@@ -297,7 +297,12 @@ export class objectView {
 
                 try {
                     if (!(int.fields[f].type instanceof Array) && ["link", "ref"].indexOf(int.fields[f].type) >= 0) {
-                        fKeys[f] = ints[int.fields[f][int.fields[f].type]].fields[this.__getPK(ints[int.fields[f][int.fields[f].type]])].type;
+                        let linkType = int.fields[f].type;
+                        let linkToObject = int.fields[f][linkType];
+                        let linkObject = ints[linkToObject];
+                        let linkObjectPK = this.__getPK(linkObject);
+                        let linkObjectPKType = linkObject.fields[linkObjectPK].type;
+                        fKeys[f] = linkObjectPKType;
                     }
                 }
                 catch(e){
