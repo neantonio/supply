@@ -56,6 +56,10 @@
             "utility": "supply",
             "uObject": "suppliersSupply"
         },
+        "suppliersContactsSupply": {
+            "utility": "supply",
+            "uObject": "suppliersContactsSupply"
+        },
         "contractsSupply": {
             "utility": "supply",
             "uObject": "contractsSupply"
@@ -81,7 +85,7 @@
             "uObject": "bankAccountsSupply"
         },
         "supply_subscriberStorage": {
-            "utility": "gag",
+            "utility": "supply",
             "uObject": "supply_subscriberStorage_table"
         }
     }
