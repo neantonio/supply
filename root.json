@@ -1,0 +1,17 @@
+{
+    "name": "root",
+    "common": "objectView",
+    "description": "Test multiadapter",
+    "methods": {},
+    "objects": {
+        "root_subscriberStorage": {
+            "utility": "gag",
+            "uObject": "root_subscriberStorage_table"
+        }
+    },
+    "objectViews": {
+        "helpDesk": "helpDesk.json",
+        "supply": "supply.json",
+        "role": "role.json"
+    }
+}
