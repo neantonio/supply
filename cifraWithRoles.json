@@ -1,0 +1,16 @@
+{
+    "name": "cifraWithRoles",
+    "common": "objectView",
+    "description": "Test multiadapter",
+    "methods": {},
+    "objects": {
+        "cifraWithRoles_subscriberStorage": {
+            "utility": "cifra",
+            "uObject": "cifraWithRoles_subscriberStorage_table"
+        }
+    },
+    "objectViews": {
+        "cifra": "cifra.json",
+        "role": "role.json"
+    }
+}

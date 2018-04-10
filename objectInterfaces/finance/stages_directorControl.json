@@ -1,0 +1,29 @@
+{
+  "name": "stages_directorControl",
+  "description" : "Согласование директором",
+  "common": "stage",
+  "fields": {
+    "ID": {
+      "type": "uuid",
+      "isPrimary": true
+    },
+    "description": {
+      "type": "string",
+      "title": "Название"
+    },
+    "commentary": {
+      "type": "string",
+      "title": "Комментарий"
+    },
+    "expenditureID": {
+      "type": "link",
+      "link": "expenditure",
+      "title": "Статья расходов"
+    },
+    "queryID":{
+      "type": "link",
+      "link": "query",
+      "title": "Заявка"
+    }
+  }
+}

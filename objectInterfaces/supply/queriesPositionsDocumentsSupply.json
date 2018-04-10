@@ -1,0 +1,11 @@
+{
+  "name": "queriesPositionsDocumentsSupply",
+  "description" : "Документы/изображения",
+  "common": "fileStorage",
+  "fields": {
+    "positionID": {
+      "type": "ref",
+      "ref": "queriesPositionsSupply"
+    }
+  }
+}

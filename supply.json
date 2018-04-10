@@ -1,0 +1,88 @@
+{
+    "name": "supply",
+    "common": "objectView",
+    "description": "Снабжение",
+    "methods": {},
+    "objects": {
+        "queriesSupply": {
+            "utility": "supply",
+            "uObject": "queriesSupply"
+        },
+        "usersSupply": {
+            "utility": "supply",
+            "uObject": "usersSupply"
+        },
+        "organizationsSupply": {
+            "utility": "supply",
+            "uObject": "organizationsSupply"
+        },
+        "organizationContactsSupply": {
+            "utility": "supply",
+            "uObject": "organizationContactsSupply"
+        },
+        "organizationBillsSupply": {
+            "utility": "supply",
+            "uObject": "organizationBillsSupply"
+        },
+        "divisionsSupply": {
+            "utility": "supply",
+            "uObject": "divisionsSupply"
+        },
+        "stocksSupply": {
+            "utility": "supply",
+            "uObject": "stocksSupply"
+        },
+        "causesSupply": {
+            "utility": "supply",
+            "uObject": "causesSupply"
+        },
+        "originsSupply": {
+            "utility": "supply",
+            "uObject": "originsSupply"
+        },
+        "periodicitySupply": {
+            "utility": "supply",
+            "uObject": "periodicitySupply"
+        },
+        "urgencySupply": {
+            "utility": "supply",
+            "uObject": "urgencySupply"
+        },
+        "nomenclatureSupply": {
+            "utility": "supply",
+            "uObject": "nomenclatureSupply"
+        },
+        "suppliersSupply": {
+            "utility": "supply",
+            "uObject": "suppliersSupply"
+        },
+        "contractsSupply": {
+            "utility": "supply",
+            "uObject": "contractsSupply"
+        },
+        "normsSupply": {
+            "utility": "supply",
+            "uObject": "normsSupply"
+        },
+        "measureUnitsSupply": {
+            "utility": "supply",
+            "uObject": "measureUnitsSupply"
+        },
+        "cashFlowFiguresSupply": {
+            "utility": "supply",
+            "uObject": "cashFlowFiguresSupply"
+        },
+        "bankAccountsSupply": {
+            "utility": "supply",
+            "uObject": "bankAccountsSupply"
+        },
+        "banksSupply": {
+            "utility": "supply",
+            "uObject": "bankAccountsSupply"
+        },
+        "supply_subscriberStorage": {
+            "utility": "gag",
+            "uObject": "supply_subscriberStorage_table"
+        }
+    }
+}

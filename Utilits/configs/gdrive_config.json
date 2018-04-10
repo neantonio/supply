@@ -1,0 +1,9 @@
+{"installed":
+{"client_id":"105125592457508867398",
+"project_id":"ivory-being-183207",
+"auth_uri":"https://accounts.google.com/o/oauth2/auth",
+"token_uri":"https://accounts.google.com/o/oauth2/token",
+"auth_provider_x509_cert_url":"https://www.googleapis.com/oauth2/v1/certs",
+"client_secret":"p-fVKyZ6bQRQKbZvZmARPy0u",
+"redirect_uris":["https://gag.groupstp.ru"],
+"javascript_origins":["https://gag.groupstp.ru"]}}

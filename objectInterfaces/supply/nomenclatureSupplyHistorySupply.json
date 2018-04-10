@@ -1,0 +1,45 @@
+{
+  "name": "nomenclatureSupplyHistorySupply",
+  "description" : "История закупок",
+  "common": "reference",
+  "fields": {
+    "ID": {
+      "type": "uuid",
+      "isPrimary": true,
+      "readonly": true
+    },
+    "description": {
+      "type": "string",
+      "required": true,
+      "title": "Наименование"
+    },
+    "supplier": {
+      "type": "link",
+      "link": "supplierSupply",
+      "required": true,
+      "title": "Поставщик"
+    },
+    "price": {
+      "type": "float",
+      "required": true,
+      "title": "Закупочная цена"
+    },
+    "amount": {
+      "type": "float",
+      "required": true,
+      "title": "Количество"
+    },
+    "nomenclature": {
+      "type": "ref",
+      "ref": "nomenclatureSupply",
+      "required": true,
+      "title": "Номенклатура"
+    },
+    "date": {
+      "type": "timestamp",
+      "required": true,
+      "title": "Дата закупки"
+    }
+  },
+  "methods": {}
+}

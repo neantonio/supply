@@ -1,0 +1,29 @@
+{
+  "name": "bankAccountsSupply",
+  "description" : "Банковские счета",
+  "common": "reference",
+  "fields": {
+    "ID": {
+      "type": "uuid",
+      "isPrimary": true,
+      "readonly": true
+    },
+    "description": {
+      "type": "string",
+      "required": true,
+      "title": "Наименование"
+    },
+    "number": {
+      "type": "string",
+      "required": true,
+      "title": "Значение"
+    },
+    "bank": {
+      "type": "link",
+      "link": "banks",
+      "title": "Банк",
+      "required": true
+    }
+  },
+  "methods": {}
+}

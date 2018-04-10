@@ -1,0 +1,35 @@
+{
+  "name": "outlayDocument_position",
+  "description" : "Позиции сметы",
+  "common": "reference",
+  "fields": {
+    "ID": {
+      "type": "uuid",
+      "isPrimary": true,
+      "readonly": true
+    },
+    "outlayDocumentID": {
+      "type": "ref",
+      "ref": "outlayDocument"
+    },
+    "description": {
+      "type": "string",
+      "title": "ТЗ"
+    },
+    "productID": {
+      "type": "link",
+      "link": "product",
+      "title": "Номенклатура"
+    },
+    "quantity": {
+      "type": "float",
+      "required": true,
+      "title": "Количество"
+    },
+    "price": {
+      "type": "integer",
+      "required": true,
+      "title": "Расчетная стоимость"
+    }
+  }
+}

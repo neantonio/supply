@@ -1,0 +1,10 @@
+{
+  "name": "object",
+  "description" : "Simple object interface",
+  "methods": {
+    "getInterface": {
+      "description" : "Возвращает интерфейс объекта",
+      "type": "object"
+    }
+  }
+}

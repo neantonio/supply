@@ -1,0 +1,74 @@
+{
+  "name": "organization",
+  "description" : "Организация",
+  "common": "reference1C",
+  "fields": {
+    "ID": {
+      "type": "uuid",
+      "isPrimary": true,
+      "readonly": true
+    },
+    "description": {
+      "type": "string",
+      "required": false,
+      "title": "Наименование"
+    },
+    "fullName": {
+      "type": "string",
+      "required": false,
+      "title": "Полное наименование"
+    },
+    "INN": {
+      "type": "string",
+      "required": false,
+      "title": "ИНН"
+    },
+    "KPP": {
+      "type": "string",
+      "required": false,
+      "title": "КПП"
+    },
+    "OGRN": {
+      "type": "string",
+      "required": false,
+      "title": "ОГРН"
+    },
+    "bank": {
+      "type": "string",
+      "required": false,
+      "title": "Банк"
+    },
+    "bankBill": {
+      "type": "string",
+      "required": false,
+      "title": "Банковский счет"
+    },
+    "urMail": {
+      "type": "string",
+      "required": false,
+      "title": "Юридическая почта"
+    },
+    "mail": {
+      "type": "string",
+      "required": false,
+      "title": "Физическая почта"
+    },
+    "phone": {
+      "type": "string",
+      "required": false,
+      "title": "Телефон"
+    },
+    "fax": {
+      "type": "string",
+      "required": false,
+      "title": "Факс"
+    }
+  },
+  "configFor1C": {
+    "fields1C": ["УникальныйИдентификатор", "ИНН", "КПП", "Наименование", "НаименованиеПолное"],
+    "fieldsSupply": ["externalCode", "INN", "KPP", "description", "fullName"],
+    "reference1C": "Организации",
+    "fieldsPriority": ["INN", "description", "fulName"],
+    "dependencyFields": []
+  }
+}

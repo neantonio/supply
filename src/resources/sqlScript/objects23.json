@@ -1,0 +1,27 @@
+{
+  "name": "objects23",
+  "description" : "Объекты",
+  "common": "reference",
+  "fields": {
+    "ID": {
+      "type": "uuid",
+      "isPrimary": true,
+      "readonly": true
+    },
+    "description1": {
+      "type": "string",
+      "required": true,
+      "title": "Объект"
+    },
+    "description2": {
+      "type": "string",
+      "required": true,
+      "title": "Объект"
+    }
+  }
+}
+
+"objects23": {
+"utility": "gag",
+"uObject": "objects_table"
+},

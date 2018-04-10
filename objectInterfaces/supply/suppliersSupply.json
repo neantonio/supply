@@ -1,0 +1,77 @@
+{
+  "name": "suppliersSupply",
+  "description": "Поставщики",
+  "common": "reference1C",
+  "fields":{
+    "ID":{
+      "type": "uuid",
+      "isPrimary": true,
+      "readonly": true
+    },
+    "description":{
+      "type": "string",
+      "required": true,
+      "title": "Наименование поставщика"
+    },
+    "fullDescription": {
+      "type": "string",
+      "title": "Полное наименование"
+    },
+    "INN": {
+      "type": "string",
+      "required": true,
+      "title": "ИНН"
+    },
+    "KPP": {
+      "type": "string",
+      "title": "КПП"
+    },
+    "OGRN": {
+      "type": "string",
+      "title": "ОГРН"
+    },
+    "legalAddress": {
+      "type": "string",
+      "title": "Юридический адрес"
+    },
+    "postAddress": {
+      "type": "string",
+      "title": "Почтовый адрес"
+    },
+    "factAddress": {
+      "type": "string",
+      "title": "Фактический адрес"
+    },
+    "phone": {
+      "type": "string",
+      "title": "Телефон"
+    },
+    "fax": {
+      "type": "string",
+      "title": "Факс"
+    },
+    "mainContact": {
+      "type": "link",
+      "link": "suppliersContactsSupply",
+      "title": "Основной контакт"
+    },
+    "isGroup": {
+      "type": "boolean",
+      "title": "ЭтоГруппа"
+    },
+    "parentID": {
+      "type": "link",
+      "link": "suppliersSupply",
+      "title": "Родитель"
+    }
+  },
+  "methods": {},
+  "configFor1C": {
+    "fields1C": ["УникальныйИдентификатор", "Наименование", "НаименованиеПолное", "ЭтоГруппа", "Родитель"],
+    "fieldsSupply": ["externalCode", "description", "fullDescription", "isGroup", "parentID"],
+    "reference1C": "Номенклатура",
+    "fieldsPriority": ["INN", "KPP"],
+    "dependencyFields": ["unitID"],
+    "hieracaclyField": "parentID"
+  }
+}

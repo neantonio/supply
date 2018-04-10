@@ -1,0 +1,33 @@
+{
+  "name": "contractsSupply",
+  "description" : "Договоры",
+  "common": "reference",
+  "fields": {
+    "ID": {
+      "type": "uuid",
+      "isPrimary": true,
+      "readonly": true
+    },
+    "description": {
+      "type": "string",
+      "required": true,
+      "title": "Наименование"
+    },
+    "number": {
+      "type": "string",
+      "required": true,
+      "title": "Номер"
+    },
+    "date": {
+      "type": "date",
+      "required": true,
+      "title": "Дата"
+    },
+    "validDate": {
+      "type": "date",
+      "required": false,
+      "title": "Срок действия"
+    }
+  },
+  "methods": {}
+}

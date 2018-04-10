@@ -1,0 +1,53 @@
+{
+  "name": "fileStorage",
+  "description" : "Object for collect files",
+  "common": "reference",
+  "fields": {
+    "ID": {
+      "type": "uuid",
+      "isPrimary": true,
+      "readonly": true
+    },
+    "description": {
+      "type": "string",
+      "required": true,
+      "title": "Имя файла"
+    },
+    "extension": {
+      "type": "string",
+      "required": false,
+      "title": "Расширение"
+    },
+    "fileID": {
+      "type": "string",
+      "required": false,
+      "title": "Идентификатор файла"
+    },
+    "file": {
+      "type": "file",
+      "required": false,
+      "title": "Файл"
+    }
+  },
+  "methods": {
+    "download":{
+      "description" : "Возвращает запрошенные файлы",
+      "type": "object",
+      "parameters":[{
+        "name": "filter",
+        "type": "object",
+        "description": "Фильтр на выборку записей из хранилища"
+      },
+       {
+         "description": "Дополнительные параметры (пагинация, порядок выдачи)",
+         "name": "parameters",
+         "type": "object"
+       },
+       {
+        "name": "objInfo",
+        "type": "object",
+        "description": ""
+      }]
+    }
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "type": "pg",
+  "name": "magic",
+  "config": {
+    "user": "postgres",
+    "password": "postgres",
+    "port": "5432",
+    "host": "localhost",
+    "database": "magic_db",
+    "max": 100
+  }
+}

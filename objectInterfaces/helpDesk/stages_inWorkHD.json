@@ -1,0 +1,97 @@
+{
+  "name": "stages_inWorkHD",
+  "description" : "В работе",
+  "common": "stage",
+  "fields": {
+    "ID": {
+      "type": "uuid",
+      "isPrimary": true
+    },
+    "description": {
+      "type": "string",
+      "title": "Название"
+    },
+    "executorID":{
+      "type": "link",
+      "link": "initiatorHD",
+      "title": "Ответственный исполнитель"
+    },
+    "deadline": {
+      "type": "timestamp",
+      "title": "Срок выполнения"
+    },
+    "categoryID":{
+      "type": "link",
+      "link": "categoryHD",
+      "title": "Категория"
+    },
+    "queryID": {
+      "type": "link",
+      "link": "queryToTaskHD",
+      "required": false,
+      "title": "Заявка"
+    },
+    "bossComment":{
+        "type": "string",
+        "title": "Комментарий ответственного за направление"
+    },
+    "commentary":{
+      "type": "string",
+      "title": "Комментарий"
+    }
+  },
+  "plugins": {
+    "sendMessageToInitiator": {
+      "description" : "Отправить уведомление инициатору",
+      "type": "text",
+      "parameters":[
+        {
+          "name": "filter",
+          "type": "object",
+          "description": "Фильтр на выборку записей из хранилища"
+        },
+        {
+          "name": "values",
+          "type": "object",
+          "description": "Набор новых значений"
+        },
+        {
+          "description": "Дополнительные параметры (пагинация, порядок выдачи)",
+          "name": "parameters",
+          "type": "object"
+        }
+      ],
+      "connection": {
+        "host": "localhost",
+        "port": 8000,
+        "name": "sendMessageToInitiator"
+      }
+    },
+    "sendMessageToMentor": {
+      "description" : "Отправить уведомление куратору направления",
+      "type": "text",
+      "parameters":[
+        {
+          "name": "filter",
+          "type": "object",
+          "description": "Фильтр на выборку записей из хранилища"
+        },
+        {
+          "name": "values",
+          "type": "object",
+          "description": "Набор новых значений"
+        },
+        {
+          "description": "Дополнительные параметры (пагинация, порядок выдачи)",
+          "name": "parameters",
+          "type": "object"
+        }
+      ],
+      "connection": {
+        "host": "localhost",
+        "port": 8000,
+        "name": "sendMessageToMentor_helpDesk"
+      }
+    }
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "name": "urgencySupply",
+  "description" : "Срочность",
+  "common": "reference",
+  "fields": {
+    "ID": {
+      "type": "uuid",
+      "isPrimary": true,
+      "readonly": true
+    },
+    "description": {
+      "type": "string",
+      "required": true,
+      "title": "Срочность"
+    }
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "name": "supplier_offers",
+  "description" : "Счеты поставщика",
+  "common": "reference",
+  "fields": {
+    "ID": {
+      "type": "uuid",
+      "isPrimary": true,
+      "readonly": true
+    },
+    "description": {
+      "type": "string",
+      "required": false,
+      "title": "Номер счета"
+    },
+    "supplier": {
+      "type": "ref",
+      "ref": "supplier"
+    }
+  }
+}

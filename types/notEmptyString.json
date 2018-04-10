@@ -1,0 +1,1 @@
+{"type":"notEmptyString","check":{"type":"regexp","check":{"exp":".{1}","flags":""}},"generate":null,"common":"string"}

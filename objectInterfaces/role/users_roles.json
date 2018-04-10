@@ -1,0 +1,25 @@
+{
+  "name": "users_roles",
+  "description": "Роли пользователей",
+  "common": "reference",
+  "fields": {
+    "ID": {
+      "type": "uuid",
+      "isPrimary": true,
+      "readonly": true
+    },
+    "description": {
+      "type": "string",
+      "required": true,
+      "title": "Роли пользователя"
+    },
+    "roleID": {
+      "type": "link",
+      "link": "roles"
+    },
+    "userID":{
+      "type": "ref",
+      "ref": "users"
+    }
+  }
+}

@@ -1,0 +1,40 @@
+{
+  "name": "position",
+  "description" : "Позиции заявки",
+  "common": "reference",
+  "fields": {
+    "ID": {
+      "type": "uuid",
+      "isPrimary": true,
+      "readonly": true
+    },
+    "queryID": {
+      "type": "ref",
+      "ref": "query"
+    },
+    "commentary": {
+      "type": "string",
+      "required": false,
+      "title": "Комментарии к заявке"
+    },
+    "tz": {
+      "type": "string",
+      "required": false,
+      "title": "Техзадание"
+    },
+    "productID": {
+      "type": "link",
+      "link": "product",
+      "required": false,
+      "title": "Товарная единица"
+    },
+    "stage":{
+      "type": "string",
+      "title": "Текущий этап"
+    },
+    "workOut": {
+      "type": "boolean",
+      "title":"Отработано"
+    }
+  }
+}

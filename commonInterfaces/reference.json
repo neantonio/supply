@@ -1,0 +1,191 @@
+{
+  "name": "reference",
+  "description": "Reference",
+  "common": "object",
+  "methods": {
+    "update": {
+      "description" : "Изменяет описание объекта(ов).",
+      "type": "text",
+      "parameters":[
+        {
+          "name": "filter",
+          "type": "object",
+          "description": "Фильтр на выборку записей из хранилища"
+        },
+        {
+          "name": "values",
+          "type": "object",
+          "description": "Набор новых значений"
+        },
+         {
+           "description": "Дополнительные параметры (пагинация, порядок выдачи)",
+           "name": "parameters",
+           "type": "object"
+         },
+        {
+          "description": "Информация о связи объектов (для восстановления взаимосвязи полей в списках fields и filter)",
+          "name": "objInfo",
+          "type": "object"
+        }
+      ]
+    },
+    "delete": {
+      "description": "Удаляет описание объекта(ов) из хранилища.",
+      "type": "text",
+      "parameters":[
+        {
+          "name": "filter",
+          "type": "object",
+          "description": "Фильтр на выборку записей из хранилища"
+        },
+         {
+           "description": "Дополнительные параметры (пагинация, порядок выдачи)",
+           "name": "parameters",
+           "type": "object"
+         },
+        {
+          "description": "Информация о связи объектов (для восстановления взаимосвязи полей в списках filter)",
+          "name": "objInfo",
+          "type": "object"
+        }
+      ]
+    },
+    "insert": {
+      "description": "Добавляет описание объекта(ов) в хранилище.",
+      "type": "text",
+      "parameters" : [
+        {
+          "name": "values",
+          "type": "object",
+          "description": "Набор новых значений"
+        },
+        {
+          "description": "Дополнительные параметры (пагинация, порядок выдачи)",
+          "name": "parameters",
+          "type": "object"
+        }
+      ]
+    },
+    "get": {
+      "description": "Возвращает описание объектов по фильтру",
+      "type": "object",
+      "parameters":[
+        {
+          "description": "Список полей для отображения",
+          "name": "fields",
+          "type": "object"
+        },
+        {
+          "description": "Фильтр на выборку записей из хранилища",
+          "name": "filter",
+          "type": "object"
+        },
+        {
+          "description": "Дополнительные параметры (пагинация, порядок выдачи)",
+          "name": "parameters",
+          "type": "object"
+        },
+        {
+          "description": "Информация о связи объектов (для восстановления взаимосвязи полей в списках fields и filter)",
+          "name": "objInfo",
+          "type": "object"
+        }
+      ]
+    },
+    "setInitiator": {
+      "description": "Определить инициатора",
+      "type": "object",
+      "parameters":[
+        {
+          "description": "Фильтр на выборку записей из хранилища",
+          "name": "filter",
+          "type": "object"
+        },
+        {
+          "name": "values",
+          "type": "object",
+          "description": "Набор новых значений"
+        },
+        {
+          "description": "Дополнительные параметры (пагинация, порядок выдачи)",
+          "name": "parameters",
+          "type": "object"
+        }
+      ]
+    },
+    "copy": {
+      "description": "Копировать запись",
+      "type": "object",
+      "parameters":[
+        {
+          "description": "Список полей для отображения",
+          "name": "fields",
+          "type": "object"
+        },
+        {
+          "name": "filter",
+          "type": "object",
+          "description": "Фильтр на выборку записей из хранилища"
+        },
+        {
+          "description": "Дополнительные параметры (пагинация, порядок выдачи)",
+          "name": "parameters",
+          "type": "object"
+        },
+        {
+          "description": "Информация о связи объектов (для восстановления взаимосвязи полей в списках filter)",
+          "name": "objInfo",
+          "type": "object"
+        }
+      ],
+      "permanentParameters": {
+        "parameters": {
+          "allFields": true
+        }
+      }
+    },
+    "rbInsert":{
+      "description": "Откат операции Insert",
+      "type": "text",
+      "parameters":[
+        {
+          "description": "Добавленные значения, которые нужно удалить.",
+          "name": "values",
+          "type": "object"
+        },
+        {
+          "description": "Информация о связи объектов (для восстановления взаимосвязи полей в списках filter)",
+          "name": "objInfo",
+          "type": "object"
+        }
+      ]
+    },
+    "rbUpdate":{
+      "description": "Откат операции Update",
+      "type": "text",
+      "parameters":[
+        {
+          "name": "values",
+          "type": "object",
+          "description": "Набор новых значений"
+        },
+        {
+          "description": "Информация о связи объектов (для восстановления взаимосвязи полей в списках fields и filter)",
+          "name": "objInfo",
+          "type": "object"
+        }
+      ]
+    },
+    "rbDelete": {
+      "description": "Откат операции Delete.",
+      "type": "text",
+      "parameters" : [
+        {
+          "name": "values",
+          "type": "object",
+          "description": "Набор восстанавливаемых значений"
+        }
+      ]
+    }
+  }
+}

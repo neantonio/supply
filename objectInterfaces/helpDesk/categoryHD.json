@@ -1,0 +1,34 @@
+{
+  "name": "categoryHD",
+  "description" : "Категория заявки",
+  "common": "reference",
+  "fields": {
+    "ID": {
+      "type": "uuid",
+      "isPrimary": true,
+      "readonly": true
+    },
+    "description": {
+      "type": "string",
+      "required": true,
+      "title": "Наименование"
+    },
+     "initiatorID": {
+       "type": "link",
+       "link": "initiatorHD",
+       "required": true,
+       "title": "Ответственный"
+     },
+    "priorityID": {
+       "type": "link",
+       "link": "priorityHD",
+       "required": true,
+       "title": "Приоритет по умолчанию"
+    },
+     "template": {
+       "type": "string",
+       "required": true,
+       "title": "Шаблон"
+     }
+  }
+}

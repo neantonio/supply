@@ -1,0 +1,27 @@
+{
+  "name": "billFiles",
+  "description" : "Загруженные счета",
+  "common": "fileStorage",
+  "fields" : {
+    "supplier": {
+      "type": "link",
+      "link": "supplier",
+      "title": "Поставщик"
+    },
+    "organization":{
+      "type": "link",
+      "link": "organization",
+      "title": "Организация"
+    },
+    "subdivision":{
+      "type": "link",
+      "link": "subdivision",
+      "title": "Подразделение"
+    },
+    "date": {
+      "type": "timestamp",
+      "title": "Дата выставления"
+    }
+  },
+  "methods": {}
+}

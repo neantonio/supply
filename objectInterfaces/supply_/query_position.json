@@ -1,0 +1,79 @@
+{
+  "name": "query_position",
+  "description" : "Позиции заявки",
+  "common": "reference",
+  "fields": {
+    "ID": {
+      "type": "uuid",
+      "isPrimary": true,
+      "readonly": true
+    },
+    "queryID": {
+      "type": "ref",
+      "ref": "query"
+    },
+    "description": {
+      "type": "string",
+      "title": "Название"
+    },
+    "commentary": {
+      "type": "string",
+      "required": false,
+      "title": "Комментарии к заявке"
+    },
+    "tz": {
+      "type": "string",
+      "required": false,
+      "title": "Техзадание"
+    },
+    "nomGroup": {
+      "type": "link",
+      "link": "product",
+      "title": "Номенклатурная группа"
+    },
+    "productID": {
+      "type": "link",
+      "link": "product",
+      "required": false,
+      "title": "Товарная единица"
+    },
+    "quantity":{
+      "type": "float",
+      "title": "Количество"
+    },
+    "calculatedCost":{
+      "type": "float",
+      "title": "Проценочная стоимость"
+    },
+    "appliedQuontity":{
+      "type": "float",
+      "title": "Купленное количество"
+    },
+    "price":{
+      "type": "float",
+      "title": "Цена"
+    },
+    "bill":{
+      "type": "link",
+      "link": "billFiles",
+      "title": "Счёт"
+    },
+    "stage":{
+      "type": "string",
+      "title": "Текущий этап"
+    },
+    "accepted":{
+      "type": "boolean",
+      "title": "Принято/отказано"
+    },
+    "workOut": {
+      "type": "boolean",
+      "title":"В работе"
+    },
+    "outlayDocument_positionID": {
+      "type": "link",
+      "link": "outlayDocument_position",
+      "title":"Позиция в смете"
+    }
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "name": "cifra",
+  "common": "objectView",
+  "description": "Цифровой документооборот",
+  "methods": {},
+  "objects": {
+    "doctypes": {
+      "utility": "cifra",
+      "uObject": "doctypes_table"
+    },
+    "cifra_subscriberStorage": {
+      "utility": "cifra",
+      "uObject": "cifra_subscriberStorage_table"
+    }
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "name": "usersToken",
+  "description" : "Роли пользователей",
+  "common": "reference",
+  "fields": {
+    "ID": {
+      "type": "uuid",
+      "isPrimary": true,
+      "readonly": true
+    },
+    "token": {
+      "type": "string",
+      "required": true,
+      "title": "Номер токена"
+    },
+    "expirationDate": {
+      "type": "date",
+      "required": false,
+      "title": "Дата окончания действия токена"
+    },
+    "userID": {
+      "type": "ref",
+      "ref": "users"
+    }
+  }
+}

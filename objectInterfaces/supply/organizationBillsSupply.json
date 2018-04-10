@@ -1,0 +1,28 @@
+{
+  "name": "organizationBillsSupply",
+  "description" : "Счета организации",
+  "common": "reference",
+  "fields": {
+    "ID": {
+      "type": "uuid",
+      "isPrimary": true,
+      "readonly": true
+    },
+    "description": {
+      "type": "string",
+      "required": true,
+      "title": "Номер счета"
+    },
+    "bankID": {
+      "type": "link",
+      "link": "banksSupply",
+      "required": true,
+      "title": "Банк"
+    },
+    "organization": {
+      "type": "ref",
+      "ref": "organizationsSupply",
+      "title": "Организация"
+    }
+  }
+}

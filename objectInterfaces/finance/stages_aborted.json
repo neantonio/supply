@@ -1,0 +1,29 @@
+{
+  "name": "stages_aborted",
+  "description" : "Отказано",
+  "common": "stage",
+  "fields": {
+    "description": {
+      "type": "string",
+      "title": "Название"
+    },
+    "commentary": {
+      "type": "string",
+      "title": "Комментарий к заявке"
+    },
+    "queryID": {
+      "type": "link",
+      "link": "query",
+      "title": "Заявка"
+    },
+    "expenditureID":{
+      "type": "link",
+      "link": "expenditure",
+      "title": "Статья расходов"
+    },
+    "comment": {
+      "type": "string",
+      "title": "Комментарий"
+    }
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "name": "inventory",
+  "description" : "Инвентарь",
+  "common": "reference",
+  "fields": {
+    "ID": {
+      "type": "uuid",
+      "isPrimary": true,
+      "readonly": true
+    },
+    "heroID": {
+      "type": "ref",
+      "ref": "hero"
+    },
+    "weaponID": {
+      "type": "link",
+      "link": "weapon",
+      "required": false,
+      "title": "Оружие"
+    }
+  }
+}

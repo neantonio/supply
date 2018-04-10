@@ -1,0 +1,72 @@
+{
+  "name": "stocksSupply",
+  "description" : "Склад",
+  "common": "reference1C",
+  "fields": {
+    "ID": {
+      "type": "uuid",
+      "isPrimary": true,
+      "readonly": true
+    },
+    "description": {
+      "type": "string",
+      "required": true,
+      "title": "Описание"
+    },
+    "organizationID": {
+      "type": "link",
+      "link": "organizationsSupply",
+      "required": true,
+      "title": "Организация"
+    },
+    "divisionID": {
+      "type": "link",
+      "link": "divisionsSupply",
+      "required": false,
+      "title": "Подразделение"
+    },
+    "parentID": {
+      "type": "link",
+      "link": "stocksSupply",
+      "required": false,
+      "title": "Основной склад"
+    },
+    "commentary": {
+      "type": "string",
+      "required": false,
+      "title": "Комментарий"
+    }
+  },
+  "methods": {
+    "sync": {
+      "description": "Синхронизировать.",
+      "type": "text",
+      "permanentParameters": {
+        "fields": [
+          "organizationID.externalCode",
+          "subdivisionID.externalCode"
+        ]
+      },
+      "parameters": [
+        {
+          "name": "fields",
+          "type": "object",
+          "description": "Список доп.полей"
+        },
+        {
+          "description": "Информация о связи объектов (для восстановления взаимосвязи полей в списках filter)",
+          "name": "objInfo",
+          "type": "object"
+        }
+      ]
+    }
+  },
+  "configFor1C": {
+    "fields1C": ["УникальныйИдентификатор", "Наименование", "Комментарий", "ПодразделениеОрганизации", "Организация", "Родитель"],
+    "fieldsSupply": ["externalCode", "description", "commentary", "divisionID", "organizationID", "parentID"],
+    "reference1C": "Склады",
+    "fieldsPriority": ["description"],
+    "dependencyFields": ["organizationID", "subdivisionID"],
+    "hieracaclyField": "parentID"
+  }
+}

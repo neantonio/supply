@@ -1,0 +1,21 @@
+{
+  "name": "posref",
+  "description" : "ТЧ для ТЧ",
+  "common": "reference",
+  "fields": {
+    "ID": {
+      "type": "uuid",
+      "isPrimary": true,
+      "readonly": true
+    },
+    "posID": {
+      "type": "ref",
+      "ref": "position"
+    },
+    "description": {
+      "type": "string",
+      "required": false,
+      "title": "Описание"
+    }
+  }
+}

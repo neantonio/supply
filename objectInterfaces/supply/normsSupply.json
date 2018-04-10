@@ -1,0 +1,28 @@
+{
+  "name": "normsSupply",
+  "description" : "Нормативы",
+  "common": "reference",
+  "fields": {
+    "ID": {
+      "type": "uuid",
+      "isPrimary": true,
+      "readonly": true
+    },
+    "description": {
+      "type": "string",
+      "required": true,
+      "title": "Наименование"
+    },
+    "value": {
+      "type": "float",
+      "required": true,
+      "title": "Значение"
+    },
+    "comment": {
+      "type": "string",
+      "title": "Комментарий",
+      "required": false
+    }
+  },
+  "methods": {}
+}

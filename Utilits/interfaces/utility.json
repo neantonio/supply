@@ -1,0 +1,21 @@
+{
+  "name": "utility",
+  "description": "Base interface for utilities",
+  "common": "object",
+  "field": {
+    "subquerySupport":{
+      "type": "boolean",
+      "description": "Поле для илентификации возможности вложенных запросов."
+    }
+  },
+  "methods": {
+    "checkConfig": {
+      "type": "boolean",
+      "description": "Проверяет идентичность конфигураций (нужно для вложенных запросов)"
+    },
+    "getPermission": {
+      "type": "object",
+      "description": "Возвращает права доступа к списку переданных объектов (ко всем объектам, если не указано ни одного объекта)"
+    }
+  }
+}

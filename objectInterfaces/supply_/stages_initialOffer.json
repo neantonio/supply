@@ -1,0 +1,37 @@
+{
+  "name": "stages_initialOffer",
+  "description" : "Этап первичного предложения",
+  "common": "stage",
+  "fields": {
+    "ID": {
+      "type": "uuid",
+      "isPrimary": true
+    },
+    "description": {
+      "type": "string",
+      "title": "Название"
+    },
+    "commentary": {
+      "type": "string",
+      "title": "Комментарий"
+    },
+    "positionID": {
+      "type": "link",
+      "link": "query_position",
+      "title": "Позиции"
+    },
+    "productID":{
+      "type": "link",
+      "link": "product",
+      "title": "Номенклатура"
+    },
+    "quantity": {
+      "type": "float",
+      "title": "Количество"
+    },
+    "prepared": {
+      "type": "boolean",
+      "title": "Подготовлено"
+    }
+  }
+}

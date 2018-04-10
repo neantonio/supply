@@ -1,0 +1,129 @@
+{
+  "name": "queryToTaskHD",
+  "description" : "Заявка",
+  "common": "reference",
+  "fields": {
+    "ID": {
+      "type": "uuid",
+      "isPrimary": true,
+      "readonly": true
+    },
+    "initiatorID":{
+      "type": "link",
+      "link": "initiatorHD",
+      "title": "Создатель заявки"
+    },
+    "problemUserID":{
+      "type": "link",
+      "link": "initiatorHD",
+      "title": "Заинтересованное лицо"
+    },
+    "description": {
+      "multiline": true,
+      "type": "string",
+      "required": true,
+      "title": "Описание"
+    },
+    "date": {
+      "type": "timestamp",
+      "required": false,
+      "title": "Дата создания"
+    },
+    "categoryID":{
+      "required": true,
+      "type": "link",
+      "link": "categoryHD",
+      "title": "Категория"
+    },
+    "urgencyComment":{
+      "type": "string",
+      "title": "Комментарий высокой срочности"
+    },
+    "executorID":{
+      "type": "link",
+      "link": "initiatorHD",
+      "title": "Ответственный исполнитель"
+    },
+    "workOut":{
+      "type":"boolean",
+      "title":"В работе"
+    },
+    "status": {
+        "type": "string",
+        "title": "Статус"
+    },
+    "finishDate": {
+        "type": "timestamp",
+        "title": "Дата завершения"
+    },
+     "executorComment": {
+         "type": "string",
+         "title": "Комментарий исполнителя"
+     }
+  },
+  "methods":{
+    "active": {
+      "description" : "Запускает заявку на обработку",
+      "type": "text",
+      "parameters":[
+        {
+          "name": "filter",
+          "type": "object",
+          "description": "Фильтр на выборку записей из хранилища"
+        },
+         {
+           "description": "Дополнительные параметры (пагинация, порядок выдачи)",
+           "name": "parameters",
+           "type": "object"
+         },
+        {
+          "description": "Информация о связи объектов (для восстановления взаимосвязи полей в списках fields и filter)",
+          "name": "objInfo",
+          "type": "object"
+        }
+      ]
+    },
+    "deactive": {
+      "description" : "Деактивирует заявку",
+      "type": "text",
+      "parameters":[
+        {
+          "name": "filter",
+          "type": "object",
+          "description": "Фильтр на выборку записей из хранилища"
+        },
+         {
+           "description": "Дополнительные параметры (пагинация, порядок выдачи)",
+           "name": "parameters",
+           "type": "object"
+         },
+        {
+          "description": "Информация о связи объектов (для восстановления взаимосвязи полей в списках fields и filter)",
+          "name": "objInfo",
+          "type": "object"
+        }
+      ]
+    },
+     "sendMessageToMentor": {
+       "description" : "Отправить уведомление ответственному за категорию",
+       "type": "text",
+       "parameters":[
+         {
+           "name": "filter",
+           "type": "object",
+           "description": "Фильтр на выборку записей из хранилища"
+         },
+        {
+          "name": "values",
+          "type": "object",
+          "description": "Набор новых значений"
+        },
+        {
+          "description": "Дополнительные параметры (пагинация, порядок выдачи)",
+          "name": "parameters",
+          "type": "object"
+        }
+       ]
+     }
+  }
+}

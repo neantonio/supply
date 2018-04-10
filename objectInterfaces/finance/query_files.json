@@ -1,0 +1,17 @@
+{
+  "name": "query_files",
+  "description" : "Файлы в заявке",
+  "common": "fileStorage",
+  "fields": {
+    "ID": {
+      "type": "uuid",
+      "isPrimary": true,
+      "readonly": true
+    },
+    "queryID": {
+      "type": "ref",
+      "ref": "query",
+      "title": "Заявка"
+    }
+  }
+}

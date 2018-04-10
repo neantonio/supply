@@ -1,0 +1,42 @@
+
+  Обновление с фильтром
+        return ov.query("supply.query", "update", {
+            values: [{
+                "description": "ggg"
+            }],
+            filter: {
+                comparisons : {
+                    name: {
+                        left: {type: "field", value: "ID"},
+                        right: {type: "value", value: "67153668-4431-0695-6378-854624241672"},
+                        sign: "equal"
+                    }
+                }, tree : {and : ["name"]}
+            }
+        });
+
+ удаление  с фильтром по ID
+           return ov.query("supply.query", "delete", {
+                    filter: {
+                        comparisons : {
+                            name: {
+                                left: {type: "field", value: "ID"},
+                                right: {type: "value", value: "67153668-4431-0695-6378-854624241672"},
+                                sign: "equal"
+                            }
+                        }, tree : {and : ["name"]}
+                    }
+                });
+
+Вставка
+  await super.query("role.objects", "insert", {
+            values:
+                [{"description": "object1"}],
+        });
+
+
+ПОлучение данных
+await super.query("role.objects", "get", {})
+            .then(v => {
+                console.log(Object.keys(v.records));
+            });

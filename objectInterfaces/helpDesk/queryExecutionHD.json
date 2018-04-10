@@ -1,0 +1,184 @@
+{
+  "name": "queryExecutionHD",
+  "description": "Этапы",
+  "common": "scheme",
+  "fields": {
+    "qid": {
+      "type": "link",
+      "link": "queryToTaskHD",
+      "required": true,
+      "title": "Позиция"
+    },
+    "description": {
+      "type": "string",
+      "title": "Задача"
+    },
+    "executorID":{
+      "type": "link",
+      "link": "initiatorHD",
+      "title": "Ответственный исполнитель"
+    },
+    "categoryID":{
+      "type": "link",
+      "link": "categoryHD",
+      "title": "Категория"
+    },
+    "finished":{
+      "type": "boolean",
+      "title": "Отметка об окончании"
+    }
+  },
+  "uniqueFields":[
+    "qid"
+  ],
+  "stages": {
+    "stages_setExecutorHD": {
+      "unique": {
+        "qid": "queryID"
+      },
+      "toNextUpdate": [
+        {
+          "object": "queryToTaskHD",
+          "comments" : [
+            "filterFields - поля для формирования фильтра, valuesFields - определяемые значения",
+            "Фильтр формируется по принципу объединения условий через AND",
+            "Каждое условие - сравнение поля filterFields[i].object у объекта object со значением поля filterFields[i].stage у объекта этапа",
+            "Пока доступно копирование значений полей только основного объекта в поля только указанного объекта",
+            "Указанные в качестве любого из имен полей 'сложные' имена будут проигнорированы"
+          ],
+          "filterFields": [{
+            "stage": "queryID",
+            "object": "ID"
+          }],
+          "valuesFields": [{
+            "stage": "executorID",
+            "object" : "executorID"
+          }]
+        }
+      ],
+      "auto": true
+    },
+    "stages_inWorkHD": {
+      "unique": {
+        "qid": "queryID"
+      },
+      "toNextUpdate": [
+        {
+          "object": "queryToTaskHD",
+          "comments" : [
+            "filterFields - поля для формирования фильтра, valuesFields - определяемые значения",
+            "Фильтр формируется по принципу объединения условий через AND",
+            "Каждое условие - сравнение поля filterFields[i].object у объекта object со значением поля filterFields[i].stage у объекта этапа",
+            "Пока доступно копирование значений полей только основного объекта в поля только указанного объекта",
+            "Указанные в качестве любого из имен полей 'сложные' имена будут проигнорированы"
+          ],
+          "filterFields": [{
+            "stage": "queryID",
+            "object": "ID"
+          }],
+          "valuesFields": [{
+            "stage": "commentry",
+            "object" : "executorComment"
+          }]
+        }
+      ]
+    },
+    "stages_acceptanceHD": {
+      "unique": {
+        "qid": "queryID"
+      },
+      "last": false
+    },
+    "stages_abortedHD": {
+      "unique": {
+        "qid": "queryID"
+      },
+      "last": true
+    }
+  },
+  "relations": [
+    {
+      "comment": "Переход с определения исполнителя к вкладке 'В работе'",
+      "from": "stages_setExecutorHD",
+      "to": "stages_inWorkHD",
+      "type": "post",
+      "relation": {
+        "fields": {
+          "old.records.fields.commentary": "values.bossComment",
+          "old.records.fields.executorID": "values.executorID",
+          "old.records.fields.deadline": "values.deadline",
+          "old.records.fields.categoryID": "values.categoryID",
+          "old.records.fields.queryID": "values.queryID"
+        },
+        "condition": {
+          "comparisons": {
+            "hasExecutor": {
+              "left": {
+                "type": "field",
+                "value": "old.records.fields.executorID"
+              },
+              "right": {
+                "type": "value",
+                "value": ""
+              },
+              "sign": "unEqual"
+            }
+          },
+          "tree": {
+            "and": [
+              "hasExecutor"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "comment": "Переход с этапа 'В работе' на этап 'Отработано'",
+      "from": "stages_inWorkHD",
+      "to": "stages_acceptanceHD",
+      "type": "post",
+      "relation": {
+        "fields": {
+          "old.records.fields.queryID": "values.queryID",
+          "old.records.fields.categoryID": "values.categoryID",
+          "old.records.fields.executorID": "values.executorID",
+          "old.records.fields.commentary": "values.commentary"
+        }
+      }
+    }
+  ],
+  "input": {
+    "stages_setExecutorHD":{
+      "comment":"Начальный этап - определение исполнителя.",
+      "relation":{
+        "fields":{
+          "values.qid": "values.queryID",
+          "values.categoryID": "values.categoryID"
+        },
+        "behavior":{
+          "pullOut": true
+        }
+      }
+    }
+  },
+  "output": {
+    "stages_acceptanceHD": {
+      "object": "stages",
+      "method": "update",
+      "relation": {
+        "behavior": {},
+        "fields": {
+          "filter.all.queryID": "filter.all.qid"
+        },
+        "direct": {
+          "values": [
+            {
+              "workOut": true
+            }
+          ]
+        }
+      }
+    }
+  },
+  "abort": "stages_abortedHD"
+}

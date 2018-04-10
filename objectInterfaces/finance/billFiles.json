@@ -1,0 +1,23 @@
+{
+  "name": "billFiles",
+  "description" : "Загруженные счета",
+  "common": "googleStorage",
+  "fields" : {
+    "supplier": {
+      "type": "link",
+      "link": "supplier",
+      "title": "Поставщик"
+    },
+    "organization":{
+      "type": "link",
+      "link": "organization",
+      "title": "Организация"
+    },
+    "subdivision":{
+      "type": "link",
+      "link": "subdivision",
+      "title": "Подразделение"
+    }
+  },
+  "methods": {}
+}

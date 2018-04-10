@@ -1,0 +1,32 @@
+{
+  "name": "history",
+  "description": "история действий пользователя",
+  "common": "reference",
+  "fields": {
+    "ID": {
+      "type": "uuid",
+      "isPrimary": true,
+      "readonly": true
+    },
+    "description":{
+        "type": "string",
+        "title": "Описание"
+    },
+    "date": {
+      "type": "timestamp",
+      "title": "дата и время"
+    },
+    "actionID": {
+      "type": "link",
+      "link": "objects_actions"
+    },
+    "objectID": {
+      "type": "link",
+      "link": "objects"
+    },
+    "userID": {
+      "type": "ref",
+      "ref": "users"
+    }
+  }
+}

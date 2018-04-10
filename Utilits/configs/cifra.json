@@ -1,0 +1,13 @@
+{
+  "type": "pg",
+  "name": "cifra",
+  "config": {
+    "user": "postgres",
+    "password": "postgres",
+    "port": "5432",
+    "host": "localhost",
+    "database": "cifra",
+    "max": 100,
+    "native": false
+  }
+}

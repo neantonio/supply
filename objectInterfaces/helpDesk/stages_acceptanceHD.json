@@ -1,0 +1,88 @@
+{
+  "name": "stages_acceptanceHD",
+  "description" : "Выполнено",
+  "common": "stage",
+  "fields": {
+    "ID": {
+      "type": "uuid",
+      "isPrimary": true
+    },
+    "description": {
+      "type": "string",
+      "title": "Название"
+    },
+    "categoryID":{
+      "type": "link",
+      "link": "categoryHD",
+      "title": "Категория"
+    },
+    "executorID":{
+      "type": "link",
+      "link": "initiatorHD",
+      "title": "Ответственный исполнитель"
+    },
+    "queryID": {
+      "type": "link",
+      "link": "queryToTaskHD",
+      "title": "Позиции"
+    },
+    "commentary":{
+      "type": "string",
+      "title": "Комментарий исполнителя"
+    }
+  },
+  "plugins": {
+    "sendMessageToInitiator": {
+      "description" : "Отправить уведомление инициатору",
+      "type": "text",
+      "parameters":[
+        {
+          "name": "filter",
+          "type": "object",
+          "description": "Фильтр на выборку записей из хранилища"
+        },
+        {
+          "name": "values",
+          "type": "object",
+          "description": "Набор новых значений"
+        },
+        {
+          "description": "Дополнительные параметры (пагинация, порядок выдачи)",
+          "name": "parameters",
+          "type": "object"
+        }
+      ],
+      "connection": {
+        "host": "localhost",
+        "port": 8000,
+        "name": "sendMessageToInitiator"
+      }
+    },
+    "sendMessageToMentor": {
+      "description" : "Отправить уведомление куратору направления",
+      "type": "text",
+      "parameters":[
+        {
+          "name": "filter",
+          "type": "object",
+          "description": "Фильтр на выборку записей из хранилища"
+        },
+        {
+          "name": "values",
+          "type": "object",
+          "description": "Набор новых значений"
+        },
+        {
+          "description": "Дополнительные параметры (пагинация, порядок выдачи)",
+          "name": "parameters",
+          "type": "object"
+        }
+      ],
+      "connection": {
+        "host": "localhost",
+        "port": 8000,
+        "name": "sendMessageToMentor_helpDesk"
+      }
+    }
+  }
+}

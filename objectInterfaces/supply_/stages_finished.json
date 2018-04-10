@@ -1,0 +1,70 @@
+{
+  "name": "stages_finished",
+  "description" : "Отработанные позиции",
+  "common": "stage",
+  "fields": {
+    "ID": {
+      "type": "uuid",
+      "isPrimary": true,
+      "auto": true
+    },
+    "description": {
+      "type": "string",
+      "title": "Название",
+      "auto": true
+    },
+    "productID":{
+      "type": "link",
+      "link": "product",
+      "title": "Номенклатура",
+      "auto": true
+    },
+    "quantity": {
+      "type": "float",
+      "title": "Количество",
+      "auto": true
+    },
+    "appliedQuantity": {
+      "type": "float",
+      "title": "Принятое количество"
+    },
+    "supplier":{
+      "type": "link",
+      "link": "supplier",
+      "title": "Поставщик",
+      "auto": true
+    },
+    "price":{
+      "type": "float",
+      "title": "Цена",
+      "auto": true
+    },
+    "deliveryTime":{
+      "type": "integer",
+      "title": "Срок доставки",
+      "auto": true
+    },
+    "bill":{
+      "type": "link",
+      "link": "billFiles",
+      "title": "Счёт",
+      "auto": true
+    },
+    "delivered":{
+      "type": "boolean",
+      "title": "Получено",
+      "auto": true
+    },
+    "commentary": {
+      "type": "string",
+      "title": "Комментарий",
+      "auto": true
+    },
+    "positionID": {
+      "type": "link",
+      "link": "query_position",
+      "title": "Позиции",
+      "auto": true
+    }
+  }
+}

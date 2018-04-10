@@ -1,0 +1,27 @@
+{
+  "name": "priorityHD",
+  "description" : "Приоритет",
+  "common": "reference",
+  "fields": {
+    "ID": {
+      "type": "uuid",
+      "isPrimary": true,
+      "readonly": true
+    },
+    "description": {
+      "type": "string",
+      "required": true,
+      "title": "Имя"
+    },
+    "reglament": {
+      "type": "float",
+      "required": true,
+      "title": "Регламент реагирования (часы)"
+    },
+     "commentary": {
+       "type": "string",
+       "required": true,
+       "title": "Комментарий"
+     }
+  }
+}

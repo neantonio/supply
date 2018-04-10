@@ -1,0 +1,56 @@
+{
+  "name": "supplier",
+  "description": "Поставщик",
+  "common": "reference",
+  "fields":{
+    "ID":{
+      "type": "uuid",
+      "isPrimary": true,
+      "readonly": true
+    },
+    "name":{
+      "type": "string",
+      "title": "Наименование поставщика"
+    },
+    "description": {
+      "type": "string",
+      "title": "Название"
+    },
+    "INN": {
+      "type": "string",
+      "title": "ИНН"
+    },
+    "KPP": {
+      "type": "string",
+      "title": "КПП"
+    },
+    "OGRN": {
+      "type": "string",
+      "title": "ОГРН"
+    },
+    "urAddress": {
+      "type": "string",
+      "title": "Юридический адрес"
+    },
+    "pAddress": {
+      "type": "string",
+      "title": "Почтовый адрес"
+    },
+    "factAddress": {
+      "type": "string",
+      "title": "Фактический адрес"
+    },
+    "bank": {
+      "type": "string",
+      "title": "Обслуживающий банк"
+    },
+    "bankBill": {
+      "type": "string",
+      "title": "Номер банковского счета"
+    },
+    "phone": {
+      "type": "string",
+      "title": "Телефон"
+    }
+  }
+}

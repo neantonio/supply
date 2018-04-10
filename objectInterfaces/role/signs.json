@@ -1,0 +1,22 @@
+{
+  "name": "signs",
+  "description" : "знаки",
+  "common": "reference",
+  "fields": {
+    "ID": {
+      "type": "uuid",
+      "isPrimary": true,
+      "readonly": true
+    },
+    "description": {
+      "type": "string",
+      "required": true,
+      "title": "Логический оператор фильтра"
+    },
+    "sign": {
+      "type": "string",
+      "required": true,
+      "title": "знак"
+    }
+  }
+}

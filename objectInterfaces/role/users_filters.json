@@ -1,0 +1,32 @@
+{
+  "name": "users_filters",
+  "description": "Фильтры пользователей",
+  "common": "reference",
+  "fields": {
+    "ID": {
+      "type": "uuid",
+      "isPrimary": true,
+      "readonly": true
+    },
+    "description": {
+      "type": "string",
+      "required": true,
+      "title": "Фильтры пользователя"
+    },
+    "filterID": {
+      "type": "link",
+      "link": "filters"
+    },
+    "userID":{
+      "type": "ref",
+      "ref": "users"
+    },
+    "filtersGroup":{
+      "type": "integer",
+      "title": "группа фильтров",
+      "required": false
+    }
+
+
+  }
+}

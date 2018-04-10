@@ -1,0 +1,50 @@
+{
+  "name": "outlayDocument",
+  "description" : "Смета",
+  "common": "reference",
+  "fields": {
+    "ID": {
+      "type": "uuid",
+      "isPrimary": true,
+      "readonly": true
+    },
+    "description": {
+      "type": "string",
+      "required": true,
+      "title": "Наименование"
+    },
+    "date": {
+      "type": "date",
+      "required": false,
+      "title": "Дата создания"
+    },
+    "organization":{
+      "type": "link",
+      "link": "organization",
+      "title": "Организация"
+    },
+    "subdivision":{
+      "type": "link",
+      "link": "subdivision",
+      "title": "Подразделение"
+    },
+    "stock":{
+      "type":"link",
+      "link": "stock",
+      "title":"Склад"
+    },
+    "startDate":{
+      "type":"date",
+      "title":"Дата начала"
+    },
+    "finishDate":{
+      "type":"date",
+      "title":"Дата окончания"
+    },
+    "price":{
+      "type":"integer",
+      "title":"Цена (коп.)"
+    }
+  },
+  "methods":{}
+}

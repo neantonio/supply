@@ -1,0 +1,14 @@
+{
+  "type": "email",
+  "name": "emailBills",
+  "config": {
+    "user": "bills@groupstp.ru",
+    "password": "cocbboreturfesjm",
+    "smtp": "smtp.gmail.com",
+    "from": "supply@groupstp.ru",
+    "concurrency": 5,
+    "timeout": 2000,
+    "numberOfAttempts": 3,
+    "aliasFrom": "\"ИС Снабжение\""
+  }
+}

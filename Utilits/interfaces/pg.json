@@ -1,0 +1,69 @@
+{
+  "name": "pg",
+  "description" : "PostgreSQL service",
+  "fields": {},
+  "common": "utility",
+  "methods": {
+    "select": {
+      "type": "object",
+      "description" : "Выборка из БД",
+      "parameters":[
+        {
+          "description": "Описание таблицы, из которой осуществляется выборка",
+          "name": "object",
+          "type": "object"
+        },
+        {
+          "description": "Список полей для отображения",
+          "name": "fields",
+          "type": "object"
+        },
+        {
+          "description": "Фильтр на выборку записей из хранилища",
+          "name": "filter",
+          "type": "object"
+        },
+        {
+          "description": "Информация о связи объектов (для восстановления взаимосвязи полей в списке fields)",
+          "name": "objInfo",
+          "type": "object"
+        },
+        {
+          "description": "Дополнительные параметры (пагинация, порядок выдачи)",
+          "name": "parameters",
+          "type": "object"
+        }
+      ]
+    },
+    "update": {
+      "type": "object",
+      "description" : "Обновлние записей в БД"
+    },
+    "insert": {
+      "type": "object",
+      "description" : "Добавление записей в БД"
+    },
+    "delete": {
+      "type": "object",
+      "description" : "Удаление записей из БД"
+    },
+
+    "tableInfo": {
+      "type": "object",
+      "description": "Возвращает описание таблицы с перечнем полей и разрешенными действиями"
+    },
+
+    "updateTable": {
+      "type": "object",
+      "description" : "Обновлние таблицы в БД"
+    },
+    "createTable": {
+      "type": "object",
+      "description" : "Добавление новой таблицы в БД"
+    },
+    "deleteTable": {
+      "type": "object",
+      "description" : "Удаление записей из БД"
+    }
+  }
+}

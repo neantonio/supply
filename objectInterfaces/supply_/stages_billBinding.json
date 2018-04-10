@@ -1,0 +1,55 @@
+{
+  "name": "stages_billBinding",
+  "description" : "Этап привязки счетов",
+  "common": "stage",
+  "fields": {
+    "ID": {
+      "type": "uuid",
+      "isPrimary": true
+    },
+    "description": {
+      "type": "string",
+      "title": "Название"
+    },
+    "commentary": {
+      "type": "string",
+      "title": "Комментарий"
+    },
+    "positionID": {
+      "type": "link",
+      "link": "query_position",
+      "title": "Позиции"
+    },
+    "productID":{
+      "type": "link",
+      "link": "product",
+      "title": "Номенклатура"
+    },
+    "supplier":{
+      "type": "link",
+      "link": "supplier",
+      "title": "Поставщик"
+    },
+    "price":{
+      "type": "float",
+      "title": "Цена"
+    },
+    "deliveryTime":{
+      "type": "integer",
+      "title": "Срок доставки"
+    },
+    "quantity": {
+      "type": "float",
+      "title": "Количество"
+    },
+    "appliedQuantity": {
+      "type": "float",
+      "title": "Принятое количество"
+    },
+    "bill":{
+      "type": "link",
+      "link": "billFiles",
+      "title": "Счёт"
+    }
+  }
+}

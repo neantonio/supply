@@ -1,0 +1,20 @@
+{
+  "name": "magic",
+  "common": "objectView",
+  "description": "magic for test",
+  "methods": {},
+  "objects": {
+    "hero": {
+      "utility": "magic",
+      "uObject": "hero_table"
+    },
+    "inventory": {
+      "utility": "magic",
+      "uObject": "inventory_table"
+    },
+    "weapon": {
+      "utility": "magic",
+      "uObject": "weapon_table"
+    }
+  }
+}

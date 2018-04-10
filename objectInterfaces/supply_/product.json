@@ -1,0 +1,76 @@
+{
+  "name": "product",
+  "description" : "Справочник номенклатур",
+  "fields": {
+    "ID": {
+      "type": "uuid",
+      "isPrimary": true,
+      "readonly": true
+    },
+    "description": {
+      "type": "string",
+      "required": false,
+      "title": "Наименование"
+    },
+    "full_name": {
+      "type": "string",
+      "required": false,
+      "title": "Полное наименование"
+    },
+    "unitID": {
+      "type": "link",
+      "link": "unit",
+      "title": "Единица измерения"
+    },
+    "parentID": {
+      "type": "link",
+      "link": "product",
+      "title": "Номенклатурная группа"
+    },
+    "photo": {
+      "type": "string",
+      "required": false,
+      "title": "Фото"
+    },
+    "article":{
+      "type": "string",
+      "title": "Артикул"
+    },
+    "isGroup":{
+      "type": "boolean",
+      "title": "Группа"
+    }
+  },
+  "common": "reference1C",
+  "methods": {
+    "sync": {
+      "description": "Синхронизировать.",
+      "type": "text",
+      "permanentParameters": {
+        "fields": [
+          "unitID.externalCode"
+        ]
+      },
+      "parameters": [
+        {
+          "name": "fields",
+          "type": "object",
+          "description": "Список доп.полей"
+        },
+        {
+          "description": "Информация о связи объектов (для восстановления взаимосвязи полей в списках filter)",
+          "name": "objInfo",
+          "type": "object"
+        }
+      ]
+    }
+  },
+  "configFor1C": {
+    "fields1C": ["УникальныйИдентификатор", "Наименование", "НаименованиеПолное", "Артикул", "ЕдиницаИзмерения", "ЭтоГруппа", "Родитель"],
+    "fieldsSupply": ["externalCode", "description", "full_name", "article", "unitID", "isGroup", "parentID"],
+    "reference1C": "Номенклатура",
+    "fieldsPriority": ["vendorCode", "description", "full_name"],
+    "dependencyFields": ["unitID"],
+    "hieracaclyField": "parentID"
+  }
+}

@@ -1,0 +1,503 @@
+{
+  "name": "stages",
+  "description": "Этапы",
+  "common": "scheme",
+  "fields": {
+    "qid": {
+      "type": "link",
+      "link": "query_position",
+      "required": true,
+      "title": "Позиция"
+    },
+    "description": {
+      "type": "string",
+      "title": "Название"
+    },
+    "commentary": {
+      "type": "string",
+      "title": "Комментарий к заявке"
+    },
+    "tz": {
+      "type": "string",
+      "title": "Техзадание"
+    },
+    "productID": {
+      "type": "link",
+      "link": "product",
+      "title": "Номенклатура"
+    },
+    "nomGroup": {
+      "type": "link",
+      "link": "product",
+      "title": "Номенклатурная группа"
+    },
+    "stockID": {
+      "type": "link",
+      "link": "stock",
+      "title": "Склад"
+    },
+    "organizationID": {
+      "type": "link",
+      "link": "organization",
+      "title": "Организация"
+    },
+    "initiatorID": {
+      "type": "link",
+      "link": "initiator",
+      "title": "Тот, кто создал заявку"
+    },
+    "quantity": {
+      "type": "float",
+      "title": "Количество"
+    },
+    "comment": {
+      "type": "string",
+      "title": "Комментарий"
+    }
+  },
+  "uniqueFields":[
+    "qid"
+  ],
+  "stages": {
+    "stages_nomControl": {
+      "unique": {
+        "qid": "positionID"
+      },
+      "toNextUpdate": [
+        {
+          "object": "query_position",
+          "comments" : [
+            "filterFields - поля для формирования фильтра, valuesFields - определяемые значения",
+            "Фильтр формируется по принципу объединения условий через AND",
+            "Каждое условие - сравнение поля filterFields[i].object у объекта object со значением поля filterFields[i].stage у объекта этапа",
+            "Пока доступно копирование значений полей только основного объекта в поля только указанного объекта",
+            "Указанные в качестве любого из имен полей 'сложные' имена будут проигнорированы"
+          ],
+          "filterFields": [{
+            "stage": "positionID",
+            "object": "ID"
+          }],
+          "valuesFields": [{
+            "stage": "productID",
+            "object" : "productID"
+          }]
+        }
+      ],
+      "auto": true
+    },
+    "stages_initialOffer": {
+      "unique": {
+        "qid": "positionID"
+      }
+    },
+    "stages_procurementCommission": {
+      "unique": {
+        "qid": "positionID"
+      }
+    },
+    "stages_billBinding": {
+      "unique": {
+        "qid": "positionID"
+      },
+      "toNextUpdate": [
+        {
+          "object": "query_position",
+          "comments" : [
+            "filterFields - поля для формирования фильтра, valuesFields - определяемые значения",
+            "Фильтр формируется по принципу объединения условий через AND",
+            "Каждое условие - сравнение поля filterFields[i].object у объекта object со значением поля filterFields[i].stage у объекта этапа",
+            "Пока доступно копирование значений полей только основного объекта в поля только указанного объекта",
+            "Указанные в качестве любого из имен полей 'сложные' имена будут проигнорированы"
+          ],
+          "filterFields": [{
+            "stage": "positionID",
+            "object": "ID"
+          }],
+          "valuesFields": [
+            {
+              "stage": "price",
+              "object" : "price"
+            },
+            {
+              "stage": "bill",
+              "object" : "bill"
+            },
+            {
+                "stage": "appliedQuantity",
+                "object" : "appliedQuantity"
+            }
+          ]
+        }
+      ]
+    },
+    "stages_acceptance": {
+      "unique": {
+        "qid": "positionID"
+      },
+      "last": false
+    },
+    "stages_finished": {
+      "unique": {
+        "qid": "positionID"
+      },
+      "last": true
+    },
+    "stages_aborted": {
+      "unique": {
+        "qid": "positionID"
+      },
+      "last": true
+    }
+  },
+  "relations": [
+    {
+      "comment": "Переход со номенклатурного контроля на подбор поставщиков, если номенклатура заполнена",
+      "from": "stages_nomControl",
+      "to": "stages_initialOffer",
+      "type": "post",
+      "relation": {
+        "fields": {
+          "old.records.fields.positionID": "values.positionID",
+          "old.records.fields.description": "values.description",
+          "old.records.fields.commentary": "values.commentary",
+          "old.records.fields.productID": "values.productID",
+          "old.records.fields.quantity": "values.quantity"
+        },
+        "behavior": {},
+        "priority": "first",
+        "condition": {
+          "comparisons": {
+            "hasNom": {
+              "left": {
+                "type": "field",
+                "value": "old.records.fields.productID"
+              },
+              "right": {
+                "type": "value",
+                "value": ""
+              },
+              "sign": "unEqual"
+            }
+          },
+          "tree": {
+            "and": [
+              "hasNom"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "comment": "Переход с первичного предложения на закупочную комиссию, должен быть как минимум 1 поставщик, должны быть указаны цена и срок доставки",
+      "from": "stages_initialOffer",
+      "to": "stages_procurementCommission",
+      "type": "uber",
+      "relation": {
+        "fields": {
+          "old.records.fields.positionID":  "values.positionID",
+          "old.records.fields.commentary":  "values.commentary",
+          "old.records.fields.description": "values.description",
+          "old.records.fields.productID":   "values.productID",
+          "old.records.fields.quantity":    "values.quantity",
+          "old.records.refs.stages_initialOffer_offers.fields.description":  "values.refs.stages_procurementCommission_votes.description",
+          "old.records.refs.stages_initialOffer_offers.fields.commentary":   "values.refs.stages_procurementCommission_votes.commentary",
+          "old.records.refs.stages_initialOffer_offers.fields.supplier":     "values.refs.stages_procurementCommission_votes.supplier",
+          "old.records.refs.stages_initialOffer_offers.fields.price":        "values.refs.stages_procurementCommission_votes.price",
+          "old.records.refs.stages_initialOffer_offers.fields.deliveryTime": "values.refs.stages_procurementCommission_votes.deliveryTime"
+        },
+        "priority": "first",
+        "condition": {
+          "comparisons": {
+            "noPrice": {
+              "left": {
+                "type": "field",
+                "value": "old.records.refs.stages_initialOffer_offers.fields.price"
+              },
+              "right": {
+                "type": "value",
+                "value": ""
+              },
+              "sign": "equal"
+            },
+            "noDeliveryTime": {
+              "left": {
+                "type": "field",
+                "value": "old.records.refs.stages_initialOffer_offers.fields.deliveryTime"
+              },
+              "right": {
+                "type": "value",
+                "value": ""
+              },
+              "sign": "equal"
+            }
+          },
+          "tree": {
+            "or": [
+              "noPrice",
+              "noDeliveryTime"
+            ]
+          },
+          "errorText": "Заполните цену и срок доставки."
+        },
+        "behavior": {
+          "checkMinQuantity": {
+            "stages_initialOffer_offers": 1
+          }
+        }
+      }
+    },
+    {
+      "comment": "Переход с закупочной комиссии на привязку счетов, если за поставщика проголосовали",
+      "from": "stages_procurementCommission",
+      "to": "stages_billBinding",
+      "type": "post",
+      "relation": {
+        "fields": {
+          "old.records.fields.positionID": "values.positionID",
+          "old.records.fields.commentary": "values.commentary",
+          "old.records.fields.productID": "values.productID",
+          "old.records.fields.quantity": "values.quantity",
+          "old.records.refs.stages_procurementCommission_votes.fields.quantity": "values.appliedQuantity",
+          "old.records.refs.stages_procurementCommission_votes.fields.supplier": "values.supplier",
+          "old.records.refs.stages_procurementCommission_votes.fields.price": "values.price",
+          "old.records.refs.stages_procurementCommission_votes.fields.deliveryTime": "values.deliveryTime"
+        },
+        "priority": "first",
+        "behavior": {},
+        "condition": {
+          "comparisons": {
+            "hasVote": {
+              "left": {
+                "type": "field",
+                "value": "old.records.refs.stages_procurementCommission_votes.fields.chVote"
+              },
+              "right": {
+                "type": "value",
+                "value": true
+              },
+              "sign": "equal"
+            }
+          },
+          "tree": {
+            "and": [
+              "hasVote"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "comment": "Переход с привязки счетов на приёмку товара, если документ со счётом привязан, на этап приемки товара",
+      "from": "stages_billBinding",
+      "to": "stages_acceptance",
+      "type": "post",
+      "relation": {
+        "fields": {
+          "old.records.fields.positionID": "values.positionID",
+          "old.records.fields.commentary": "values.commentary",
+          "old.records.fields.productID": "values.productID",
+          "old.records.fields.supplier": "values.supplier",
+          "old.records.fields.price": "values.price",
+          "old.records.fields.deliveryTime": "values.deliveryTime",
+          "old.records.fields.bill": "values.bill",
+          "old.records.fields.quantity": "values.quantity",
+          "old.records.fields.appliedQuantity": "values.appliedQuantity"
+        },
+        "condition": {
+          "comparisons": {
+            "hasBill": {
+              "left": {
+                "type": "field",
+                "value": "old.records.fields.bill"
+              },
+              "right": {
+                "type": "value",
+                "value": ""
+              },
+              "sign": "unEqual"
+            }
+          },
+          "tree": {
+            "and": [
+              "hasBill"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "comment": "Переход с приемки товара на этап 'Отработано'",
+      "from": "stages_acceptance",
+      "to": "stages_finished",
+      "type": "post",
+      "relation": {
+        "fields": {
+          "old.records.fields.positionID": "values.positionID",
+          "old.records.fields.commentary": "values.commentary",
+          "old.records.fields.productID": "values.productID",
+          "old.records.fields.supplier": "values.supplier",
+          "old.records.fields.price": "values.price",
+          "old.records.fields.deliveryTime": "values.deliveryTime",
+          "old.records.fields.bill": "values.bill",
+          "old.records.fields.quantity": "values.quantity",
+          "old.records.fields.appliedQuantity": "values.appliedQuantity",
+          "old.records.fields.delivered": "values.delivered"
+        },
+        "condition": {
+          "comparisons": {
+            "hasBill": {
+              "left": {
+                "type": "field",
+                "value": "old.records.fields.bill"
+              },
+              "right": {
+                "type": "value",
+                "value": ""
+              },
+              "sign": "unEqual"
+            },
+            "hasDelivered": {
+              "left": {
+                "type": "field",
+                "value": "old.records.fields.delivered"
+              },
+              "right": {
+                "type": "value",
+                "value": ""
+              },
+              "sign": "unEqual"
+            }
+          },
+          "tree": {
+            "and": [
+              "hasBill", "hasDelivered"
+            ]
+          }
+        }
+      }
+    }
+  ],
+  "input": {
+    "stages_initialOffer":{
+      "comment":"Начальный этап - первичное предложение; сюда попадают позиции, у которых указана номенклатура.",
+      "relation":{
+        "fields":{
+          "values.description":"values.description",
+          "values.commentary":"values.commentary",
+          "values.qid":"values.positionID",
+          "values.productID":"values.productID",
+          "values.quantity":"values.quantity"
+        },
+        "behavior":{
+          "pullOut": true
+        },
+        "condition":{
+          "comparisons":{
+            "hasNom":{
+              "left":{
+                "type": "field",
+                "value": "values.productID"
+              },
+              "right":{
+                "type": "value",
+                "value": ""
+              },
+              "sign":"unEqual"
+            },
+            "hasPrice": {
+              "left":{
+                "type": "field",
+                "value": "values.quantity"
+              },
+              "right":{
+                "type": "value",
+                "value": 0
+              },
+              "sign":"greater"
+            }
+          },
+          "tree":{"and": ["hasNom", "hasPrice"]}
+        }
+      }
+    },
+    "stages_nomControl" :{
+      "comment":"Начальный этап Номенклатурный контроль - сюда попадают позиции без указания номенклатуры; должно быть ТЗ",
+      "relation":{
+        "fields":{
+          "values.description":"values.description",
+          "values.commentary":"values.commentary",
+          "values.qid": "values.positionID",
+          "values.tz": "values.tz",
+          "values.quantity": "values.quantity"
+        },
+        "behavior": {
+          "pullOut": true
+        },
+        "condition": {
+          "comparisons": {
+            "hasTz": {
+              "left": {
+                "type": "field",
+                "value": "values.tz"
+              },
+              "right": {
+                "type": "value",
+                "value": ""
+              },
+              "sign": "unEqual"
+            },
+            "noNom": {
+              "left": {
+                "type": "field",
+                "value": "values.nomGroup"
+              },
+              "right": {
+                "type": "value",
+                "value": ""
+              },
+              "sign": "unEqual"
+            },
+            "hasPrice": {
+              "left": {
+                "type": "field",
+                "value": "values.quantity"
+              },
+              "right": {
+                "type": "value",
+                "value": 0
+              },
+              "sign": "greater"
+            }
+          },
+          "tree": {
+            "and": [
+              "hasTz",
+              "noNom",
+              "hasPrice"
+            ]
+          }
+        }
+      }
+    }
+  },
+  "output": {
+    "stages_acceptance": {
+      "object": "stages",
+      "method": "update",
+      "relation": {
+        "behavior": {},
+        "fields": {
+          "filter.all.posID": "filter.all.qid"
+        },
+        "direct": {
+          "values": [
+            {
+              "workOut": true
+            }
+          ]
+        }
+      }
+    }
+  },
+  "abort": "stages_aborted"
+}

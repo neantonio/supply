@@ -1,0 +1,20 @@
+{
+  "supply": {
+    "initiatorTable": "initiator",
+    "objects":{
+      "query" : "initiatorID"
+    }
+  },
+  "finance": {
+    "initiatorTable": "finUsers",
+    "objects": {
+      "query": "usersID"
+    }
+  },
+  "helpDesk": {
+    "initiatorTable": "initiatorHD",
+    "objects": {
+      "queryToTaskHD": "initiatorID"
+    }
+  }
+}

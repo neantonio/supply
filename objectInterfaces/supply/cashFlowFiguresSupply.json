@@ -1,0 +1,28 @@
+{
+  "name": "cashFlowFiguresSupply",
+  "description" : "Статьи ДДС",
+  "common": "reference",
+  "fields": {
+    "ID": {
+      "type": "uuid",
+      "isPrimary": true,
+      "readonly": true
+    },
+    "description": {
+      "type": "string",
+      "required": true,
+      "title": "Наименование"
+    },
+    "figureNumber": {
+      "type": "string",
+      "required": false,
+      "title": "Номер статьи"
+    },
+    "comment": {
+      "type": "string",
+      "required": false,
+      "title": "Комментарий"
+    }
+  },
+  "methods": {}
+}

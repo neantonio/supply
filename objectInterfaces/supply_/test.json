@@ -1,0 +1,30 @@
+{
+  "name": "test",
+  "description" : "Test interface for object",
+  "common": "reference",
+  "fields": {
+    "field1": {
+      "type": "string",
+      "required": true,
+      "title": "Поле 1"
+    },
+    "field2": {
+      "type": "integer",
+      "required": false,
+      "title": "Поле 2",
+      "properties": ["readonly"]
+    },
+    "field4": {
+      "type": "uuid",
+      "isPrimary": true,
+      "required": false,
+      "title": "Поле 2"
+    }
+  },
+  "methods": {
+    "get": {
+      "type": "integer",
+      "description" : "Get random value"
+    }
+  }
+}

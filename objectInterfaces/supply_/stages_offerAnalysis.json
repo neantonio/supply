@@ -1,0 +1,38 @@
+{
+  "name": "stages_offerAnalysis",
+  "description" : "Этап анализа предложений",
+  "common": "stage",
+  "fields": {
+    "ID": {
+      "type": "uuid",
+      "isPrimary": true
+    },
+    "description": {
+      "type": "string",
+      "title": "Название"
+    },
+    "commentary": {
+      "type": "string",
+      "title": "Комментарий"
+    },
+    "tz":{
+      "type": "string",
+      "title": "Техзадание"
+    },
+    "positionID": {
+      "type": "link",
+      "link": "query_position",
+      "required": false,
+      "title": "Позиции"
+    },
+    "productID":{
+      "type": "link",
+      "link": "product",
+      "title": "Номенклатура"
+    },
+    "quantity": {
+      "type": "float",
+      "title": "Количество"
+    }
+  }
+}

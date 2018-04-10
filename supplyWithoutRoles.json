@@ -1,0 +1,10 @@
+{
+  "name": "supplyWithoutRoles",
+  "common": "objectView",
+  "description": "Test multiadapter",
+  "methods": {},
+  "objects" : {},
+  "objectViews":{
+    "supply": "supply.json"
+  }
+}

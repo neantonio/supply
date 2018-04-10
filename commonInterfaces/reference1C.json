@@ -1,0 +1,39 @@
+{
+  "name": "reference1C",
+  "description": "1C Reference",
+  "common": "reference",
+  "fields": {
+    "externalCode":{
+        "type": "string",
+        "title": "Идентификатор 1С",
+        "readonly": true
+    },
+    "date": {
+        "type": "timestamp",
+        "title": "Время добавления"
+    }
+  },
+  "methods": {
+    "sync": {
+      "description": "Синхронизировать.",
+      "type": "text",
+      "parameters": [
+        {
+          "name": "fields",
+          "type": "object",
+          "description": "Список доп.полей"
+        },
+         {
+           "description": "Дополнительные параметры (пагинация, порядок выдачи)",
+           "name": "parameters",
+           "type": "object"
+         },
+        {
+          "description": "Информация о связи объектов (для восстановления взаимосвязи полей в списках filter)",
+          "name": "objInfo",
+          "type": "object"
+        }
+      ]
+    }
+  }
+}

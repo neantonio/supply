@@ -1,0 +1,26 @@
+{
+  "objects": {
+    "reference": {
+      "objects": {
+        "query": {
+          "forms": {
+            "list": {
+              "controlClass": "QueryListForm"
+            },
+            "element": {
+              "controlClass": "QueryElementForm"
+            }
+          }
+        }
+      },
+      "forms": {
+        "list": {
+          "controlClass": "ReferenceListForm"
+        },
+        "element": {
+          "controlClass": "ElementListForm"
+        }
+      }
+    }
+  }
+}

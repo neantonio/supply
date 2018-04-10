@@ -1,0 +1,13 @@
+{
+  "type": "pg",
+  "name": "finance",
+  "config": {
+    "user": "postgres",
+    "password": "postgres",
+    "port": "5432",
+    "host": "localhost",
+    "database": "finance_test",
+    "max": 100,
+    "native": false
+  }
+}

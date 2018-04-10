@@ -1,0 +1,25 @@
+{
+  "name": "quotationRequest",
+  "description" : "Запросы котировок",
+  "common": "reference",
+  "fields": {
+    "ID": {
+      "type": "uuid",
+      "isPrimary": true,
+      "readonly": true
+    },
+    "positionID": {
+      "type": "link",
+      "link": "query_position",
+      "title": "Позиция"
+    },
+    "user":{
+      "type": "string",
+      "title": "Отправитель"
+    },
+    "email":{
+      "type": "string",
+      "title": "email отправителя"
+    }
+  }
+}

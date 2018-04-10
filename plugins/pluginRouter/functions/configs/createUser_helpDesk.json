@@ -1,0 +1,155 @@
+{
+  "fieldsDescription": {
+    "isExecutor": "helpDesk.executor",
+    "isQueryCreator": "helpDesk.initiator",
+    "isMentor": "helpDesk.mentor"
+  },
+  "objectFilter": {
+    "helpDesk.mentor": {
+      "helpDesk.queryExecutionHD": {
+        "categoryID.initiatorID.ID": [
+          "get"
+        ]
+      },
+      "helpDesk.stages_setExecutorHD": {
+        "categoryID.initiatorID.ID": [
+          "get",
+          "update",
+          "toNext"
+        ]
+      },
+      "helpDesk.stages_inWorkHD": {
+        "categoryID.initiatorID.ID": [
+          "get",
+          "update",
+          "toNext"
+        ]
+      },
+      "helpDesk.stages_abortedHD": {
+        "categoryID.initiatorID.ID": [
+          "get"
+        ]
+      },
+      "helpDesk.stages_acceptanceHD": {
+        "categoryID.initiatorID.ID": [
+          "get"
+        ]
+      }
+    },
+    "helpDesk.initiator": {
+      "helpDesk.queryToTaskHD": {
+        "initiatorID": [
+          "get",
+          "update",
+          "active"
+        ],
+        "problemUserID": [
+          "get",
+          "update",
+          "active"
+        ]
+      }
+    },
+    "helpDesk.executor": {
+      "helpDesk.stages_inWorkHD": {
+        "executorID": [
+          "get",
+          "update",
+          "toNext"
+        ]
+      },
+      "helpDesk.stages_abortedHD": {
+        "executorID": [
+          "get"
+        ]
+      },
+      "helpDesk.stages_acceptanceHD": {
+        "executorID": [
+          "get"
+        ]
+      }
+    }
+  },
+  "objectForRoles": {
+    "helpDesk.mentor": {
+      "helpDesk": [
+        "getInterface"
+      ],
+      "helpDesk.categoryHD": [
+        "getInterface",
+        "get"
+      ],
+      "helpDesk.initiatorHD": [
+        "getInterface",
+        "get"
+      ],
+      "helpDesk.priorityHD": [
+        "getInterface",
+        "get"
+      ],
+      "helpDesk.queryToTaskHD": [
+        "getInterface"
+      ],
+      "helpDesk.queryExecutionHD": [
+        "getInterface"
+      ],
+      "helpDesk.stages_abortedHD": [
+        "getInterface"
+      ],
+      "helpDesk.stages_acceptanceHD": [
+        "getInterface"
+      ],
+      "helpDesk.stages_inWorkHD": [
+        "getInterface"
+      ],
+      "helpDesk.stages_setExecutorHD": [
+        "getInterface"
+      ]
+    },
+    "helpDesk.initiator": {
+      "helpDesk": [
+        "getInterface"
+      ],
+      "helpDesk.categoryHD": [
+        "getInterface",
+        "get"
+      ],
+      "helpDesk.initiatorHD": [
+        "getInterface"
+      ],
+      "helpDesk.priorityHD": [
+        "getInterface"
+      ],
+      "helpDesk.queryToTaskHD": [
+        "getInterface",
+        "insert"
+      ]
+    },
+    "helpDesk.executor": {
+      "helpDesk": [
+        "getInterface"
+      ],
+      "helpDesk.categoryHD": [
+        "getInterface"
+      ],
+      "helpDesk.initiatorHD": [
+        "getInterface"
+      ],
+      "helpDesk.priorityHD": [
+        "getInterface"
+      ],
+      "helpDesk.queryExecutionHD": [
+        "getInterface"
+      ],
+      "helpDesk.stages_abortedHD": [
+        "getInterface"
+      ],
+      "helpDesk.stages_acceptanceHD": [
+        "getInterface"
+      ],
+      "helpDesk.stages_inWorkHD": [
+        "getInterface"
+      ]
+    }
+  }
+}
