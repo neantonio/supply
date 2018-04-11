@@ -22,13 +22,13 @@
       "required": true,
       "title": "Позиция"
     },
-    "stockControlFlag": {
+    "endSelectionFlag": {
       "type": "boolean",
-      "title": "Флаг складского контроля"
+      "title": "Флаг завершания подбора"
     },
-    "stockControlFlagTime": {
+    "endSelectionFlagTime": {
       "type": "timestamp",
-      "title": "Время завершения складского контроля"
+      "title": "Время завершения подбора"
     }
   }
 }
