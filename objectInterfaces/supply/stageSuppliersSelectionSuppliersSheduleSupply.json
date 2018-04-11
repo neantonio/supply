@@ -1,0 +1,28 @@
+{
+  "name": "stageSuppliersSelectionSuppliersSheduleSupply",
+  "description": "График поставки",
+  "common": "reference",
+  "fields": {
+    "ID": {
+      "type": "uuid",
+      "isPrimary": true
+    },
+    "stageSuppliersSelectionSuppliers": {
+      "type": "ref",
+      "title": "Поставщики",
+      "link": "stageSuppliersSelectionSuppliersSupply"
+    },
+    "description": {
+      "type": "string",
+      "title": "Название"
+    },
+    "date": {
+      "type": "date",
+      "title": "Дата поставки"
+    },
+    "amount": {
+      "type": "float",
+      "title": "Количество"
+    }
+  }
+}
