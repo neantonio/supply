@@ -97,7 +97,6 @@ class pgLib {
      */
     async __extractDBStructure() {
         let
-            query = '',
             structure = {objects: {}},
             nextObj = {},
             result = [];
@@ -105,7 +104,7 @@ class pgLib {
         // получаем список таблиц с правами и полями
         // структура выборки вот такая:
         // table_name | can_select | can_insert | can_update | can_delete | can_truncate | column_list | type_list
-        query = `
+        let query = `
             SELECT
                 DISTINCT rtg.table_name,
                 CASE 
@@ -155,14 +154,14 @@ class pgLib {
                 // заготовка для объекта, пишем права
                 nextObj = {
                     'permissions': {
-                        'canSelect': result.rows[i][1] == 't' ? true : false,
-                        'canInsert': result.rows[i][2] == 't' ? true : false,
-                        'canUpdate': result.rows[i][3] == 't' ? true : false,
-                        'canDelete': result.rows[i][4] == 't' ? true : false,
-                        'canTruncate': result.rows[i][5] == 't' ? true : false
+                        'canSelect': 't' == result.rows[i][1],
+                        'canInsert': 't' == result.rows[i][2],
+                        'canUpdate': 't' == result.rows[i][3],
+                        'canDelete': 't' == result.rows[i][4],
+                        'canTruncate': 't' == result.rows[i][5]
                     },
                     'columns': {}
-                }
+                };
                 // разбираем колонки и их типы данных
                 for (let j = 0; j < result.rows[i][6].length; j++) {
                     nextObj['columns'][result.rows[i][6][j]] = result.rows[i][7][j];
@@ -282,7 +281,6 @@ class pgLib {
 
     async __extractDBStructure() {
         let
-            query = '',
             structure = {objects: {}},
             nextObj = {},
             result = [];
@@ -290,7 +288,7 @@ class pgLib {
         // получаем список таблиц с правами и полями
         // структура выборки вот такая:
         // table_name | can_select | can_insert | can_update | can_delete | can_truncate | column_list | type_list
-        query = `
+        let query = `
             SELECT
                 DISTINCT rtg.table_name,
                 CASE 
@@ -347,7 +345,7 @@ class pgLib {
                         'canTruncate': result[i].canTruncate
                     },
                     'columns': {}
-                }
+                };
                 // разбираем колонки и их типы данных
                 for (let j = 0; j < result[i].column_list.length; j++) {
                     nextObj['columns'][result[i].column_list[j]] = result[i].type_list[j];
@@ -402,6 +400,10 @@ class pgLib {
         let fieldsDesc = [];
         // перебрать все поля в описании, узнать поддерживаются ли такие типы данных
         for (let i = 0; i < oDesc.length && fieldsOk; i++) {
+            if (!oDesc[i].type) {
+                logger.write(`error`, `Неверный тип поля ${oDesc[i].name} объекта ${oName}.`, new Error());
+                throw new Error();
+            }
             let native = [...this.__getNativeType(oDesc[i].type)][0];
             if (!native) {
                 fieldsOk = false;
@@ -819,7 +821,7 @@ class pgLib {
                 }
                 // и внешние ключи
                 for (let LinkID in object.link) {
-                    let boolean = new Boolean(objInfo[LinkID]);
+//                    let boolean = new Boolean(objInfo[LinkID]);
                     if (objInfo[LinkID]) {
                         result1[tableName][fullNameFieldId][LinkID] = record[`"${LinkID}.${Object.keys(objInfo[LinkID].PK)[0]}"`];
                     } else {

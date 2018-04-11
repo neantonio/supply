@@ -8,6 +8,10 @@
             "utility": "supply",
             "uObject": "queriesSupply"
         },
+      "queriesPositionsSupply": {
+        "utility": "supply",
+        "uObject": "queriesPositionsSupply"
+      },
         "usersSupply": {
             "utility": "supply",
             "uObject": "usersSupply"
@@ -84,6 +88,18 @@
             "utility": "supply",
             "uObject": "bankAccountsSupply"
         },
+      "stageNomenclatureControlSupply": {
+        "utility": "supply",
+        "uObject": "stageNomenclatureControlSupply"
+      },
+      "stageNomenclatureControlAnalogsSupply": {
+        "utility": "supply",
+        "uObject": "stageNomenclatureControlAnalogsSupply"
+      },
+      "stageStockControlSupply": {
+        "utility": "supply",
+        "uObject": "stageStockControlSupply"
+      },
         "supply_subscriberStorage": {
             "utility": "supply",
             "uObject": "supply_subscriberStorage_table"

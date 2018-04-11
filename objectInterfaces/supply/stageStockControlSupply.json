@@ -1,0 +1,34 @@
+{
+  "name": "stageStockControlSupply",
+  "description": "Складской контроль",
+  "common": "stage",
+  "fields": {
+    "ID": {
+      "type": "uuid",
+      "isPrimary": true
+    },
+    "description": {
+      "type": "string",
+      "title": "Название"
+    },
+    "query": {
+      "type": "link",
+      "title": "Заявка",
+      "link": "queriesSupply"
+    },
+    "position": {
+      "type": "link",
+      "link": "queriesPositionsSupply",
+      "required": true,
+      "title": "Позиция"
+    },
+    "stockControlFlag": {
+      "type": "boolean",
+      "title": "Флаг складского контроля"
+    },
+    "stockControlFlagTime": {
+      "type": "timestamp",
+      "title": "Время завершения складского контроля"
+    }
+  }
+}

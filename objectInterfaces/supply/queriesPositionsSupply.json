@@ -8,7 +8,7 @@
       "isPrimary": true,
       "readonly": true
     },
-    "queryID": {
+    "query": {
       "type": "ref",
       "ref": "queriesSupply"
     },
@@ -31,7 +31,7 @@
       "required": false,
       "title": "Артикул"
     },
-    "nomenclatureID":{
+    "nomenclature": {
       "type": "link",
       "link": "nomenclatureSupply",
       "required": true,
@@ -46,9 +46,9 @@
       "type": "string",
       "title": "Описание"
     },
-    "stockID": {
+    "stock": {
       "type": "link",
-      "link": "stockSupply",
+      "link": "stocksSupply",
       "required": true,
       "title": "Склад"
     },
