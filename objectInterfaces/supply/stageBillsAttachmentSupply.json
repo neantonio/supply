@@ -1,0 +1,46 @@
+{
+  "name": "stageBillsAttachmentSupply",
+  "description": "Прикрепление счетов",
+  "common": "stage",
+  "fields": {
+    "ID": {
+      "type": "uuid",
+      "isPrimary": true
+    },
+    "description": {
+      "type": "string",
+      "title": "Название"
+    },
+    "query": {
+      "type": "link",
+      "title": "Заявка",
+      "link": "queriesSupply"
+    },
+    "position": {
+      "type": "link",
+      "link": "queriesPositionsSupply",
+      "required": true,
+      "title": "Позиция"
+    },
+    "bill": {
+      "type": "link",
+      "link": "billsSupply",
+      "required": true,
+      "title": "Счёт"
+    },
+    "figure": {
+      "type": "link",
+      "link": "cashFlowFiguresSupply",
+      "required": true,
+      "title": "Статья ДДС"
+    },
+    "sum": {
+      "type": "float",
+      "title": "Сумма"
+    },
+    "paymentDate": {
+      "type": "date",
+      "title": "Дата платежа"
+    }
+  }
+}
