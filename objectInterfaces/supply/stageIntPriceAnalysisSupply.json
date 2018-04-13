@@ -23,7 +23,8 @@
       "title": "Позиция"
     },
     "processingType": {
-      "type": "list",
+      "type": "link",
+      "link": "intPriceAnalysisProcessingTypeSupply",
       "title": "Тип обработки"
     },
     "priceAnalysisFlag": {

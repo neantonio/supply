@@ -1,0 +1,15 @@
+{
+  "name": "stockControlOperationTypesSupply",
+  "description": "Типы операций складского контроля",
+  "common": "fixedList",
+  "values": [
+    {
+      "ID": "снабжение",
+      "description": "снабжение"
+    },
+    {
+      "ID": "логистика",
+      "description": "логистика"
+    }
+  ]
+}

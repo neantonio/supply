@@ -28,6 +28,10 @@
             "utility": "supply",
             "uObject": "organizationBillsSupply"
         },
+      "staffersSupply": {
+        "utility": "supply",
+        "uObject": "staffersSupply"
+      },
         "divisionsSupply": {
             "utility": "supply",
             "uObject": "divisionsSupply"
@@ -100,9 +104,57 @@
         "utility": "supply",
         "uObject": "stageStockControlSupply"
       },
-        "supply_subscriberStorage": {
-            "utility": "supply",
-            "uObject": "supply_subscriberStorage_table"
-        }
+      "stockControlOperationTypesSupply": {
+        "utility": "supply",
+        "uObject": "stockControlOperationTypesSupply"
+      },
+      "stageSuppliersSelectionSupply": {
+        "utility": "supply",
+        "uObject": "stageSuppliersSelectionSupply"
+      },
+      "stageSuppliersSelectionSuppliersSupply": {
+        "utility": "supply",
+        "uObject": "stageSuppliersSelectionSuppliersSupply"
+      },
+      "stageSuppliersSelectionSheduleSupply": {
+        "utility": "supply",
+        "uObject": "stageSuppliersSelectionSheduleSupply"
+      },
+      "stageIntPriceAnalysisSupply": {
+        "utility": "supply",
+        "uObject": "stageIntPriceAnalysisSupply"
+      },
+      "stageIntPriceAnalysisSuppliersSupply": {
+        "utility": "supply",
+        "uObject": "stageIntPriceAnalysisSuppliersSupply"
+      },
+      "stageIntPriceAnalysisSheduleSupply": {
+        "utility": "supply",
+        "uObject": "stageIntPriceAnalysisSheduleSupply"
+      },
+      "intPriceAnalysisProcessingTypeSupply": {
+        "utility": "supply",
+        "uObject": "intPriceAnalysisProcessingTypeSupply"
+      },
+      "stagePurchaseCommittieSupply": {
+        "utility": "supply",
+        "uObject": "stagePurchaseCommittieSupply"
+      },
+      "stagePurchaseCommittieVotesSupply": {
+        "utility": "supply",
+        "uObject": "stagePurchaseCommittieVotesSupply"
+      },
+      "stageBillsAttachmentSupply": {
+        "utility": "supply",
+        "uObject": "stageBillsAttachmentSupply"
+      },
+      "stageProxyCardSupply": {
+        "utility": "supply",
+        "uObject": "stageProxyCardSupply"
+      },
+      "supply_subscriberStorage": {
+        "utility": "supply",
+        "uObject": "supply_subscriberStorage_table"
+      }
     }
 }

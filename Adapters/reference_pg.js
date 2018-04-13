@@ -565,7 +565,8 @@ class reference_pg {
             let pk = this.__getPK();
             // генерация значения для первичного ключа
             for (let i = 0; i < newValues.length; ++i) {
-                newValues[i][pk] = await typeController.generateValue(this.__interface.fields[pk].type[0]);
+                if (!newValues[i][pk])
+                    newValues[i][pk] = await typeController.generateValue(this.__interface.fields[pk].type[0]);
             }
             //
             let uValues = [];

@@ -7,10 +7,10 @@
       "type": "uuid",
       "isPrimary": true
     },
-    "stageSuppliersSelectionSuppliers": {
+    "stageIntPriceAnalysisSupply": {
       "type": "ref",
-      "title": "Поставщики",
-      "link": "stageSuppliersSelectionSuppliersSupply"
+      "title": "Внутренний анализ цен",
+      "ref": "stageIntPriceAnalysisSupply"
     },
     "description": {
       "type": "string",

@@ -102,7 +102,7 @@ function startServer() {
     server.on('error', onError);
     server.on('listening', onListening);
 
-    console.log('Fucking perfect server has been created!');
+    console.log('bizblocks server has been created!');
 
     return server;
 

@@ -1,7 +1,7 @@
 {
     "name": "root",
     "common": "objectView",
-    "description": "Test multiadapter",
+  "description": "multiadapter for eben",
     "methods": {},
     "objects": {
         "root_subscriberStorage": {

@@ -1,0 +1,22 @@
+{
+  "name": "fixedList",
+  "description": "Фиксированный список",
+  "common": "reference",
+  "fields": {
+    "ID": {
+      "type": "string",
+      "title": "Идентификатор",
+      "isPrimary": true,
+      "required": "true",
+      "readonly": "true"
+    },
+    "description": {
+      "type": "string",
+      "title": "Наименование",
+      "required": "true",
+      "readonly": "true"
+    }
+  },
+  "methods": {
+  }
+}

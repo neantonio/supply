@@ -94,7 +94,7 @@ global.objView.init()
 
 function startServer() {
     http.createServer(accept).listen(12345);
-    console.log("Fucking perfect server has been created!");
+    console.log("bizblocks server has been created!");
 }
 
 function accept(req, res) {

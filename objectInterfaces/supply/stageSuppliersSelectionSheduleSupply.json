@@ -1,5 +1,5 @@
 {
-  "name": "stageSuppliersSelectionSuppliersSheduleSupply",
+  "name": "stageSuppliersSelectionSheduleSupply",
   "description": "График поставки",
   "common": "reference",
   "fields": {
@@ -7,10 +7,10 @@
       "type": "uuid",
       "isPrimary": true
     },
-    "stageSuppliersSelectionSuppliers": {
+    "stageSuppliersSelection": {
       "type": "ref",
-      "title": "Поставщики",
-      "link": "stageSuppliersSelectionSuppliersSupply"
+      "title": "Подбор поставщиков",
+      "ref": "stageSuppliersSelectionSupply"
     },
     "description": {
       "type": "string",

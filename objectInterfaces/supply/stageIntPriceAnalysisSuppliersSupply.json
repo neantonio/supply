@@ -7,10 +7,10 @@
       "type": "uuid",
       "isPrimary": true
     },
-    "stageSuppliersSelection": {
+    "stageIntPriceAnalysisSupply": {
       "type": "ref",
-      "title": "Складской контроль",
-      "link": "stageSuppliersSelection"
+      "title": "Внутренний анализ цен",
+      "ref": "stageIntPriceAnalysisSupply"
     },
     "description": {
       "type": "string",

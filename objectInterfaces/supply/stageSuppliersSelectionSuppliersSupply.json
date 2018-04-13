@@ -10,7 +10,7 @@
     "stageSuppliersSelection": {
       "type": "ref",
       "title": "Складской контроль",
-      "link": "stageSuppliersSelection"
+      "ref": "stageSuppliersSelectionSupply"
     },
     "description": {
       "type": "string",
