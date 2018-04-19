@@ -7,8 +7,8 @@ class pluginClass extends service{
         super(name);
         this.name = name;
     }
-    
-    __getLastPriceForProduct(record){
+
+    static __getLastPriceForProduct(record) {
         let lastDate, lastPrice = 0;
         for(let productPriceID in record.refs.product_prices){
             let price = record.refs.product_prices[productPriceID].fields;
@@ -21,14 +21,14 @@ class pluginClass extends service{
         return lastPrice;
     }
 
-    __processQueryPosition(position){
+    static __processQueryPosition(position) {
         let {ID, quantity} = position.fields;
         let result = {
             ID: ID,
             price: 0
         };
         if(position.fields.productID) {
-            let lastPrice = this.__getLastPriceForProduct(util.getFirstValueFromHash(position.fields.productID));
+            let lastPrice = pluginClass.__getLastPriceForProduct(util.getFirstValueFromHash(position.fields.productID));
             if(lastPrice > 0) {
                 result.price = quantity * lastPrice;
                 sender.send({
@@ -59,7 +59,7 @@ class pluginClass extends service{
         return result;
     }
 
-    __updateQueryCost(queryID, price){
+    static __updateQueryCost(queryID, price) {
         return sender.send({
             object: "supply.query",
             method: "update",
@@ -108,7 +108,7 @@ class pluginClass extends service{
             let allPositionsWithLastPrice = true;
             let sum = 0;
             for(let positionID in queryRecord.refs.query_position){
-                let positionResult = this.__processQueryPosition(queryRecord.refs.query_position[positionID]);
+                let positionResult = pluginClass.__processQueryPosition(queryRecord.refs.query_position[positionID]);
                 if(positionResult.price === 0){
                     allPositionsWithLastPrice = false;
                 }
@@ -119,7 +119,7 @@ class pluginClass extends service{
             }
             if(allPositionsWithLastPrice){
                 records[queryID].fields.calculatedCost = sum;
-                updatePromises.push(this.__updateQueryCost(queryID, sum));
+                updatePromises.push(pluginClass.__updateQueryCost(queryID, sum));
             }
         }
 

@@ -27,6 +27,7 @@ class fixedList_pg extends adapter {
 
         await this.__updateValues(existedValues, shemaValues);
         await this.__insertValues(existedValues, shemaValues);
+        await this.__deleteValues(existedValues, shemaValues);
     }
 
     toHash(values) {
@@ -35,6 +36,7 @@ class fixedList_pg extends adapter {
         return res;
     }
 
+    //обновляет значения с измененным в конфигурации описанием
     async __updateValues(existedValues, shemaValues) {
         Object.keys(existedValues).forEach(k => {
             if (shemaValues[k] && shemaValues[k] != existedValues[k])
@@ -51,6 +53,7 @@ class fixedList_pg extends adapter {
         })
     }
 
+    //добавляет новые значения из конфигурации
     async __insertValues(existedValues, shemaValues) {
         let valuesToInsert = [];
         Object.keys(shemaValues).forEach(k => {
@@ -60,12 +63,20 @@ class fixedList_pg extends adapter {
         return await super.insert(valuesToInsert);
     }
 
-    async __deleteValues(existedValuesm, shemaValues) {
+    async __deleteValues(existedValues, shemaValues) {
         //TODO delete values
     }
 
     async insert(values, parameters) {
         throw `Невозможно добавить данные в фиксированный список.`;
+    }
+
+    async delete(filter, parameters, objInfo = {fields: {}}) {
+        throw `Невозможно удалить данные из фиксированного списка.`;
+    }
+
+    async update(filter, values, parameters, objInfo) {
+        throw `Невозможно обновить данные фиксированного списка.`;
     }
 
 }
