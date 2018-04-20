@@ -36,20 +36,39 @@ class fixedList_pg extends adapter {
         return res;
     }
 
+    //создаёт фильтр по ID
+    __getFilterById(id) {
+        return {
+            comparisons: {
+                "ID": {
+                    "left": {type: "field", value: "ID"},
+                    "right": {type: "value", value: id},
+                    sign: "equal"
+                }
+            },
+            "tree": {or: ["ID"]}
+        };
+    }
+
+    //создаёт фильтр по массиву ID
+    __getFilterByIds(ids) {
+        return {
+            comparisons: {
+                "ID": {
+                    "left": {type: "field", value: "ID"},
+                    "right": {type: "value", value: ids},
+                    sign: "in"
+                }
+            },
+            "tree": {or: ["ID"]}
+        };
+    }
+
     //обновляет значения с измененным в конфигурации описанием
     async __updateValues(existedValues, shemaValues) {
         Object.keys(existedValues).forEach(k => {
             if (shemaValues[k] && shemaValues[k] != existedValues[k])
-                this.update({
-                    comparisons: {
-                        "ID": {
-                            "left": {type: "field", value: "ID"},
-                            "right": {type: "value", value: k},
-                            sign: "equal"
-                        }
-                    },
-                    "tree": {or: ["ID"]}
-                }, [{"description": shemaValues[k]}]);
+                this.update(this.__getFilterById(k), [{"description": shemaValues[k]}]);
         })
     }
 
@@ -63,8 +82,14 @@ class fixedList_pg extends adapter {
         return await super.insert(valuesToInsert);
     }
 
+    //удаляет знечения, которых нет  кофнигурации
     async __deleteValues(existedValues, shemaValues) {
-        //TODO delete values
+        let valuesToDelete = [];
+        Object.keys(existedValues).forEach(k => {
+            if (!shemaValues[k])
+                valuesToDelete.push(k);
+        });
+        return await super.delete(this.__getFilterByIds(valuesToDelete));
     }
 
     async insert(values, parameters) {
