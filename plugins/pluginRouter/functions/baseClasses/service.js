@@ -41,6 +41,47 @@ class service{
         this.__throw(`В интерфейсе объекта '${objectInterface.name}' отсутствует описание первичного ключа.`);
     }
 
+    //создат фильтр по ID
+    static __getFilterById(ID, field = "ID") {
+        return {
+            comparisons: {
+                ID: {
+                    left: {
+                        type: "field",
+                        value: field
+                    },
+                    right: {
+                        type: "value",
+                        value: ID
+                    },
+                    sign: "equal"
+                }
+            },
+            tree: {and: ["ID"]}
+        }
+    }
+
+    //создат фильтр по массиву ID
+    static __getFilterByIds(IDs, field = "ID") {
+        return {
+            comparisons: {
+                ID: {
+                    left: {
+                        type: "field",
+                        value: field
+                    },
+                    right: {
+                        type: "value",
+                        value: IDs
+                    },
+                    sign: "in"
+                }
+            },
+            tree: {and: ["ID"]}
+        }
+    }
+
+
     __formFilterByParameters(objectInterface, parameters){
         let filter;
         if(!parameters.filter || Object.keys(parameters.filter).length === 0){
