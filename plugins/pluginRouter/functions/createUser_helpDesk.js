@@ -125,24 +125,7 @@ class pluginClass extends service{
             object: "role.users",
             method: "get",
             parameters: {
-                filter: {
-                    comparisons: {
-                        ids:{
-                            left: {
-                                type: "field",
-                                value: "ID"
-                            },
-                            right: {
-                                type: "value",
-                                value: IDs
-                            },
-                            sign: "in"
-                        }
-                    },
-                    tree: {
-                        and: ["ids"]
-                    }
-                },
+                filter: this.__getFilterByIds(IDs),
                 fields: [
                     "ref.users_roles.roleID.description",
                     "ref.users_filters.description",
@@ -651,26 +634,10 @@ class pluginClass extends service{
             object: "role.users_filters",
             method: "delete",
             parameters: {
-                filter: {
-                    comparisons: {
-                        ids:{
-                            left: {
-                                type: "field",
-                                value: "ID"
-                            },
-                            right: {
-                                type: "value",
-                                value: IDs
-                            },
-                            sign: "in"
-                        }
-                    },
-                    tree: {
-                        and: ["ids"]
-                    }
-                }
+                filter: this.__getFilterByIds(IDs)
             }
-        });
+            }
+        );
     }
 
     __addFilter(name){
