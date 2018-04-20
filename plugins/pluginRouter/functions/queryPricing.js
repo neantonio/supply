@@ -8,6 +8,7 @@ class pluginClass extends service{
         this.name = name;
     }
 
+    //получение последней цены
     static __getLastPriceForProduct(record) {
         let lastDate, lastPrice = 0;
         for(let productPriceID in record.refs.product_prices){
@@ -21,6 +22,7 @@ class pluginClass extends service{
         return lastPrice;
     }
 
+    //обновление цены в позиции заявки
     static __processQueryPosition(position) {
         let {ID, quantity} = position.fields;
         let result = {
@@ -35,22 +37,7 @@ class pluginClass extends service{
                     object: "supply.query_position",
                     method: "update",
                     parameters: {
-                        filter: {
-                            comparisons: {
-                                ID: {
-                                    left: {
-                                        type: "field",
-                                        value: "ID"
-                                    },
-                                    right: {
-                                        type: "value",
-                                        value: ID
-                                    },
-                                    sign: "equal"
-                                }
-                            },
-                            tree: {and: ["ID"]}
-                        },
+                        filter: this.__getFilterById(ID),
                         values: [{calculatedCost: result.price}]
                     }
                 });
@@ -59,27 +46,13 @@ class pluginClass extends service{
         return result;
     }
 
+    //обновление сумм в заявке
     static __updateQueryCost(queryID, price) {
         return sender.send({
             object: "supply.query",
             method: "update",
             parameters: {
-                filter: {
-                    comparisons: {
-                        ID:{
-                            left: {
-                                type: "field",
-                                value: "ID"
-                            },
-                            right: {
-                                type: "values",
-                                value: queryID
-                            },
-                            sign: "equal"
-                        }
-                    },
-                    tree: {and: ["ID"]}
-                },
+                filter: this.__getFilterById(queryID),
                 values: [{calculatedCost: price}]
             }
         });
