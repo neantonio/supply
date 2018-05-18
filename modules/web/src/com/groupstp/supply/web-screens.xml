@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<screen-config xmlns="http://schemas.haulmont.com/cuba/screens.xsd">
+    <include file="com/groupstp/supply/screens.xml"/>
+    <screen id="supply$MeasureUnits.browse"
+            template="com/groupstp/supply/web/measureunits/measure-units-browse.xml"/>
+    <screen id="supply$Company.browse"
+            template="com/groupstp/supply/web/company/company-browse.xml"/>
+    <screen id="supply$Division.browse"
+            template="com/groupstp/supply/web/division/division-browse.xml"/>
+    <screen id="supply$Store.browse"
+            template="com/groupstp/supply/web/store/store-browse.xml"/>
+    <screen id="supply$Urgency.browse"
+            template="com/groupstp/supply/web/urgency/urgency-browse.xml"/>
+    <screen id="supply$Query.browse"
+            template="com/groupstp/supply/web/query/query-browse.xml"/>
+    <screen id="supply$Query.edit"
+            template="com/groupstp/supply/web/query/query-edit.xml"/>
+</screen-config>

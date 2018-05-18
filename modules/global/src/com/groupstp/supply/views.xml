@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<views xmlns="http://schemas.haulmont.com/cuba/view.xsd">
+    <view class="com.groupstp.supply.entity.Division"
+          extends="_local"
+          name="division-view">
+        <property name="company"
+                  view="_minimal"/>
+    </view>
+    <view class="com.groupstp.supply.entity.Store"
+          extends="_local"
+          name="store-view">
+        <property name="division"
+                  view="_minimal">
+            <property name="company"
+                      view="_minimal"/>
+        </property>
+    </view>
+    <view class="com.groupstp.supply.entity.Urgency"
+          extends="_local"
+          name="urgency-view">
+        <property name="stageTerm"
+                  view="_minimal">
+            <property name="stage"/>
+            <property name="time"/>
+        </property>
+    </view>
+    <view class="com.groupstp.supply.entity.Query"
+          extends="_local"
+          name="query-view">
+        <property name="urgency"
+                  view="_minimal"/>
+        <property name="workflow"
+                  view="_minimal"/>
+        <property name="company"
+                  view="_minimal"/>
+        <property name="division"
+                  view="_minimal"/>
+        <property name="store"
+                  view="_minimal"/>
+        <property name="contact"
+                  view="_minimal"/>
+        <property name="positions"
+                  view="_minimal">
+            <property name="positionType"/>
+            <property name="numberArticle"/>
+            <property name="nomenclature"
+                      view="_minimal"/>
+            <property name="specification"/>
+            <property name="measureUnit"
+                      view="_minimal"/>
+            <property name="quantity"/>
+            <property name="analogsAllowed"/>
+        </property>
+        <property name="createdBy"/>
+        <property name="createTs"/>
+        <property name="updateTs"/>
+        <property name="updatedBy"/>
+    </view>
+    <view class="com.groupstp.supply.entity.QueriesPosition"
+          extends="_local"
+          name="queriesPosition-view">
+        <property name="nomenclature"
+                  view="_minimal"/>
+        <property name="measureUnit"
+                  view="_minimal"/>
+    </view>
+</views>

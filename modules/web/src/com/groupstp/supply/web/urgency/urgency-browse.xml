@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+  ~ Copyright (c) 2017 Haulmont Technology Ltd. All Rights Reserved.
+  ~ Haulmont Technology proprietary and confidential.
+  ~ Use is subject to license terms.
+  -->
+<window xmlns="http://schemas.haulmont.com/cuba/window.xsd"
+        caption="msg://caption"
+        class="com.groupstp.supply.web.urgency.UrgencyBrowse"
+        focusComponent="table"
+        lookupComponent="table"
+        messagesPack="com.groupstp.supply.web.urgency">
+    <dsContext>
+        <datasource id="urgencyDs"
+                    class="com.groupstp.supply.entity.Urgency"
+                    view="urgency-view">
+            <collectionDatasource id="stageTermDs"
+                                  property="stageTerm"/>
+        </datasource>
+        <groupDatasource id="urgenciesDs"
+                         class="com.groupstp.supply.entity.Urgency"
+                         view="urgency-view">
+            <query>
+                <![CDATA[select e from supply$Urgency e]]>
+            </query>
+        </groupDatasource>
+    </dsContext>
+    <actions>
+        <action id="save"
+                caption="mainMsg://actions.Ok"
+                icon="icons/ok.png"
+                invoke="save"
+                shortcut="CTRL-ENTER"/>
+        <action id="cancel"
+                caption="mainMsg://actions.Cancel"
+                description="Esc"
+                icon="icons/cancel.png"
+                invoke="cancel"/>
+    </actions>
+    <dialogMode height="600"
+                width="800"/>
+    <layout>
+        <split id="split"
+               height="100%"
+               orientation="horizontal"
+               reversePosition="true"
+               width="100%">
+            <vbox id="lookupBox"
+                  expand="table"
+                  height="100%"
+                  margin="false,true,false,false"
+                  spacing="true">
+                <filter id="filter"
+                        applyTo="table"
+                        datasource="urgenciesDs">
+                    <properties include=".*"/>
+                </filter>
+                <groupTable id="table"
+                            width="100%">
+                    <actions>
+                        <action id="create"/>
+                        <action id="edit"/>
+                        <action id="remove"/>
+                        <action id="refresh"/>
+                        <action id="excel"/>
+                    </actions>
+                    <columns>
+                        <column id="name"/>
+                    </columns>
+                    <rows datasource="urgenciesDs"/>
+                    <rowsCount/>
+                    <buttonsPanel id="buttonsPanel"
+                                  alwaysVisible="true">
+                        <button id="createBtn"
+                                action="table.create"/>
+                        <button id="editBtn"
+                                action="table.edit"/>
+                        <button id="removeBtn"
+                                action="table.remove"/>
+                        <button id="refreshBtn"
+                                action="table.refresh"/>
+                        <button id="excelBtn"
+                                action="table.excel"/>
+                    </buttonsPanel>
+                </groupTable>
+            </vbox>
+            <vbox id="editBox"
+                  expand="tabSheetBox"
+                  height="100%"
+                  margin="false,false,false,true"
+                  spacing="true">
+                <vbox id="tabSheetBox">
+                    <tabSheet id="tabSheet"
+                              height="100%">
+                        <tab id="mainTab"
+                             caption="msg://mainTab"
+                             margin="true">
+                            <scrollBox id="fieldGroupBox"
+                                       height="100%">
+                                <fieldGroup id="fieldGroup"
+                                            datasource="urgencyDs">
+                                    <column width="300px">
+                                        <field property="name"/>
+                                    </column>
+                                </fieldGroup>
+                            </scrollBox>
+                        </tab>
+                        <tab id="stageTermTab"
+                             caption="msg://com.groupstp.supply.entity/Urgency.stageTerm"
+                             margin="true,false,false,false">
+                            <table id="stageTermTable"
+                                   height="200px"
+                                   width="100%">
+                                <actions>
+                                    <action id="create"/>
+                                    <action id="edit"/>
+                                    <action id="remove"/>
+                                </actions>
+                                <columns>
+                                    <column id="stage"/>
+                                    <column id="time"/>
+                                </columns>
+                                <rows datasource="stageTermDs"/>
+                                <buttonsPanel>
+                                    <button action="stageTermTable.create"/>
+                                    <button action="stageTermTable.edit"/>
+                                    <button action="stageTermTable.remove"/>
+                                </buttonsPanel>
+                            </table>
+                        </tab>
+                    </tabSheet>
+                </vbox>
+                <hbox id="actionsPane"
+                      spacing="true"
+                      visible="false">
+                    <button id="saveBtn"
+                            action="save"/>
+                    <button id="cancelBtn"
+                            action="cancel"/>
+                </hbox>
+            </vbox>
+        </split>
+    </layout>
+</window>
