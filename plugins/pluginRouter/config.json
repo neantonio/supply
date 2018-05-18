@@ -1,9 +1,0 @@
-{
-  "schedulerTimeout":5,
-  "sendConfig": {
-    "host": "localhost",
-    "port": 12345,
-    "user": "admin",
-    "password": "admin"
-  }
-}

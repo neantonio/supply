@@ -1,7 +1,0 @@
-{
-  "name": "googleStorage",
-  "description" : "Object for collect files",
-  "common": "fileStorage",
-  "fields": {},
-  "methods": {}
-}

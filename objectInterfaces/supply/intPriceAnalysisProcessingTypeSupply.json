@@ -1,6 +1,0 @@
-{
-  "name": "intPriceAnalysisProcessingTypeSupply",
-  "description": "Тип обработки внутреннего анализа цен",
-  "common": "fixedList",
-  "values": []
-}
