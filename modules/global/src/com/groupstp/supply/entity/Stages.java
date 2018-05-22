@@ -7,6 +7,7 @@ import javax.annotation.Nullable;
 
 public enum Stages implements EnumClass<String> {
 
+    New("New"),
     NomControl("NomControl"),
     StoreControl("StoreControl"),
     SupSelection("SupSelection"),

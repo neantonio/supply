@@ -8,6 +8,14 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Column;
 import javax.validation.constraints.NotNull;
+import com.haulmont.chile.core.annotations.Composition;
+import com.haulmont.cuba.core.entity.annotation.OnDelete;
+import com.haulmont.cuba.core.global.DeletePolicy;
+import java.util.List;
+import javax.persistence.OneToMany;
+import java.util.Date;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 @Table(name = "SUPPLY_QUERIES_POSITION")
 @Entity(name = "supply$QueriesPosition")
@@ -46,6 +54,114 @@ public class QueriesPosition extends StandardEntity {
 
     @Column(name = "ANALOGS_ALLOWED")
     protected Boolean analogsAllowed;
+
+    @Composition
+    @OnDelete(DeletePolicy.CASCADE)
+    @OneToMany(mappedBy = "queriesPosition")
+    protected List<PositionsAnalogs> analogs;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "STORE_ID")
+    protected Store store;
+
+    @Column(name = "POSITION_USEFULNESS")
+    protected Boolean positionUsefulness;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "POSITION_USEFULNESS_TS")
+    protected Date positionUsefulnessTS;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "SPEC_NOMENCLATURE_ID")
+    protected Nomenclature specNomenclature;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "NOMECLATURE_CHANGE_ID")
+    protected Nomenclature nomeclatureChange;
+
+    @Column(name = "ANALOGS_CORRECTION_FLAG")
+    protected Boolean analogsCorrectionFlag;
+
+    @Column(name = "NOM_CONTROL_FLAG")
+    protected Boolean nomControlFlag;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "NOM_CONTROL_FLAG_TS")
+    protected Date nomControlFlagTS;
+
+    public void setStore(Store store) {
+        this.store = store;
+    }
+
+    public Store getStore() {
+        return store;
+    }
+
+    public void setPositionUsefulness(Boolean positionUsefulness) {
+        this.positionUsefulness = positionUsefulness;
+    }
+
+    public Boolean getPositionUsefulness() {
+        return positionUsefulness;
+    }
+
+    public void setPositionUsefulnessTS(Date positionUsefulnessTS) {
+        this.positionUsefulnessTS = positionUsefulnessTS;
+    }
+
+    public Date getPositionUsefulnessTS() {
+        return positionUsefulnessTS;
+    }
+
+    public void setSpecNomenclature(Nomenclature specNomenclature) {
+        this.specNomenclature = specNomenclature;
+    }
+
+    public Nomenclature getSpecNomenclature() {
+        return specNomenclature;
+    }
+
+    public void setNomeclatureChange(Nomenclature nomeclatureChange) {
+        this.nomeclatureChange = nomeclatureChange;
+    }
+
+    public Nomenclature getNomeclatureChange() {
+        return nomeclatureChange;
+    }
+
+    public void setAnalogsCorrectionFlag(Boolean analogsCorrectionFlag) {
+        this.analogsCorrectionFlag = analogsCorrectionFlag;
+    }
+
+    public Boolean getAnalogsCorrectionFlag() {
+        return analogsCorrectionFlag;
+    }
+
+    public void setNomControlFlag(Boolean nomControlFlag) {
+        this.nomControlFlag = nomControlFlag;
+    }
+
+    public Boolean getNomControlFlag() {
+        return nomControlFlag;
+    }
+
+    public void setNomControlFlagTS(Date nomControlFlagTS) {
+        this.nomControlFlagTS = nomControlFlagTS;
+    }
+
+    public Date getNomControlFlagTS() {
+        return nomControlFlagTS;
+    }
+
+
+    public void setAnalogs(List<PositionsAnalogs> analogs) {
+        this.analogs = analogs;
+    }
+
+    public List<PositionsAnalogs> getAnalogs() {
+        return analogs;
+    }
+
 
     public void setNomenclature(Nomenclature nomenclature) {
         this.nomenclature = nomenclature;

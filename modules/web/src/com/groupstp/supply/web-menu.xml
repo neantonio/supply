@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <menu-config xmlns="http://schemas.haulmont.com/cuba/menu.xsd">
+    <item insertBefore="administration"
+          screen="supply$QueriesPosition.workflow"/>
     <menu id="references"
           icon="BOOK"
           insertBefore="administration">
         <menu id="nomenclature"
               icon="SHOPPING_CART">
+            <item screen="supply$Nomenclature.browse"/>
             <item screen="supply$MeasureUnits.browse"/>
         </menu>
         <menu id="orgstru">
@@ -12,7 +15,15 @@
             <item screen="supply$Division.browse"/>
             <item screen="supply$Store.browse"/>
         </menu>
-        <item screen="supply$Urgency.browse"/>
+        <item screen="supply$QueryWorkflow.browse"/>
     </menu>
-    <item screen="supply$Query.browse"/>
+    <menu id="queries"
+          insertBefore="administration">
+        <item screen="supply$Query.browse"/>
+        <menu id="querySettings"
+              description="mainMsg://Queries settings">
+            <item screen="supply$Urgency.browse"/>
+            <item screen="supply$QueryWorkflow.browse"/>
+        </menu>
+    </menu>
 </menu-config>

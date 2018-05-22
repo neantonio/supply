@@ -63,5 +63,84 @@
                   view="_minimal"/>
         <property name="measureUnit"
                   view="_minimal"/>
+        <property name="analogs"
+                  view="_minimal"/>
+        <property name="store"
+                  view="_minimal"/>
+    </view>
+    <view class="com.groupstp.supply.entity.Nomenclature"
+          extends="_local"
+          name="nomenclature-view">
+        <property name="unit"
+                  view="_minimal"/>
+        <property name="parent"
+                  view="_minimal"/>
+        <property name="analogs"
+                  view="_minimal">
+            <property name="analog"
+                      view="_minimal"/>
+        </property>
+    </view>
+    <view class="com.groupstp.supply.entity.PositionsAnalogs"
+          extends="_local"
+          name="positionsAnalogs-view">
+        <property name="analog"
+                  view="_minimal"/>
+    </view>
+    <view class="com.groupstp.supply.entity.QueriesPosition"
+          extends="_minimal"
+          name="queriesPosition-analogs">
+        <property name="analogs"
+                  view="_minimal"/>
+    </view>
+    <view class="com.groupstp.supply.entity.QueriesPosition"
+          extends="_minimal"
+          name="queriesPosition-NomControl">
+        <property name="numberArticle"/>
+        <property name="nomenclature"
+                  view="_minimal"/>
+        <property name="specification"/>
+        <property name="measureUnit"
+                  view="_minimal"/>
+        <property name="quantity"/>
+        <property name="analogsAllowed"/>
+        <property name="analogs"
+                  view="_minimal"/>
+        <property name="store"
+                  view="_minimal"/>
+        <property name="positionUsefulness"/>
+        <property name="positionUsefulnessTS"/>
+        <property name="specNomenclature"
+                  view="_minimal"/>
+        <property name="nomeclatureChange"
+                  view="_minimal"/>
+        <property name="analogsCorrectionFlag"/>
+        <property name="nomControlFlag"/>
+        <property name="nomControlFlagTS"/>
+        <property name="currentStage"/>
+        <property name="positionType"/>
+        <property name="query"
+                  view="_minimal">
+            <property name="company"
+                      view="_minimal"/>
+            <property name="division"
+                      view="_minimal"/>
+            <property name="urgency"
+                      view="_minimal"/>
+        </property>
+    </view>
+    <view class="com.groupstp.supply.entity.QueryWorkflow"
+          extends="_local"
+          name="queryWorkflow-view">
+        <property name="details"
+                  view="_minimal">
+            <property name="sourceStage"/>
+            <property name="destStage"/>
+            <property name="priority"/>
+            <property name="validation"/>
+            <property name="validationScript"/>
+            <property name="conditions"/>
+            <property name="script"/>
+        </property>
     </view>
 </views>

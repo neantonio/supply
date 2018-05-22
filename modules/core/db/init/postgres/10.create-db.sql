@@ -9,6 +9,7 @@ create table SUPPLY_QUERY (
     DELETE_TS timestamp,
     DELETED_BY varchar(50),
     --
+    IN_WORK boolean,
     NUMBER_ varchar(20) not null,
     TIME_CREATION timestamp,
     COMMENT_ text,
@@ -204,6 +205,14 @@ create table SUPPLY_QUERIES_POSITION (
     MEASURE_UNIT_ID uuid,
     QUANTITY varchar(255) not null,
     ANALOGS_ALLOWED boolean,
+    STORE_ID uuid,
+    POSITION_USEFULNESS boolean,
+    POSITION_USEFULNESS_TS timestamp,
+    SPEC_NOMENCLATURE_ID uuid,
+    NOMECLATURE_CHANGE_ID uuid,
+    ANALOGS_CORRECTION_FLAG boolean,
+    NOM_CONTROL_FLAG boolean,
+    NOM_CONTROL_FLAG_TS timestamp,
     --
     primary key (ID)
 )^
@@ -220,7 +229,48 @@ create table SUPPLY_NOMENCLATURE (
     DELETED_BY varchar(50),
     --
     NAME varchar(50) not null,
+    ISGROUP boolean,
+    FULL_NAME varchar(255),
+    ARTICLE varchar(25),
+    UNIT_ID uuid,
+    PARENT_ID uuid,
+    WEIGHT decimal(10, 3),
+    DIMENSIONS varchar(30),
     --
     primary key (ID)
 )^
 -- end SUPPLY_NOMENCLATURE
+-- begin SUPPLY_ANALOGS
+create table SUPPLY_ANALOGS (
+    ID uuid,
+    VERSION integer not null,
+    CREATE_TS timestamp,
+    CREATED_BY varchar(50),
+    UPDATE_TS timestamp,
+    UPDATED_BY varchar(50),
+    DELETE_TS timestamp,
+    DELETED_BY varchar(50),
+    --
+    NOMENCLATURE_ID uuid,
+    ANALOG_ID uuid,
+    --
+    primary key (ID)
+)^
+-- end SUPPLY_ANALOGS
+-- begin SUPPLY_POSITIONS_ANALOGS
+create table SUPPLY_POSITIONS_ANALOGS (
+    ID uuid,
+    VERSION integer not null,
+    CREATE_TS timestamp,
+    CREATED_BY varchar(50),
+    UPDATE_TS timestamp,
+    UPDATED_BY varchar(50),
+    DELETE_TS timestamp,
+    DELETED_BY varchar(50),
+    --
+    ANALOG_ID uuid,
+    QUERIES_POSITION_ID uuid,
+    --
+    primary key (ID)
+)^
+-- end SUPPLY_POSITIONS_ANALOGS

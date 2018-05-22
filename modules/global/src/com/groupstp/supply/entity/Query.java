@@ -29,6 +29,9 @@ import javax.persistence.OneToMany;
 public class Query extends StandardEntity {
     private static final long serialVersionUID = -4851885001969302872L;
 
+    @Column(name = "IN_WORK")
+    protected Boolean inWork;
+
     @NotNull
     @Column(name = "NUMBER_", nullable = false, unique = true, length = 20)
     protected String number;
@@ -41,8 +44,9 @@ public class Query extends StandardEntity {
     @Column(name = "COMMENT_")
     protected String comment;
 
+    @NotNull
     @Lookup(type = LookupType.DROPDOWN, actions = {"lookup", "open", "clear"})
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "URGENCY_ID")
     protected Urgency urgency;
 
@@ -93,6 +97,15 @@ public class Query extends StandardEntity {
     @OnDelete(DeletePolicy.CASCADE)
     @OneToMany(mappedBy = "query")
     protected List<QueriesPosition> positions;
+
+    public void setInWork(Boolean inWork) {
+        this.inWork = inWork;
+    }
+
+    public Boolean getInWork() {
+        return inWork;
+    }
+
 
     public void setPositions(List<QueriesPosition> positions) {
         this.positions = positions;

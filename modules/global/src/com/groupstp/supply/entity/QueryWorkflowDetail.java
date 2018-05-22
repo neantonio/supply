@@ -27,6 +27,14 @@ public class QueryWorkflowDetail extends StandardEntity {
     protected Integer priority;
 
     @Lob
+    @Column(name = "VALIDATION")
+    protected String validation;
+
+    @Lob
+    @Column(name = "VALIDATION_SCRIPT")
+    protected String validationScript;
+
+    @Lob
     @Column(name = "CONDITIONS")
     protected String conditions;
 
@@ -37,6 +45,23 @@ public class QueryWorkflowDetail extends StandardEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "QUERY_WORKFLOW_ID")
     protected QueryWorkflow queryWorkflow;
+
+    public void setValidation(String validation) {
+        this.validation = validation;
+    }
+
+    public String getValidation() {
+        return validation;
+    }
+
+    public void setValidationScript(String validationScript) {
+        this.validationScript = validationScript;
+    }
+
+    public String getValidationScript() {
+        return validationScript;
+    }
+
 
     public void setQueryWorkflow(QueryWorkflow queryWorkflow) {
         this.queryWorkflow = queryWorkflow;

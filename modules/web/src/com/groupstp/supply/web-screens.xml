@@ -15,4 +15,20 @@
             template="com/groupstp/supply/web/query/query-browse.xml"/>
     <screen id="supply$Query.edit"
             template="com/groupstp/supply/web/query/query-edit.xml"/>
+    <screen id="supply$Nomenclature.browse"
+            template="com/groupstp/supply/web/nomenclature/nomenclature-browse.xml"/>
+    <screen id="supply$NomenclatureGroup.edit"
+            template="com/groupstp/supply/web/nomenclature/nomenclature-group-edit.xml"/>
+    <screen id="supply$Nomenclature.edit"
+            template="com/groupstp/supply/web/nomenclature/nomenclature-edit.xml"/>
+    <screen id="supply$QueryWorkflow.browse"
+            template="com/groupstp/supply/web/queryworkflow/query-workflow-browse.xml"/>
+    <screen id="supply$QueryWorkflow.edit"
+            template="com/groupstp/supply/web/queryworkflow/query-workflow-edit.xml"/>
+    <screen id="supply$PositionsAnalogs.browse"
+            template="com/groupstp/supply/web/positionsanalogs/positions-analogs-browse.xml"/>
+    <screen id="supply$QueriesPosition.editAnalogs"
+            template="com/groupstp/supply/web/queriesposition/queries-position-edit.xml"/>
+    <screen id="supply$QueriesPosition.workflow"
+            template="com/groupstp/supply/web/queriesposition/queries-position-browse.xml"/>
 </screen-config>

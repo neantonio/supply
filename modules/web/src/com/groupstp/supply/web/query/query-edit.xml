@@ -52,12 +52,18 @@
             </query>
         </collectionDatasource>
         <collectionDatasource id="queriesPositionsDs"
-                              class="com.groupstp.supply.entity.QueriesPosition">
+                              class="com.groupstp.supply.entity.QueriesPosition"
+                              view="queriesPosition-view">
             <query>
-                <![CDATA[select e from supply$QueriesPosition e]]>
+                <![CDATA[select e from supply$QueriesPosition e where e.query.id=:ds$queryDs.id]]>
             </query>
         </collectionDatasource>
     </dsContext>
+    <actions>
+        <action id="finish"
+                description="msg://Finish"
+                invoke="onFinsh"/>
+    </actions>
     <dialogMode height="600"
                 width="800"/>
     <layout expand="positions"
@@ -95,18 +101,49 @@
                 </column>
             </fieldGroup>
             <textArea datasource="queryDs"
+                      height="80px"
                       property="comment"
                       width="99%"/>
         </scrollBox>
+        <buttonsPanel>
+            <button id="createPosition"
+                    caption="mainMsg://Create"
+                    icon="CREATE_ACTION"
+                    invoke="onCreatePositionClick"/>
+            <button action="positions.edit"/>
+            <button action="positions.remove"/>
+            <button id="btnEditAnalogs"
+                    caption="msg://Edit analogs"
+                    description="msg://Edit analogs"
+                    invoke="onBtnEditAnalogsClick"/>
+        </buttonsPanel>
         <dataGrid id="positions"
-                  height="100px"
-                  width="200px">
+                  datasource="queriesPositionsDs"
+                  editorEnabled="true"
+                  width="100%">
+            <actions>
+                <action id="create"/>
+                <action id="edit"/>
+                <action id="remove"/>
+            </actions>
             <columns>
-                <column id="a"/>
-                <column id="b"/>
+                <column editable="false"
+                        property="currentStage"/>
+                <column property="positionType"/>
+                <column property="numberArticle"/>
+                <column property="nomenclature"/>
+                <column property="specification"/>
+                <column property="quantity"/>
+                <column property="analogsAllowed"/>
+                <column id="analogs"
+                        property="analogs"/>
             </columns>
         </dataGrid>
-        <frame id="windowActions"
-               screen="editWindowActions"/>
+        <hbox>
+            <frame id="windowActions"
+                   screen="editWindowActions"/>
+            <button action="finish"
+                    caption="msg://Finish"/>
+        </hbox>
     </layout>
 </window>
