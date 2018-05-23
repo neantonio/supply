@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<window xmlns="http://schemas.haulmont.com/cuba/window.xsd"
+        caption="msg://browseCaption"
+        class="com.groupstp.supply.web.queriesposition.QueriesPositionBrowse"
+        messagesPack="com.groupstp.supply.web.queriesposition">
+    <dsContext>
+        <groupDatasource id="dsNomControl"
+                         class="com.groupstp.supply.entity.QueriesPosition"
+                         view="queriesPosition-NomControl">
+            <query>
+                <![CDATA[select e from supply$QueriesPosition e
+where e.currentStage='NomControl']]>
+            </query>
+        </groupDatasource>
+        <groupDatasource id="dsStoreControl"
+                         class="com.groupstp.supply.entity.QueriesPosition"
+                         view="queriesPosition-StoreControl">
+            <query>
+                <![CDATA[select e from supply$QueriesPosition e
+where e.currentStage='StoreControl']]>
+            </query>
+        </groupDatasource>
+    </dsContext>
+    <dialogMode height="600"
+                width="800"/>
+    <layout spacing="true">
+        <tabSheet id="tabs"
+                  height="100%">
+            <tab id="tabNomControl"
+                 caption="mainMsg://NomControl"
+                 margin="true,false,false,false"
+                 spacing="true">
+                <vbox id="vbox"
+                      expand="positionsNomControl"
+                      height="100%"
+                      spacing="true">
+                    <filter id="filter"
+                            applyTo="positionsNomControl"
+                            datasource="dsNomControl">
+                        <properties include=".*"/>
+                    </filter>
+                    <buttonsPanel>
+                        <button id="btnSetQueryUsefulness"
+                                caption="msg://Query usefulness"
+                                description="msg://Set whole query usefulness"
+                                invoke="onBtnSetQueryUsefulnessClick"/>
+                        <button id="btnWholeQuery"
+                                caption="msg://Обработать целиком"
+                                description="msg://Обрабатывать заявку целиком"/>
+                        <button id="btnWrite"
+                                caption="mainMsg://Write"
+                                description="mainMsg://Write table changes"
+                                icon="SAVE"
+                                invoke="onBtnWriteClick"/>
+                        <button id="btnDone"
+                                caption="mainMsg://Done"
+                                icon="STEP_FORWARD"
+                                invoke="onBtnDoneClick"/>
+                        <button id="btnCancel"
+                                caption="mainMsg://Cancel"
+                                icon="CANCEL"/>
+                        <button id="btnExpandAll"
+                                caption="mainMsg://Expand All"
+                                icon="EXPAND"
+                                invoke="onBtnExpandAllClick"/>
+                        <button id="btnCollapseAll"
+                                caption="mainMsg://Collapse all"
+                                icon="COMPRESS"
+                                invoke="onBtnCollapseAllClick"/>
+                    </buttonsPanel>
+                    <groupTable id="positionsNomControl"
+                                editable="true"
+                                fixedGrouping="true"
+                                multiselect="true"
+                                presentations="true"
+                                width="100%">
+                        <actions>
+                            <action id="edit"/>
+                        </actions>
+                        <columns>
+                            <group>
+                                <column id="query.urgency"/>
+                                <column id="query.company"/>
+                                <column id="query.division"/>
+                                <column id="query"/>
+                            </group>
+                            <column id="positionType"/>
+                            <column id="numberArticle"/>
+                            <column id="nomenclature"/>
+                            <column id="specification"/>
+                            <column id="nomeclatureChange"
+                                    editable="true"/>
+                            <column id="measureUnit"/>
+                            <column id="quantity"
+                                    editable="true"/>
+                            <column id="analogsCorrectionFlag"
+                                    caption="mainMsg://Analogs correction"
+                                    editable="true"/>
+                            <column id="store"/>
+                            <column id="positionUsefulness"
+                                    caption="mainMsg://Usefulness"
+                                    editable="true"/>
+                        </columns>
+                        <rows datasource="dsNomControl"/>
+                    </groupTable>
+                </vbox>
+            </tab>
+            <tab id="tabStoreControl"
+                 caption="mainMsg://StoreControl"
+                 margin="true,false,false,false"
+                 spacing="true">
+                <vbox id="vboxStoreControl"
+                      expand="positionsStoreControl"
+                      height="100%"
+                      spacing="true">
+                    <filter id="filterStoreControl"
+                            applyTo="positionsStoreControl"
+                            datasource="dsNomControl">
+                        <properties include=".*"/>
+                    </filter>
+                    <groupTable id="positionsStoreControl"
+                                width="100%">
+                        <actions>
+                            <action id="create"/>
+                            <action id="edit"/>
+                            <action id="remove"/>
+                        </actions>
+                        <columns>
+                            <column id="nomenclature"/>
+                        </columns>
+                        <rows datasource="dsStoreControl"/>
+                        <rowsCount/>
+                    </groupTable>
+                </vbox>
+            </tab>
+        </tabSheet>
+    </layout>
+</window>

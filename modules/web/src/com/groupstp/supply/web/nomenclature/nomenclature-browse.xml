@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<window xmlns="http://schemas.haulmont.com/cuba/window.xsd"
+        caption="msg://browseCaption"
+        class="com.groupstp.supply.web.nomenclature.NomenclatureBrowse"
+        focusComponent="nomenclaturesTable"
+        lookupComponent="nomenclaturesTable"
+        messagesPack="com.groupstp.supply.web.nomenclature">
+    <dsContext>
+        <hierarchicalDatasource id="nomenclaturesDs"
+                                class="com.groupstp.supply.entity.Nomenclature"
+                                hierarchyProperty="parent"
+                                view="nomenclature-view">
+            <query>
+                <![CDATA[select e from supply$Nomenclature e]]>
+            </query>
+        </hierarchicalDatasource>
+    </dsContext>
+    <dialogMode height="600"
+                width="800"/>
+    <layout expand="nomenclaturesTable"
+            spacing="true">
+        <filter id="filter"
+                applyTo="nomenclaturesTable"
+                datasource="nomenclaturesDs">
+            <properties include=".*"/>
+        </filter>
+        <treeTable id="nomenclaturesTable"
+                   width="100%">
+            <actions>
+                <action id="create"
+                        openType="DIALOG"/>
+                <action id="edit"
+                        openType="DIALOG"/>
+                <action id="remove"/>
+                <action id="excel"/>
+                <action id="refresh"/>
+            </actions>
+            <columns>
+                <column id="name"/>
+                <column id="fullName"/>
+                <column id="article"/>
+                <column id="unit"/>
+                <column id="weight"/>
+                <column id="dimensions"/>
+            </columns>
+            <rows datasource="nomenclaturesDs"/>
+            <rowsCount/>
+            <buttonsPanel id="buttonsPanel"
+                          alwaysVisible="true">
+                <button id="newGrp"
+                        caption="msg://Create group"
+                        invoke="onNewGrpClick"/>
+                <button id="createBtn"
+                        caption="msg://Create element"
+                        invoke="onCreateBtnClick"/>
+                <button id="editBtn"
+                        action="nomenclaturesTable.edit"/>
+                <button id="removeBtn"
+                        action="nomenclaturesTable.remove"/>
+                <button id="excelBtn"
+                        action="nomenclaturesTable.excel"/>
+                <button id="refreshBtn"
+                        action="nomenclaturesTable.refresh"/>
+            </buttonsPanel>
+        </treeTable>
+    </layout>
+</window>
