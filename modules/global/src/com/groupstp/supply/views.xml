@@ -143,4 +143,13 @@
             <property name="script"/>
         </property>
     </view>
+    <view class="com.groupstp.supply.entity.QueriesPosition"
+          extends="_minimal"
+          name="queriesPosition-StoreControl">
+        <property name="currentStage"/>
+        <property name="nomenclature"
+                  view="_minimal"/>
+        <property name="nomeclatureChange"
+                  view="_minimal"/>
+    </view>
 </views>
