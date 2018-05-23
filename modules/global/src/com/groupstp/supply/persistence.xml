@@ -17,5 +17,6 @@
         <class>com.groupstp.supply.entity.Nomenclature</class>
         <class>com.groupstp.supply.entity.Analogs</class>
         <class>com.groupstp.supply.entity.PositionsAnalogs</class>
+        <class>com.groupstp.supply.entity.QueryPositionMovements</class>
     </persistence-unit>
 </persistence>

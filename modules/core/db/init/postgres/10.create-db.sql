@@ -13,7 +13,7 @@ create table SUPPLY_QUERY (
     NUMBER_ varchar(20) not null,
     TIME_CREATION timestamp,
     COMMENT_ text,
-    URGENCY_ID uuid,
+    URGENCY_ID uuid not null,
     WORKFLOW_ID uuid not null,
     ORIGIN varchar(50) not null,
     CAUSE varchar(50) not null,
@@ -146,6 +146,8 @@ create table SUPPLY_QUERY_WORKFLOW_DETAIL (
     SOURCE_STAGE varchar(50) not null,
     DEST_STAGE varchar(50) not null,
     PRIORITY integer,
+    VALIDATION text,
+    VALIDATION_SCRIPT text,
     CONDITIONS text,
     SCRIPT text,
     QUERY_WORKFLOW_ID uuid,
@@ -202,7 +204,7 @@ create table SUPPLY_QUERIES_POSITION (
     NUMBER_ARTICLE varchar(25),
     NOMENCLATURE_ID uuid,
     SPECIFICATION varchar(255),
-    MEASURE_UNIT_ID uuid,
+    MEASURE_UNIT_ID uuid not null,
     QUANTITY varchar(255) not null,
     ANALOGS_ALLOWED boolean,
     STORE_ID uuid,
@@ -274,3 +276,21 @@ create table SUPPLY_POSITIONS_ANALOGS (
     primary key (ID)
 )^
 -- end SUPPLY_POSITIONS_ANALOGS
+-- begin SUPPLY_QUERY_POSITION_MOVEMENTS
+create table SUPPLY_QUERY_POSITION_MOVEMENTS (
+    ID uuid,
+    VERSION integer not null,
+    CREATE_TS timestamp,
+    CREATED_BY varchar(50),
+    UPDATE_TS timestamp,
+    UPDATED_BY varchar(50),
+    DELETE_TS timestamp,
+    DELETED_BY varchar(50),
+    --
+    POSITION_ID uuid not null,
+    STAGE varchar(50) not null,
+    USER_ID uuid not null,
+    --
+    primary key (ID)
+)^
+-- end SUPPLY_QUERY_POSITION_MOVEMENTS

@@ -21,8 +21,6 @@
             template="com/groupstp/supply/web/nomenclature/nomenclature-group-edit.xml"/>
     <screen id="supply$Nomenclature.edit"
             template="com/groupstp/supply/web/nomenclature/nomenclature-edit.xml"/>
-    <screen id="supply$QueryWorkflow.browse"
-            template="com/groupstp/supply/web/queryworkflow/query-workflow-browse.xml"/>
     <screen id="supply$QueryWorkflow.edit"
             template="com/groupstp/supply/web/queryworkflow/query-workflow-edit.xml"/>
     <screen id="supply$PositionsAnalogs.browse"
@@ -31,4 +29,8 @@
             template="com/groupstp/supply/web/queriesposition/queries-position-edit.xml"/>
     <screen id="supply$QueriesPosition.workflow"
             template="com/groupstp/supply/web/queriesposition/queries-position-browse.xml"/>
+    <screen id="supply$QueryWorkflowDetail.edit"
+            template="com/groupstp/supply/web/queryworkflowdetail/query-workflow-detail-edit.xml"/>
+    <screen id="supply$QueryWorkflow.browse"
+            template="com/groupstp/supply/web/queryworkflow/query-workflow-browse.xml"/>
 </screen-config>

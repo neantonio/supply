@@ -133,6 +133,7 @@
                 <column property="numberArticle"/>
                 <column property="nomenclature"/>
                 <column property="specification"/>
+                <column property="measureUnit"/>
                 <column property="quantity"/>
                 <column property="analogsAllowed"/>
                 <column id="analogs"

@@ -44,7 +44,8 @@ public class QueriesPosition extends StandardEntity {
     @Column(name = "SPECIFICATION")
     protected String specification;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @NotNull
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "MEASURE_UNIT_ID")
     protected MeasureUnits measureUnit;
 
