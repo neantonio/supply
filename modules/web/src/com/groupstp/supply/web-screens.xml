@@ -33,4 +33,12 @@
             template="com/groupstp/supply/web/queryworkflowdetail/query-workflow-detail-edit.xml"/>
     <screen id="supply$QueryWorkflow.browse"
             template="com/groupstp/supply/web/queryworkflow/query-workflow-browse.xml"/>
+    <screen id="supply$PositionSupplier.browse"
+            template="com/groupstp/supply/web/positionsupplier/position-supplier-browse.xml"/>
+    <screen id="supply$Suppliers.browse"
+            template="com/groupstp/supply/web/suppliers/suppliers-browse.xml"/>
+    <screen id="supply$SuppliersSuggestion.browse"
+            template="com/groupstp/supply/web/supplierssuggestion/suppliers-suggestion-browse.xml"/>
+    <screen id="supply$Vote.browse"
+            template="com/groupstp/supply/web/vote/vote-browse.xml"/>
 </screen-config>

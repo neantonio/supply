@@ -23,7 +23,7 @@ import com.haulmont.cuba.core.global.DeletePolicy;
 import java.util.List;
 import javax.persistence.OneToMany;
 
-@NamePattern("%s %s|number,timeCreation")
+@NamePattern("#getQueryName|number,timeCreation")
 @Table(name = "SUPPLY_QUERY")
 @Entity(name = "supply$Query")
 public class Query extends StandardEntity {
@@ -231,5 +231,16 @@ public class Query extends StandardEntity {
         return comment;
     }
 
-
+    public String getQueryName()
+    {
+        String name = number.toString();
+        try{
+            name = String.format("%s %td.%tm.%ty", number, timeCreation,timeCreation,timeCreation);
+        }
+        catch (Exception e)
+        {
+            System.console().printf(e.getMessage());
+        }
+        return name;
+    }
 }

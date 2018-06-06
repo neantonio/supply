@@ -6,16 +6,12 @@ import com.haulmont.cuba.core.global.LoadContext;
 import com.haulmont.cuba.core.global.Scripting;
 import com.haulmont.cuba.core.global.UserSessionSource;
 import groovy.lang.Binding;
-import org.eclipse.persistence.jpa.jpql.parser.DateTime;
-import org.eclipse.persistence.jpa.jpql.parser.QueryPosition;
-import org.eclipse.persistence.sessions.Session;
 import org.slf4j.Logger;
 import org.springframework.stereotype.Service;
 
 import javax.inject.Inject;
-import java.util.ArrayList;
+import java.math.BigDecimal;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 
 @Service(WorkflowService.NAME)
@@ -30,6 +26,9 @@ public class WorkflowServiceBean implements WorkflowService {
     @Inject
     private Logger log;
 
+    @Inject
+    private UserSessionSource userSessionSource;
+
     /**
      * Производит проверку заполнения и перемещает позицию на этап, согласно условий {@link QueryWorkflowDetail}
      * @param position - позиция заявки
@@ -43,7 +42,9 @@ public class WorkflowServiceBean implements WorkflowService {
         {
             try
             {
-                found = validatePosition(position, detail) && checkConditions(position, detail);
+                found = validatePosition(position, detail);
+                if(found)
+                    found &= checkConditions(position, detail);
             }
             catch (Exception e)
             {
@@ -59,17 +60,26 @@ public class WorkflowServiceBean implements WorkflowService {
             throw new Exception(errors);
     }
 
+    /**
+     * Переводит позицию на этап без каких-либо проверок и условий
+     * @param position позиция заявки
+     * @param stage этап, на который переводится позиция
+     */
     public void movePositionTo(QueriesPosition position, Stages stage) {
-        position.setNomControlFlag(true);
-        position.setNomControlFlagTS(new Date());
+        String strStage = position.getCurrentStage().name();
+        strStage = strStage.substring(0, 1).toLowerCase()+strStage.substring(1);
+        position.setValue(strStage+"Flag", true);
+        position.setValue(strStage+"FlagTS", new Date());
         position.setCurrentStage(stage);
         dataManager.commit(position);
         createMovementRecord(position, stage);
     }
 
-    @Inject
-    private UserSessionSource userSessionSource;
-
+    /**
+     * Запись в журнал движений позиции
+     * @param position позиция
+     * @param stage этап
+     */
     protected void createMovementRecord(QueriesPosition position, Stages stage)
     {
         QueryPositionMovements movement = new QueryPositionMovements();
@@ -87,7 +97,7 @@ public class WorkflowServiceBean implements WorkflowService {
         Object res = scripting.evaluateGroovy(script, binding);
         if(res instanceof String)
             throw new Exception((String) res);
-        return true;
+        return res.equals(true);
     }
 
     private boolean checkConditions(QueriesPosition position, QueryWorkflowDetail detail) throws Exception {

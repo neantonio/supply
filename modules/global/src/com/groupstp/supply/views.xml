@@ -151,5 +151,122 @@
                   view="_minimal"/>
         <property name="nomeclatureChange"
                   view="_minimal"/>
+        <property name="query"
+                  view="_minimal">
+            <property name="urgency"
+                      view="_minimal"/>
+            <property name="company"
+                      view="_minimal"/>
+            <property name="division"
+                      view="_minimal"/>
+            <property name="store"
+                      view="_minimal"/>
+        </property>
+        <property name="storeControlFlag"/>
+        <property name="srcStore"
+                  view="_minimal"/>
+        <property name="quantity"/>
+        <property name="supplyWorkoutType"/>
+        <property name="inStore"/>
+        <property name="position"
+                  view="_minimal"/>
+        <property name="storeControlFlagTS"/>
+    </view>
+    <view class="com.groupstp.supply.entity.QueriesPosition"
+          extends="_local"
+          name="queriesPosition-SupSelection">
+        <property name="query"
+                  view="_minimal">
+            <property name="urgency"
+                      view="_minimal"/>
+            <property name="workflow"
+                      view="_minimal"/>
+            <property name="company"
+                      view="_minimal"/>
+            <property name="division"
+                      view="_minimal"/>
+            <property name="store"
+                      view="_minimal"/>
+        </property>
+        <property name="position"
+                  view="_minimal"/>
+        <property name="nomenclature"
+                  view="_minimal"/>
+    </view>
+    <view class="com.groupstp.supply.entity.QueriesPosition"
+          extends="_local"
+          name="queriesPosition-full">
+        <property name="query"
+                  view="_minimal">
+            <property name="urgency"
+                      view="_minimal"/>
+            <property name="company"
+                      view="_minimal"/>
+            <property name="division"
+                      view="_minimal"/>
+            <property name="store"
+                      view="_minimal"/>
+        </property>
+        <property name="specNomenclature"
+                  view="_minimal"/>
+        <property name="nomeclatureChange"
+                  view="_minimal"/>
+        <property name="position"
+                  view="_minimal"/>
+        <property name="srcStore"
+                  view="_minimal"/>
+        <property name="nomenclature"
+                  view="_minimal"/>
+        <property name="measureUnit"
+                  view="_minimal"/>
+        <property name="analogs"
+                  view="_minimal"/>
+        <property name="store"
+                  view="_minimal"/>
+    </view>
+    <view class="com.groupstp.supply.entity.PositionSupplier"
+          extends="_local"
+          name="positionSupplier-view">
+        <property name="position"
+                  view="_minimal">
+            <property name="quantity"/>
+        </property>
+        <property name="supplier"
+                  view="_minimal"/>
+    </view>
+    <view class="com.groupstp.supply.entity.Suppliers"
+          extends="_local"
+          name="suppliers-view"/>
+    <view class="com.groupstp.supply.entity.SuppliersSuggestion"
+          extends="_local"
+          name="suppliersSuggestion-view">
+        <property name="posSup"
+                  view="_minimal">
+            <property name="selected"/>
+        </property>
+    </view>
+    <view class="com.groupstp.supply.entity.QueriesPosition"
+          extends="queriesPosition-SupSelection"
+          name="queriesPosition-Analysis">
+    </view>
+    <view class="com.groupstp.supply.entity.QueriesPosition"
+          extends="_local"
+          name="queriesPosition-Comission"/>
+    <view class="com.groupstp.supply.entity.Vote"
+          extends="_local"
+          name="vote-view">
+        <property name="position"
+                  view="_minimal">
+            <property name="numberArticle"/>
+        </property>
+        <property name="emp"
+                  view="_minimal"/>
+        <property name="suggestion"
+                  view="_minimal">
+            <property name="quantity"/>
+            <property name="price"/>
+            <property name="supAddress"/>
+            <property name="term"/>
+        </property>
     </view>
 </views>

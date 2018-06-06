@@ -10,7 +10,9 @@ buildscript {
                 password(rootProject.hasProperty('repoPass') ? rootProject['repoPass'] : 'cuba123')
             }
         }
-        
+	maven {
+	    url  "https://dl.bintray.com/mariodavid/cuba-components"
+	}        
     }
     dependencies {
         classpath "com.haulmont.gradle:cuba-plugin:$cubaVersion"
@@ -43,6 +45,7 @@ cuba {
 
 dependencies {
     appComponent("com.haulmont.cuba:cuba-global:$cubaVersion")
+    appComponent("de.diedavids.cuba.runtimediagnose:runtime-diagnose-global:1.0.0")
 
 }
 
@@ -65,6 +68,15 @@ configure([globalModule, coreModule, guiModule, webModule]) {
 
     artifacts {
         archives sourceJar
+    }
+}
+
+configure([globalModule, coreModule, guiModule, webModule]) {
+    apply(plugin: 'groovy')
+
+    sourceSets {
+        main { groovy { srcDirs = ["src"] } }
+        test { groovy { srcDirs = ["test"] } }
     }
 }
 

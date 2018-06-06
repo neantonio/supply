@@ -64,8 +64,10 @@
                 description="msg://Finish"
                 invoke="onFinsh"/>
     </actions>
-    <dialogMode height="600"
-                width="800"/>
+    <dialogMode height="90%"
+                maximized="true"
+                resizable="true"
+                width="90%"/>
     <layout expand="positions"
             spacing="true">
         <scrollBox id="scrollBox"

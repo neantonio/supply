@@ -199,13 +199,14 @@ create table SUPPLY_QUERIES_POSITION (
     DELETED_BY varchar(50),
     --
     QUERY_ID uuid not null,
+    STORE_CONTROL_FLAG boolean,
     CURRENT_STAGE varchar(50) not null,
     POSITION_TYPE varchar(50) not null,
     NUMBER_ARTICLE varchar(25),
     NOMENCLATURE_ID uuid,
     SPECIFICATION varchar(255),
     MEASURE_UNIT_ID uuid not null,
-    QUANTITY varchar(255) not null,
+    QUANTITY double precision not null,
     ANALOGS_ALLOWED boolean,
     STORE_ID uuid,
     POSITION_USEFULNESS boolean,
@@ -215,6 +216,18 @@ create table SUPPLY_QUERIES_POSITION (
     ANALOGS_CORRECTION_FLAG boolean,
     NOM_CONTROL_FLAG boolean,
     NOM_CONTROL_FLAG_TS timestamp,
+    IN_STORE boolean,
+    STORE_CONTROL_FLAG_TS timestamp,
+    SUPPLY_WORKOUT_TYPE varchar(50),
+    POSITION_ID uuid,
+    SRC_STORE_ID uuid,
+    SUP_SELECTION_FLAG boolean,
+    SUP_SELECTION_FLAG_TS timestamp,
+    ANALYSIS_RESULT varchar(50),
+    ANALYSIS_FLAG boolean,
+    ANALYSIS_FLAG_TS timestamp,
+    PRICE_REDUCE boolean,
+    MINIMAL_PRICE double precision,
     --
     primary key (ID)
 )^
@@ -294,3 +307,58 @@ create table SUPPLY_QUERY_POSITION_MOVEMENTS (
     primary key (ID)
 )^
 -- end SUPPLY_QUERY_POSITION_MOVEMENTS
+-- begin SUPPLY_SUPPLIERS_SUGGESTION
+create table SUPPLY_SUPPLIERS_SUGGESTION (
+    ID uuid,
+    VERSION integer not null,
+    CREATE_TS timestamp,
+    CREATED_BY varchar(50),
+    UPDATE_TS timestamp,
+    UPDATED_BY varchar(50),
+    DELETE_TS timestamp,
+    DELETED_BY varchar(50),
+    --
+    POS_SUP_ID uuid,
+    QUANTITY double precision not null,
+    PRICE double precision not null,
+    SUP_ADDRESS varchar(255),
+    TERM integer not null,
+    --
+    primary key (ID)
+)^
+-- end SUPPLY_SUPPLIERS_SUGGESTION
+-- begin SUPPLY_SUPPLIERS
+create table SUPPLY_SUPPLIERS (
+    ID uuid,
+    VERSION integer not null,
+    CREATE_TS timestamp,
+    CREATED_BY varchar(50),
+    UPDATE_TS timestamp,
+    UPDATED_BY varchar(50),
+    DELETE_TS timestamp,
+    DELETED_BY varchar(50),
+    --
+    NAME varchar(50),
+    FULL_NAME varchar(255),
+    --
+    primary key (ID)
+)^
+-- end SUPPLY_SUPPLIERS
+-- begin SUPPLY_POSITION_SUPPLIER
+create table SUPPLY_POSITION_SUPPLIER (
+    ID uuid,
+    VERSION integer not null,
+    CREATE_TS timestamp,
+    CREATED_BY varchar(50),
+    UPDATE_TS timestamp,
+    UPDATED_BY varchar(50),
+    DELETE_TS timestamp,
+    DELETED_BY varchar(50),
+    --
+    POSITION_ID uuid not null,
+    SELECTED boolean,
+    SUPPLIER_ID uuid,
+    --
+    primary key (ID)
+)^
+-- end SUPPLY_POSITION_SUPPLIER

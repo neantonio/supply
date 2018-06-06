@@ -20,6 +20,30 @@ where e.currentStage='NomControl']]>
 where e.currentStage='StoreControl']]>
             </query>
         </groupDatasource>
+        <groupDatasource id="dsSupSelection"
+                         class="com.groupstp.supply.entity.QueriesPosition"
+                         view="queriesPosition-SupSelection">
+            <query>
+                <![CDATA[select e from supply$QueriesPosition e
+where e.currentStage='SupSelection']]>
+            </query>
+        </groupDatasource>
+        <groupDatasource id="dsAnalysis"
+                         class="com.groupstp.supply.entity.QueriesPosition"
+                         view="queriesPosition-Analysis">
+            <query>
+                <![CDATA[select e from supply$QueriesPosition e
+where e.currentStage='Analysis']]>
+            </query>
+        </groupDatasource>
+        <groupDatasource id="dsComission"
+                         class="com.groupstp.supply.entity.QueriesPosition"
+                         view="queriesPosition-Comission">
+            <query>
+                <![CDATA[select e from supply$QueriesPosition e
+where e.currentStage='Comission']]>
+            </query>
+        </groupDatasource>
     </dsContext>
     <dialogMode height="600"
                 width="800"/>
@@ -40,13 +64,6 @@ where e.currentStage='StoreControl']]>
                         <properties include=".*"/>
                     </filter>
                     <buttonsPanel>
-                        <button id="btnSetQueryUsefulness"
-                                caption="msg://Query usefulness"
-                                description="msg://Set whole query usefulness"
-                                invoke="onBtnSetQueryUsefulnessClick"/>
-                        <button id="btnWholeQuery"
-                                caption="msg://Обработать целиком"
-                                description="msg://Обрабатывать заявку целиком"/>
                         <button id="btnWrite"
                                 caption="mainMsg://Write"
                                 description="mainMsg://Write table changes"
@@ -59,6 +76,10 @@ where e.currentStage='StoreControl']]>
                         <button id="btnCancel"
                                 caption="mainMsg://Cancel"
                                 icon="CANCEL"/>
+                        <button id="btnRefresh"
+                                action="positionsNomControl.refresh"
+                                caption="mainMsg://Refresh"
+                                icon="REFRESH_ACTION"/>
                         <button id="btnExpandAll"
                                 caption="mainMsg://Expand All"
                                 icon="EXPAND"
@@ -67,6 +88,13 @@ where e.currentStage='StoreControl']]>
                                 caption="mainMsg://Collapse all"
                                 icon="COMPRESS"
                                 invoke="onBtnCollapseAllClick"/>
+                        <button id="btnWholeQuery"
+                                caption="msg://Обработать целиком"
+                                description="msg://Обрабатывать заявку целиком"/>
+                        <button id="btnSetQueryUsefulness"
+                                caption="msg://Query usefulness"
+                                description="msg://Set whole query usefulness"
+                                invoke="onBtnSetQueryUsefulnessClick"/>
                     </buttonsPanel>
                     <groupTable id="positionsNomControl"
                                 editable="true"
@@ -75,7 +103,7 @@ where e.currentStage='StoreControl']]>
                                 presentations="true"
                                 width="100%">
                         <actions>
-                            <action id="edit"/>
+                            <action id="refresh"/>
                         </actions>
                         <columns>
                             <group>
@@ -86,10 +114,9 @@ where e.currentStage='StoreControl']]>
                             </group>
                             <column id="positionType"/>
                             <column id="numberArticle"/>
-                            <column id="nomenclature"/>
-                            <column id="specification"/>
-                            <column id="nomeclatureChange"
+                            <column id="nomenclature"
                                     editable="true"/>
+                            <column id="specification"/>
                             <column id="measureUnit"/>
                             <column id="quantity"
                                     editable="true"/>
@@ -97,6 +124,8 @@ where e.currentStage='StoreControl']]>
                                     caption="mainMsg://Analogs correction"
                                     editable="true"/>
                             <column id="store"/>
+                            <column id="nomeclatureChange"
+                                    editable="true"/>
                             <column id="positionUsefulness"
                                     caption="mainMsg://Usefulness"
                                     editable="true"/>
@@ -118,18 +147,264 @@ where e.currentStage='StoreControl']]>
                             datasource="dsNomControl">
                         <properties include=".*"/>
                     </filter>
+                    <buttonsPanel>
+                        <button id="button_3"
+                                caption="mainMsg://Write"
+                                description="mainMsg://Write table changes"
+                                icon="SAVE"
+                                invoke="onBtnWriteClick"/>
+                        <button id="button_4"
+                                caption="mainMsg://Done"
+                                icon="STEP_FORWARD"
+                                invoke="onBtnDoneClick"/>
+                        <button id="button_5"
+                                caption="mainMsg://Cancel"
+                                icon="CANCEL"/>
+                        <button id="button_1"
+                                action="positionsStoreControl.refresh"
+                                caption="mainMsg://Refresh"
+                                icon="REFRESH_ACTION"/>
+                        <button id="button_2"
+                                caption="mainMsg://Expand All"
+                                icon="EXPAND"
+                                invoke="onBtnExpandAllClick"/>
+                        <button id="button_6"
+                                caption="mainMsg://Collapse all"
+                                icon="COMPRESS"
+                                invoke="onBtnCollapseAllClick"/>
+                        <button id="btnSplit"
+                                caption="mainMsg://Split"
+                                description="mainMsg://Split position"
+                                icon="ARROWS_V"
+                                invoke="onBtnSplitClick"/>
+                    </buttonsPanel>
                     <groupTable id="positionsStoreControl"
+                                editable="true"
+                                fixedGrouping="true"
+                                presentations="true"
+                                width="100%">
+                        <actions>
+                            <action id="refresh"/>
+                        </actions>
+                        <columns>
+                            <group>
+                                <column id="query.urgency"/>
+                                <column id="query.company"/>
+                                <column id="query.division"/>
+                                <column id="position"/>
+                            </group>
+                            <column id="supplyWorkoutType"
+                                    editable="true"/>
+                            <column id="query"/>
+                            <column id="nomenclature"/>
+                            <column id="quantity"
+                                    editable="true"/>
+                            <column id="storeControlFlag"/>
+                            <column id="srcStore"
+                                    editable="true"/>
+                        </columns>
+                        <rows datasource="dsStoreControl"/>
+                    </groupTable>
+                </vbox>
+            </tab>
+            <tab id="tabSupSelection"
+                 caption="mainMsg://SupSelection"
+                 margin="true,false,false,false"
+                 spacing="true">
+                <vbox id="vboxSupSelection"
+                      expand="positionsSupSelection"
+                      height="100%"
+                      spacing="true">
+                    <filter id="filterSupSelection"
+                            applyTo="positionsSupSelection"
+                            datasource="dsSupSelection">
+                        <properties include=".*"/>
+                    </filter>
+                    <buttonsPanel>
+                        <button id="button_7"
+                                caption="mainMsg://Write"
+                                description="mainMsg://Write table changes"
+                                icon="SAVE"
+                                invoke="onBtnWriteClick"/>
+                        <button id="button_8"
+                                caption="mainMsg://Done"
+                                icon="STEP_FORWARD"
+                                invoke="onBtnDoneClick"/>
+                        <button id="button_9"
+                                caption="mainMsg://Cancel"
+                                icon="CANCEL"/>
+                        <button id="button_12"
+                                action="positionsSupSelection.refresh"
+                                caption="mainMsg://Refresh"
+                                icon="REFRESH_ACTION"/>
+                        <button id="button_10"
+                                caption="mainMsg://Expand All"
+                                icon="EXPAND"
+                                invoke="onBtnExpandAllClick"/>
+                        <button id="button_11"
+                                caption="mainMsg://Collapse all"
+                                icon="COMPRESS"
+                                invoke="onBtnCollapseAllClick"/>
+                        <button id="btnSuppliers"
+                                caption="mainMsg://Suppliers"
+                                invoke="onBtnSuppliersClick"/>
+                        <button id="btnSuggestions"
+                                caption="mainMsg://Suggestions"
+                                invoke="onBtnSuggestionsClick"/>
+                    </buttonsPanel>
+                    <groupTable id="positionsSupSelection"
+                                fixedGrouping="true"
+                                presentations="true"
                                 width="100%">
                         <actions>
                             <action id="create"/>
+                            <action id="refresh"/>
                             <action id="edit"/>
                             <action id="remove"/>
                         </actions>
                         <columns>
+                            <group>
+                                <column id="query.urgency"/>
+                                <column id="query.company"/>
+                                <column id="query.division"/>
+                            </group>
+                            <column id="query"/>
                             <column id="nomenclature"/>
+                            <column id="quantity"/>
                         </columns>
-                        <rows datasource="dsStoreControl"/>
-                        <rowsCount/>
+                        <rows datasource="dsSupSelection"/>
+                    </groupTable>
+                </vbox>
+            </tab>
+            <tab id="tabAnalysis"
+                 caption="mainMsg://Analysis"
+                 margin="true,false,false,false"
+                 spacing="true">
+                <vbox id="vboxAnalysis"
+                      expand="positionsAnalysis"
+                      height="100%"
+                      spacing="true">
+                    <filter id="filterAnalysis"
+                            applyTo="positionsSupSelection"
+                            datasource="dsSupSelection">
+                        <properties include=".*"/>
+                    </filter>
+                    <buttonsPanel>
+                        <button id="btnWriteAnalysis"
+                                caption="mainMsg://Write"
+                                description="mainMsg://Write table changes"
+                                icon="SAVE"
+                                invoke="onBtnWriteClick"/>
+                        <button id="btnDoneAnalysis"
+                                caption="mainMsg://Done"
+                                icon="STEP_FORWARD"
+                                invoke="onBtnDoneClick"/>
+                        <button id="btnCancelAnalysis"
+                                caption="mainMsg://Cancel"
+                                icon="CANCEL"/>
+                        <button id="btnRefreshAnalysis"
+                                action="positionsSupSelection.refresh"
+                                caption="mainMsg://Refresh"
+                                icon="REFRESH_ACTION"/>
+                        <button id="btnExpandAllAnalysis"
+                                caption="mainMsg://Expand All"
+                                icon="EXPAND"
+                                invoke="onBtnExpandAllClick"/>
+                        <button id="btnCollapseAllAnalysis"
+                                caption="mainMsg://Collapse all"
+                                icon="COMPRESS"
+                                invoke="onBtnCollapseAllClick"/>
+                        <button id="btnSuppliersAnalysis"
+                                caption="mainMsg://Suppliers"
+                                invoke="onBtnSuppliersClick"/>
+                        <button id="btnSuggestionsAnalysis"
+                                caption="mainMsg://Suggestions"
+                                invoke="onBtnSuggestionsClick"/>
+                    </buttonsPanel>
+                    <groupTable id="positionsAnalysis"
+                                fixedGrouping="true"
+                                presentations="true"
+                                width="100%">
+                        <actions>
+                            <action id="create"/>
+                            <action id="refresh"/>
+                            <action id="edit"/>
+                            <action id="remove"/>
+                        </actions>
+                        <columns>
+                            <group>
+                                <column id="query.urgency"/>
+                                <column id="query.company"/>
+                                <column id="query.division"/>
+                            </group>
+                            <column id="query"/>
+                            <column id="nomenclature"/>
+                            <column id="quantity"/>
+                        </columns>
+                        <rows datasource="dsAnalysis"/>
+                    </groupTable>
+                </vbox>
+            </tab>
+            <tab id="tabComission"
+                 caption="mainMsg://Comission"
+                 margin="true,false,false,false"
+                 spacing="true">
+                <vbox id="vboxComission"
+                      expand="positionsComission"
+                      height="100%"
+                      spacing="true">
+                    <filter id="filterComission"
+                            applyTo="positionsComission"
+                            datasource="dsComission">
+                        <properties include=".*"/>
+                    </filter>
+                    <buttonsPanel>
+                        <button id="btnWriteComission"
+                                caption="mainMsg://Write"
+                                description="mainMsg://Write table changes"
+                                icon="SAVE"
+                                invoke="onBtnWriteClick"/>
+                        <button id="btnDoneComission"
+                                caption="mainMsg://Done"
+                                icon="STEP_FORWARD"
+                                invoke="onBtnDoneClick"/>
+                        <button id="btnCancelComission"
+                                caption="mainMsg://Cancel"
+                                icon="CANCEL"/>
+                        <button id="btnRefreshComission"
+                                action="positionsSupSelection.refresh"
+                                caption="mainMsg://Refresh"
+                                icon="REFRESH_ACTION"/>
+                        <button id="btnExpandAllComission"
+                                caption="mainMsg://Expand All"
+                                icon="EXPAND"
+                                invoke="onBtnExpandAllClick"/>
+                        <button id="btnCollapseAllComission"
+                                caption="mainMsg://Collapse all"
+                                icon="COMPRESS"
+                                invoke="onBtnCollapseAllClick"/>
+                    </buttonsPanel>
+                    <groupTable id="positionsComission"
+                                fixedGrouping="true"
+                                presentations="true"
+                                width="100%">
+                        <actions>
+                            <action id="create"/>
+                            <action id="refresh"/>
+                            <action id="edit"/>
+                            <action id="remove"/>
+                        </actions>
+                        <columns>
+                            <group>
+                                <column id="query.urgency"/>
+                                <column id="query.company"/>
+                                <column id="query.division"/>
+                            </group>
+                            <column id="query"/>
+                            <column id="nomenclature"/>
+                            <column id="quantity"/>
+                        </columns>
+                        <rows datasource="dsAnalysis"/>
                     </groupTable>
                 </vbox>
             </tab>

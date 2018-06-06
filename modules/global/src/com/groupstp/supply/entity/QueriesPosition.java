@@ -16,7 +16,11 @@ import javax.persistence.OneToMany;
 import java.util.Date;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import com.haulmont.chile.core.annotations.NamePattern;
+import java.math.BigDecimal;
+import com.haulmont.chile.core.annotations.NumberFormat;
 
+@NamePattern("%s|nomenclature")
 @Table(name = "SUPPLY_QUERIES_POSITION")
 @Entity(name = "supply$QueriesPosition")
 public class QueriesPosition extends StandardEntity {
@@ -25,6 +29,9 @@ public class QueriesPosition extends StandardEntity {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "QUERY_ID")
     protected Query query;
+
+    @Column(name = "STORE_CONTROL_FLAG")
+    protected Boolean storeControlFlag;
 
     @NotNull
     @Column(name = "CURRENT_STAGE", nullable = false)
@@ -49,9 +56,10 @@ public class QueriesPosition extends StandardEntity {
     @JoinColumn(name = "MEASURE_UNIT_ID")
     protected MeasureUnits measureUnit;
 
+    @NumberFormat(pattern = "########.###")
     @NotNull
     @Column(name = "QUANTITY", nullable = false)
-    protected String quantity;
+    protected Double quantity;
 
     @Column(name = "ANALOGS_ALLOWED")
     protected Boolean analogsAllowed;
@@ -89,6 +97,161 @@ public class QueriesPosition extends StandardEntity {
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "NOM_CONTROL_FLAG_TS")
     protected Date nomControlFlagTS;
+
+    @Column(name="IN_STORE")
+    protected Boolean inStore;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "STORE_CONTROL_FLAG_TS")
+    protected Date storeControlFlagTS;
+
+    @Column(name = "SUPPLY_WORKOUT_TYPE")
+    protected String supplyWorkoutType;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "POSITION_ID")
+    protected QueriesPosition position;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "SRC_STORE_ID")
+    protected Store srcStore;
+
+    @Column(name = "SUP_SELECTION_FLAG")
+    protected Boolean supSelectionFlag;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "SUP_SELECTION_FLAG_TS")
+    protected Date supSelectionFlagTS;
+
+    @Column(name = "ANALYSIS_RESULT")
+    protected String analysisResult;
+
+    @Column(name = "ANALYSIS_FLAG")
+    protected Boolean analysisFlag;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "ANALYSIS_FLAG_TS")
+    protected Date analysisFlagTS;
+
+    @Column(name = "PRICE_REDUCE")
+    protected Boolean priceReduce;
+
+    @Column(name = "MINIMAL_PRICE")
+    protected Double minimalPrice;
+
+    public Double getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(Double quantity) {
+        this.quantity = quantity;
+    }
+
+
+    public void setPriceReduce(Boolean priceReduce) {
+        this.priceReduce = priceReduce;
+    }
+
+    public Boolean getPriceReduce() {
+        return priceReduce;
+    }
+
+    public void setMinimalPrice(Double minimalPrice) {
+        this.minimalPrice = minimalPrice;
+    }
+
+    public Double getMinimalPrice() {
+        return minimalPrice;
+    }
+
+
+    public void setAnalysisResult(AnalysisResult analysisResult) {
+        this.analysisResult = analysisResult == null ? null : analysisResult.getId();
+    }
+
+    public AnalysisResult getAnalysisResult() {
+        return analysisResult == null ? null : AnalysisResult.fromId(analysisResult);
+    }
+
+    public void setAnalysisFlag(Boolean analysisFlag) {
+        this.analysisFlag = analysisFlag;
+    }
+
+    public Boolean getAnalysisFlag() {
+        return analysisFlag;
+    }
+
+    public void setAnalysisFlagTS(Date analysisFlagTS) {
+        this.analysisFlagTS = analysisFlagTS;
+    }
+
+    public Date getAnalysisFlagTS() {
+        return analysisFlagTS;
+    }
+
+
+    public void setSupSelectionFlag(Boolean supSelectionFlag) {
+        this.supSelectionFlag = supSelectionFlag;
+    }
+
+    public Boolean getSupSelectionFlag() {
+        return supSelectionFlag;
+    }
+
+    public void setSupSelectionFlagTS(Date supSelectionFlagTS) {
+        this.supSelectionFlagTS = supSelectionFlagTS;
+    }
+
+    public Date getSupSelectionFlagTS() {
+        return supSelectionFlagTS;
+    }
+
+
+    public void setStoreControlFlagTS(Date storeControlFlagTS) {
+        this.storeControlFlagTS = storeControlFlagTS;
+    }
+
+    public Date getStoreControlFlagTS() {
+        return storeControlFlagTS;
+    }
+
+
+
+    public Store getSrcStore() {
+        return srcStore;
+    }
+
+    public void setSrcStore(Store srcStore) {
+        this.srcStore = srcStore;
+    }
+
+
+    public SupplyWorkoutType getSupplyWorkoutType() {
+        return supplyWorkoutType == null ? null : SupplyWorkoutType.fromId(supplyWorkoutType);
+    }
+
+    public void setSupplyWorkoutType(SupplyWorkoutType supplyWorkoutType) {
+        this.supplyWorkoutType = supplyWorkoutType == null ? null : supplyWorkoutType.getId();
+    }
+
+
+
+    public void setStoreControlFlag(Boolean storeControlFlag) {
+        this.storeControlFlag = storeControlFlag;
+    }
+
+    public Boolean getStoreControlFlag() {
+        return storeControlFlag;
+    }
+
+    public void setPosition(QueriesPosition position) {
+        this.position = position;
+    }
+
+    public QueriesPosition getPosition() {
+        return position;
+    }
+
 
     public void setStore(Store store) {
         this.store = store;
@@ -188,14 +351,6 @@ public class QueriesPosition extends StandardEntity {
         return measureUnit;
     }
 
-    public void setQuantity(String quantity) {
-        this.quantity = quantity;
-    }
-
-    public String getQuantity() {
-        return quantity;
-    }
-
     public void setAnalogsAllowed(Boolean analogsAllowed) {
         this.analogsAllowed = analogsAllowed;
     }
@@ -239,5 +394,8 @@ public class QueriesPosition extends StandardEntity {
         return query;
     }
 
+    public Boolean getInStore() { return inStore; }
+
+    public void setInStore(Boolean inStore) { this.inStore = inStore; }
 
 }

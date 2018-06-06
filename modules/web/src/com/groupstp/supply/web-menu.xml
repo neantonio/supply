@@ -15,7 +15,9 @@
             <item screen="supply$Division.browse"/>
             <item screen="supply$Store.browse"/>
         </menu>
-        <item screen="supply$QueryWorkflow.browse"/>
+        <item openType="NEW_TAB"
+              screen="supply$Suppliers.browse"/>
+        <item screen="supply$Vote.browse"/>
     </menu>
     <menu id="queries"
           insertBefore="administration">
@@ -23,6 +25,7 @@
         <menu id="querySettings"
               description="mainMsg://Queries settings">
             <item screen="supply$Urgency.browse"/>
+            <item screen="supply$QueryWorkflow.browse"/>
         </menu>
     </menu>
 </menu-config>
