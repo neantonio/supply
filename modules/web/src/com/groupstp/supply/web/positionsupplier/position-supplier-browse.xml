@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<window xmlns="http://schemas.haulmont.com/cuba/window.xsd"
+        caption="msg://browseCaption"
+        class="com.groupstp.supply.web.positionsupplier.PositionSupplierBrowse"
+        messagesPack="com.groupstp.supply.web.positionsupplier">
+    <dsContext>
+        <groupDatasource id="positionSuppliersDs"
+                         allowCommit="false"
+                         class="com.groupstp.supply.entity.PositionSupplier"
+                         view="positionSupplier-view">
+            <query>
+                <![CDATA[select e from supply$PositionSupplier e 
+where 
+e.position in (select distinct f.position from supply$PositionSupplier f
+where f.position.id in :param$positions)]]>
+            </query>
+        </groupDatasource>
+    </dsContext>
+    <dialogMode height="95%"
+                resizable="true"
+                width="95%"/>
+    <layout expand="tab"
+            spacing="true">
+        <filter id="filter"
+                applyTo="tab"
+                datasource="positionSuppliersDs">
+            <properties include=".*"/>
+        </filter>
+        <hbox spacing="true">
+            <button id="btnAdd"
+                    caption="msg://Add supplier"
+                    icon="PLUS"
+                    invoke="onBtnAddClick"/>
+            <button id="btnMessage"
+                    caption="msg://Message"
+                    icon="ENVELOPE"
+                    invoke="onBtnMessageClick"/>
+        </hbox>
+        <table id="tab"
+               width="100%">
+            <columns>
+                <column id="position"/>
+            </columns>
+            <rows datasource="positionSuppliersDs"/>
+        </table>
+    </layout>
+</window>

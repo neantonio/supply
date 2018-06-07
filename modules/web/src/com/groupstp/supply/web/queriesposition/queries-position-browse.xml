@@ -383,6 +383,9 @@ where e.currentStage='Comission']]>
                                 caption="mainMsg://Collapse all"
                                 icon="COMPRESS"
                                 invoke="onBtnCollapseAllClick"/>
+                        <button id="btnVote"
+                                caption="mainMsg://Vote"
+                                invoke="onBtnVoteClick"/>
                     </buttonsPanel>
                     <groupTable id="positionsComission"
                                 fixedGrouping="true"

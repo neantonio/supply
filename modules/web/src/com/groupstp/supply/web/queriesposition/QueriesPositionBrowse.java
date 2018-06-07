@@ -262,4 +262,22 @@ public class QueriesPositionBrowse extends AbstractLookup {
         items.put("positions", positionsSupSelection.getSelected());
         openWindow("supply$SuppliersSuggestion.browse", WindowManager.OpenType.DIALOG, items);
     }
+
+    @Inject
+    private GroupTable<QueriesPosition> positionsComission;
+
+    /**
+     * Открывает голосование
+     */
+    public void onBtnVoteClick() {
+
+        if(positionsComission.getSelected().size()==0)
+        {
+            showNotification(getMessage("Select position first"), NotificationType.WARNING);
+            return;
+        }
+        HashMap<String, Object> items = new HashMap<>();
+        items.put("positions", positionsComission.getSelected());
+        openWindow("supply$Vote.browse", WindowManager.OpenType.DIALOG, items);
+    }
 }

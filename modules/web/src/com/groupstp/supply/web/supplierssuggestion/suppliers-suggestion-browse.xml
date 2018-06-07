@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<window xmlns="http://schemas.haulmont.com/cuba/window.xsd"
+        caption="msg://browseCaption"
+        class="com.groupstp.supply.web.supplierssuggestion.SuppliersSuggestionBrowse"
+        focusComponent="tab"
+        lookupComponent="tab"
+        messagesPack="com.groupstp.supply.web.supplierssuggestion">
+    <dsContext>
+        <groupDatasource id="suppliersSuggestionsDs"
+                         class="com.groupstp.supply.entity.SuppliersSuggestion"
+                         view="suppliersSuggestion-view">
+            <query>
+                <![CDATA[select ss from supply$SuppliersSuggestion ss where
+ss.posSup in (select ps from supply$PositionSupplier ps where ps.position in :param$positions)
+]]>
+            </query>
+        </groupDatasource>
+    </dsContext>
+    <actions>
+        <action id="commit"/>
+    </actions>
+    <dialogMode height="600"
+                width="800"/>
+    <layout expand="tab"
+            spacing="true">
+        <filter id="filter"
+                applyTo="tab"
+                datasource="suppliersSuggestionsDs">
+            <properties include=".*"/>
+        </filter>
+        <groupTable id="tab"
+                    editable="true"
+                    fixedGrouping="true"
+                    width="100%">
+            <actions>
+                <action id="create"/>
+                <action id="commit"
+                        caption="msg://commit"
+                        icon="SAVE"
+                        invoke="onCommit"/>
+                <action id="remove"/>
+            </actions>
+            <columns>
+                <group>
+                    <column id="posSup"/>
+                </group>
+                <column id="quantity"
+                        editable="true"
+                        width="50"/>
+                <column id="price"
+                        editable="true"
+                        width="50"/>
+                <column id="supAddress"
+                        editable="true"
+                        width="200"/>
+                <column id="term"
+                        editable="true"
+                        width="50"/>
+            </columns>
+            <rows datasource="suppliersSuggestionsDs"/>
+            <rowsCount/>
+            <buttonsPanel id="buttonsPanel"
+                          alwaysVisible="true">
+                <button id="createBtn"
+                        caption="mainMsg://Add"
+                        icon="CREATE_ACTION"
+                        invoke="onCreateBtnClick"/>
+                <button id="removeBtn"
+                        action="tab.remove"/>
+                <button id="btnCommit"
+                        action="tab.commit"
+                        caption="msg://commit"/>
+            </buttonsPanel>
+        </groupTable>
+    </layout>
+</window>

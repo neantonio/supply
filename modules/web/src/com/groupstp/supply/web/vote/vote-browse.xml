@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<window xmlns="http://schemas.haulmont.com/cuba/window.xsd"
+        caption="msg://browseCaption"
+        class="com.groupstp.supply.web.vote.VoteBrowse"
+        focusComponent="votesTable"
+        lookupComponent="votesTable"
+        messagesPack="com.groupstp.supply.web.vote">
+    <dsContext>
+        <groupDatasource id="votesDs"
+                         class="com.groupstp.supply.entity.Vote"
+                         view="vote-view">
+            <query>
+                <![CDATA[select e from supply$Vote e]]>
+            </query>
+        </groupDatasource>
+    </dsContext>
+    <dialogMode height="600"
+                width="800"/>
+    <layout expand="votesTable"
+            spacing="true">
+        <filter id="filter"
+                applyTo="votesTable"
+                datasource="votesDs">
+            <properties include=".*"/>
+        </filter>
+        <groupTable id="votesTable"
+                    width="100%">
+            <actions>
+                <action id="create"/>
+                <action id="edit"/>
+                <action id="remove"/>
+            </actions>
+            <columns>
+                <column id="position"/>
+                <column id="emp"/>
+                <column id="suggestion"/>
+                <column id="weight"/>
+                <column id="voteTS"/>
+            </columns>
+            <rows datasource="votesDs"/>
+            <rowsCount/>
+            <buttonsPanel id="buttonsPanel"
+                          alwaysVisible="true">
+                <button id="createBtn"
+                        action="votesTable.create"/>
+                <button id="editBtn"
+                        action="votesTable.edit"/>
+                <button id="removeBtn"
+                        action="votesTable.remove"/>
+            </buttonsPanel>
+        </groupTable>
+    </layout>
+</window>
