@@ -39,6 +39,8 @@
             template="com/groupstp/supply/web/suppliers/suppliers-browse.xml"/>
     <screen id="supply$SuppliersSuggestion.browse"
             template="com/groupstp/supply/web/supplierssuggestion/suppliers-suggestion-browse.xml"/>
-    <screen id="supply$Vote.browse"
+    <screen id="supply$Vote.browse1"
             template="com/groupstp/supply/web/vote/vote-browse.xml"/>
+    <screen id="supply$VoteDialog"
+            template="com/groupstp/supply/web/screens/vote.xml"/>
 </screen-config>

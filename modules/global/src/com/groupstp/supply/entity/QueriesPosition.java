@@ -19,6 +19,7 @@ import javax.persistence.TemporalType;
 import com.haulmont.chile.core.annotations.NamePattern;
 import java.math.BigDecimal;
 import com.haulmont.chile.core.annotations.NumberFormat;
+import javax.persistence.OneToOne;
 
 @NamePattern("%s|nomenclature")
 @Table(name = "SUPPLY_QUERIES_POSITION")
@@ -84,6 +85,10 @@ public class QueriesPosition extends StandardEntity {
     @JoinColumn(name = "SPEC_NOMENCLATURE_ID")
     protected Nomenclature specNomenclature;
 
+    @NumberFormat(pattern = "########.##")
+    @Column(name = "START_MINIMAL_PRICE")
+    protected Double startMinimalPrice;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "NOMECLATURE_CHANGE_ID")
     protected Nomenclature nomeclatureChange;
@@ -138,6 +143,51 @@ public class QueriesPosition extends StandardEntity {
 
     @Column(name = "MINIMAL_PRICE")
     protected Double minimalPrice;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "VOTE_RESULT_ID")
+    protected SuppliersSuggestion voteResult;
+
+    @Column(name = "BILL")
+    protected String bill;
+
+    @Column(name = "BILL_QUERY")
+    protected Boolean billQuery;
+
+    public void setBill(String bill) {
+        this.bill = bill;
+    }
+
+    public String getBill() {
+        return bill;
+    }
+
+    public void setBillQuery(Boolean billQuery) {
+        this.billQuery = billQuery;
+    }
+
+    public Boolean getBillQuery() {
+        return billQuery;
+    }
+
+
+    public void setVoteResult(SuppliersSuggestion voteResult) {
+        this.voteResult = voteResult;
+    }
+
+    public SuppliersSuggestion getVoteResult() {
+        return voteResult;
+    }
+
+
+    public void setStartMinimalPrice(Double startMinimalPrice) {
+        this.startMinimalPrice = startMinimalPrice;
+    }
+
+    public Double getStartMinimalPrice() {
+        return startMinimalPrice;
+    }
+
 
     public Double getQuantity() {
         return quantity;

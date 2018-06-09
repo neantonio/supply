@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<window xmlns="http://schemas.haulmont.com/cuba/window.xsd"
+        caption="mainMsg://Vote"
+        class="com.groupstp.supply.web.screens.VoteDialog"
+        messagesPack="com.groupstp.supply.web.screens">
+    <dialogMode closeable="true"
+                resizable="true"/>
+    <layout margin="true">
+        <accordion id="positions"
+                   height="100%"/>
+    </layout>
+</window>

@@ -36,6 +36,7 @@ public class PositionSupplier extends StandardEntity {
     @JoinColumn(name = "SUPPLIER_ID")
     protected Suppliers supplier;
 
+
     public void setSelected(Boolean selected) {
         this.selected = selected;
     }

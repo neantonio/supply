@@ -8,6 +8,8 @@ import com.haulmont.cuba.core.global.Messages;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import com.haulmont.cuba.core.entity.annotation.OnDeleteInverse;
+import com.haulmont.cuba.core.global.DeletePolicy;
 
 @NamePattern("#displayString|posSup,quantity,price,term,supAddress")
 @Table(name = "SUPPLY_SUPPLIERS_SUGGESTION")
@@ -36,6 +38,19 @@ public class SuppliersSuggestion extends StandardEntity {
     @NumberFormat(pattern = "##")
     @Column(name = "TERM", nullable = false)
     protected Integer term;
+
+    @OnDeleteInverse(DeletePolicy.DENY)
+    @OneToOne(fetch = FetchType.LAZY, mappedBy = "voteResult")
+    protected QueriesPosition queriesPosition;
+
+    public void setQueriesPosition(QueriesPosition queriesPosition) {
+        this.queriesPosition = queriesPosition;
+    }
+
+    public QueriesPosition getQueriesPosition() {
+        return queriesPosition;
+    }
+
 
     public void setSupAddress(String supAddress) {
         this.supAddress = supAddress;
@@ -83,8 +98,8 @@ public class SuppliersSuggestion extends StandardEntity {
     public String displayString()
     {
         Messages msgs = AppBeans.get(Messages.class);
-        String msg = msgs.getMessage(getClass(), "Price: %10.2f; Term: %d; Quantity: %d; Address: %s");
-        msg = msgs.formatMessage(getClass(), msg, price, term, quantity, supAddress);
+        String msg = msgs.getMessage( getClass(), "SuppliersSuggestion.displayString");
+        msg = String.format(msg, price, term, quantity, supAddress);
         return msg;
     }
 

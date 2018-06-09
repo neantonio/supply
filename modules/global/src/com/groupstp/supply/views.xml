@@ -242,8 +242,9 @@
           name="suppliersSuggestion-view">
         <property name="posSup"
                   view="_minimal">
-            <property name="selected"/>
         </property>
+        <property name="queriesPosition"
+                  view="_minimal"/>
     </view>
     <view class="com.groupstp.supply.entity.QueriesPosition"
           extends="queriesPosition-SupSelection"
@@ -263,10 +264,12 @@
                   view="_minimal"/>
         <property name="suggestion"
                   view="_minimal">
-            <property name="quantity"/>
-            <property name="price"/>
-            <property name="supAddress"/>
-            <property name="term"/>
         </property>
+    </view>
+    <view class="com.groupstp.supply.entity.QueriesPosition"
+          extends="_minimal"
+          name="queriesPosition-Bills">
+        <property name="bill"/>
+        <property name="billQuery"/>
     </view>
 </views>

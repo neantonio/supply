@@ -9,6 +9,7 @@ import com.haulmont.chile.core.model.MetaProperty;
 import com.haulmont.cuba.core.entity.Entity;
 import com.haulmont.cuba.core.entity.KeyValueEntity;
 import com.haulmont.cuba.core.global.DataManager;
+import com.haulmont.cuba.core.global.Metadata;
 import com.haulmont.cuba.core.global.ValueLoadContext;
 import com.haulmont.cuba.gui.WindowManager;
 import com.haulmont.cuba.gui.components.*;
@@ -216,6 +217,9 @@ public class QueriesPositionBrowse extends AbstractLookup {
         tab.getDatasource().addItem(copy);
     }
 
+    @Inject
+    private Metadata metadata;
+
     /**
      * Копирует текущую позицию
      * @param position позиция для копирования
@@ -224,7 +228,7 @@ public class QueriesPositionBrowse extends AbstractLookup {
     private QueriesPosition copyPosition(QueriesPosition position)
     {
         QueriesPosition src = dataManager.reload(position, "queriesPosition-full");
-        QueriesPosition copy = new QueriesPosition();
+        QueriesPosition copy = metadata.create(QueriesPosition.class);
         Collection<MetaProperty> properties = position.getMetaClass().getProperties();
         for (MetaProperty property : properties) {
             if(property.getDeclaringClass()!=position.getMetaClass().getJavaClass())
@@ -278,6 +282,6 @@ public class QueriesPositionBrowse extends AbstractLookup {
         }
         HashMap<String, Object> items = new HashMap<>();
         items.put("positions", positionsComission.getSelected());
-        openWindow("supply$Vote.browse", WindowManager.OpenType.DIALOG, items);
+        openWindow("supply$VoteDialog", WindowManager.OpenType.DIALOG, items);
     }
 }

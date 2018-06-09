@@ -212,6 +212,7 @@ create table SUPPLY_QUERIES_POSITION (
     POSITION_USEFULNESS boolean,
     POSITION_USEFULNESS_TS timestamp,
     SPEC_NOMENCLATURE_ID uuid,
+    START_MINIMAL_PRICE double precision,
     NOMECLATURE_CHANGE_ID uuid,
     ANALOGS_CORRECTION_FLAG boolean,
     NOM_CONTROL_FLAG boolean,
@@ -228,6 +229,9 @@ create table SUPPLY_QUERIES_POSITION (
     ANALYSIS_FLAG_TS timestamp,
     PRICE_REDUCE boolean,
     MINIMAL_PRICE double precision,
+    VOTE_RESULT_ID uuid,
+    BILL varchar(255),
+    BILL_QUERY boolean,
     --
     primary key (ID)
 )^
@@ -301,6 +305,7 @@ create table SUPPLY_QUERY_POSITION_MOVEMENTS (
     DELETED_BY varchar(50),
     --
     POSITION_ID uuid not null,
+    FINISH_TS timestamp,
     STAGE varchar(50) not null,
     USER_ID uuid not null,
     --

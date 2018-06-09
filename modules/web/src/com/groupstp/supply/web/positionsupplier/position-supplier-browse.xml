@@ -4,17 +4,12 @@
         class="com.groupstp.supply.web.positionsupplier.PositionSupplierBrowse"
         messagesPack="com.groupstp.supply.web.positionsupplier">
     <dsContext>
-        <groupDatasource id="positionSuppliersDs"
-                         allowCommit="false"
-                         class="com.groupstp.supply.entity.PositionSupplier"
-                         view="positionSupplier-view">
-            <query>
-                <![CDATA[select e from supply$PositionSupplier e 
-where 
-e.position in (select distinct f.position from supply$PositionSupplier f
-where f.position.id in :param$positions)]]>
-            </query>
-        </groupDatasource>
+        <valueCollectionDatasource id="ds">
+            <properties idProperty="position">
+                <property class="com.groupstp.supply.entity.QueriesPosition"
+                          name="position"/>
+            </properties>
+        </valueCollectionDatasource>
     </dsContext>
     <dialogMode height="95%"
                 resizable="true"
@@ -23,7 +18,7 @@ where f.position.id in :param$positions)]]>
             spacing="true">
         <filter id="filter"
                 applyTo="tab"
-                datasource="positionSuppliersDs">
+                datasource="ds">
             <properties include=".*"/>
         </filter>
         <hbox spacing="true">
@@ -41,7 +36,7 @@ where f.position.id in :param$positions)]]>
             <columns>
                 <column id="position"/>
             </columns>
-            <rows datasource="positionSuppliersDs"/>
+            <rows datasource="ds"/>
         </table>
     </layout>
 </window>

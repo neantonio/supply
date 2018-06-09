@@ -44,6 +44,14 @@ where e.currentStage='Analysis']]>
 where e.currentStage='Comission']]>
             </query>
         </groupDatasource>
+        <groupDatasource id="dsBills"
+                         class="com.groupstp.supply.entity.QueriesPosition"
+                         view="queriesPosition-Bills">
+            <query>
+                <![CDATA[select e from supply$QueriesPosition e
+where e.currentStage='Bills']]>
+            </query>
+        </groupDatasource>
     </dsContext>
     <dialogMode height="600"
                 width="800"/>
@@ -398,16 +406,91 @@ where e.currentStage='Comission']]>
                             <action id="remove"/>
                         </actions>
                         <columns>
-                            <group>
-                                <column id="query.urgency"/>
-                                <column id="query.company"/>
-                                <column id="query.division"/>
-                            </group>
-                            <column id="query"/>
-                            <column id="nomenclature"/>
+                            <column id="storeControlFlag"/>
+                            <column id="currentStage"/>
+                            <column id="positionType"/>
+                            <column id="numberArticle"/>
+                            <column id="specification"/>
                             <column id="quantity"/>
+                            <column id="analogsAllowed"/>
+                            <column id="positionUsefulness"/>
+                            <column id="positionUsefulnessTS"/>
+                            <column id="startMinimalPrice"/>
+                            <column id="analogsCorrectionFlag"/>
+                            <column id="nomControlFlag"/>
+                            <column id="nomControlFlagTS"/>
+                            <column id="inStore"/>
+                            <column id="storeControlFlagTS"/>
+                            <column id="supplyWorkoutType"/>
+                            <column id="supSelectionFlag"/>
+                            <column id="supSelectionFlagTS"/>
+                            <column id="analysisResult"/>
+                            <column id="analysisFlag"/>
+                            <column id="analysisFlagTS"/>
+                            <column id="priceReduce"/>
+                            <column id="minimalPrice"/>
                         </columns>
-                        <rows datasource="dsAnalysis"/>
+                        <rows datasource="dsComission"/>
+                    </groupTable>
+                </vbox>
+            </tab>
+            <tab id="tabBills"
+                 caption="mainMsg://Bills"
+                 margin="true,false,false,false"
+                 spacing="true">
+                <vbox id="vboxBills"
+                      expand="positionsBills"
+                      height="100%"
+                      spacing="true">
+                    <filter id="filterBills"
+                            applyTo="positionsBills"
+                            datasource="dsBills">
+                        <properties include=".*"/>
+                    </filter>
+                    <buttonsPanel>
+                        <button id="btnWriteBills"
+                                caption="mainMsg://Write"
+                                description="mainMsg://Write table changes"
+                                icon="SAVE"
+                                invoke="onBtnWriteClick"/>
+                        <button id="btnDoneBills"
+                                caption="mainMsg://Done"
+                                icon="STEP_FORWARD"
+                                invoke="onBtnDoneClick"/>
+                        <button id="btnCancelBills"
+                                caption="mainMsg://Cancel"
+                                icon="CANCEL"/>
+                        <button id="btnRefreshBills"
+                                action="positionsSupSelection.refresh"
+                                caption="mainMsg://Refresh"
+                                icon="REFRESH_ACTION"/>
+                        <button id="btnExpandAllBills"
+                                caption="mainMsg://Expand All"
+                                icon="EXPAND"
+                                invoke="onBtnExpandAllClick"/>
+                        <button id="btnCollapseAllBills"
+                                caption="mainMsg://Collapse all"
+                                icon="COMPRESS"
+                                invoke="onBtnCollapseAllClick"/>
+                        <button id="btnQueryBill"
+                                caption="msg://Query bill"
+                                icon="ENVELOPE"/>
+                    </buttonsPanel>
+                    <groupTable id="positionsBills"
+                                fixedGrouping="true"
+                                presentations="true"
+                                width="100%">
+                        <actions>
+                            <action id="create"/>
+                            <action id="refresh"/>
+                            <action id="edit"/>
+                            <action id="remove"/>
+                        </actions>
+                        <columns>
+                            <column id="bill"/>
+                            <column id="billQuery"/>
+                        </columns>
+                        <rows datasource="dsBills"/>
                     </groupTable>
                 </vbox>
             </tab>

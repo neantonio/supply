@@ -1,10 +1,7 @@
 package com.groupstp.supply.service;
 
 import com.groupstp.supply.entity.*;
-import com.haulmont.cuba.core.global.DataManager;
-import com.haulmont.cuba.core.global.LoadContext;
-import com.haulmont.cuba.core.global.Scripting;
-import com.haulmont.cuba.core.global.UserSessionSource;
+import com.haulmont.cuba.core.global.*;
 import groovy.lang.Binding;
 import org.slf4j.Logger;
 import org.springframework.stereotype.Service;
@@ -66,6 +63,7 @@ public class WorkflowServiceBean implements WorkflowService {
      * @param stage этап, на который переводится позиция
      */
     public void movePositionTo(QueriesPosition position, Stages stage) {
+        //TODO: add finishTS to current position
         String strStage = position.getCurrentStage().name();
         strStage = strStage.substring(0, 1).toLowerCase()+strStage.substring(1);
         position.setValue(strStage+"Flag", true);
@@ -75,6 +73,9 @@ public class WorkflowServiceBean implements WorkflowService {
         createMovementRecord(position, stage);
     }
 
+    @Inject
+    private Metadata metadata;
+
     /**
      * Запись в журнал движений позиции
      * @param position позиция
@@ -82,7 +83,7 @@ public class WorkflowServiceBean implements WorkflowService {
      */
     protected void createMovementRecord(QueriesPosition position, Stages stage)
     {
-        QueryPositionMovements movement = new QueryPositionMovements();
+        QueryPositionMovements movement = metadata.create(QueryPositionMovements.class);
         movement.setPosition(position);
         movement.setStage(stage);
         movement.setUser(userSessionSource.getUserSession().getUser());
@@ -116,7 +117,7 @@ public class WorkflowServiceBean implements WorkflowService {
 
     /**
      * Возвращает для позиции queryPosition список вариантов движения заявки
-     * @param queryPosition
+     * @param queryPosition - позиция заявки
      * @return QueryWorkflowDetail
      */
     private List<QueryWorkflowDetail> getWorkflowDetailsForPositions(QueriesPosition queryPosition)

@@ -23,6 +23,10 @@ public class QueryPositionMovements extends StandardEntity {
     @JoinColumn(name = "POSITION_ID")
     protected QueriesPosition position;
 
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "FINISH_TS")
+    protected Date finishTS;
+
     @NotNull
     @Column(name = "STAGE", nullable = false)
     protected String stage;
@@ -31,6 +35,15 @@ public class QueryPositionMovements extends StandardEntity {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "USER_ID")
     protected User user;
+
+    public void setFinishTS(Date finishTS) {
+        this.finishTS = finishTS;
+    }
+
+    public Date getFinishTS() {
+        return finishTS;
+    }
+
 
     public void setPosition(QueriesPosition position) {
         this.position = position;

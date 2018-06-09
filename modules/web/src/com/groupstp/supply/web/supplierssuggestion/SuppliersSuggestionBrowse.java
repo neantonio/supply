@@ -2,9 +2,11 @@ package com.groupstp.supply.web.supplierssuggestion;
 
 import com.groupstp.supply.entity.PositionSupplier;
 import com.groupstp.supply.entity.QueriesPosition;
+import com.groupstp.supply.entity.QueryPositionMovements;
 import com.groupstp.supply.entity.SuppliersSuggestion;
 import com.haulmont.cuba.core.global.DataManager;
 import com.haulmont.cuba.core.global.LoadContext;
+import com.haulmont.cuba.core.global.Metadata;
 import com.haulmont.cuba.gui.WindowManager;
 import com.haulmont.cuba.gui.components.AbstractLookup;
 import com.haulmont.cuba.gui.components.GroupTable;
@@ -51,22 +53,21 @@ public class SuppliersSuggestionBrowse extends AbstractLookup {
         addValues(positions);
     }
 
+    @Inject
+    private Metadata metadata;
+
     /**
-     * Создаёт предложения для поставщиков
-     * @param positions
+     * Создаёт предложения поставщиков
+     * @param positions - список позиций заявок, для которых создаются предложения поставщиков
      */
     private void addValues(Set<QueriesPosition> positions) {
         LoadContext<PositionSupplier> ctx = LoadContext.create(PositionSupplier.class).
-                setQuery(LoadContext.createQuery("select ps from supply$PositionSupplier ps where ps.position in :positions")
+                setQuery(LoadContext.createQuery("select ps from supply$PositionSupplier ps where ps.position in :positions " +
+                        "AND ps NOT IN (select ss.posSup from  supply$SuppliersSuggestion ss) ")
                 .setParameter("positions", positions)).setView("positionSupplier-view");
         List<PositionSupplier> psList = dataManager.loadList(ctx);
-        ctx = LoadContext.create(PositionSupplier.class).
-                setQuery(LoadContext.createQuery("select ss.posSup from supply$SuppliersSuggestion ss"));
-        List<PositionSupplier> positionList = dataManager.loadList(ctx);
         for (PositionSupplier ps : psList) {
-            if(positionList.contains(ps))
-                continue;
-            SuppliersSuggestion ss = new SuppliersSuggestion();
+            SuppliersSuggestion ss = metadata.create(SuppliersSuggestion.class);
             ss.setPosSup(ps);
             ss.setQuantity(ps.getPosition().getQuantity());
             ss.setPrice(0.);
@@ -78,7 +79,7 @@ public class SuppliersSuggestionBrowse extends AbstractLookup {
     }
 
     /**
-     * Добавляет предложение. используя в текущую выбранную позицию-поставшик
+     * Добавляет предложение поставщика, используя поставщика текущей выбранной позиции
      */
     public void onCreateBtnClick() {
         SuppliersSuggestion ss = tab.getSingleSelected();
@@ -88,14 +89,14 @@ public class SuppliersSuggestionBrowse extends AbstractLookup {
             return;
         }
         PositionSupplier ps = tab.getSingleSelected().getPosSup();
-        ss = new SuppliersSuggestion();
+        ss = metadata.create(SuppliersSuggestion.class);
         ss.setPosSup(ps);
         suppliersSuggestionsDs.addItem(ss);
     }
 
     /**
      * Заносит изменения в таблице в БД
-     * @param source
+     * @param source компонент, вызвавший действие
      */
     public void onCommit(Component source) {
         suppliersSuggestionsDs.commit();
