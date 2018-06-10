@@ -3,6 +3,7 @@ package com.groupstp.supply.web.query;
 import com.groupstp.supply.entity.PositionType;
 import com.groupstp.supply.entity.QueriesPosition;
 import com.groupstp.supply.entity.Stages;
+import com.groupstp.supply.service.WorkflowService;
 import com.haulmont.bali.util.ParamsMap;
 import com.haulmont.cuba.core.app.UniqueNumbersService;
 import com.haulmont.cuba.gui.WindowManager;
@@ -12,6 +13,7 @@ import com.haulmont.cuba.gui.components.DataGrid;
 import com.haulmont.cuba.gui.components.Field;
 
 import javax.inject.Inject;
+import java.util.Collection;
 import java.util.Map;
 import com.haulmont.cuba.gui.components.Component;
 
@@ -29,7 +31,7 @@ public class QueryEdit extends AbstractEditor<Query> {
     protected void postInit() {
         super.postInit();
         //если заявка передана в работу - возможен только просмотр
-        Boolean inWork = getItem().getInWork()==null ? false : true;
+        Boolean inWork = getItem().getInWork()==null ? false : getItem().getInWork();
         if(inWork)
         {
             showNotification(getMessage("ViewOnly"));
@@ -51,11 +53,8 @@ public class QueryEdit extends AbstractEditor<Query> {
         setupAnalogsColumn(); //добавление генерируемой колонки аналогов
     }
     
-    private void setupAnalogsColumn()
-    {
-//        positions.addGeneratedColumn("analogs", e -> {
-//
-//        });
+    private void setupAnalogsColumn() {
+        //TODO: отображение аналогов (З2)
     }
     
     private void setupEditorListeners()
@@ -94,7 +93,9 @@ public class QueryEdit extends AbstractEditor<Query> {
     }
 
 
-    //присваиваине нового номера
+    /**
+     * присваиваине нового номера
+     */
     @Override
     protected void initNewItem(Query item) {
         super.initNewItem(item);
@@ -109,10 +110,23 @@ public class QueryEdit extends AbstractEditor<Query> {
         positions.getDatasource().addItem(p);
     }
 
-    public void onFinsh(Component source) {
+    public void onFinsh(Component source) throws Exception {
+        moveToWork();
+    }
+
+    @Inject
+    private WorkflowService workflowService;
+
+    /**
+     * передача заявки в работу
+     */
+    public void moveToWork() throws Exception {
+        for (QueriesPosition qp: (Collection<QueriesPosition>)positions.getDatasource().getItems()) {
+            workflowService.movePosition(qp);
+        }
+        positions.getDatasource().refresh();
         getItem().setInWork(true);
         commit();
-        //TODO: отправить все позиции на номенклатурный контроль
     }
 
     //по нажатию кнопки "редактировать аналоги"

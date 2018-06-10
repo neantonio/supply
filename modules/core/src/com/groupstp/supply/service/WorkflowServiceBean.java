@@ -57,6 +57,9 @@ public class WorkflowServiceBean implements WorkflowService {
             throw new Exception(errors);
     }
 
+    @Inject
+    private TimeSource timeSource;
+
     /**
      * Переводит позицию на этап без каких-либо проверок и условий
      * @param position позиция заявки
@@ -67,7 +70,7 @@ public class WorkflowServiceBean implements WorkflowService {
         String strStage = position.getCurrentStage().name();
         strStage = strStage.substring(0, 1).toLowerCase()+strStage.substring(1);
         position.setValue(strStage+"Flag", true);
-        position.setValue(strStage+"FlagTS", new Date());
+        position.setValue(strStage+"FlagTS", timeSource.currentTimestamp());
         position.setCurrentStage(stage);
         dataManager.commit(position);
         createMovementRecord(position, stage);
