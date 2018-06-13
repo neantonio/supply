@@ -406,27 +406,11 @@ where e.currentStage='Bills']]>
                             <action id="remove"/>
                         </actions>
                         <columns>
-                            <column id="storeControlFlag"/>
-                            <column id="currentStage"/>
-                            <column id="positionType"/>
-                            <column id="numberArticle"/>
-                            <column id="specification"/>
+                            <column id="query.company"/>
+                            <column id="query.division"/>
+                            <column id="nomenclature"/>
                             <column id="quantity"/>
-                            <column id="analogsAllowed"/>
-                            <column id="positionUsefulness"/>
-                            <column id="positionUsefulnessTS"/>
                             <column id="startMinimalPrice"/>
-                            <column id="analogsCorrectionFlag"/>
-                            <column id="nomControlFlag"/>
-                            <column id="nomControlFlagTS"/>
-                            <column id="inStore"/>
-                            <column id="storeControlFlagTS"/>
-                            <column id="supplyWorkoutType"/>
-                            <column id="supSelectionFlag"/>
-                            <column id="supSelectionFlagTS"/>
-                            <column id="analysisResult"/>
-                            <column id="analysisFlag"/>
-                            <column id="analysisFlagTS"/>
                             <column id="priceReduce"/>
                             <column id="minimalPrice"/>
                         </columns>

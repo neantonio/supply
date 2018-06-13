@@ -252,7 +252,17 @@
     </view>
     <view class="com.groupstp.supply.entity.QueriesPosition"
           extends="_local"
-          name="queriesPosition-Comission"/>
+          name="queriesPosition-Comission">
+        <property name="query"
+                  view="_minimal">
+            <property name="company"
+                      view="_minimal"/>
+            <property name="division"
+                      view="_minimal"/>
+        </property>
+        <property name="nomenclature"
+                  view="_minimal"/>
+    </view>
     <view class="com.groupstp.supply.entity.Vote"
           extends="_local"
           name="vote-view">
