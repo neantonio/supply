@@ -14,7 +14,6 @@ public enum Stages implements EnumClass<String> {
     Analysis("Analysis"),
     Comission("Comission"),
     Bills("Bills"),
-    Procuration("Procuration"),
     Logistic("Logistic"),
     Retention("Retention"),
     Abortion("Abortion"),
