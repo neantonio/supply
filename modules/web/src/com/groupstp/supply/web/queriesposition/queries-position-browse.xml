@@ -52,6 +52,14 @@ where e.currentStage='Comission']]>
 where e.currentStage='Bills']]>
             </query>
         </groupDatasource>
+        <groupDatasource id="dsProcuration"
+                         class="com.groupstp.supply.entity.QueriesPosition"
+                         view="queriesPosition-Procuration">
+            <query>
+                <![CDATA[select e from supply$QueriesPosition e
+where e.currentStage='Procuration']]>
+            </query>
+        </groupDatasource>
     </dsContext>
     <dialogMode height="600"
                 width="800"/>
@@ -475,6 +483,60 @@ where e.currentStage='Bills']]>
                             <column id="billQuery"/>
                         </columns>
                         <rows datasource="dsBills"/>
+                    </groupTable>
+                </vbox>
+            </tab>
+            <tab id="tabProcuration"
+                 caption="mainMsg://Procuration"
+                 margin="true,false,false,false"
+                 spacing="true">
+                <vbox id="vboxProcuration"
+                      expand="positionsProcuration"
+                      height="100%"
+                      spacing="true">
+                    <filter id="filterProcuration"
+                            applyTo="positionsProcuration"
+                            datasource="dsProcuration">
+                        <properties include=".*"/>
+                    </filter>
+                    <buttonsPanel>
+                        <button id="btnWriteProcuration"
+                                caption="mainMsg://Write"
+                                description="mainMsg://Write table changes"
+                                icon="SAVE"
+                                invoke="onBtnWriteClick"/>
+                        <button id="btnDoneProcuration"
+                                caption="mainMsg://Done"
+                                icon="STEP_FORWARD"
+                                invoke="onBtnDoneClick"/>
+                        <button id="btnCancelProcuration"
+                                caption="mainMsg://Cancel"
+                                icon="CANCEL"/>
+                        <button id="btnRefreshProcuration"
+                                action="positionsSupSelection.refresh"
+                                caption="mainMsg://Refresh"
+                                icon="REFRESH_ACTION"/>
+                        <button id="btnExpandAllProcuration"
+                                caption="mainMsg://Expand All"
+                                icon="EXPAND"
+                                invoke="onBtnExpandAllClick"/>
+                        <button id="btnCollapseAllProcuration"
+                                caption="mainMsg://Collapse all"
+                                icon="COMPRESS"
+                                invoke="onBtnCollapseAllClick"/>
+                    </buttonsPanel>
+                    <groupTable id="positionsProcuration"
+                                fixedGrouping="true"
+                                presentations="true"
+                                width="100%">
+                        <actions>
+                            <action id="refresh"/>
+                        </actions>
+                        <columns>
+                            <column id="bill"/>
+                            <column id="billQuery"/>
+                        </columns>
+                        <rows datasource="dsProcuration"/>
                     </groupTable>
                 </vbox>
             </tab>

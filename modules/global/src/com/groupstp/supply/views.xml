@@ -282,4 +282,7 @@
         <property name="bill"/>
         <property name="billQuery"/>
     </view>
+    <view class="com.groupstp.supply.entity.QueriesPosition"
+          extends="_local"
+          name="queriesPosition-Procuration"/>
 </views>
