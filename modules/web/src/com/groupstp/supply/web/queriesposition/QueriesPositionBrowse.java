@@ -284,4 +284,24 @@ public class QueriesPositionBrowse extends AbstractLookup {
         items.put("positions", positionsComission.getSelected());
         openWindow("supply$VoteDialog", WindowManager.OpenType.DIALOG, items);
     }
+
+    @Inject
+    private GroupTable<QueriesPosition> listPosition;
+
+    @Override
+    public void init(Map<String, Object> params) {
+        listPosition.addGeneratedColumn("summ", new Table.PrintableColumnGenerator<QueriesPosition, String>() {
+            @Override
+            public Component generateCell(QueriesPosition entity) {
+                Label label = (Label) componentsFactory.createComponent(Label.NAME);
+                label.setValue(entity.getVoteResult().getPrice() * entity.getVoteResult().getQuantity());
+                return label;
+            }
+
+            @Override
+            public String getValue(QueriesPosition entity) {
+                return Double.toString(entity.getVoteResult().getPrice() * entity.getVoteResult().getQuantity());
+            }
+        });
+    }
 }

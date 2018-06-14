@@ -439,11 +439,11 @@ where e.currentStage='Bills']]>
                  margin="true,false,false,false"
                  spacing="true">
                 <vbox id="vboxBills"
-                      expand="positionsBills"
+                      expand="listPosition"
                       height="100%"
                       spacing="true">
                     <filter id="filterBills"
-                            applyTo="positionsBills"
+                            applyTo="listPosition"
                             datasource="dsBills">
                         <properties include=".*"/>
                     </filter>
@@ -477,6 +477,15 @@ where e.currentStage='Bills']]>
                                 icon="ENVELOPE"/>
                     </buttonsPanel>
                     <groupTable id="positionsBills"
+                                height="100px"
+                                width="200px">
+                        <columns>
+                            <column id="bill"/>
+                            <column id="billQuery"/>
+                        </columns>
+                        <rows datasource="dsBills"/>
+                    </groupTable>
+                    <groupTable id="listPosition"
                                 fixedGrouping="true"
                                 presentations="true"
                                 width="100%">
@@ -487,8 +496,13 @@ where e.currentStage='Bills']]>
                             <action id="remove"/>
                         </actions>
                         <columns>
-                            <column id="bill"/>
-                            <column id="billQuery"/>
+                            <column id="query"/>
+                            <column id="query.company"/>
+                            <column id="query.division"/>
+                            <column id="query.urgency"/>
+                            <column id="nomenclature"/>
+                            <column id="voteResult.price"/>
+                            <column id="voteResult.quantity"/>
                         </columns>
                         <rows datasource="dsBills"/>
                     </groupTable>
