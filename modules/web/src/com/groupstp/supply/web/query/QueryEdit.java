@@ -111,6 +111,7 @@ public class QueryEdit extends AbstractEditor<Query> {
     }
 
     public void onFinsh(Component source) throws Exception {
+        commit();
         moveToWork();
     }
 

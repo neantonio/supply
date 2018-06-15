@@ -290,7 +290,7 @@ public class QueriesPositionBrowse extends AbstractLookup {
 
     @Override
     public void init(Map<String, Object> params) {
-        listPosition.addGeneratedColumn("summ", new Table.PrintableColumnGenerator<QueriesPosition, String>() {
+        listPosition.addGeneratedColumn("Сумма", new Table.PrintableColumnGenerator<QueriesPosition, String>() {
             @Override
             public Component generateCell(QueriesPosition entity) {
                 Label label = (Label) componentsFactory.createComponent(Label.NAME);

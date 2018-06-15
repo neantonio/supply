@@ -69,8 +69,10 @@ public class WorkflowServiceBean implements WorkflowService {
         //TODO: add finishTS to current position
         String strStage = position.getCurrentStage().name();
         strStage = strStage.substring(0, 1).toLowerCase()+strStage.substring(1);
-        position.setValue(strStage+"Flag", true);
-        position.setValue(strStage+"FlagTS", timeSource.currentTimestamp());
+        if(position.getMetaClass().getProperty(strStage+"Flag")!=null) {
+            position.setValue(strStage + "Flag", true);
+            position.setValue(strStage + "FlagTS", timeSource.currentTimestamp());
+        }
         position.setCurrentStage(stage);
         dataManager.commit(position);
         createMovementRecord(position, stage);
