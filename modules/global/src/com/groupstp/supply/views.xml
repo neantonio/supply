@@ -67,6 +67,18 @@
                   view="_minimal"/>
         <property name="store"
                   view="_minimal"/>
+        <property name="query"
+                  view="_minimal"/>
+        <property name="specNomenclature"
+                  view="_minimal"/>
+        <property name="nomeclatureChange"
+                  view="_minimal"/>
+        <property name="position"
+                  view="_minimal"/>
+        <property name="srcStore"
+                  view="_minimal"/>
+        <property name="voteResult"
+                  view="_minimal"/>
     </view>
     <view class="com.groupstp.supply.entity.Nomenclature"
           extends="_local"
@@ -261,6 +273,8 @@
                       view="_minimal"/>
         </property>
         <property name="nomenclature"
+                  view="_minimal"/>
+        <property name="voteResult"
                   view="_minimal"/>
     </view>
     <view class="com.groupstp.supply.entity.Vote"

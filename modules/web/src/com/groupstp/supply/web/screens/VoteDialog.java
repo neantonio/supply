@@ -3,10 +3,7 @@ package com.groupstp.supply.web.screens;
 import com.groupstp.supply.entity.QueriesPosition;
 import com.groupstp.supply.entity.SuppliersSuggestion;
 import com.groupstp.supply.entity.Vote;
-import com.haulmont.cuba.core.global.DataManager;
-import com.haulmont.cuba.core.global.LoadContext;
-import com.haulmont.cuba.core.global.Metadata;
-import com.haulmont.cuba.core.global.TimeSource;
+import com.haulmont.cuba.core.global.*;
 import com.haulmont.cuba.gui.WindowManager;
 import com.haulmont.cuba.gui.components.AbstractWindow;
 import com.haulmont.cuba.gui.components.AbstractFrame;
@@ -15,6 +12,7 @@ import com.haulmont.cuba.gui.components.OptionsGroup;
 import com.haulmont.cuba.gui.data.impl.ValueCollectionDatasourceImpl;
 import com.haulmont.cuba.gui.data.impl.ValueDatasource;
 import com.haulmont.cuba.gui.xml.layout.ComponentsFactory;
+import com.haulmont.cuba.security.entity.User;
 import com.haulmont.cuba.security.global.UserSession;
 
 import javax.inject.Inject;
@@ -49,7 +47,8 @@ public class VoteDialog extends AbstractWindow {
             LoadContext<SuppliersSuggestion> ctx = LoadContext.create(SuppliersSuggestion.class).
                     setQuery(LoadContext.createQuery("select ss from supply$SuppliersSuggestion ss where "+
                             "ss.posSup in (select ps from supply$PositionSupplier ps where ps.position in :positions)")
-                            .setParameter("positions", qp)).setView("suppliersSuggestion-view");
+                            .setParameter("positions", qp)
+                    ).setView("suppliersSuggestion-view");
             List<SuppliersSuggestion> ssList = dataManager.loadList(ctx);
             for (SuppliersSuggestion ss : ssList) {
                 QueriesPosition p = ss.getPosSup().getPosition();
@@ -70,8 +69,9 @@ public class VoteDialog extends AbstractWindow {
             }
 
             LoadContext<Vote> vctx = LoadContext.create(Vote.class)
-                    .setQuery(LoadContext.createQuery("select v from supply$Vote v where v.position.id in :positions")
-                        .setParameter("positions", qp))
+                    .setQuery(LoadContext.createQuery("select v from supply$Vote v where v.position.id in :positions and v.emp.id=:user")
+                            .setParameter("positions", qp)
+                            .setParameter("user", userSession.getUser()))
                     .setView("vote-view");
             List<Vote> votes = dataManager.loadList(vctx);
             for(Vote v:votes)
@@ -105,6 +105,9 @@ public class VoteDialog extends AbstractWindow {
             vote.setWeight(1);
             vote.setEmp(userSession.getUser());
             vote.setPosition(value.getPosSup().getPosition());
+        }
+        else if(value.equals(vote.getSuggestion())) {
+            return;
         }
         vote.setVoteTS(timeSource.currentTimestamp());
         vote.setSuggestion(value);

@@ -14,6 +14,8 @@
                        value="com.groupstp.supply.service.WorkflowService"/>
                 <entry key="supply_GroovyTestService"
                        value="com.groupstp.supply.service.GroovyTestService"/>
+                <entry key="supply_VoteService"
+                       value="com.groupstp.supply.service.VoteService"/>
             </map>
         </property>
     </bean>

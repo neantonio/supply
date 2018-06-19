@@ -107,9 +107,11 @@
                         <column id="destStage"/>
                         <column id="priority"/>
                         <column id="validation"/>
-                        <column id="validationScript"/>
+                        <column id="validationScript"
+                                maxTextLength="25"/>
                         <column id="conditions"/>
-                        <column id="script"/>
+                        <column id="script"
+                                maxTextLength="25"/>
                     </columns>
                     <rows datasource="detailsDs"/>
                     <buttonsPanel>

@@ -4,6 +4,7 @@ import com.groupstp.supply.entity.QueriesPosition;
 import com.groupstp.supply.entity.Query;
 import com.groupstp.supply.entity.Stages;
 import com.groupstp.supply.service.GroovyTestService;
+import com.groupstp.supply.service.VoteService;
 import com.groupstp.supply.service.WorkflowService;
 import com.haulmont.chile.core.model.MetaProperty;
 import com.haulmont.cuba.core.entity.Entity;
@@ -162,15 +163,22 @@ public class QueriesPositionBrowse extends AbstractLookup {
      * Для списка выделенных позиций пытается первести их на следующий этап
      */
     public void onBtnDoneClick() throws Exception {
+        movePositions();
+    }
+
+    private void movePositions() throws Exception {
         GroupTable<QueriesPosition> grpTab = getOpenedStageTable();
         GroupDatasource ds = grpTab.getDatasource();
         Set<QueriesPosition> positions = grpTab.getSelected();
         for (QueriesPosition position: positions) {
             workflowService.movePosition(position);
+//TEST groovy scripts
 //            groovyTestService.testScript( position);
         }
         ds.refresh();
     }
+
+
 
     /**
      * Обработчик нажатия кнопки Записать.
@@ -285,5 +293,23 @@ public class QueriesPositionBrowse extends AbstractLookup {
         HashMap<String, Object> items = new HashMap<>();
         items.put("positions", positionsComission.getSelected());
         openWindow("supply$VoteDialog", WindowManager.OpenType.DIALOG, items);
+    }
+
+    public void onBtnDoneClickComission() throws Exception {
+        setVote();
+    }
+
+    @Inject
+    private VoteService voteService;
+
+    private void setVote() throws Exception {
+        GroupTable<QueriesPosition> grpTab = getOpenedStageTable();
+        GroupDatasource ds = grpTab.getDatasource();
+        Set<QueriesPosition> positions = grpTab.getSelected();
+        for (QueriesPosition position: positions) {
+            voteService.setVoteForPosition(position);
+            workflowService.movePosition(position);
+        }
+        ds.refresh();
     }
 }

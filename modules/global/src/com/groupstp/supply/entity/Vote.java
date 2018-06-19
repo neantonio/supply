@@ -15,7 +15,6 @@ import javax.persistence.TemporalType;
 import com.haulmont.chile.core.annotations.NamePattern;
 import com.haulmont.cuba.core.entity.annotation.Listeners;
 
-@Listeners("supply_VoteListener")
 @NamePattern("%s %s %s %s|position,suggestion,weight,voteTS")
 @Table(name = "SUPPLY_VOTE")
 @Entity(name = "supply$Vote")

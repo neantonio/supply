@@ -1,8 +1,10 @@
 package com.groupstp.supply.service
 
+import com.groupstp.supply.entity.Vote
 import com.haulmont.cuba.core.entity.KeyValueEntity
 import com.haulmont.cuba.core.global.AppBeans
 import com.haulmont.cuba.core.global.DataManager
+import com.haulmont.cuba.core.global.LoadContext
 import com.haulmont.cuba.core.global.ValueLoadContext
 import org.springframework.stereotype.Service
 
@@ -52,7 +54,35 @@ public class GroovyTestServiceBean implements GroovyTestService {
         return true
     }
 
+    boolean testVotes(position)
+    {
+        DataManager dataManager = AppBeans.get(DataManager.class)
+        List errors = []
+        String query = 'select count(v.suggestion), sum(v.weight), v.suggestion from supply$Vote v ' +
+                'where v.position.id=:position ' +
+                'group by v.suggestion ' +
+                'order by sum(v.weight) desc';
+        ValueLoadContext ctx = ValueLoadContext.create().setQuery(ValueLoadContext.createQuery(query)
+                .setParameter("position",position))
+        .addProperty("count")
+        .addProperty("weight")
+        .addProperty("suggestion")
+        def maxw = 0
+        def count = 0
+        List res = dataManager.loadValues(ctx)
+        for(r in res)
+        {
+            int w = r.getValue("weight")
+            if(w>maxw)
+                maxw = w
+            else if(w.equals(maxw))
+                return false;
+            count+=r.getValue("count")
+        }
+        return maxw>0 && count>=3
+    }
+
     boolean testScript(Object position) {
-        return testAnalisys(position)
+        return testVotes(position)
     }
 }
