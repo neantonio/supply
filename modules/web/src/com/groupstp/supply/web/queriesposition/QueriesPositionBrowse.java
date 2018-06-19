@@ -243,13 +243,14 @@ public class QueriesPositionBrowse extends AbstractLookup {
      * Открывает подбор поставщиков
      */
     public void onBtnSuppliersClick() {
-        if(positionsSupSelection.getSelected().size()==0)
+        GroupTable tab = getOpenedStageTable();
+        if(tab.getSelected().size()==0)
         {
             showNotification(getMessage("Select position first"), NotificationType.WARNING);
             return;
         }
         HashMap<String, Object> items = new HashMap<>();
-        items.put("positions", positionsSupSelection.getSelected());
+        items.put("positions", tab.getSelected());
         openWindow("supply$PositionSupplier.browse", WindowManager.OpenType.DIALOG, items);
     }
 
@@ -257,13 +258,14 @@ public class QueriesPositionBrowse extends AbstractLookup {
      * Открывает ввод предложений
      */
     public void onBtnSuggestionsClick() {
-        if(positionsSupSelection.getSelected().size()==0)
+        GroupTable tab = getOpenedStageTable();
+        if(tab.getSelected().size()==0)
         {
             showNotification(getMessage("Select position first"), NotificationType.WARNING);
             return;
         }
         HashMap<String, Object> items = new HashMap<>();
-        items.put("positions", positionsSupSelection.getSelected());
+        items.put("positions", tab.getSelected());
         openWindow("supply$SuppliersSuggestion.browse", WindowManager.OpenType.DIALOG, items);
     }
 
