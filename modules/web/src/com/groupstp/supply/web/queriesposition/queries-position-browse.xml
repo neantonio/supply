@@ -52,6 +52,22 @@ where e.currentStage='Comission']]>
 where e.currentStage='Bills']]>
             </query>
         </groupDatasource>
+        <groupDatasource id="billsesDs"
+                         class="com.groupstp.supply.entity.Bills"
+                         view="bills-view">
+            <query>
+                <![CDATA[select e from supply$Bills e]]>
+            </query>
+        </groupDatasource>
+        <groupDatasource id="currentBillPositionsDs"
+                         class="com.groupstp.supply.entity.QueriesPosition"
+                         view="queriesPosition-Bills">
+            <query>
+                <![CDATA[select e from supply$QueriesPosition e
+where e.bills.id = :custom$billId 
+and e.voteResult.posSup.supplier.id = :custom$supplerId]]>
+            </query>
+        </groupDatasource>
     </dsContext>
     <dialogMode height="600"
                 width="800"/>
@@ -439,11 +455,9 @@ where e.currentStage='Bills']]>
                  margin="true,false,false,false"
                  spacing="true">
                 <vbox id="vboxBills"
-                      expand="listPosition"
-                      height="100%"
                       spacing="true">
                     <filter id="filterBills"
-                            applyTo="listPosition"
+                            applyTo="positionsBills"
                             datasource="dsBills">
                         <properties include=".*"/>
                     </filter>
@@ -475,37 +489,65 @@ where e.currentStage='Bills']]>
                         <button id="btnQueryBill"
                                 caption="msg://Query bill"
                                 icon="ENVELOPE"/>
+                        <button id="btnBills"
+                                action="billsTable.create"
+                                caption="Создание счета"/>
+                        <button id="btnAttach"
+                                caption="Прикрепить"
+                                invoke="onBtnAttachClick"/>
+                        <button id="btnUndock"
+                                caption="Открепить"
+                                invoke="onBtnUndockClick"/>
                     </buttonsPanel>
-                    <groupTable id="positionsBills"
-                                height="100px"
-                                width="200px">
-                        <columns>
-                            <column id="bill"/>
-                            <column id="billQuery"/>
-                        </columns>
-                        <rows datasource="dsBills"/>
-                    </groupTable>
-                    <groupTable id="listPosition"
-                                fixedGrouping="true"
-                                presentations="true"
-                                width="100%">
-                        <actions>
-                            <action id="create"/>
-                            <action id="refresh"/>
-                            <action id="edit"/>
-                            <action id="remove"/>
-                        </actions>
-                        <columns>
-                            <column id="query"/>
-                            <column id="query.company"/>
-                            <column id="query.division"/>
-                            <column id="query.urgency"/>
-                            <column id="nomenclature"/>
-                            <column id="voteResult.price"/>
-                            <column id="voteResult.quantity"/>
-                        </columns>
-                        <rows datasource="dsBills"/>
-                    </groupTable>
+                    <hbox expand="positionsBills"
+                          height="500px"
+                          spacing="true"
+                          width="100%">
+                        <table id="billsTable"
+                               height="100%"
+                               presentations="true">
+                            <actions>
+                                <action id="create"/>
+                                <action id="refresh"/>
+                                <action id="edit"/>
+                                <action id="remove"/>
+                            </actions>
+                            <columns>
+                                <column id="number"/>
+                                <column id="timePayment"/>
+                                <column id="price"/>
+                                <column id="sumControl"/>
+                            </columns>
+                            <rows datasource="billsesDs"/>
+                        </table>
+                        <groupTable id="positionsBills"
+                                    fixedGrouping="true"
+                                    height="100%"
+                                    multiselect="true"
+                                    presentations="true">
+                            <actions>
+                                <action id="create"/>
+                                <action id="refresh"/>
+                                <action id="edit"/>
+                                <action id="remove"/>
+                            </actions>
+                            <columns>
+                                <group>
+                                    <column id="voteResult.posSup.supplier"/>
+                                    <column id="query.contact"/>
+                                </group>
+                                <column id="query"/>
+                                <column id="query.company"/>
+                                <column id="query.division"/>
+                                <column id="query.urgency"/>
+                                <column id="nomenclature"/>
+                                <column id="bills.number"/>
+                                <column id="voteResult.quantity"/>
+                                <column id="voteResult.price"/>
+                            </columns>
+                            <rows datasource="dsBills"/>
+                        </groupTable>
+                    </hbox>
                 </vbox>
             </tab>
         </tabSheet>

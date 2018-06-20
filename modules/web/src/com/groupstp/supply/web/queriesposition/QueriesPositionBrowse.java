@@ -1,20 +1,18 @@
 package com.groupstp.supply.web.queriesposition;
 
-import com.groupstp.supply.entity.QueriesPosition;
-import com.groupstp.supply.entity.Query;
-import com.groupstp.supply.entity.Stages;
+import com.groupstp.supply.entity.*;
 import com.groupstp.supply.service.GroovyTestService;
 import com.groupstp.supply.service.WorkflowService;
+import com.haulmont.bali.util.ParamsMap;
 import com.haulmont.chile.core.model.MetaProperty;
 import com.haulmont.cuba.core.entity.Entity;
 import com.haulmont.cuba.core.entity.KeyValueEntity;
-import com.haulmont.cuba.core.global.DataManager;
-import com.haulmont.cuba.core.global.Metadata;
-import com.haulmont.cuba.core.global.ValueLoadContext;
+import com.haulmont.cuba.core.global.*;
 import com.haulmont.cuba.gui.WindowManager;
 import com.haulmont.cuba.gui.components.*;
 import com.haulmont.cuba.gui.components.actions.BaseAction;
 import com.haulmont.cuba.gui.data.GroupDatasource;
+import com.haulmont.cuba.gui.data.impl.GroupDatasourceImpl;
 import com.haulmont.cuba.gui.xml.layout.ComponentsFactory;
 import org.dom4j.Element;
 
@@ -286,11 +284,20 @@ public class QueriesPositionBrowse extends AbstractLookup {
     }
 
     @Inject
-    private GroupTable<QueriesPosition> listPosition;
+    private GroupTable<QueriesPosition> positionsBills;
+
+    @Inject
+    private Table<Bills> billsTable;
+
+    @Inject
+    private GroupDatasource<QueriesPosition, UUID> dsBills;
+
+    @Inject
+    private GroupDatasource<QueriesPosition, UUID> currentBillPositionsDs;
 
     @Override
     public void init(Map<String, Object> params) {
-        listPosition.addGeneratedColumn("Сумма", new Table.PrintableColumnGenerator<QueriesPosition, String>() {
+        positionsBills.addGeneratedColumn("Сумма", new Table.PrintableColumnGenerator<QueriesPosition, String>() {
             @Override
             public Component generateCell(QueriesPosition entity) {
                 Label label = (Label) componentsFactory.createComponent(Label.NAME);
@@ -303,5 +310,65 @@ public class QueriesPositionBrowse extends AbstractLookup {
                 return Double.toString(entity.getVoteResult().getPrice() * entity.getVoteResult().getQuantity());
             }
         });
+
+        billsTable.setClickListener("number", (item, columnId) -> {
+            dsBills.refresh();
+//            openWindow("AnotherTab", WindowManager.OpenType.NEW_TAB, ParamsMap.of("parameter", item.getInstanceName()));
+//            (String) item.getId()
+            //billsTable.getSelected().iterator().next().getNumber()
+//            dsBills.refresh();
+            Bills clickedBills = (Bills) item;
+//            showNotification(getMessage(clickedBills.getPrice().toString()), NotificationType.WARNING);
+
+//            LoadContext<QueriesPosition> ctx = LoadContext.create(QueriesPosition.class).setQuery(
+//                    LoadContext.createQuery("select q from supply$QueriesPosition q where q.bills.id=:bills" )
+//                            .setParameter("bills", clickedBills.getId()));
+//            DataManager dataManager = AppBeans.get(DataManager.class);
+//            List<QueriesPosition> list = dataManager.loadList(ctx);
+//            showNotification(getMessage(list.toString()), NotificationType.WARNING);
+            HashMap<String, Object> items = new HashMap<>();
+            items.put("billId", clickedBills);
+            items.put("supplerId", clickedBills.);
+            currentBillPositionsDs.refresh(items);
+            positionsBills.setDatasource(currentBillPositionsDs);
+
+//            list1.forEach(t -> {
+//                if (!t.getBills().getId().equals(item.getId())) {
+//                    dsBills.removeItem(t);
+//                    dsBills.commit();
+//                }
+//            });
+
+
+        });
     }
+
+    public void onBtnAttachClick() {
+        if(positionsBills.getSelected().size()==0 || billsTable.getSelected().size()!=1)
+        {
+            showNotification(getMessage("Select positions and one bill first"), NotificationType.WARNING);
+            return;
+        }
+        Bills currentBill = billsTable.getSelected().iterator().next();
+        positionsBills.getSelected().forEach(p -> {
+            p.setBills(currentBill);
+            dsBills.setItem(p);
+            dsBills.commit();
+        });
+    }
+
+    public void onBtnUndockClick() {
+        if(positionsBills.getSelected().size()==0 || billsTable.getSelected().size()!=1)
+        {
+            showNotification(getMessage("Select positions and one bill first"), NotificationType.WARNING);
+            return;
+        }
+//        Bills currentBill = billsTable.getSelected().iterator().next();
+        positionsBills.getSelected().forEach(p -> {
+            p.setBills(null);
+            dsBills.setItem(p);
+            dsBills.commit();
+        });
+    }
+
 }

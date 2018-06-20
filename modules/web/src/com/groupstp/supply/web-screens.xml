@@ -43,4 +43,8 @@
             template="com/groupstp/supply/web/vote/vote-browse.xml"/>
     <screen id="supply$VoteDialog"
             template="com/groupstp/supply/web/screens/vote.xml"/>
+    <screen id="supply$Bills.browse"
+            template="com/groupstp/supply/web/bills/bills-browse.xml"/>
+    <screen id="supply$Bills.edit"
+            template="com/groupstp/supply/web/bills/bills-edit.xml"/>
 </screen-config>
