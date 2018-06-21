@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<window xmlns="http://schemas.haulmont.com/cuba/window.xsd"
+        caption="msg://caption"
+        class="com.groupstp.supply.web.queriesposition.Queryregister"
+        messagesPack="com.groupstp.supply.web.queriesposition">
+    <dsContext>
+        <collectionDatasource id="queriesPositionsDs"
+                              class="com.groupstp.supply.entity.QueriesPosition"
+                              view="queriesPosition-full">
+            <query>
+                <![CDATA[select e from supply$QueriesPosition e]]>
+            </query>
+        </collectionDatasource>
+        <groupDatasource id="cqueriesPositionRegisterDs"
+                         class="com.groupstp.supply.entity.QueriesPosition"
+                         datasourceClass="com.groupstp.supply.web.queriesposition.QueryPositionRegisterDs"
+                         view="queriesPosition-full">
+            <query>
+                <![CDATA[select e from supply$QueriesPosition e]]>
+            </query>
+        </groupDatasource>
+        <collectionDatasource id="nomenclaturesDs"
+                              allowCommit="false"
+                              class="com.groupstp.supply.entity.Nomenclature"
+                              view="nomenclature-name">
+            <query>
+                <![CDATA[select e from supply$Nomenclature e]]>
+            </query>
+        </collectionDatasource>
+    </dsContext>
+    <dialogMode height="600"
+                width="800"/>
+    <layout>
+        <vbox spacing="true">
+            <filter id="positionFilter"
+                    datasource="queriesPositionsDs"/>
+            <buttonsPanel id="buttonsPanel">
+                <button align="BOTTOM_LEFT"
+                        caption="msg://group_order"
+                        invoke="onChangeGroupOrder"/>
+                <button align="BOTTOM_LEFT"
+                        caption="msg://cancel_position"
+                        invoke="onCancelPosition"/>
+                <button caption="msg://send_email"
+                        invoke="onSendEmail"/>
+                <button id="archiveFilterButton"
+                        caption="msg://archive_filter"
+                        invoke="onArchiveFlagChange"/>
+            </buttonsPanel>
+            <groupTable id="positionsTable"
+                        editable="true"
+                        fixedGrouping="true"
+                        multiLineCells="true"
+                        presentations="true"
+                        width="100%">
+                <columns>
+                    <column id="currentStage"/>
+                    <column id="analogsAllowed"
+                            caption="msg://stage_overdue_flag"/>
+                    <column id="query"
+                            caption="msg://query"/>
+                    <column id="createTs"
+                            caption="msg://created"/>
+                    <column id="updateTs"
+                            caption="msg://execution time">
+                        <formatter class="com.haulmont.cuba.gui.components.formatters.DateFormatter"
+                                   format="dd.MM.yy"/>
+                    </column>
+                    <column id="query.contact"
+                            caption="msg://contact"/>
+                    <column id="query.company"
+                            caption="msg://company"/>
+                    <column id="query.division"
+                            caption="msg://division"/>
+                    <column id="store"
+                            caption="msg://store"/>
+                    <column id="query.urgency"
+                            caption="msg://urgency"/>
+                    <column id="query.origin"
+                            caption="msg://origin"/>
+                </columns>
+                <rows datasource="cqueriesPositionRegisterDs"/>
+            </groupTable>
+        </vbox>
+    </layout>
+</window>

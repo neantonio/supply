@@ -1,0 +1,2 @@
+alter table SUPPLY_QUERY_WORKFLOW_DETAIL add column VALIDATION text ;
+alter table SUPPLY_QUERY_WORKFLOW_DETAIL add column VALIDATION_SCRIPT text ;

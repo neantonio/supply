@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<window xmlns="http://schemas.haulmont.com/cuba/window.xsd"
+        caption="msg://caption"
+        class="com.groupstp.supply.web.screens.Sendemail"
+        messagesPack="com.groupstp.supply.web.screens">
+    <dialogMode height="370"
+                width="530"/>
+    <layout>
+        <vbox spacing="true"
+              width="494px">
+            <hbox spacing="true">
+                <label value="msg://receivers"
+                       width="90px"/>
+                <label id="receiversList"/>
+            </hbox>
+            <hbox spacing="true">
+                <label value="msg://theme"
+                       width="90px"/>
+                <textField id="themeArea"
+                           width="390px"/>
+            </hbox>
+            <hbox spacing="true">
+                <label value="msg://text"
+                       width="90px"/>
+                <textField id="contentArea"
+                           height="203px"
+                           width="390px"/>
+            </hbox>
+            <hbox align="BOTTOM_RIGHT"
+                  spacing="true">
+                <button caption="msg://send"
+                        invoke="onSend"/>
+                <button caption="msg://cancel"
+                        invoke="onCancel"/>
+            </hbox>
+        </vbox>
+    </layout>
+</window>

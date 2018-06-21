@@ -1,0 +1,2 @@
+create unique index IDX_SUPPLY_MEASURE_UNITS_UK_NAME on SUPPLY_MEASURE_UNITS (NAME) where DELETE_TS is null ;
+create unique index IDX_SUPPLY_MEASURE_UNITS_UK_CODE on SUPPLY_MEASURE_UNITS (CODE) where DELETE_TS is null ;

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<window xmlns="http://schemas.haulmont.com/cuba/window.xsd"
+        caption="msg://editorCaption"
+        class="com.groupstp.supply.web.queryworkflow.QueryWorkflowEdit"
+        datasource="queryWorkflowDs"
+        focusComponent="fieldGroup"
+        messagesPack="com.groupstp.supply.web.queryworkflow">
+    <dsContext>
+        <datasource id="queryWorkflowDs"
+                    class="com.groupstp.supply.entity.QueryWorkflow"
+                    view="queryWorkflow-view">
+            <collectionDatasource id="detailsDs"
+                                  property="details"/>
+        </datasource>
+    </dsContext>
+    <dialogMode height="600"
+                width="800"/>
+    <layout expand="detailsBox"
+            spacing="true">
+        <fieldGroup id="fieldGroup"
+                    datasource="queryWorkflowDs">
+            <column width="300px">
+                <field property="name"/>
+            </column>
+        </fieldGroup>
+        <groupBox id="detailsBox"
+                  caption="msg://com.groupstp.supply.entity/QueryWorkflow.details">
+            <table id="detailsTable"
+                   height="100%"
+                   width="100%">
+                <actions>
+                    <action id="create"/>
+                    <action id="edit"/>
+                    <action id="remove"/>
+                </actions>
+                <columns>
+                    <column id="sourceStage"/>
+                    <column id="destStage"/>
+                    <column id="priority"/>
+                    <column id="validation"/>
+                    <column id="validationScript"/>
+                    <column id="conditions"/>
+                    <column id="script"/>
+                </columns>
+                <rows datasource="detailsDs"/>
+                <buttonsPanel>
+                    <button action="detailsTable.create"/>
+                    <button action="detailsTable.edit"/>
+                    <button action="detailsTable.remove"/>
+                </buttonsPanel>
+            </table>
+        </groupBox>
+        <frame id="windowActions"
+               screen="editWindowActions"/>
+    </layout>
+</window>

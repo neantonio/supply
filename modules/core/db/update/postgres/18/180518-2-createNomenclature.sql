@@ -1,0 +1,1 @@
+create unique index IDX_SUPPLY_NOMENCLATURE_UK_NAME on SUPPLY_NOMENCLATURE (NAME) where DELETE_TS is null ;

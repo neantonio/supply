@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<window xmlns="http://schemas.haulmont.com/cuba/window.xsd"
+        caption="msg://editorCaption"
+        class="com.groupstp.supply.web.query.QueryEdit"
+        datasource="queryDs"
+        focusComponent="fieldGroup"
+        messagesPack="com.groupstp.supply.web.query">
+    <dsContext>
+        <datasource id="queryDs"
+                    class="com.groupstp.supply.entity.Query"
+                    view="query-view"/>
+        <collectionDatasource id="urgenciesDs"
+                              class="com.groupstp.supply.entity.Urgency"
+                              view="_minimal">
+            <query>
+                <![CDATA[select e from supply$Urgency e]]>
+            </query>
+        </collectionDatasource>
+        <collectionDatasource id="workflowsDs"
+                              class="com.groupstp.supply.entity.QueryWorkflow"
+                              view="_minimal">
+            <query>
+                <![CDATA[select e from supply$QueryWorkflow e]]>
+            </query>
+        </collectionDatasource>
+        <collectionDatasource id="companiesDs"
+                              class="com.groupstp.supply.entity.Company"
+                              view="_minimal">
+            <query>
+                <![CDATA[select e from supply$Company e]]>
+            </query>
+        </collectionDatasource>
+        <collectionDatasource id="divisionsDs"
+                              class="com.groupstp.supply.entity.Division"
+                              view="_minimal">
+            <query>
+                <![CDATA[select e from supply$Division e]]>
+            </query>
+        </collectionDatasource>
+        <collectionDatasource id="storesDs"
+                              class="com.groupstp.supply.entity.Store"
+                              view="_minimal">
+            <query>
+                <![CDATA[select e from supply$Store e]]>
+            </query>
+        </collectionDatasource>
+        <collectionDatasource id="contactsDs"
+                              class="com.haulmont.cuba.security.entity.User"
+                              view="_minimal">
+            <query>
+                <![CDATA[select e from sec$User e]]>
+            </query>
+        </collectionDatasource>
+        <collectionDatasource id="queriesPositionsDs"
+                              class="com.groupstp.supply.entity.QueriesPosition"
+                              view="queriesPosition-view">
+            <query>
+                <![CDATA[select e from supply$QueriesPosition e where e.query.id=:ds$queryDs.id]]>
+            </query>
+        </collectionDatasource>
+    </dsContext>
+    <actions>
+        <action id="finish"
+                description="msg://Finish"
+                invoke="onFinsh"/>
+    </actions>
+    <dialogMode height="90%"
+                maximized="true"
+                resizable="true"
+                width="90%"/>
+    <layout expand="positions"
+            spacing="true">
+        <scrollBox id="scrollBox"
+                   spacing="true">
+            <fieldGroup id="fieldGroup"
+                        datasource="queryDs">
+                <column width="200px">
+                    <field property="number"/>
+                    <field property="timeCreation"/>
+                    <field caption="mainMsg://creation time (sys)"
+                           property="createTs"/>
+                    <field editable="false"
+                           property="wholeQueryWorkout"/>
+                </column>
+                <column width="300px">
+                    <field optionsDatasource="companiesDs"
+                           property="company"/>
+                    <field optionsDatasource="divisionsDs"
+                           property="division"/>
+                    <field optionsDatasource="storesDs"
+                           property="store"/>
+                    <field optionsDatasource="contactsDs"
+                           property="contact"/>
+                </column>
+                <column width="300px">
+                    <field optionsDatasource="workflowsDs"
+                           property="workflow"/>
+                    <field optionsDatasource="urgenciesDs"
+                           property="urgency"/>
+                    <field property="origin"/>
+                    <field property="cause"/>
+                    <field property="peridiocity"/>
+                </column>
+            </fieldGroup>
+            <textArea datasource="queryDs"
+                      height="80px"
+                      property="comment"
+                      width="99%"/>
+        </scrollBox>
+        <buttonsPanel>
+            <button id="createPosition"
+                    caption="mainMsg://Create"
+                    icon="CREATE_ACTION"
+                    invoke="onCreatePositionClick"/>
+            <button action="positions.edit"/>
+            <button action="positions.remove"/>
+            <button id="btnEditAnalogs"
+                    caption="msg://Edit analogs"
+                    description="msg://Edit analogs"
+                    invoke="onBtnEditAnalogsClick"/>
+        </buttonsPanel>
+        <dataGrid id="positions"
+                  datasource="queriesPositionsDs"
+                  editorEnabled="true"
+                  width="100%">
+            <actions>
+                <action id="create"/>
+                <action id="edit"/>
+                <action id="remove"/>
+            </actions>
+            <columns>
+                <column editable="false"
+                        property="currentStage"/>
+                <column property="positionType"/>
+                <column property="numberArticle"/>
+                <column property="nomenclature"/>
+                <column property="specification"/>
+                <column property="measureUnit"/>
+                <column property="quantity"/>
+                <column property="analogsAllowed"/>
+                <column id="analogs"
+                        property="analogs"/>
+            </columns>
+        </dataGrid>
+        <hbox>
+            <frame id="windowActions"
+                   screen="editWindowActions"/>
+            <button action="finish"
+                    caption="msg://Finish"/>
+        </hbox>
+    </layout>
+</window>

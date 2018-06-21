@@ -1,0 +1,11 @@
+alter table SUPPLY_QUERY add constraint FK_SUPPLY_QUERY_URGENCY foreign key (URGENCY_ID) references SUPPLY_URGENCY(ID);
+alter table SUPPLY_QUERY add constraint FK_SUPPLY_QUERY_WORKFLOW foreign key (WORKFLOW_ID) references SUPPLY_QUERY_WORKFLOW(ID);
+alter table SUPPLY_QUERY add constraint FK_SUPPLY_QUERY_COMPANY foreign key (COMPANY_ID) references SUPPLY_COMPANY(ID);
+alter table SUPPLY_QUERY add constraint FK_SUPPLY_QUERY_DIVISION foreign key (DIVISION_ID) references SUPPLY_DIVISION(ID);
+alter table SUPPLY_QUERY add constraint FK_SUPPLY_QUERY_STORE foreign key (STORE_ID) references SUPPLY_STORE(ID);
+create unique index IDX_SUPPLY_QUERY_UK_NUMBER_ on SUPPLY_QUERY (NUMBER_) where DELETE_TS is null ;
+create index IDX_SUPPLY_QUERY_URGENCY on SUPPLY_QUERY (URGENCY_ID);
+create index IDX_SUPPLY_QUERY_WORKFLOW on SUPPLY_QUERY (WORKFLOW_ID);
+create index IDX_SUPPLY_QUERY_COMPANY on SUPPLY_QUERY (COMPANY_ID);
+create index IDX_SUPPLY_QUERY_DIVISION on SUPPLY_QUERY (DIVISION_ID);
+create index IDX_SUPPLY_QUERY_STORE on SUPPLY_QUERY (STORE_ID);

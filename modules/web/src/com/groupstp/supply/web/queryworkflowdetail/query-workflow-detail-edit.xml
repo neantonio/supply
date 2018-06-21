@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<window xmlns="http://schemas.haulmont.com/cuba/window.xsd"
+        caption="msg://editorCaption"
+        class="com.groupstp.supply.web.queryworkflowdetail.QueryWorkflowDetailEdit"
+        datasource="queryWorkflowDetailDs"
+        focusComponent="fieldGroup"
+        messagesPack="com.groupstp.supply.web.queryworkflowdetail">
+    <dsContext>
+        <datasource id="queryWorkflowDetailDs"
+                    class="com.groupstp.supply.entity.QueryWorkflowDetail"
+                    view="_local"/>
+    </dsContext>
+    <dialogMode height="600"
+                width="800"/>
+    <layout expand="vbox"
+            margin="true"
+            spacing="true">
+        <fieldGroup id="fieldGroup"
+                    datasource="queryWorkflowDetailDs">
+            <column>
+                <field property="sourceStage"/>
+                <field property="priority"/>
+            </column>
+            <column>
+                <field property="destStage"/>
+            </column>
+        </fieldGroup>
+        <vbox id="vbox"
+              spacing="true">
+            <split height="100%"
+                   orientation="horizontal"
+                   width="100%">
+                <vbox height="100%"
+                      spacing="true">
+                    <textArea caption="mainMsg://Validation"
+                              datasource="queryWorkflowDetailDs"
+                              height="100%"
+                              property="validation"
+                              width="100%"/>
+                </vbox>
+                <vbox height="100%"
+                      spacing="true">
+                    <sourceCodeEditor caption="msg://Validation script"
+                                      datasource="queryWorkflowDetailDs"
+                                      height="100%"
+                                      mode="Groovy"
+                                      property="validationScript"
+                                      width="100%"/>
+                </vbox>
+            </split>
+            <split height="100%"
+                   orientation="horizontal"
+                   width="100%">
+                <vbox height="100%"
+                      spacing="true">
+                    <textArea id="conditions"
+                              caption="msg://Conditions"
+                              datasource="queryWorkflowDetailDs"
+                              height="100%"
+                              property="conditions"
+                              width="100%"/>
+                </vbox>
+                <vbox height="100%"
+                      spacing="true">
+                    <sourceCodeEditor caption="msg://Condition script"
+                                      datasource="queryWorkflowDetailDs"
+                                      height="100%"
+                                      mode="Groovy"
+                                      property="script"
+                                      width="100%"/>
+                </vbox>
+            </split>
+
+        </vbox>
+        <frame id="windowActions"
+               screen="editWindowActions"/>
+    </layout>
+</window>

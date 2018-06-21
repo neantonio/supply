@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<window xmlns="http://schemas.haulmont.com/cuba/window.xsd"
+        caption="msg://editorCaption"
+        class="com.groupstp.supply.web.nomenclature.NomenclatureEdit"
+        datasource="nomenclatureDs"
+        focusComponent="fieldGroup"
+        messagesPack="com.groupstp.supply.web.nomenclature">
+    <dsContext>
+        <datasource id="nomenclatureDs"
+                    class="com.groupstp.supply.entity.Nomenclature"
+                    view="nomenclature-view">
+            <collectionDatasource id="analogsDs"
+                                  property="analogs"/>
+        </datasource>
+    </dsContext>
+    <dialogMode height="600"
+                width="800"/>
+    <layout expand="analogsBox"
+            spacing="true">
+        <fieldGroup id="fieldGroup"
+                    datasource="nomenclatureDs">
+            <column width="300px">
+                <field property="parent"/>
+                <field property="name"/>
+                <field property="fullName"/>
+                <field property="article"/>
+                <field property="unit"/>
+                <field property="weight"/>
+                <field property="dimensions"/>
+            </column>
+        </fieldGroup>
+        <groupBox id="analogsBox"
+                  caption="msg://com.groupstp.supply.entity/Nomenclature.analogs">
+            <table id="analogsTable"
+                   height="200px"
+                   width="100%">
+                <actions>
+                    <action id="create"/>
+                    <action id="edit"/>
+                    <action id="remove"/>
+                </actions>
+                <columns>
+                    <column id="analog"/>
+                </columns>
+                <rows datasource="analogsDs"/>
+                <buttonsPanel>
+                    <button action="analogsTable.create"/>
+                    <button action="analogsTable.edit"/>
+                    <button action="analogsTable.remove"/>
+                </buttonsPanel>
+            </table>
+        </groupBox>
+        <frame id="windowActions"
+               screen="editWindowActions"/>
+    </layout>
+</window>

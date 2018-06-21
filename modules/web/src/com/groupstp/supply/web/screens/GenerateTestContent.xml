@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<window xmlns="http://schemas.haulmont.com/cuba/window.xsd"
+        caption="msg://caption"
+        class="com.groupstp.supply.web.screens.Generatetestcontent"
+        messagesPack="com.groupstp.supply.web.screens"
+        xmlns:dnd="http://schemas.haulmont.com/dnd/0.1/drag-and-drop.xsd">
+    <dsContext>
+        <groupDatasource id="queriesDs"
+                         class="com.groupstp.supply.entity.Query"
+                         maxResults="100">
+            <query>
+                <![CDATA[select e from supply$Query e]]>
+            </query>
+        </groupDatasource>
+        <groupDatasource id="queriesPositionsDs"
+                         class="com.groupstp.supply.entity.QueriesPosition">
+            <query>
+                <![CDATA[select e from supply$QueriesPosition e where e.query.id=:ds$queriesDs]]>
+            </query>
+        </groupDatasource>
+    </dsContext>
+    <dialogMode height="600"
+                width="800"/>
+    <layout>
+        <buttonsPanel>
+            <button id="create_companies"
+                    caption="Create companies"
+                    invoke="onCreateCompany"/>
+            <button id="modal"
+                    caption="modal"
+                    invoke="onModal"/>
+            <button id="start_business"
+                    caption="запустить бизнесс процесс"
+                    invoke="onBusiness"/>
+                            
+            <button id="test"
+                    caption="тест сервиса"
+                    invoke="onTestQueryService"/>
+        </buttonsPanel>
+        <hbox spacing="true">
+            <groupTable id="query"
+                        height="100px"
+                        width="638px">
+                <columns>
+                    <column id="inWork"/>
+                    <column id="number"/>
+                    <column id="timeCreation"/>
+                    <column id="comment"/>
+                    <column id="origin"/>
+                    <column id="cause"/>
+                    <column id="peridiocity"/>
+                    <column id="wholeQueryWorkout"/>
+                </columns>
+                <rows datasource="queriesDs"/>
+            </groupTable>
+            <groupTable id="queryPosition"
+                        height="100px"
+                        width="420px">
+                <columns>
+                    <column id="storeControlFlag"/>
+                    <column id="currentStage"/>
+                    <column id="positionType"/>
+                    <column id="numberArticle"/>
+                    <column id="specification"/>
+                    <column id="quantity"/>
+                    <column id="analogsAllowed"/>
+                    <column id="positionUsefulness"/>
+                    <column id="positionUsefulnessTS"/>
+                    <column id="startMinimalPrice"/>
+                    <column id="analogsCorrectionFlag"/>
+                    <column id="nomControlFlag"/>
+                    <column id="nomControlFlagTS"/>
+                    <column id="inStore"/>
+                    <column id="storeControlFlagTS"/>
+                    <column id="supplyWorkoutType"/>
+                    <column id="supSelectionFlag"/>
+                    <column id="supSelectionFlagTS"/>
+                    <column id="analysisResult"/>
+                    <column id="analysisFlag"/>
+                    <column id="analysisFlagTS"/>
+                    <column id="priceReduce"/>
+                    <column id="minimalPrice"/>
+                    <column id="bill"/>
+                    <column id="billQuery"/>
+                </columns>
+                <rows datasource="queriesPositionsDs"/>
+            </groupTable>
+        </hbox>
+    </layout>
+</window>

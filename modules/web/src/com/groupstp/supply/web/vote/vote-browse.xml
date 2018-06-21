@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<window xmlns="http://schemas.haulmont.com/cuba/window.xsd"
+        caption="msg://browseCaption"
+        class="com.groupstp.supply.web.vote.VoteBrowse"
+        focusComponent="tab"
+        messagesPack="com.groupstp.supply.web.vote">
+    <dsContext>
+        <groupDatasource id="votesDs"
+                         allowCommit="false"
+                         class="com.groupstp.supply.entity.Vote"
+                         view="vote-view">
+            <query>
+                <![CDATA[select e from supply$Vote e where e.position in :param$positions and e.emp.id=:session$userId]]>
+            </query>
+        </groupDatasource>
+    </dsContext>
+    <dialogMode height="600"
+                width="800"/>
+    <layout expand="tab"
+            spacing="true">
+        <filter id="filter"
+                applyTo="tab"
+                datasource="votesDs">
+            <properties include=".*"/>
+        </filter>
+        <groupTable id="tab"
+                    fixedGrouping="true"
+                    multiselect="true"
+                    width="100%">
+            <columns>
+                <group>
+                    <column id="position"/>
+                </group>
+                <column id="suggestion"/>
+                <column id="voteTS"/>
+            </columns>
+            <rows datasource="votesDs"/>
+            <rowsCount/>
+        </groupTable>
+        <button id="btnClose"
+                caption="mainMsg://Close"
+                invoke="onBtnCloseClick"/>
+    </layout>
+</window>

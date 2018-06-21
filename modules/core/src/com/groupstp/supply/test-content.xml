@@ -1,0 +1,1379 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
+
+
+    <util:map id="measureMap" map-class="java.util.HashMap">
+        <entry key="кг">
+            <value>килограмм</value>
+        </entry>
+        <entry key="компл">
+            <value>кмплект</value>
+        </entry>
+        <entry key="км">
+            <value>километр</value>
+        </entry>
+        <entry key="м">
+            <value>метр</value>
+        </entry>
+        <entry key="г">
+            <value>грамм</value>
+        </entry>
+        <entry key="т">
+            <value>тонна</value>
+        </entry>
+        <entry key="шт">
+            <value>штука</value>
+        </entry>
+        <entry key="пара">
+            <value>пара</value>
+        </entry>
+        <entry key="уп">
+            <value>упаковка</value>
+        </entry>
+
+    </util:map>
+
+    <util:list id="divisionList" value-type="java.lang.String">
+        <value>Отдел кадров</value>
+        <value>Отдел технического обеспечения</value>
+        <value>Служба собственной безопасности</value>
+        <value>Отдел продаж</value>
+        <value>Юридический отдел</value>
+        <value>Бухгалтерия</value>
+        <value>Казначейство</value>
+        <value>Общий отдел</value>
+        <value>Служба взыскания задолженностей</value>
+        <value>Клиентская служба</value>
+    </util:list>
+
+    <util:list id="workflowValidationScriptList" value-type="java.lang.String">
+        <value>return true;</value>
+    </util:list>
+
+    <util:list id="urgencyList" value-type="java.lang.String">
+        <value>Наивысшая</value>
+        <value>Высокая</value>
+        <value>Средняя</value>
+        <value>Не срочно</value>
+        <value>Подождет</value>
+    </util:list>
+
+    <util:list id="workflowList" value-type="java.lang.String">
+        <value>Первый процесс</value>
+        <value>Второй процесс</value>
+        <value>Третий процесс</value>
+    </util:list>
+
+    <util:list id="groupList" value-type="java.lang.String">
+        <value>Пользователь</value>
+    </util:list>
+
+    <util:list id="ownCompanyList" value-type="java.lang.String">
+        <value>ООО "ИТК" </value>
+        <value>ООО "Клиника 38"</value>
+        <value>ООО "Бетон+"</value>
+        <value>ООО "Стп-Промэко"</value>
+        <value>ИРО СКВРИЗ</value>
+        <value>ООО "Спартак"</value>
+        <value>ЗАО "Реголит" </value>
+        <value>ООО "Экопроект"</value>
+        <value>ООО ЧДА "Спрут"</value>
+        <value>ООО "СТС" </value>
+        <value>ООО "Коммунальный Транспорт" </value>
+        <value>ООО "Коммунальник+"</value>
+        <value>ООО "АСМ"</value>
+        <value>ООО "УК "СТП" </value>
+        <value>ООО "УМК" </value>
+        <value>ООО "ТМП"</value>
+    </util:list>
+
+    <util:list id="warehouseList" value-type="java.lang.String">
+        <value>Склад А</value>
+        <value>Склад B</value>
+        <value>Склад C</value>
+        <value>Склад D</value>
+        <value>Склад E</value>
+        <value>Склад F</value>
+            </util:list>
+
+    <util:list id="firstNameFemaleList" value-type="java.lang.String">
+        <value>Анастасия</value>
+        <value>Анна</value>
+        <value>Анжелика</value>
+        <value>Алина</value>
+        <value>Ангелина</value>
+        <value>Арина</value>
+        <value>Алиса</value>
+        <value>Алла</value>
+        <value>Алеся</value>
+        <value>Амина</value>
+        <value>Белла</value>
+        <value>Божена</value>
+        <value>Барбара</value>
+        <value>Берта</value>
+        <value>Беата</value>
+        <value>Богдана</value>
+        <value>Бланка</value>
+        <value>Бригитта</value>
+        <value>Беатриса</value>
+        <value>Бенедикта</value>
+        <value>Виолетта</value>
+        <value>Валерия</value>
+        <value>Виктория</value>
+        <value>Вероника</value>
+        <value>Вера</value>
+        <value>Варвара</value>
+        <value>Василиса</value>
+        <value>Валентина</value>
+        <value>Веста</value>
+        <value>Вита</value>
+        <value>Галина</value>
+        <value>Гортензия</value>
+        <value>Глория</value>
+        <value>Гера</value>
+        <value>Грация</value>
+        <value>Грета</value>
+        <value>Гертруда</value>
+        <value>Глафира</value>
+        <value>Георгина</value>
+        <value>Гелла</value>
+        <value>Диана</value>
+        <value>Дарья</value>
+        <value>Дарина</value>
+        <value>Дина</value>
+        <value>Дора</value>
+        <value>Доминика</value>
+        <value>Доля</value>
+        <value>Даная</value>
+        <value>Дана</value>
+        <value>Джульетта</value>
+        <value>Ева</value>
+        <value>Елизавета</value>
+        <value>Екатерина</value>
+        <value>Есения</value>
+        <value>Елена</value>
+        <value>Евгения</value>
+        <value>Евдокия</value>
+        <value>Евпраксия</value>
+        <value>Ефросиния</value>
+        <value>Ефимия</value>
+        <value>Жанна</value>
+        <value>Жозефина</value>
+        <value>Жеральдина</value>
+        <value>Жилит</value>
+        <value>Злата</value>
+        <value>Зоя</value>
+        <value>Зара</value>
+        <value>Земфира</value>
+        <value>Забава</value>
+        <value>Зухра</value>
+        <value>Зинаида</value>
+        <value>Зита</value>
+        <value>Захра</value>
+        <value>Забира</value>
+        <value>Инна</value>
+        <value>Ирина</value>
+        <value>Инесса</value>
+        <value>Инга</value>
+        <value>Изабелла</value>
+        <value>Ия</value>
+        <value>Илона</value>
+        <value>Ирма</value>
+        <value>Ивона</value>
+        <value>Изольда</value>
+        <value>Каролина</value>
+        <value>Карина</value>
+        <value>Ксения</value>
+        <value>Кира</value>
+        <value>Камилла</value>
+        <value>Клеопатра</value>
+        <value>Кристина</value>
+        <value>Кора</value>
+        <value>Карен</value>
+        <value>Катарина</value>
+        <value>Любовь</value>
+        <value>Лилия</value>
+        <value>Людмила</value>
+        <value>Лариса</value>
+        <value>Лидия</value>
+        <value>Леонида</value>
+        <value>Лада</value>
+        <value>Лолита</value>
+        <value>Линда</value>
+        <value>Лаура</value>
+        <value>Мария</value>
+        <value>Марина</value>
+        <value>Маргарита</value>
+        <value>Майя</value>
+        <value>Марта</value>
+        <value>Милена</value>
+        <value>Милана</value>
+        <value>Мирослава</value>
+        <value>Марианна</value>
+        <value>Марьяна</value>
+        <value>Надежда</value>
+        <value>Наталия</value>
+        <value>Нина</value>
+        <value>Ника</value>
+        <value>Нана</value>
+        <value>Нинель</value>
+        <value>Нури</value>
+        <value>Нелли</value>
+        <value>Нора</value>
+        <value>Нонна</value>
+        <value>Оксана</value>
+        <value>Олеся</value>
+        <value>Ольга</value>
+        <value>Октавия</value>
+        <value>Олимпиада</value>
+        <value>Ольвия</value>
+        <value>Одетта</value>
+        <value>Октябрина</value>
+        <value>Полина</value>
+        <value>Пелагея</value>
+        <value>Пальмира</value>
+        <value>Петиция</value>
+        <value>Памела</value>
+        <value>Прасковья</value>
+        <value>Патриция</value>
+        <value>Паулина</value>
+        <value>Пульхерия</value>
+        <value>Паула</value>
+        <value>Регина</value>
+        <value>Римма</value>
+        <value>Роза</value>
+        <value>Рада</value>
+        <value>Руслана</value>
+        <value>Ребекка</value>
+        <value>Рита</value>
+        <value>Роксана</value>
+        <value>Рената</value>
+        <value>Рема</value>
+        <value>София</value>
+        <value>Светлана</value>
+        <value>Соня</value>
+        <value>Сабина</value>
+        <value>Снежана</value>
+        <value>Сандра</value>
+        <value>Сима</value>
+        <value>Стелла</value>
+        <value>Селена</value>
+        <value>Симона</value>
+        <value>Татьяна</value>
+        <value>Тамара</value>
+        <value>Таисия</value>
+        <value>Тереза</value>
+        <value>Текла</value>
+        <value>Теодора</value>
+        <value>Тала</value>
+        <value>Таира</value>
+        <value>Томила</value>
+        <value>Трифена</value>
+        <value>Ульяна</value>
+        <value>Урсула</value>
+        <value>Уна</value>
+        <value>Устинья</value>
+        <value>Устина</value>
+        <value>Феодосия</value>
+        <value>Флора</value>
+        <value>Фрида</value>
+        <value>Филомена</value>
+        <value>Фаина</value>
+        <value>Фатима</value>
+        <value>Фелиция</value>
+        <value>Фарида</value>
+        <value>Фая</value>
+        <value>Феодора</value>
+        <value>Хильда</value>
+        <value>Христина</value>
+        <value>Христя</value>
+        <value>Эвелина</value>
+        <value>Элеонора</value>
+        <value>Элина</value>
+        <value>Эльвира</value>
+        <value>Эмилия</value>
+        <value>Эльза</value>
+        <value>Эмма</value>
+        <value>Эрика</value>
+        <value>Эсмеральда</value>
+        <value>Эллада</value>
+        <value>Юлия</value>
+        <value>Юнона</value>
+        <value>Ювента</value>
+        <value>Юна</value>
+        <value>Юдифь</value>
+        <value>Юстина</value>
+        <value>Юзефа</value>
+        <value>Юдита</value>
+        <value>Юханна</value>
+        <value>Яна</value>
+        <value>Ярослава</value>
+        <value>Янина</value>
+        <value>Янка</value>
+        <value>Ядвига</value>
+        <value>Янита</value>
+            </util:list>
+
+    <util:list id="firstNameMaleList" value-type="java.lang.String">
+        <value>Абрам</value>
+        <value>Аваз</value>
+        <value>Аввакум</value>
+        <value>Август</value>
+        <value>Августин</value>
+        <value>Авдей</value>
+        <value>Авраам</value>
+        <value>Автандил</value>
+        <value>Агап</value>
+        <value>Агафон</value>
+        <value>Аггей</value>
+        <value>Адам</value>
+        <value>Адис</value>
+        <value>Адольф</value>
+        <value>Адриан</value>
+        <value>Азамат</value>
+        <value>Айдар</value>
+        <value>Айнур</value>
+        <value>Айрат</value>
+        <value>Аким</value>
+        <value>Алан</value>
+        <value>Алей</value>
+        <value>Александр</value>
+        <value>Алексей</value>
+        <value>Али</value>
+        <value>Альберт</value>
+        <value>Альфред</value>
+        <value>Амадей</value>
+        <value>Амадеус</value>
+        <value>Амаяк</value>
+        <value>Амвросий</value>
+        <value>Ананий</value>
+        <value>Анастасий</value>
+        <value>Анатолий</value>
+        <value>Анвар</value>
+        <value>Ангел</value>
+        <value>Андоим</value>
+        <value>Андрей</value>
+        <value>Аникита</value>
+        <value>Антон</value>
+        <value>Арам</value>
+        <value>Арий</value>
+        <value>Аристарх</value>
+        <value>Аркадий</value>
+        <value>Арман</value>
+        <value>Арно</value>
+        <value>Арнольд</value>
+        <value>Арон</value>
+        <value>Арсен</value>
+        <value>Арсений</value>
+        <value>Арслан</value>
+        <value>Артем</value>
+        <value>Артемий</value>
+        <value>Артур</value>
+        <value>Архип</value>
+        <value>Аскар</value>
+        <value>Аскольд</value>
+        <value>Аслан</value>
+        <value>Афанасий</value>
+        <value>Ахмет</value>
+        <value>Ашот</value>
+        <value>Бальтазар</value>
+        <value>Бежен</value>
+        <value>Бенедикт</value>
+        <value>Берек</value>
+        <value>Бернард</value>
+        <value>Бертран</value>
+        <value>Богдан</value>
+        <value>Болеслав</value>
+        <value>Борис</value>
+        <value>Бронислав</value>
+        <value>Булат</value>
+        <value>Вадим</value>
+        <value>Валентин</value>
+        <value>Валерий</value>
+        <value>Вальтер</value>
+        <value>Варфоломей</value>
+        <value>Василий</value>
+        <value>Вацлав</value>
+        <value>Велизар</value>
+        <value>Венедикт</value>
+        <value>Вениамин</value>
+        <value>Викентий</value>
+        <value>Виктор</value>
+        <value>Вилли</value>
+        <value>Вильгельм</value>
+        <value>Виссарион</value>
+        <value>Виталий</value>
+        <value>Витольд</value>
+        <value>Владимир</value>
+        <value>Владислав</value>
+        <value>Владлен</value>
+        <value>Володар</value>
+        <value>Вольдемар</value>
+        <value>Всеволод</value>
+        <value>Вячеслав</value>
+        <value>Гавриил</value>
+        <value>Галактион</value>
+        <value>Гарри</value>
+        <value>Гастон</value>
+        <value>Гаяс</value>
+        <value>Гевор</value>
+        <value>Геннадий</value>
+        <value>Генрих</value>
+        <value>Георгий</value>
+        <value>Геракл</value>
+        <value>Геральд</value>
+        <value>Герасим</value>
+        <value>Герман</value>
+        <value>Глеб</value>
+        <value>Гордей</value>
+        <value>Гордон</value>
+        <value>Горислав</value>
+        <value>Градимир</value>
+        <value>Григорий</value>
+        <value>Гурий</value>
+        <value>Густав</value>
+        <value>Давид</value>
+        <value>Дамир</value>
+        <value>Даниил</value>
+        <value>Даниэль</value>
+        <value>Данияр</value>
+        <value>Дарий</value>
+        <value>Дементий</value>
+        <value>Демид</value>
+        <value>Демосфен</value>
+        <value>Демьян</value>
+        <value>Денис</value>
+        <value>Джамал</value>
+        <value>Джордан</value>
+        <value>Дмитрий</value>
+        <value>Добрыня</value>
+        <value>Дональд</value>
+        <value>Донат</value>
+        <value>Дорофей</value>
+        <value>Евгений</value>
+        <value>Евграф</value>
+        <value>Евдоким</value>
+        <value>Евсевий</value>
+        <value>Евсей</value>
+        <value>Евстафий</value>
+        <value>Егор</value>
+        <value>Елеазар</value>
+        <value>Елисей</value>
+        <value>Емельян</value>
+        <value>Еремей</value>
+        <value>Ермолай</value>
+        <value>Ерофей</value>
+        <value>Ефим</value>
+        <value>Ефрем</value>
+        <value>Жан</value>
+        <value>Ждан</value>
+        <value>Жорж</value>
+        <value>Захар</value>
+        <value>Зиновий</value>
+        <value>Ибрагим</value>
+        <value>Иван</value>
+        <value>Игнатий</value>
+        <value>Игорь</value>
+        <value>Илларион</value>
+        <value>Ильдар</value>
+        <value>Ильнар</value>
+        <value>Ильнур</value>
+        <value>Илья</value>
+        <value>Ильяс</value>
+        <value>Иннокентий</value>
+        <value>Иоанн</value>
+        <value>Иосиф</value>
+        <value>Ипполит</value>
+        <value>Искандер</value>
+        <value>Ислам</value>
+        <value>Камиль</value>
+        <value>Карим</value>
+        <value>Карл</value>
+        <value>Кирилл</value>
+        <value>Клим</value>
+        <value>Кондрат</value>
+        <value>Константин</value>
+        <value>Корней</value>
+        <value>Кузьма</value>
+        <value>Лавр</value>
+        <value>Лаврентий</value>
+        <value>Лев</value>
+        <value>Леон</value>
+        <value>Леонид</value>
+        <value>Леонтий</value>
+        <value>Леопольд</value>
+        <value>Лука</value>
+        <value>Лукьян</value>
+        <value>Любим</value>
+        <value>Макарий</value>
+        <value>Максим</value>
+        <value>Максимилиан</value>
+        <value>Марат</value>
+        <value>Марк</value>
+        <value>Марсель</value>
+        <value>Мартин</value>
+        <value>Матвей</value>
+        <value>Мирон</value>
+        <value>Мирослав</value>
+        <value>Митрофаний</value>
+        <value>Михаил</value>
+        <value>Михей</value>
+        <value>Мишель</value>
+        <value>Мстислав</value>
+        <value>Мурат</value>
+        <value>Муслим</value>
+        <value>Назар</value>
+        <value>Назарий</value>
+        <value>Наиль</value>
+        <value>Натан</value>
+        <value>Наум</value>
+        <value>Нестор</value>
+        <value>Никанор</value>
+        <value>Никита</value>
+        <value>Никифор</value>
+        <value>Николай</value>
+        <value>Никон</value>
+        <value>Нифонт</value>
+        <value>Норман</value>
+        <value>Овидий</value>
+        <value>Олан</value>
+        <value>Олег</value>
+        <value>Олесь</value>
+        <value>Онисим</value>
+        <value>Орест</value>
+        <value>Осип</value>
+        <value>Оскар</value>
+        <value>Павел</value>
+        <value>Петр</value>
+        <value>Платон</value>
+        <value>Прохор</value>
+        <value>Равиль</value>
+        <value>Радик</value>
+        <value>Радмир</value>
+        <value>Радомир</value>
+        <value>Раду</value>
+        <value>Рамазан</value>
+        <value>Рамиль</value>
+        <value>Ратибор</value>
+        <value>Ратмир</value>
+        <value>Рафаэль</value>
+        <value>Рахим</value>
+        <value>Рашид</value>
+        <value>Ринат</value>
+        <value>Ричард</value>
+        <value>Роберт</value>
+        <value>Родион</value>
+        <value>Ролан</value>
+        <value>Роман</value>
+        <value>Ростислав</value>
+        <value>Рудольф</value>
+        <value>Руслан</value>
+        <value>Рустам</value>
+        <value>Сабир</value>
+        <value>Савва</value>
+        <value>Савелий</value>
+        <value>Салим</value>
+        <value>Самвел</value>
+        <value>Самсон</value>
+        <value>Святослав</value>
+        <value>Севастьян</value>
+        <value>Семён</value>
+        <value>Серафим</value>
+        <value>Сергей</value>
+            </util:list>
+
+    <util:list id="secondNameList" value-type="java.lang.String">
+    <value>Иванов</value>
+    <value>Смирнов</value>
+    <value>Кузнецов</value>
+    <value>Попов</value>
+    <value>Васильев</value>
+    <value>Петров</value>
+    <value>Соколов</value>
+    <value>Михайлов</value>
+    <value>Новиков</value>
+    <value>Федоров</value>
+    <value>Морозов</value>
+    <value>Волков</value>
+    <value>Алексеев</value>
+    <value>Лебедев</value>
+    <value>Семенов</value>
+    <value>Егоров</value>
+    <value>Павлов</value>
+    <value>Козлов</value>
+    <value>Степанов</value>
+    <value>Николаев</value>
+    <value>Орлов</value>
+    <value>Андреев</value>
+    <value>Макаров</value>
+    <value>Никитин</value>
+    <value>Захаров</value>
+    <value>Зайцев</value>
+    <value>Соловьев</value>
+    <value>Борисов</value>
+    <value>Яковлев</value>
+    <value>Григорьев</value>
+    <value>Романов</value>
+    <value>Воробьев</value>
+    <value>Сергеев</value>
+    <value>Кузьмин</value>
+    <value>Фролов</value>
+    <value>Александров</value>
+    <value>Дмитриев</value>
+    <value>Королев</value>
+    <value>Гусев</value>
+    <value>Киселев</value>
+    <value>Ильин</value>
+    <value>Максимов</value>
+    <value>Поляков</value>
+    <value>Сорокин</value>
+    <value>Виноградов</value>
+    <value>Ковалев</value>
+    <value>Белов</value>
+    <value>Медведев</value>
+    <value>Антонов</value>
+    <value>Тарасов</value>
+    <value>Жуков</value>
+    <value>Баранов</value>
+    <value>Филиппов</value>
+    <value>Комаров</value>
+    <value>Давыдов</value>
+    <value>Беляев</value>
+    <value>Герасимов</value>
+    <value>Богданов</value>
+    <value>Осипов</value>
+    <value>Сидоров</value>
+    <value>Матвеев</value>
+    <value>Титов</value>
+    <value>Марков</value>
+    <value>Миронов</value>
+    <value>Крылов</value>
+    <value>Куликов</value>
+    <value>Карпов</value>
+    <value>Власов</value>
+    <value>Мельников</value>
+    <value>Денисов</value>
+    <value>Гаврилов</value>
+    <value>Тихонов</value>
+    <value>Казаков</value>
+    <value>Афанасьев</value>
+    <value>Данилов</value>
+    <value>Савельев</value>
+    <value>Тимофеев</value>
+    <value>Фомин</value>
+    <value>Чернов</value>
+    <value>Абрамов</value>
+    <value>Мартынов</value>
+    <value>Ефимов</value>
+    <value>Федотов</value>
+    <value>Щербаков</value>
+    <value>Назаров</value>
+    <value>Калинин</value>
+    <value>Исаев</value>
+    <value>Чернышев</value>
+    <value>Быков</value>
+    <value>Маслов</value>
+    <value>Родионов</value>
+    <value>Коновалов</value>
+    <value>Лазарев</value>
+    <value>Воронин</value>
+    <value>Климов</value>
+    <value>Филатов</value>
+    <value>Пономарев</value>
+    <value>Голубев</value>
+    <value>Кудрявцев</value>
+    <value>Прохоров</value>
+    <value>Наумов</value>
+    <value>Потапов</value>
+    <value>Журавлев</value>
+    <value>Овчинников</value>
+    <value>Трофимов</value>
+    <value>Леонов</value>
+    <value>Соболев</value>
+    <value>Ермаков</value>
+    <value>Колесников</value>
+    <value>Гончаров</value>
+    <value>Емельянов</value>
+    <value>Никифоров</value>
+    <value>Грачев</value>
+    <value>Котов</value>
+    <value>Гришин</value>
+    <value>Ефремов</value>
+    <value>Архипов</value>
+    <value>Громов</value>
+    <value>Кириллов</value>
+    <value>Малышев</value>
+    <value>Панов</value>
+    <value>Моисеев</value>
+    <value>Румянцев</value>
+    <value>Акимов</value>
+    <value>Кондратьев</value>
+    <value>Бирюков</value>
+    <value>Горбунов</value>
+    <value>Анисимов</value>
+    <value>Еремин</value>
+    <value>Тихомиров</value>
+    <value>Галкин</value>
+    <value>Лукьянов</value>
+    <value>Михеев</value>
+    <value>Скворцов</value>
+    <value>Юдин</value>
+    <value>Белоусов</value>
+    <value>Нестеров</value>
+    <value>Симонов</value>
+    <value>Прокофьев</value>
+    <value>Харитонов</value>
+    <value>Князев</value>
+    <value>Цветков</value>
+    <value>Левин</value>
+    <value>Митрофанов</value>
+    <value>Воронов</value>
+    <value>Аксенов</value>
+    <value>Софронов</value>
+    <value>Мальцев</value>
+    <value>Логинов</value>
+    <value>Горшков</value>
+    <value>Савин</value>
+    <value>Краснов</value>
+    <value>Майоров</value>
+    <value>Демидов</value>
+    <value>Елисеев</value>
+    <value>Рыбаков</value>
+    <value>Сафонов</value>
+    <value>Плотников</value>
+    <value>Демин</value>
+    <value>Хохлов</value>
+    <value>Фадеев</value>
+    <value>Молчанов</value>
+    <value>Игнатов</value>
+    <value>Литвинов</value>
+    <value>Ершов</value>
+    <value>Ушаков</value>
+    <value>Дементьев</value>
+    <value>Рябов</value>
+    <value>Мухин</value>
+    <value>Калашников</value>
+    <value>Леонтьев</value>
+    <value>Лобанов</value>
+    <value>Кузин</value>
+    <value>Корнеев</value>
+    <value>Евдокимов</value>
+    <value>Бородин</value>
+    <value>Платонов</value>
+    <value>Некрасов</value>
+    <value>Балашов</value>
+    <value>Бобров</value>
+    <value>Жданов</value>
+    <value>Блинов</value>
+    <value>Игнатьев</value>
+    <value>Коротков</value>
+    <value>Муравьев</value>
+    <value>Крюков</value>
+    <value>Беляков</value>
+    <value>Богомолов</value>
+    <value>Дроздов</value>
+    <value>Лавров</value>
+    <value>Зуев</value>
+    <value>Петухов</value>
+    <value>Ларин</value>
+    <value>Никулин</value>
+    <value>Серов</value>
+    <value>Терентьев</value>
+    <value>Зотов</value>
+    <value>Устинов</value>
+    <value>Фокин</value>
+    <value>Самойлов</value>
+    <value>Константинов</value>
+    <value>Сахаров</value>
+    <value>Шишкин</value>
+    <value>Самсонов</value>
+    <value>Черкасов</value>
+    <value>Чистяков</value>
+    <value>Носов</value>
+    <value>Спиридонов</value>
+    <value>Карасев</value>
+    <value>Авдеев</value>
+    <value>Воронцов</value>
+    <value>Зверев</value>
+    <value>Владимиров</value>
+    <value>Селезнев</value>
+    <value>Нечаев</value>
+    <value>Кудряшов</value>
+    <value>Седов</value>
+    <value>Фирсов</value>
+    <value>Андрианов</value>
+    <value>Панин</value>
+    <value>Головин</value>
+    <value>Терехов</value>
+    <value>Ульянов</value>
+    <value>Шестаков</value>
+    <value>Агеев</value>
+    <value>Никонов</value>
+    <value>Селиванов</value>
+    <value>Баженов</value>
+    <value>Гордеев</value>
+    <value>Кожевников</value>
+    <value>Пахомов</value>
+    <value>Зимин</value>
+    <value>Костин</value>
+    <value>Широков</value>
+    <value>Филимонов</value>
+    <value>Ларионов</value>
+    <value>Овсянников</value>
+    <value>Сазонов</value>
+    <value>Суворов</value>
+    <value>Нефедов</value>
+    <value>Корнилов</value>
+    <value>Любимов</value>
+    <value>Львов</value>
+    <value>Горбачев</value>
+    <value>Копылов</value>
+    <value>Лукин</value>
+    <value>Токарев</value>
+    <value>Кулешов</value>
+    <value>Шилов</value>
+    <value>Большаков</value>
+    <value>Панкратов</value>
+    <value>Родин</value>
+    <value>Шаповалов</value>
+    <value>Покровский</value>
+    <value>Бочаров</value>
+    <value>Никольский</value>
+    <value>Маркин</value>
+    <value>Горелов</value>
+    <value>Агафонов</value>
+    <value>Березин</value>
+    <value>Ермолаев</value>
+    <value>Зубков</value>
+    <value>Куприянов</value>
+    <value>Трифонов</value>
+    <value>Масленников</value>
+    <value>Круглов</value>
+    <value>Третьяков</value>
+    <value>Колосов</value>
+    <value>Рожков</value>
+    <value>Артамонов</value>
+    <value>Шмелев</value>
+    <value>Лаптев</value>
+    <value>Лапшин</value>
+    <value>Федосеев</value>
+    <value>Зиновьев</value>
+    <value>Зорин</value>
+    <value>Уткин</value>
+    <value>Столяров</value>
+    <value>Зубов</value>
+    <value>Ткачев</value>
+    <value>Дорофеев</value>
+    <value>Антипов</value>
+    <value>Завьялов</value>
+    <value>Свиридов</value>
+    <value>Золотарев</value>
+    <value>Кулаков</value>
+    <value>Мещеряков</value>
+    <value>Макеев</value>
+    <value>Дьяконов</value>
+    <value>Гуляев</value>
+    <value>Петровский</value>
+    <value>Бондарев</value>
+    <value>Поздняков</value>
+    <value>Панфилов</value>
+    <value>Кочетков</value>
+    <value>Суханов</value>
+    <value>Рыжов</value>
+    <value>Старостин</value>
+    <value>Калмыков</value>
+    <value>Колесов</value>
+    <value>Золотов</value>
+    <value>Кравцов</value>
+    <value>Субботин</value>
+    <value>Шубин</value>
+    <value>Щукин</value>
+    <value>Лосев</value>
+    <value>Винокуров</value>
+    <value>Лапин</value>
+    <value>Парфенов</value>
+    <value>Исаков</value>
+    <value>Голованов</value>
+    <value>Коровин</value>
+    <value>Розанов</value>
+    <value>Артемов</value>
+    <value>Козырев</value>
+    <value>Русаков</value>
+    <value>Алешин</value>
+    <value>Крючков</value>
+    <value>Булгаков</value>
+    <value>Кошелев</value>
+    <value>Сычев</value>
+    <value>Синицын</value>
+    <value>Черных</value>
+    <value>Рогов</value>
+    <value>Кононов</value>
+    <value>Лаврентьев</value>
+    <value>Евсеев</value>
+    <value>Пименов</value>
+    <value>Пантелеев</value>
+    <value>Горячев</value>
+    <value>Аникин</value>
+    <value>Лопатин</value>
+    <value>Рудаков</value>
+    <value>Одинцов</value>
+    <value>Серебряков</value>
+    <value>Панков</value>
+    <value>Дегтярев</value>
+    <value>Орехов</value>
+    <value>Царев</value>
+    <value>Шувалов</value>
+    <value>Кондрашов</value>
+    <value>Горюнов</value>
+    <value>Дубровин</value>
+    <value>Голиков</value>
+    <value>Курочкин</value>
+    <value>Латышев</value>
+    <value>Севастьянов</value>
+    <value>Вавилов</value>
+    <value>Ерофеев</value>
+    <value>Сальников</value>
+    <value>Клюев</value>
+    <value>Носков</value>
+    <value>Озеров</value>
+    <value>Кольцов</value>
+    <value>Комиссаров</value>
+    <value>Меркулов</value>
+    <value>Киреев</value>
+    <value>Хомяков</value>
+    <value>Булатов</value>
+    <value>Ананьев</value>
+    <value>Буров</value>
+    <value>Шапошников</value>
+    <value>Дружинин</value>
+    <value>Островский</value>
+    <value>Шевелев</value>
+    <value>Долгов</value>
+    <value>Суслов</value>
+    <value>Шевцов</value>
+    <value>Пастухов</value>
+    <value>Рубцов</value>
+    <value>Бычков</value>
+    <value>Глебов</value>
+    <value>Ильинский</value>
+    <value>Успенский</value>
+    <value>Дьяков</value>
+    <value>Кочетов</value>
+    <value>Вишневский</value>
+    <value>Высоцкий</value>
+    <value>Глухов</value>
+    <value>Дубов</value>
+    <value>Бессонов</value>
+    <value>Ситников</value>
+    <value>Астафьев</value>
+    <value>Мешков</value>
+    <value>Шаров</value>
+    <value>Яшин</value>
+    <value>Козловский</value>
+    <value>Туманов</value>
+    <value>Басов</value>
+    <value>Корчагин</value>
+    <value>Болдырев</value>
+    <value>Олейников</value>
+    <value>Чумаков</value>
+    <value>Фомичев</value>
+    <value>Губанов</value>
+    <value>Дубинин</value>
+    <value>Шульгин</value>
+    <value>Касаткин</value>
+    <value>Пирогов</value>
+    <value>Семин</value>
+    <value>Трошин</value>
+    <value>Горохов</value>
+    <value>Стариков</value>
+    <value>Щеглов</value>
+    <value>Фетисов</value>
+    <value>Колпаков</value>
+    <value>Чесноков</value>
+    <value>Зыков</value>
+    <value>Верещагин</value>
+    <value>Минаев</value>
+    <value>Руднев</value>
+    <value>Троицкий</value>
+    <value>Окулов</value>
+    <value>Ширяев</value>
+    <value>Малинин</value>
+    <value>Черепанов</value>
+    <value>Измайлов</value>
+    <value>Алехин</value>
+    <value>Зеленин</value>
+    <value>Касьянов</value>
+    <value>Пугачев</value>
+    <value>Павловский</value>
+    <value>Чижов</value>
+    <value>Кондратов</value>
+    <value>Воронков</value>
+    <value>Капустин</value>
+    <value>Сотников</value>
+    <value>Демьянов</value>
+    <value>Косарев</value>
+    <value>Беликов</value>
+    <value>Сухарев</value>
+    <value>Белкин</value>
+    <value>Беспалов</value>
+    <value>Кулагин</value>
+    <value>Савицкий</value>
+    <value>Жаров</value>
+    <value>Хромов</value>
+    <value>Еремеев</value>
+    <value>Карташов</value>
+    <value>Астахов</value>
+    <value>Русанов</value>
+    <value>Сухов</value>
+    <value>Вешняков</value>
+    <value>Волошин</value>
+    <value>Козин</value>
+    <value>Худяков</value>
+    <value>Жилин</value>
+    <value>Малахов</value>
+    <value>Сизов</value>
+    <value>Ежов</value>
+    <value>Толкачев</value>
+    <value>Анохин</value>
+    <value>Вдовин</value>
+    <value>Бабушкин</value>
+    <value>Усов</value>
+    <value>Лыков</value>
+    <value>Горлов</value>
+    <value>Коршунов</value>
+    <value>Маркелов</value>
+    <value>Постников</value>
+    <value>Черный</value>
+    <value>Дорохов</value>
+    <value>Свешников</value>
+    <value>Гущин</value>
+    <value>Калугин</value>
+    <value>Блохин</value>
+    <value>Сурков</value>
+    <value>Кочергин</value>
+    <value>Греков</value>
+    <value>Казанцев</value>
+    <value>Швецов</value>
+    <value>Ермилов</value>
+    <value>Парамонов</value>
+    <value>Агапов</value>
+    <value>Минин</value>
+    <value>Корнев</value>
+    <value>Черняев</value>
+    <value>Гуров</value>
+    <value>Ермолов</value>
+    <value>Сомов</value>
+    <value>Добрынин</value>
+    <value>Барсуков</value>
+    <value>Глушков</value>
+    <value>Чеботарев</value>
+    <value>Москвин</value>
+    <value>Уваров</value>
+    <value>Безруков</value>
+    <value>Муратов</value>
+    <value>Раков</value>
+    <value>Снегирев</value>
+    <value>Гладков</value>
+    <value>Злобин</value>
+    <value>Моргунов</value>
+    <value>Поликарпов</value>
+    <value>Рябинин</value>
+    <value>Судаков</value>
+    <value>Кукушкин</value>
+    <value>Калачев</value>
+    <value>Грибов</value>
+    <value>Елизаров</value>
+    <value>Звягинцев</value>
+    <value>Корольков</value>
+    <value>Федосов</value>
+    </util:list>
+
+    <util:list id="addressList" value-type="java.lang.String">
+    <value>105005, г.Москва, Бауманская, д.7.</value>
+    <value>г.Москва, ул.Бакунинская, д.69.</value>
+    <value>127051, г.Москва, бульв.Петровский, д.3.</value>
+    <value>107140, г.Москва, пер.1-й Красносельский, д.3.</value>
+    <value>101000, г.Москва, ул.Покровка, д.14/2.</value>
+    <value>127083, г.Москва, ул.Масловка Верхняя, д.28.</value>
+    <value>127549, г.Москва, ш.Алтуфьевское, д.56.</value>
+    <value>129344, г.Москва, ул.Искры, д.31.</value>
+    <value>129347, г.Москва, Ярославское шоссе, д.124.</value>
+    <value>129085, г.Москва, бульвар Звездный 3А.</value>
+    <value>129085, г.Москва, бульвар Звездный 3А, стр.1.</value>
+    <value>129085, г.Москва, просп.Мира, д.102.</value>
+    <value>107113, г.Москва, пл.Сокольническая, д 4А.</value>
+    <value>107061, г.Москва, Большая Черкизовская, д.2, корп 2.</value>
+    <value>105568, г.Москва, ул.Чечулина, д.11.</value>
+    <value>105077, г.Москва, бульвар Измайловский, д.58.</value>
+    <value>111673, г.Москва, Новокосинская, д.10, корп 1.</value>
+    <value>111141, г.Москва, ул.Плеханова, д.15.</value>
+    <value>111141, г.Москва, ул.Плеханова, д.15, стр.2.</value>
+    <value>111024, г.Москва, 2-я Энтузиастов, д.5.</value>
+    <value>109202, г.Москва, 2-я Карачаровская, д.1.</value>
+    <value>109156, г.Москва, ул.Авиаконструктора Миля, д.3.</value>
+    <value>111020, г.Москва, ул.Боровая, д.7.</value>
+    <value>111024, г.Москва, ул.Авиамоторная, д.50.</value>
+    <value>109382, г.Москва, ул Мариупольская, дом 6.</value>
+    <value>115230, г. Москва, проезд Хлебозаводский, д.7.</value>
+    <value>115191, г.Москва, ул.Большая Тульская, дом 2.</value>
+    <value>117105, г.Москва, шоссе Варшавское, д.1.</value>
+    <value>117534, г.Москва, ул.Чертановская, д.52, корп 2.</value>
+    <value>117216, г.Москва, ул.Куликовская, д.20.</value>
+    <value>117342, г.Москва, ул.Введенского, д.23А.</value>
+    <value>117342, г.Москва, ул.Введенского, д. 23А, стр.3, этаж 4.</value>
+    <value>119415, г. Москва, Ленинский Проспект, д.114.</value>
+    <value> 119602, г.Москва, ул.Никулинская, д.27.</value>
+    <value>121609, г.Москва, ул.Осенняя, дом 17.</value>
+    <value>125310, г.Москва, Барышиха, д.44.</value>
+    <value>125464, г.Москва, Пятницкое шоссе, д.16.</value>
+    <value>125464, г.Москва, Пятницкое шоссе, д.16, этаж 1.</value>
+    <value>123458, г.Москва, ул.Маршала Катукова, д.24.</value>
+    <value>123458, г.Москва, ул.Таллинская, д.6.</value>
+    <value>123458, г.Москва, ул.Таллинская, д.6, этаж 1.</value>
+    <value>123423, г.Москва, ул.Саляма Адиля, д.9.</value>
+    <value>Головинское шоссе д.5, корп.1.</value>
+    <value>125130, г.Москва, пер. Новоподмосковный 6-Й, д. 4.</value>
+    <value>125080, г.Москва, Волоколамское шоссе, д.1.</value>
+    <value>г. Москва, ул.Новостройка.</value>
+    <value>141001, г.Мытищи, ул.Стрелковая, д.21.</value>
+    </util:list>
+
+    <util:list id="companyList" value-type="java.lang.String">
+<value>"CARGO- BLG" ТЭК</value>
+<value>АВЕНЮ</value>
+<value>НОТЗ</value>
+<value>"АвтоГОСТ"</value>
+<value>АВЕРС</value>
+<value>НПК Пермский механический завод</value>
+<value>"Азия-Авто"</value>
+<value>АВЕРС ВН</value>
+<value>НПО Диапазон</value>
+<value>"ИСТ"</value>
+<value>Авиалайн</value>
+<value>НПО ПУЛЬС</value>
+<value>"Склад карданных валов"</value>
+<value>Авик - продажа спецтехники и запчастей в одном месте</value>
+<value>НПО СтройМехТранс</value>
+<value>"СпецАвтоТранс"</value>
+<value>Авион</value>
+<value>НСК</value>
+<value>"ЮГТРАНССЕРВИС"</value>
+<value>АВИТЕК</value>
+<value>НТК форклифт</value>
+<value>1000 Инструментов</value>
+<value>АВК групп</value>
+<value>ОАО "Строймеханизация"</value>
+<value>1000машин</value>
+<value>АВК-ЦЕНТР</value>
+<value>ОАО Строймеханизация</value>
+<value>100mashin.com</value>
+<value>Аврора ИнтерРус</value>
+<value>Обуховская промышленная компания</value>
+<value>111-три единицы</value>
+<value>Авто Экспедитор</value>
+<value>Объединенная промышленная инициатива</value>
+<value>1509 Сервис</value>
+<value>АвтоАльянс</value>
+<value>Объединённые машиностроительные заводы</value>
+<value>1-ая Автотранспортная ЮТС</value>
+<value>Автобаза ДВ</value>
+<value>ОЗОНИГ-ЛУКОЙЛ</value>
+<value>40метров</value>
+<value>АВТОБАУ</value>
+<value>ОЛЬВЕКС-ДАЙМОНД</value>
+<value>5-20.BY</value>
+<value>Автобетононасосы</value>
+<value>Омские Вездеходы</value>
+<value>7728485.ru</value>
+<value>Автобетононасосы Урала</value>
+<value>ОмскТрансМаш</value>
+<value>A. L. Lee</value>
+<value>Автоброкер Онлайн.ру</value>
+<value>ОНЕЖЕЦ</value>
+<value>ABEL</value>
+<value>АВТОБЭСТ</value>
+<value>ООО Гаврилов и ГК</value>
+<value>ABEX</value>
+<value>АвтоВл</value>
+<value>ООО "Абсолют-М"</value>
+<value>ABI</value>
+<value>АвтоВладКар</value>
+<value>ООО "АвтоВладКар"</value>
+<value>ACE</value>
+<value>АвтоВладКар-Москва</value>
+<value>ООО "АвтоСнабСтрой"</value>
+<value>a-foton.ru</value>
+<value>АвтоВосток</value>
+<value>ООО "АзовСтройМаш Плюс"</value>
+<value>AFR Group</value>
+<value>Автовышка Рент</value>
+<value>ООО "Алькор"</value>
+<value>AGCO</value>
+<value>АвтовышкА, ООО</value>
+<value>ООО "Аренда техники"</value>
+<value>AGCO Corporation</value>
+<value>Автовышки в аренду - SKY-сервис</value>
+<value>ООО "АрммСтройТех"</value>
+<value>AGCOTRACTORS</value>
+<value>Автогрейдер-СТЗ</value>
+<value>ООО "Визум"</value>
+<value>Aichi</value>
+<value>Автогрупп74</value>
+<value>ООО "ГК "ЖИК г.Казани"</value>
+<value>AIRFIL</value>
+<value>АВТОДИЗАЙН</value>
+<value>ООО "Евро-тех"</value>
+<value>ALFA</value>
+<value>Автодизель</value>
+<value>ООО "Интеркара"</value>
+<value>Alitrak</value>
+<value>Автодоркомплект</value>
+<value>ООО "Компания ЭМПРО"</value>
+<value>ALLIED</value>
+<value>АВТОДОРСЕРВИС</value>
+<value>ООО "Кранар"</value>
+<value>ALL-KOR</value>
+<value>Автодром</value>
+<value>ООО "Лиюаньда"</value>
+<value>ALLMAND</value>
+<value>Авто-Империя</value>
+<value>ООО "ЛМК "Армада"</value>
+<value>All-Track</value>
+<value>АВТОИМПОРТ</value>
+<value>ООО "Магистраль"</value>
+<value>ALLU</value>
+<value>Автокар</value>
+<value>ООО "МАМЛЮКИ"</value>
+<value>Ålö</value>
+<value>АвтоКарго</value>
+<value>ООО "МассАвто"</value>
+<value>A-Logistics Group</value>
+<value>Автоклаус Центр</value>
+<value>ООО "МегаРекс"</value>
+<value>ALPHA</value>
+<value>АвтоКомТранс</value>
+<value>ООО "МирТехСтрой"</value>
+<value>ALTA</value>
+<value>Автокран</value>
+<value>ООО "Мост-Базис"</value>
+<value>ALTCON</value>
+<value>Автокран Аренда</value>
+<value>ООО "МТЗ Трактор"</value>
+<value>Altec</value>
+<value>Автокран. СПб</value>
+<value>ООО "Нефтегазмонтаж"</value>
+<value>AMCO VEBA</value>
+<value>Автокран.кз</value>
+<value>ООО "ПарнасАвтоКомплекс"</value>
+<value>American Augers</value>
+<value>АвтоКранПодъем</value>
+<value>ООО "Погрузчик-Юг"</value>
+<value>AMERICAN LA FRANCE</value>
+<value>АвтоКранСервис</value>
+<value>ООО "Прима Авто"</value>
+<value>AmeriQuip</value>
+<value>Автокраны</value>
+<value>ООО "ПУМ 500"</value>
+<value>AMMANN</value>
+<value>Автолайн</value>
+<value>ООО "РБА-Тюмень"</value>
+<value>Amog</value>
+<value>АВТОЛАЙНЕР</value>
+<value>ООО "РИАЛ"</value>
+<value>Anaconda Equipment International</value>
+<value>АвтоЛига</value>
+<value>ООО "РОС-СНАБ"</value>
+<value>Anchises</value>
+<value>АвтоЛира ГРУПП</value>
+<value>ООО "СБК"</value>
+<value>ANMOPYC</value>
+<value>Автолокатор</value>
+<value>ООО "СпецАренда Краснодар</value>
+<value>ANTEC</value>
+<value>Автомаркет</value>
+<value>ООО "Спецтехника грузовики"</value>
+<value>Antonio Carraro</value>
+<value>АВТОМАСТЕР</value>
+<value>ООО "Спецтехника Китая"</value>
+<value>APOLLO</value>
+<value>Автомобильная компания Урал</value>
+<value>ООО "СПЕЦТЕХНИКА"</value>
+<value>Aquamec</value>
+<value>Автомобильные Технлогии</value>
+<value>ООО "СпецТехСити"</value>
+<value>Aramine</value>
+<value>Автомонтаж</value>
+<value>ООО "СТК"</value>
+<value>ARCTIC MACHINE</value>
+<value>Авто-НН</value>
+<value>ООО "Строительные коммуникации"</value>
+<value>ARDCO</value>
+<value>АвтоПарк</value>
+<value>ООО "Стройтех"</value>
+<value>ARDEN</value>
+<value>Автопартнер</value>
+<value>Baltic Excavator Trade</value>
+<value>АДС Логистик</value>
+<value>ООО Рус-Торг</value>
+<value>BANDIT</value>
+<value>АДСТ-Петербург</value>
+<value>ООО СЕВЗАПСПЕЦМАШ</value>
+<value>BANUT</value>
+<value>АЗЕВРОТЕХ</value>
+<value>ООО Синь фэн машиностроительный завод</value>
+<value>BARFORD</value>
+<value>АЗИМУТ</value>
+<value>ООО Складские Технологии</value>
+<value>Barin</value>
+<value>Азия Авто</value>
+<value>ООО СпецАвто</value>
+<value>BARKO HYDRAULICS</value>
+<value>Азия Брокер</value>
+<value>ООО СпецАренда МСК</value>
+<value>Barreto</value>
+<value>Азия Маркет</value>
+<value>ООО Спецтех Самара</value>
+<value>BATEMAG</value>
+<value>Азия Моторс</value>
+<value>ООО СпецТехника</value>
+<value>Bauer</value>
+<value>Азияпром</value>
+<value>ООО Спецтехника-Казань</value>
+<value>Baughans</value>
+<value>Азия-Трак спецтехника</value>
+<value>ООО СпецТранс</value>
+<value>BAUMANN</value>
+<value>АЗМ-Стройдормаш</value>
+<value>ООО СпецТранс. Пенза</value>
+<value>BAW MOTOR</value>
+<value>Азовмаш</value>
+<value>ООО Спецтрансстрой-НН</value>
+<value>BEC</value>
+<value>АзовРСМ</value>
+<value>ООО СТЛ</value>
+<value>Beifang Benchi</value>
+<value>АЗСМ ПРОГРЕСС</value>
+<value>ООО ТД "Пром-Кран"</value>
+<value>Beijing Zhonghuan Kinetics Heavy Vehicles</value>
+<value>Аймашинери</value>
+<value>ООО ТД "СоюзАвтоКом"</value>
+<value>BELARUS CA</value>
+<value>АК Гранат</value>
+<value>ООО ТД "Спецтрейд"</value>
+<value>BELET</value>
+<value>АКБ СЕВИС</value>
+<value>ООО ТД "Строймашсервис"</value>
+<value>BELL</value>
+<value>АКБ-СтроительнаяТехника</value>
+<value>ООО ТехВосток</value>
+<value>Belle</value>
+<value>Аквилон</value>
+<value>ООО ТК «ГрузоведЪ»</value>
+<value>BEML</value>
+<value>Акимото</value>
+<value>ООО Трасса</value>
+
+</util:list>
+    </beans>
