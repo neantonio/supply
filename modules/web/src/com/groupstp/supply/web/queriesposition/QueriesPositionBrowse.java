@@ -11,11 +11,13 @@ import com.haulmont.cuba.core.global.*;
 import com.haulmont.cuba.gui.WindowManager;
 import com.haulmont.cuba.gui.components.*;
 import com.haulmont.cuba.gui.components.actions.BaseAction;
+import com.haulmont.cuba.gui.data.DsBuilder;
 import com.haulmont.cuba.gui.data.GroupDatasource;
 import com.haulmont.cuba.gui.data.impl.GroupDatasourceImpl;
 import com.haulmont.cuba.gui.xml.layout.ComponentsFactory;
 import org.dom4j.Element;
 
+import javax.annotation.Nullable;
 import javax.inject.Inject;
 import java.util.*;
 
@@ -48,7 +50,7 @@ public class QueriesPositionBrowse extends AbstractLookup {
     @Inject
     private ComponentsFactory componentsFactory;
 
-    private class QueryLinkGenerator implements Table.ColumnGenerator{
+    private class QueryLinkGenerator implements Table.ColumnGenerator {
 
         /**
          * Called by {@link Table} when rendering a column for which the generator was created.
@@ -62,7 +64,7 @@ public class QueriesPositionBrowse extends AbstractLookup {
             LinkButton lnk = (LinkButton) componentsFactory.createComponent(LinkButton.NAME);
             lnk.setAction(new BaseAction("query").
                     withCaption(q.getInstanceName()).
-                    withHandler(e-> openEditor(q, WindowManager.OpenType.DIALOG)));
+                    withHandler(e -> openEditor(q, WindowManager.OpenType.DIALOG)));
             return lnk;
         }
     }
@@ -86,7 +88,7 @@ public class QueriesPositionBrowse extends AbstractLookup {
     }
 
     private void restorePanel() {
-        if(getSettings().get(tabs.getId()).attribute("tabOpened")==null)
+        if (getSettings().get(tabs.getId()).attribute("tabOpened") == null)
             return;
         tabs.setSelectedTab(getSettings().get(tabs.getId()).attribute("tabOpened").getValue());
     }
@@ -94,8 +96,7 @@ public class QueriesPositionBrowse extends AbstractLookup {
     /**
      * Настройка вкладки номенклатурный контроль
      */
-    private void setupNomControl()
-    {
+    private void setupNomControl() {
         GroupTable<QueriesPosition> p = positionsNomControl;
         p.addGeneratedColumn("queryLink", new QueryLinkGenerator());
         p.groupBy(new Object[]{
@@ -104,7 +105,7 @@ public class QueriesPositionBrowse extends AbstractLookup {
                 p.getColumn("query.division").getId(),
                 p.getColumn("query").getId()});
         dsNomControl.addItemPropertyChangeListener(e -> {
-            if("positionUsefulness".equals(e.getProperty()) && e.getValue().equals(true)) {
+            if ("positionUsefulness".equals(e.getProperty()) && e.getValue().equals(true)) {
                 e.getItem().setPositionUsefulnessTS(new Date());
             }
         });
@@ -113,8 +114,7 @@ public class QueriesPositionBrowse extends AbstractLookup {
     /**
      * настройка складскго контроля
      */
-    private void setupStoreControl()
-    {
+    private void setupStoreControl() {
         GroupTable<QueriesPosition> p = positionsStoreControl;
         p.addGeneratedColumn("queryLink", new QueryLinkGenerator());
         p.groupBy(new Object[]{
@@ -129,8 +129,7 @@ public class QueriesPositionBrowse extends AbstractLookup {
      */
     public void onBtnSetQueryUsefulnessClick() {
         QueriesPosition position = positionsNomControl.getSingleSelected();
-        if(position==null)
-        {
+        if (position == null) {
             showNotification(getMessage("Select position first"), NotificationType.WARNING);
             return;
         }
@@ -163,7 +162,7 @@ public class QueriesPositionBrowse extends AbstractLookup {
         GroupTable<QueriesPosition> grpTab = getOpenedStageTable();
         GroupDatasource ds = grpTab.getDatasource();
         Set<QueriesPosition> positions = grpTab.getSelected();
-        for (QueriesPosition position: positions) {
+        for (QueriesPosition position : positions) {
             workflowService.movePosition(position);
 //            groovyTestService.testScript( position);
         }
@@ -182,20 +181,20 @@ public class QueriesPositionBrowse extends AbstractLookup {
 
     /**
      * Возвращает строковое представление текущей открытой вкладки (этапа)
+     *
      * @return текущий открытый этап
      */
-    public String getOpenedStage()
-    {
+    public String getOpenedStage() {
         return tabs.getSelectedTab().getName().replace("tab", "");
     }
 
     /**
      * Возвращает таблицу GroupTable текущего открытого этапа
+     *
      * @return GroupTable
      */
-    public GroupTable<QueriesPosition> getOpenedStageTable()
-    {
-        return (GroupTable<QueriesPosition>) tabs.getComponentNN("positions"+getOpenedStage());
+    public GroupTable<QueriesPosition> getOpenedStageTable() {
+        return (GroupTable<QueriesPosition>) tabs.getComponentNN("positions" + getOpenedStage());
     }
 
     /**
@@ -204,14 +203,13 @@ public class QueriesPositionBrowse extends AbstractLookup {
     public void onBtnSplitClick() {
         GroupTable<QueriesPosition> tab = getOpenedStageTable();
         QueriesPosition position = tab.getSingleSelected();
-        if(position.getPosition()!=null)
-        {
+        if (position.getPosition() != null) {
             position = position.getPosition();
         }
         QueriesPosition copy = copyPosition(position);
         copy.setPosition(position);
-        if(Stages.StoreControl.equals(position.getCurrentStage()))
-           position.setCurrentStage(Stages.Divided);
+        if (Stages.StoreControl.equals(position.getCurrentStage()))
+            position.setCurrentStage(Stages.Divided);
         tab.getDatasource().addItem(copy);
     }
 
@@ -220,16 +218,16 @@ public class QueriesPositionBrowse extends AbstractLookup {
 
     /**
      * Копирует текущую позицию
+     *
      * @param position позиция для копирования
      * @return новую позицию
      */
-    private QueriesPosition copyPosition(QueriesPosition position)
-    {
+    private QueriesPosition copyPosition(QueriesPosition position) {
         QueriesPosition src = dataManager.reload(position, "queriesPosition-full");
         QueriesPosition copy = metadata.create(QueriesPosition.class);
         Collection<MetaProperty> properties = position.getMetaClass().getProperties();
         for (MetaProperty property : properties) {
-            if(property.getDeclaringClass()!=position.getMetaClass().getJavaClass())
+            if (property.getDeclaringClass() != position.getMetaClass().getJavaClass())
                 continue;
             String name = property.getName();
             copy.setValue(name, src.getValue(name));
@@ -241,8 +239,7 @@ public class QueriesPositionBrowse extends AbstractLookup {
      * Открывает подбор поставщиков
      */
     public void onBtnSuppliersClick() {
-        if(positionsSupSelection.getSelected().size()==0)
-        {
+        if (positionsSupSelection.getSelected().size() == 0) {
             showNotification(getMessage("Select position first"), NotificationType.WARNING);
             return;
         }
@@ -255,8 +252,7 @@ public class QueriesPositionBrowse extends AbstractLookup {
      * Открывает ввод предложений
      */
     public void onBtnSuggestionsClick() {
-        if(positionsSupSelection.getSelected().size()==0)
-        {
+        if (positionsSupSelection.getSelected().size() == 0) {
             showNotification(getMessage("Select position first"), NotificationType.WARNING);
             return;
         }
@@ -273,8 +269,7 @@ public class QueriesPositionBrowse extends AbstractLookup {
      */
     public void onBtnVoteClick() {
 
-        if(positionsComission.getSelected().size()==0)
-        {
+        if (positionsComission.getSelected().size() == 0) {
             showNotification(getMessage("Select position first"), NotificationType.WARNING);
             return;
         }
@@ -292,15 +287,16 @@ public class QueriesPositionBrowse extends AbstractLookup {
     @Inject
     private GroupDatasource<QueriesPosition, UUID> dsBills;
 
-    @Inject
-    private GroupDatasource<QueriesPosition, UUID> currentBillPositionsDs;
-
     @Override
     public void init(Map<String, Object> params) {
+        //Генерируемая колонка "Сумма"
         positionsBills.addGeneratedColumn("Сумма", new Table.PrintableColumnGenerator<QueriesPosition, String>() {
             @Override
             public Component generateCell(QueriesPosition entity) {
                 Label label = (Label) componentsFactory.createComponent(Label.NAME);
+                if (entity.getVoteResult().getPrice() == null || entity.getVoteResult().getQuantity() == null) {
+                    return null;
+                }
                 label.setValue(entity.getVoteResult().getPrice() * entity.getVoteResult().getQuantity());
                 return label;
             }
@@ -311,64 +307,110 @@ public class QueriesPositionBrowse extends AbstractLookup {
             }
         });
 
+        //Значки
+        positionsBills.setIconProvider(new Table.IconProvider<QueriesPosition>() {
+            @Nullable
+            @Override
+            public String getItemIcon(QueriesPosition entity) {
+                return entity.getBills() != null ? "icons/ok.png" : "icons/cancel.png";
+            }
+        });
+
+        // Событие на клик по счету
         billsTable.setClickListener("number", (item, columnId) -> {
-            dsBills.refresh();
-//            openWindow("AnotherTab", WindowManager.OpenType.NEW_TAB, ParamsMap.of("parameter", item.getInstanceName()));
-//            (String) item.getId()
-            //billsTable.getSelected().iterator().next().getNumber()
-//            dsBills.refresh();
             Bills clickedBills = (Bills) item;
-//            showNotification(getMessage(clickedBills.getPrice().toString()), NotificationType.WARNING);
 
-//            LoadContext<QueriesPosition> ctx = LoadContext.create(QueriesPosition.class).setQuery(
-//                    LoadContext.createQuery("select q from supply$QueriesPosition q where q.bills.id=:bills" )
-//                            .setParameter("bills", clickedBills.getId()));
-//            DataManager dataManager = AppBeans.get(DataManager.class);
-//            List<QueriesPosition> list = dataManager.loadList(ctx);
-//            showNotification(getMessage(list.toString()), NotificationType.WARNING);
             HashMap<String, Object> items = new HashMap<>();
-            items.put("billId", clickedBills);
-            items.put("supplerId", clickedBills.);
-            currentBillPositionsDs.refresh(items);
-            positionsBills.setDatasource(currentBillPositionsDs);
-
-//            list1.forEach(t -> {
-//                if (!t.getBills().getId().equals(item.getId())) {
-//                    dsBills.removeItem(t);
-//                    dsBills.commit();
-//                }
-//            });
-
+            items.put("billId", clickedBills.getId());
+            items.put("supplerId", clickedBills.getSupplier().getId());
+            dsBills.setQuery("select e from supply$QueriesPosition e\n" +
+                    "where e.currentStage='Bills' and (" +
+                    "e.bills.id = :custom$billId\n" +
+                    "or\n" +
+                    "(e.voteResult.posSup.supplier.id = :custom$supplerId and e.bills is null))");
+            dsBills.refresh(items);
 
         });
     }
 
+    //Прикрепление позиций к счету
     public void onBtnAttachClick() {
-        if(positionsBills.getSelected().size()==0 || billsTable.getSelected().size()!=1)
-        {
+        if (positionsBills.getSelected().size() == 0 || billsTable.getSelected().size() != 1) {
             showNotification(getMessage("Select positions and one bill first"), NotificationType.WARNING);
             return;
         }
         Bills currentBill = billsTable.getSelected().iterator().next();
         positionsBills.getSelected().forEach(p -> {
-            p.setBills(currentBill);
-            dsBills.setItem(p);
-            dsBills.commit();
+            if (p.getVoteResult().getPosSup().getSupplier().getId().equals(currentBill.getSupplier().getId())) {
+                p.setBills(currentBill);
+                dsBills.setItem(p);
+                dsBills.commit();
+            } else {
+                showNotification(getMessage("Wrong supplier"), NotificationType.WARNING);
+            }
         });
     }
 
+    //Открепление позиций от счета
     public void onBtnUndockClick() {
-        if(positionsBills.getSelected().size()==0 || billsTable.getSelected().size()!=1)
-        {
-            showNotification(getMessage("Select positions and one bill first"), NotificationType.WARNING);
+        if (positionsBills.getSelected().size() == 0) {
+            showNotification(getMessage("Select positions first"), NotificationType.WARNING);
             return;
         }
-//        Bills currentBill = billsTable.getSelected().iterator().next();
         positionsBills.getSelected().forEach(p -> {
             p.setBills(null);
             dsBills.setItem(p);
             dsBills.commit();
         });
     }
+
+    //Возвращение на этап подбора поставщиков
+    public void onBtnToSupSelection() {
+
+        if (positionsBills.getSelected().size() == 0 && billsTable.getSelected().size() != 1) {
+            showNotification(getMessage("Select positions or Bill first"), NotificationType.WARNING);
+            return;
+        }
+
+        //Если выделен Счет
+        if (billsTable.getSelected().size() == 1) {
+            Bills currentBill = billsTable.getSelected().iterator().next();
+            dsBills.getItems().forEach(e -> {
+                if (e.getBills().getId().equals(currentBill.getId())) {
+                    e.setCurrentStage(Stages.SupSelection);
+                    dsBills.setItem(e);
+                    dsBills.commit();
+                }
+            });
+            dsBills.refresh();
+            return;
+        }
+
+        //Если выделены позиции
+        if (positionsBills.getSelected().size() != 0) {
+            positionsBills.getSelected().forEach(e -> {
+                        e.setCurrentStage(Stages.SupSelection);
+                        e.setBills(null);
+                        dsBills.setItem(e);
+                        dsBills.commit();
+                        dsBills.refresh();
+                    }
+
+            );
+        }
+    }
+
+    //Все позиции без Счета
+    public void onBtnEmptyPositions() {
+        dsBills.setQuery("select e from supply$QueriesPosition e where e.bills is null and e.currentStage='Bills')");
+        dsBills.refresh();
+    }
+
+    //Все позиции
+    public void onBtnAllPositions() {
+        dsBills.setQuery("select e from supply$QueriesPosition e where e.currentStage='Bills')");
+        dsBills.refresh();
+    }
+
 
 }

@@ -399,6 +399,7 @@ create table SUPPLY_BILLS (
     DELETED_BY varchar(50),
     --
     NUMBER_ varchar(20) not null,
+    SUPPLIER_ID uuid not null,
     TIME_PAYMENT timestamp,
     PRICE double precision,
     SUM_CONTROL boolean,

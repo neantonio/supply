@@ -59,15 +59,6 @@ where e.currentStage='Bills']]>
                 <![CDATA[select e from supply$Bills e]]>
             </query>
         </groupDatasource>
-        <groupDatasource id="currentBillPositionsDs"
-                         class="com.groupstp.supply.entity.QueriesPosition"
-                         view="queriesPosition-Bills">
-            <query>
-                <![CDATA[select e from supply$QueriesPosition e
-where e.bills.id = :custom$billId 
-and e.voteResult.posSup.supplier.id = :custom$supplerId]]>
-            </query>
-        </groupDatasource>
     </dsContext>
     <dialogMode height="600"
                 width="800"/>
@@ -498,6 +489,17 @@ and e.voteResult.posSup.supplier.id = :custom$supplerId]]>
                         <button id="btnUndock"
                                 caption="Открепить"
                                 invoke="onBtnUndockClick"/>
+                        <button id="btnToSupSelection"
+                                caption="Вернуть к Поставщикам"
+                                invoke="onBtnToSupSelection"/>
+                    </buttonsPanel>
+                    <buttonsPanel>
+                        <button id="btnEmptyPositions"
+                                caption="Позиции без счета"
+                                invoke="onBtnEmptyPositions"/>
+                        <button id="btnAllPositions"
+                                caption="Все позиции"
+                                invoke="onBtnAllPositions"/>
                     </buttonsPanel>
                     <hbox expand="positionsBills"
                           height="500px"
@@ -517,12 +519,13 @@ and e.voteResult.posSup.supplier.id = :custom$supplerId]]>
                                 <column id="timePayment"/>
                                 <column id="price"/>
                                 <column id="sumControl"/>
+                                <column id="supplier"/>
                             </columns>
                             <rows datasource="billsesDs"/>
                         </table>
                         <groupTable id="positionsBills"
                                     fixedGrouping="true"
-                                    height="100%"
+                                    height="502px"
                                     multiselect="true"
                                     presentations="true">
                             <actions>

@@ -17,7 +17,6 @@
         </menu>
         <item openType="NEW_TAB"
               screen="supply$Suppliers.browse"/>
-        <item screen="supply$Bills.browse"/>
     </menu>
     <menu id="queries"
           insertBefore="administration">

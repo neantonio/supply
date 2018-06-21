@@ -8,7 +8,7 @@
     <dsContext>
         <datasource id="billsDs"
                     class="com.groupstp.supply.entity.Bills"
-                    view="_local"/>
+                    view="bills-view"/>
     </dsContext>
     <dialogMode height="600"
                 width="800"/>
@@ -21,6 +21,7 @@
                 <field property="timePayment"/>
                 <field property="price"/>
                 <field property="sumControl"/>
+                <field property="supplier"/>
             </column>
         </fieldGroup>
         <frame id="windowActions"

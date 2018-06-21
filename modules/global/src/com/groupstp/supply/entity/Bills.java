@@ -11,6 +11,9 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import java.util.List;
 import javax.persistence.OneToMany;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 
 @Table(name = "SUPPLY_BILLS")
 @Entity(name = "supply$Bills")
@@ -20,6 +23,11 @@ public class Bills extends StandardEntity {
     @NotNull
     @Column(name = "NUMBER_", nullable = false, unique = true, length = 20)
     protected String number;
+
+    @NotNull
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "SUPPLIER_ID")
+    protected Suppliers supplier;
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "TIME_PAYMENT")
@@ -34,6 +42,15 @@ public class Bills extends StandardEntity {
 
     @OneToMany(mappedBy = "bills")
     protected List<QueriesPosition> positions;
+
+    public void setSupplier(Suppliers supplier) {
+        this.supplier = supplier;
+    }
+
+    public Suppliers getSupplier() {
+        return supplier;
+    }
+
 
     public void setPositions(List<QueriesPosition> positions) {
         this.positions = positions;
