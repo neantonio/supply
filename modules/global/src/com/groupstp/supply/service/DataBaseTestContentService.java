@@ -15,7 +15,7 @@ public interface DataBaseTestContentService {
 
     List <Company>createCompanies(List<String> nameList, List<Company> resultList, Object em);
 
-    List<Division> createDivisions(List<String> nameList, List<Company> companyList, List<Division> resultList, EntityManager emo);
+    List<Division> createDivisions(List<String> nameList, List<Company> companyList, List<Division> resultList, Object emo);
 
     List<Store> createStores(List<String> nameList, List<Division> divisionList, List<Store> resultList, Object emo);
 
