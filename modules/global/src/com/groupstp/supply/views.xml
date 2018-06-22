@@ -218,6 +218,7 @@
                     <property name="priority"/>
                 </property>
             </property>
+            <property name="createdBy"/>
         </property>
         <property name="specNomenclature"
                   view="_minimal"/>
