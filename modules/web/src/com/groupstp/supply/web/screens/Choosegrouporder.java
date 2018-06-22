@@ -10,10 +10,14 @@ import com.haulmont.addon.dnd.components.dragevent.DragAndDropEvent;
 import com.haulmont.addon.dnd.components.enums.VerticalDropLocation;
 import com.haulmont.cuba.core.global.DevelopmentException;
 import com.haulmont.cuba.gui.components.*;
+import com.haulmont.cuba.gui.components.actions.BaseAction;
+import com.haulmont.cuba.gui.icons.Icons;
 import com.haulmont.cuba.gui.xml.layout.ComponentsFactory;
 
 import javax.inject.Inject;
+import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -66,11 +70,13 @@ public class Choosegrouporder extends AbstractWindow {
         }
 
         for(Map.Entry entry:availableItems){
-            availableLayout.add(createDashboardElement((String) entry.getKey()));
+            availableLayout.add(createDashboardElement((String) entry.getKey(),resultOrder,availableItems,availableLayout,resultLayout,entry));
+
         }
 
         for(Map.Entry entry:resultOrder){
-            resultLayout.add(createDashboardElement((String) entry.getKey()));
+            resultLayout.add(createDashboardElement((String) entry.getKey(),availableItems,resultOrder,resultLayout,availableLayout,entry));
+
         }
 
 
@@ -126,9 +132,19 @@ public class Choosegrouporder extends AbstractWindow {
             return;
         }
 
-        int indexToForList=indexTo;
+        processItemMovement(ownList,otherList,indexFromSource,indexFrom,indexTo,loc,sourceLayout,targetLayout,tComponent);
 
-        //просто логика обрабатывания перетаскивания
+    }
+
+    /**
+     * просто логика обрабатывания перетаскивания
+     */
+    private void processItemMovement(List<Map.Entry<String,Object>> ownList,List<Map.Entry<String,Object>> otherList,
+                                       int indexFromSource,int indexFrom, int indexTo,VerticalDropLocation loc,
+                                       Component sourceLayout,DDVerticalLayout targetLayout,Component tComponent){
+
+
+        int indexToForList=indexTo;
         Map.Entry<String,Object> buffer;
         if (sourceLayout == targetLayout) {
 
@@ -148,7 +164,7 @@ public class Choosegrouporder extends AbstractWindow {
             otherList.remove(buffer);
 
             if(indexToForList==-1) ownList.add(buffer);
-                else ownList.add(indexToForList,buffer);
+            else ownList.add(indexToForList,buffer);
         }
 
 
@@ -181,14 +197,60 @@ public class Choosegrouporder extends AbstractWindow {
             }
             targetLayout.add(tComponent, indexTo);
         }
-
     }
 
-    public Component createDashboardElement(String label) {
+    /**
+     * создается две кнопки. одна с названием, другая перемещает элемент в противоположный список
+     * @param label
+     * @return созданный горизонтальный layout
+     */
+    public Component createDashboardElement(String label,
+                                            List<Map.Entry<String,Object>> ownList,
+                                            List<Map.Entry<String,Object>> otherList,
+                                            Component sourceLayout,DDVerticalLayout targetLayout,
+                                            Map.Entry entry
+                                            ) {
+        HBoxLayout hBoxLayout=factory.createComponent(HBoxLayout.class);
+
         Button button = factory.createComponent(Button.class);
         button.setCaption(label);
         button.setWidth("100%");
-        return button;
+
+        Button removeButton = factory.createComponent(Button.class);
+        removeButton.setIcon("font-icon:EXCHANGE");
+        removeButton.setDisableOnClick(true);
+        removeButton.setAction(new BaseAction("") {
+                                    List list1=null;
+                                    List list2=null;
+                                    DDVerticalLayout l1=null;
+                                    DDVerticalLayout l2=null;
+                                   @Override
+                                   public void actionPerform(Component component) {
+                                       if(list1==null){
+                                           list1=ownList;
+                                           list2=otherList;
+                                           l1= (DDVerticalLayout) sourceLayout;
+                                           l2=targetLayout;
+                                       }
+                                       else{
+                                           List temp=list1; list1=list2; list2=temp;
+                                           DDVerticalLayout tempL=l1;l1=l2;l2=tempL;
+                                       }
+
+                                       processItemMovement(list1,list2,list2.indexOf(entry),list2.size()-1,
+                                               list1.size(),null,l1,l2,hBoxLayout);
+                                       removeButton.setEnabled(true);
+                                   }
+                               });
+
+
+        hBoxLayout.add(button);
+        hBoxLayout.add(removeButton);
+        hBoxLayout.setSpacing(true);
+        hBoxLayout.expand(button);
+        hBoxLayout.setWidth("100%");
+
+        return hBoxLayout;
     }
 
     public void onOk(){

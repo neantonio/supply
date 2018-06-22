@@ -6,7 +6,9 @@
         xmlns:dnd="http://schemas.haulmont.com/dnd/0.1/drag-and-drop.xsd">
     <dialogMode height="600"
                 width="800"/>
+
     <layout expand="root">
+
         <hbox id="root"
               spacing="true"
               width="100%">
@@ -16,8 +18,10 @@
                       spacing="true"
                       width="100%">
                     <groupBox id="availablePalette"
+
                               caption="msg://Todo actions"
                               height="100%">
+
                         <dnd:dndVBoxLayout id="availableLayout"
                                            dragMode="CLONE"
                                            height="AUTO"

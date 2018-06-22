@@ -18,7 +18,7 @@ import java.util.Map;
 public class Sendemail extends AbstractWindow {
 
     @Inject
-    private Label receiversList;
+    private Label receivers;
 
     @Inject
     private EmailService emailService;
@@ -40,7 +40,7 @@ public class Sendemail extends AbstractWindow {
             for(String address:addresses){
                 allAddresses=allAddresses+address+"; ";
             }
-            receiversList.setValue(allAddresses);
+            receivers.setValue(allAddresses);
         }
     }
 

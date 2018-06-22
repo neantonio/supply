@@ -1,14 +1,13 @@
 package com.groupstp.supply;
 
 import com.groupstp.supply.service.QueryService;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.ClassRule;
-import org.junit.Test;
+import org.junit.*;
+import static org.junit.Assert.assertEquals;
 
 /**
  * Created by 79167 on 21.06.2018.
  */
+
 public class QueryServiceTest {
 
     @ClassRule
@@ -27,7 +26,9 @@ public class QueryServiceTest {
     }
 
     @Test
-    public void test() {
+    public void serviceReturnAnalogsOfQueriesPositionsTest() {
+
+
 
     }
 }

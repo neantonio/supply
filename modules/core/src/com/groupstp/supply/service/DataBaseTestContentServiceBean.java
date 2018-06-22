@@ -149,196 +149,265 @@ public class DataBaseTestContentServiceBean implements DataBaseTestContentServic
 
     }
 
-
-    public void createEntities(){
-
-        companies.clear();
-        divisions.clear();
-        stores.clear();
-        measureUnits.clear();
-        nomenclatureList.clear();
-        queries.clear();
-        employees.clear();
-        urgencies.clear();
-        queryWorkflows.clear();
-        queryWorkflowDetails.clear();
-        groups.clear();
-        queriesPositions.clear();
-        stageTerms.clear();
-
-
-        Transaction tx = persistence.createTransaction();
-        EntityManager em = persistence.getEntityManager();
-
-
+    @Override
+    public List <Company>createCompanies(List<String> nameList, List<Company> resultList, Object emo){
+        EntityManager em=(EntityManager)emo;
+        if(resultList==null) resultList=new ArrayList<>();
 
         for(String companyName:ownCompanyList){
             Company company =createCompany(companyName);
-            companies.add(company);
-            em.persist(company);
+            resultList.add(company);
+            if(em!=null)em.persist(company);
         }
+        return resultList;
+    }
 
-        for(Company company:companies){
+    @Override
+    public List<Division> createDivisions(List<String> nameList, List<Company> companyList, List<Division> resultList, Object emo){
+        EntityManager em=(EntityManager)emo;
+        if(resultList==null) resultList=new ArrayList<>();
+
+        for(Company company:companyList){
             int divisionsPerCompany= (int) randomDataService.getRandomLong(3,10);
             List<String> leftDivisions=new ArrayList<>();
-            divisionList.forEach(item->leftDivisions.add(item));
+            nameList.forEach(item->leftDivisions.add(item));
 
             for(int i=0;i<divisionsPerCompany;i++){
                 Division division = metadata.create(Division.class);
                 division.setName((String)randomDataService.getRandomFromList(leftDivisions));
                 leftDivisions.remove(division.getName());
                 division.setCompany(company);
-                em.persist(division);
+                if(em!=null)em.persist(division);
 
-                divisions.add(division);
+                resultList.add(division);
             }
         }
 
+        return resultList;
+    }
+
+    @Override
+    public List<Store> createStores(List<String> nameList, List<Division> divisionList, List<Store> resultList, Object emo){
+        EntityManager em=(EntityManager)emo;
+        if(resultList==null) resultList=new ArrayList<>();
         int j=1;
-        for(Division division:divisions) {
+        for(Division division:divisionList) {
             int storePerDivision = (int) randomDataService.getRandomLong(1, 6);
             List<String> leftStores = new ArrayList<>();
-            warehouseList.forEach(item -> leftStores.add(item));
+            nameList.forEach(item -> leftStores.add(item));
 
             for (int i = 0; i < storePerDivision; i++) {
                 Store store = metadata.create(Store.class);
                 store.setName((String) randomDataService.getRandomFromList(leftStores) + String.valueOf(j));
-                stores.add(store);
+                resultList.add(store);
                 leftStores.remove(store.getName());
-                em.persist(store);
+                if(em!=null)em.persist(store);
                 j++;
             }
         }
+        return resultList;
+    }
 
-        for(Map.Entry<String,String> entry:measureMap.entrySet()){
+    @Override
+    public List<MeasureUnits> createMeasureUnit(Map<String, String> unitMap, List<MeasureUnits> resultList, Map<String, MeasureUnits> resultMap, Object emo){
+        EntityManager em=(EntityManager)emo;
+        if(resultList==null) resultList=new ArrayList<>();
+
+        for(Map.Entry<String,String> entry:unitMap.entrySet()){
             MeasureUnits unit=metadata.create(MeasureUnits.class);
             unit.setCode(entry.getKey());
             unit.setName(entry.getKey());
             unit.setFullName(entry.getValue());
-            measureUnits.add(unit);
-            measureUnitMap.put(entry.getKey(),unit);
+            resultList.add(unit);
+            if(resultMap!=null)resultMap.put(entry.getKey(),unit);
         }
 
-        measureUnits.forEach(item->em.persist(item));
+        if(em!=null)resultList.forEach(item->em.persist(item));
+
+        return resultList;
+    }
+
+    @Override
+    public List<Nomenclature> createNomenclature(String priceListFileName, List<Nomenclature> resultList, Map<String, MeasureUnits> unitsMap, Object emo){
+        EntityManager em=(EntityManager)emo;
+
+        if(resultList==null) resultList=new ArrayList<>();
 
         NomenclatureWrapper.randomDataService=randomDataService;
-        NomenclatureWrapper.measureUnitsMap=measureUnitMap;
+        NomenclatureWrapper.measureUnitsMap=unitsMap;
         NomenclatureWrapper.metadata=metadata;
 
         Parser parcer=new Parser();
 
-        parcer.parse(priceListFileName).createNomenclature(nomenclatureList);
-        nomenclatureList.remove(0);
-        nomenclatureList.sort((Nomenclature item1,Nomenclature item2)->{
+        parcer.parse(priceListFileName).createNomenclature(resultList);
+        resultList.remove(0);
+        resultList.sort((Nomenclature item1,Nomenclature item2)->{
             return item1.getName().compareTo(item2.getName());
         });
 
-        for(int k=1;k<nomenclatureList.size();k++){
-            while(nomenclatureList.get(k).getName().equals(nomenclatureList.get(k-1).getName())){
-                nomenclatureList.get(k-1).setName(nomenclatureList.get(k-1).getName()+String.valueOf(k-1));
+        for(int k=1;k<resultList.size();k++){
+            while(resultList.get(k).getName().equals(resultList.get(k-1).getName())){
+                resultList.get(k-1).setName(resultList.get(k-1).getName()+String.valueOf(k-1));
                 k++;
-                if(k==nomenclatureList.size()) break;;
+                if(k==resultList.size()) break;;
             }
         }
 
-        nomenclatureList.sort((Nomenclature item1,Nomenclature item2)->{
+        resultList.sort((Nomenclature item1,Nomenclature item2)->{
             return item1.getArticle().compareTo(item2.getArticle());
         });
 
-        for(int k=1;k<nomenclatureList.size();k++){
-            if(nomenclatureList.get(k).getArticle().equals("")) nomenclatureList.get(k).setArticle(String.valueOf(k));
-            if(nomenclatureList.get(k).getArticle().equals(nomenclatureList.get(k-1).getArticle())){
-                nomenclatureList.get(k).setArticle(nomenclatureList.get(k).getArticle()+String.valueOf(k));
+        for(int k=1;k<resultList.size();k++){
+            if(resultList.get(k).getArticle().equals("")) resultList.get(k).setArticle(String.valueOf(k));
+            if(resultList.get(k).getArticle().equals(resultList.get(k-1).getArticle())){
+                resultList.get(k).setArticle(resultList.get(k).getArticle()+String.valueOf(k));
             }
         }
-        nomenclatureList.get(0).setArticle("k1");
+        resultList.get(0).setArticle("k1");
 
-        nomenclatureList.forEach(item->em.persist(item));
+        if(em!=null)resultList.forEach(item->em.persist(item));
 
-        for(String groupName:groupList){
+        return resultList;
+    }
+
+    @Override
+    public List<Group> createGroups(List<String> nameList, List<Group> resultList, Object emo){
+        EntityManager em=(EntityManager)emo;
+        if(resultList==null) resultList=new ArrayList<>();
+
+        for(String groupName:nameList){
             Group group=metadata.create(Group.class);
             group.setName(groupName);
-            groups.add(group);
-            em.persist(group);
+            resultList.add(group);
+            if(em!=null)em.persist(group);
+        }
+        return resultList;
+    }
+
+    @Override
+    public List<Employee> createEmployees(List<Group> groupList, List<Employee> resultList, int minValue, int maxValue, Object emo){
+        EntityManager em=(EntityManager)emo;
+        if(resultList==null) resultList=new ArrayList<>();
+
+        int employeeValue=(int) randomDataService.getRandomLong(minValue,maxValue);
+        for(int i=0;i<employeeValue;i++){
+            Employee employee=createEmployee(groupList);
+            resultList.add(employee);
+           if(em!=null) em.persist(employee);
         }
 
-        int employeeValue=(int) randomDataService.getRandomLong(200,400);
-        for(int i=9;i<employeeValue;i++){
-            Employee employee=createEmployee(groups);
-            employees.add(employee);
-            em.persist(employee);
-        }
+        return resultList;
+    }
 
-        for(String urg:urgencyList){
+    @Override
+    public List<Urgency> createUrgencies(List<String> nameList, List<Urgency> resultList, Object emo){
+        EntityManager em=(EntityManager)emo;
+
+        if(resultList==null) resultList=new ArrayList<>();
+        for(String urg:nameList){
             Urgency urgency=metadata.create(Urgency.class);
             urgency.setName(urg);
-            urgencies.add(urgency);
-            em.persist(urgency);
+            resultList.add(urgency);
+            if(em!=null)em.persist(urgency);
         }
 
-        for(Urgency urgency:urgencies){
-           Stages[] stages= Stages.values();
+        return resultList;
+    }
+
+    @Override
+    public List<StageTerm> createStageTerms(List<Urgency> urgencyList, List<StageTerm> resultList, int minTimeValue, int maxTimeValue, Object emo){
+        EntityManager em=(EntityManager)emo;
+        if(resultList==null) resultList=new ArrayList<>();
+
+        for(Urgency urgency:urgencyList){
+            Stages[] stages= Stages.values();
 
             for(int i=0;i<stages.length;i++){
                 StageTerm stageTerm=metadata.create(StageTerm.class);
                 stageTerm.setUrgency(urgency);
                 stageTerm.setStage(stages[i]);
-                stageTerm.setTime((int) randomDataService.getRandomLong(24,14*24));    //в часах
-                em.persist(stageTerm);
-                stageTerms.add(stageTerm);
+                stageTerm.setTime((int) randomDataService.getRandomLong(minTimeValue,maxTimeValue));    //в часах
+                if(em!=null)em.persist(stageTerm);
+                resultList.add(stageTerm);
             }
         }
+        return resultList;
+    }
 
-        for(String workflow:workflowList){
+    @Override
+    public List<QueryWorkflow> createRandomWorkflow(List<String> nameList, List<QueryWorkflow> resultList, Object emo){
+        EntityManager em=(EntityManager)emo;
+        if(resultList==null) resultList=new ArrayList<>();
+        for(String workflow:nameList){
             QueryWorkflow queryWorkflow=metadata.create(QueryWorkflow.class);
             queryWorkflow.setName(workflow);
-            queryWorkflows.add(queryWorkflow);
+            resultList.add(queryWorkflow);
             queryWorkflow.setDetails(createQueryWorkflowDetailList(0,queryWorkflow,null));
             queryWorkflow.getDetails().forEach(item->em.persist(item));
-            em.persist(queryWorkflow);
+            if(em!=null)em.persist(queryWorkflow);
         }
 
-//        int detailValue= (int) randomDataService.getRandomLong(10,50);
-//        for(int i=0;i<detailValue;i++){
-//            QueryWorkflowDetail workflowDetail=createQueryWorkflowDetail((QueryWorkflow) randomDataService.getRandomFromList(queryWorkflows));
-//            queryWorkflowDetails.add(workflowDetail);
-//            em.persist(workflowDetail);
-//        }
+        return resultList;
+    }
 
+    @Override
+    public List<Query> createQueries(List<Company> companyList,
+                                     List<Division> divisionList,
+                                     List<Store> storeList,
+                                     List<Employee> employeeList,
+                                     List<Urgency> urgencyList,
+                                     List<QueryWorkflow> workflowList,
+                                     List<Query> resultList,
+                                     int minValue,
+                                     int maxValue,
+                                     Date creationTime,
+                                     Object emo){
+        EntityManager em=(EntityManager)emo;
+        if(resultList==null) resultList=new ArrayList<>();
 
-
-
-        int queriesValue= (int) randomDataService.getRandomLong(15,20);
+        int queriesValue= (int) randomDataService.getRandomLong(minValue,maxValue);
         for(int i=0;i<queriesValue;i++){
             Query query= metadata.create(Query.class);
             query.setCause((Causes) randomDataService.getRandomFromArr(Causes.values()));
-            query.setCompany((Company) randomDataService.getRandomFromList(companies));
+            query.setCompany((Company) randomDataService.getRandomFromList(companyList));
             //query.setInWork(randomDataService.getRandomBoolean(70));
             query.setInWork(false);
-            query.setDivision((Division) randomDataService.getRandomFromList(divisions));
-            query.setContact(((Employee) randomDataService.getRandomFromList(employees)).getUser());
-            em.persist(query.getContact());
+            query.setDivision((Division) randomDataService.getRandomFromList(divisionList));
+            query.setContact(((Employee) randomDataService.getRandomFromList(employeeList)).getUser());
             query.setNumber(String.valueOf(i));
             query.setOrigin((Origin) randomDataService.getRandomFromArr(Origin.values()));
             query.setPeridiocity((Peridiocities) randomDataService.getRandomFromArr(Peridiocities.values()));
-            query.setStore((Store) randomDataService.getRandomFromList(stores));
+            query.setStore((Store) randomDataService.getRandomFromList(storeList));
 
             Date today=new Date();
-            query.setTimeCreation(randomDataService.getRandomDate(new Date(today.getTime()-20*24*60*60*1000),today));
-            query.setUrgency((Urgency) randomDataService.getRandomFromList(urgencies));
+            query.setTimeCreation(creationTime);
+            query.setUrgency((Urgency) randomDataService.getRandomFromList(urgencyList));
 
             query.setWholeQueryWorkout(randomDataService.getRandomBoolean(80));
-            query.setWorkflow((QueryWorkflow) randomDataService.getRandomFromList(queryWorkflows));
+            query.setWorkflow((QueryWorkflow) randomDataService.getRandomFromList(workflowList));
 
 
-            em.persist(query);
+            if(em!=null)em.persist(query);
             queries.add(query);
         }
 
+        return resultList;
+
+    }
+
+    @Override
+    public List<QueriesPosition> createQueriesPositions(List<Query> queryList,
+                                                        List<Nomenclature> nomenclatureList,
+                                                        List<QueriesPosition> resultList,
+                                                        int minValuePerQuery,
+                                                        int maxValuePerQuery,
+                                                        Object emo){
+        EntityManager em=(EntityManager)emo;
+        if(resultList==null) resultList=new ArrayList<>();
         Stages beginStage=Stages.values()[0];
 
-        for(Query query:queries){
-            int queryPositionValue= (int) randomDataService.getRandomLong(1,4);
+        for(Query query:queryList){
+            int queryPositionValue= (int) randomDataService.getRandomLong(minValuePerQuery,maxValuePerQuery);
             for(int i=0;i<queryPositionValue;i++) {
                 QueriesPosition queryPosition =metadata.create(QueriesPosition.class);
                 queryPosition.setQuery(query);
@@ -367,13 +436,66 @@ public class DataBaseTestContentServiceBean implements DataBaseTestContentServic
                 queryPosition.setStoreControlFlag(false);
                 queryPosition.setSupSelectionFlag(false);
 
-                queriesPositions.add(queryPosition);
+                resultList.add(queryPosition);
 
-                em.persist(queryPosition);
+               if(em!=null) em.persist(queryPosition);
 
             }
         }
-        
+
+        return resultList;
+    }
+
+
+
+
+    public void createEntities(){
+
+        companies.clear();
+        divisions.clear();
+        stores.clear();
+        measureUnits.clear();
+        nomenclatureList.clear();
+        queries.clear();
+        employees.clear();
+        urgencies.clear();
+        queryWorkflows.clear();
+        queryWorkflowDetails.clear();
+        groups.clear();
+        queriesPositions.clear();
+        stageTerms.clear();
+
+
+        Transaction tx = persistence.createTransaction();
+        EntityManager em = persistence.getEntityManager();
+        Date today=new Date();
+
+
+        createCompanies(ownCompanyList,companies,em);
+
+        createDivisions(divisionList,companies,divisions,em);
+
+        createStores(warehouseList,divisions,stores,em);
+
+        createMeasureUnit(measureMap,measureUnits,measureUnitMap,em);
+
+        createNomenclature(priceListFileName,nomenclatureList,measureUnitMap,em);
+
+        createGroups(groupList,groups,em);
+
+        createEmployees(groups,employees,200,400,em);
+
+        createUrgencies(urgencyList,urgencies,em);
+
+        createStageTerms(urgencies,stageTerms,24,24*12,em);
+
+        createRandomWorkflow(workflowList,queryWorkflows,em);
+
+        createQueries(companies,divisions,stores,employees,urgencies,queryWorkflows,queries,15,30,
+                randomDataService.getRandomDate(new Date(today.getTime()-20*24*60*60*1000),today),em);
+
+        createQueriesPositions(queries,nomenclatureList,queriesPositions,1,4,em);
+
         tx.commit();
     }
 
