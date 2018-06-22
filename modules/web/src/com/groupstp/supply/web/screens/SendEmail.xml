@@ -3,15 +3,34 @@
         caption="msg://caption"
         class="com.groupstp.supply.web.screens.Sendemail"
         messagesPack="com.groupstp.supply.web.screens">
+    <dsContext>
+        <datasource id="employeeDs"
+                    allowCommit="false"
+                    class="com.groupstp.supply.entity.Employee"
+                    view="employee-view">
+            <datasource id="userDs"
+                        allowCommit="false"
+                        property="user"/>
+        </datasource>
+        <collectionDatasource id="allEmployeeDs"
+                              class="com.groupstp.supply.entity.Employee"
+                              view="employee-view">
+            <query>
+                <![CDATA[select e from supply$Employee e]]>
+            </query>
+        </collectionDatasource>
+    </dsContext>
     <dialogMode height="370"
                 width="530"/>
     <layout>
         <vbox spacing="true"
               width="494px">
-            <hbox spacing="true">
+            <hbox expand="receivers"
+                  spacing="true"
+                  width="490px">
                 <label value="msg://receivers"
                        width="90px"/>
-                <label id="receiversList"/>
+                <label id="receivers"/>
             </hbox>
             <hbox spacing="true">
                 <label value="msg://theme"

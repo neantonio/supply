@@ -51,6 +51,7 @@
                         editable="true"
                         fixedGrouping="true"
                         multiLineCells="true"
+                        multiselect="true"
                         presentations="true"
                         width="100%">
                 <columns>

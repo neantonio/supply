@@ -304,4 +304,14 @@
           name="nomenclature-name">
         <property name="fullName"/>
     </view>
+    <view class="com.groupstp.supply.entity.Employee"
+          extends="_local"
+          name="employee-view">
+        <property name="user"
+                  view="_minimal">
+            <property name="firstName"/>
+            <property name="lastName"/>
+            <property name="email"/>
+        </property>
+    </view>
 </views>

@@ -216,7 +216,7 @@ public class Queryregister extends AbstractWindow {
                 }
             });
             params.put("receivers",addresses);
-            openWindow("SendEmail", WindowManager.OpenType.DIALOG.setWidth("530").setHeight("370"),params);
+            openWindow("SendEmail", WindowManager.OpenType.DIALOG,params);
         }
         else showNotification(messages.getMainMessage("Select_position_first"),NotificationType.WARNING);
 

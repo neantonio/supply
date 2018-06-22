@@ -5,6 +5,7 @@ import com.haulmont.cuba.core.global.EmailInfo;
 import com.haulmont.cuba.gui.components.AbstractWindow;
 import com.haulmont.cuba.gui.components.Label;
 import com.haulmont.cuba.gui.components.TextArea;
+import com.haulmont.cuba.gui.components.TextField;
 
 import javax.inject.Inject;
 import java.util.List;
@@ -23,10 +24,10 @@ public class Sendemail extends AbstractWindow {
     private EmailService emailService;
 
     @Inject
-    private TextArea themeArea;
+    private TextField themeArea;
 
     @Inject
-    private TextArea contentArea;
+    private TextField contentArea;
 
     private List<String> addresses;
 
