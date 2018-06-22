@@ -32,6 +32,12 @@ public class Queryregister extends AbstractWindow {
     Button archiveFilterButton;
 
     @Inject
+    Button authorFilterButton;
+
+    @Inject
+    Button contactFilterButton;
+
+    @Inject
     Filter positionFilter;
 
     @Inject
@@ -176,6 +182,25 @@ public class Queryregister extends AbstractWindow {
         }
         else{
             archiveFilterButton.setCaption(messages.getMainMessage("hide_archive"));
+        }
+    }
+    public void onContactFlagChange(){
+        cqueriesPositionRegisterDs.toggleContactFilter();
+        if(!cqueriesPositionRegisterDs.isUserContactFilterEnabled()){
+            contactFilterButton.setCaption(messages.getMainMessage("show_i_contact"));
+        }
+        else{
+            contactFilterButton.setCaption(messages.getMainMessage("cancel_i_contact"));
+        }
+    }
+
+    public void onAuthorFlagChange(){
+        cqueriesPositionRegisterDs.toggleAuthorFilter();
+        if(!cqueriesPositionRegisterDs.isUserAuthorFilterEnabled()){
+            authorFilterButton.setCaption(messages.getMainMessage("show_i_author"));
+        }
+        else{
+            authorFilterButton.setCaption(messages.getMainMessage("cancel_i_author"));
         }
     }
 

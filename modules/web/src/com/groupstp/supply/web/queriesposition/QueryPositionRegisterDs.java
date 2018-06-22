@@ -7,9 +7,10 @@ import com.groupstp.supply.service.QueryDaoService;
 import com.groupstp.supply.service.QueryService;
 import com.haulmont.cuba.core.global.AppBeans;
 import com.haulmont.cuba.core.global.Messages;
-import com.haulmont.cuba.core.global.filter.*;
+import com.haulmont.cuba.core.global.UserSessionSource;
 import com.haulmont.cuba.gui.data.CollectionDatasource;
 import com.haulmont.cuba.gui.data.impl.CustomGroupDatasource;
+import com.haulmont.cuba.security.entity.User;
 
 
 import javax.inject.Inject;
@@ -31,6 +32,8 @@ public class QueryPositionRegisterDs extends CustomGroupDatasource<QueriesPositi
     private QueryService queryService=AppBeans.get(QueryService.NAME);
 
 
+
+
     private
     CollectionDatasource queriesPositionDs;
 
@@ -41,6 +44,8 @@ public class QueryPositionRegisterDs extends CustomGroupDatasource<QueriesPositi
 
 
     private  boolean archiveFilterEnabler=false;
+    private  boolean userAuthorFilterEnabled =false;
+    private boolean userContactFilterEnabled =false;
 
     @Override
     protected Collection<QueriesPosition> getEntities(Map<String, Object> params) {
@@ -63,9 +68,29 @@ public class QueryPositionRegisterDs extends CustomGroupDatasource<QueriesPositi
                     return;
                 }
             }
-            else{
-                resultQueriesPositions.add(position);
+            if(isUserAuthorFilterEnabled()){
+                User u = AppBeans.get(UserSessionSource.class).getUserSession().getUser();
+                if(u.getLogin().equals(position.getQuery().getCreatedBy())){
+                    resultQueriesPositions.add(position);
+                }
+                else{
+                    return;
+                }
             }
+            //// TODO: 22.06.2018 проверить имена 
+            if(isUserContactFilterEnabled()){
+                User u = AppBeans.get(UserSessionSource.class).getUserSession().getUser();
+                if(position.getQuery().getContact()==null) return;
+                if(u.getLogin().equals(position.getQuery().getContact().getName())){
+                    resultQueriesPositions.add(position);
+                }
+                else{
+                    return;
+                }
+            }
+
+            resultQueriesPositions.add(position);
+
 
                     position.setNameCallback(qp->{
                         String result="";
@@ -154,5 +179,31 @@ public class QueryPositionRegisterDs extends CustomGroupDatasource<QueriesPositi
 
     public boolean isArchiveFilterEnabler() {
         return archiveFilterEnabler;
+    }
+
+    public boolean isUserAuthorFilterEnabled() {
+        return userAuthorFilterEnabled;
+    }
+
+    public void setUserAuthorFilterEnabled(boolean userAuthorFilterEnabled) {
+        this.userAuthorFilterEnabled = userAuthorFilterEnabled;
+    }
+
+    public boolean isUserContactFilterEnabled() {
+        return userContactFilterEnabled;
+    }
+
+    public void setUserContactFilterEnabled(boolean userContactFilterEnabled) {
+        this.userContactFilterEnabled = userContactFilterEnabled;
+    }
+
+    public void toggleContactFilter() {
+        userContactFilterEnabled=!userContactFilterEnabled;
+        refresh();
+    }
+
+    public void toggleAuthorFilter() {
+        userAuthorFilterEnabled=!userAuthorFilterEnabled;
+        refresh();
     }
 }

@@ -43,9 +43,26 @@
                         invoke="onCancelPosition"/>
                 <button caption="msg://send_email"
                         invoke="onSendEmail"/>
-                <button id="archiveFilterButton"
-                        caption="msg://archive_filter"
-                        invoke="onArchiveFlagChange"/>
+                <popupView id="popupView"
+                           minimizedValue="msg://quick_filters"
+                           align="BOTTOM_LEFT"
+                           >
+                    <vbox width="250px" >
+                        <button id="archiveFilterButton"
+                                caption="msg://archive_filter"
+                                invoke="onArchiveFlagChange"
+                                width="100%"/>
+                        <button id="authorFilterButton"
+                                caption="msg://author_filter"
+                                invoke="onAuthorFlagChange"
+                                width="100%"/>
+                        <button id="contactFilterButton"
+                                caption="msg://contact_filter"
+                                invoke="onContactFlagChange"
+                                width="100%"/>
+                    </vbox>
+                </popupView>
+
             </buttonsPanel>
             <groupTable id="positionsTable"
                         editable="true"
