@@ -16,15 +16,11 @@ public interface QueryService {
 
     QueryStatus getQueryStatus(Query query);
 
+    long getPassedTimeFromStageBegin(QueriesPosition position);
+
     List<QueriesPosition> beginQueryProcessing(List<Query> queries);
 
     List<QueriesPosition> beginQueryProcessing(Query query);
-
-    void devide(Query query);
-
-    void devide(QueriesPosition position);
-
-
 
     Date getExecutionTimeForQueriesPosition(QueriesPosition queriesPosition, boolean addHours);
 
