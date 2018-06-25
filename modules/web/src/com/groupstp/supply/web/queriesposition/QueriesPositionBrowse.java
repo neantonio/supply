@@ -5,6 +5,7 @@ import com.groupstp.supply.service.GroovyTestService;
 import com.groupstp.supply.service.WorkflowService;
 import com.haulmont.bali.util.ParamsMap;
 import com.haulmont.chile.core.model.MetaProperty;
+import com.haulmont.cuba.core.app.EmailService;
 import com.haulmont.cuba.core.entity.Entity;
 import com.haulmont.cuba.core.entity.KeyValueEntity;
 import com.haulmont.cuba.core.global.*;
@@ -20,6 +21,7 @@ import org.dom4j.Element;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class QueriesPositionBrowse extends AbstractLookup {
 
@@ -294,8 +296,8 @@ public class QueriesPositionBrowse extends AbstractLookup {
             @Override
             public Component generateCell(QueriesPosition entity) {
                 Label label = (Label) componentsFactory.createComponent(Label.NAME);
-                if (entity.getVoteResult().getPrice() == null || entity.getVoteResult().getQuantity() == null) {
-                    return null;
+                if (entity.getVoteResult() == null) {
+                    return label;
                 }
                 label.setValue(entity.getVoteResult().getPrice() * entity.getVoteResult().getQuantity());
                 return label;
@@ -303,6 +305,9 @@ public class QueriesPositionBrowse extends AbstractLookup {
 
             @Override
             public String getValue(QueriesPosition entity) {
+                if (entity.getVoteResult() == null) {
+                    return null;
+                }
                 return Double.toString(entity.getVoteResult().getPrice() * entity.getVoteResult().getQuantity());
             }
         });
@@ -383,6 +388,7 @@ public class QueriesPositionBrowse extends AbstractLookup {
                 }
             });
             dsBills.refresh();
+            billsTable.setSelected(new ArrayList<Bills>());
             return;
         }
 
@@ -410,6 +416,57 @@ public class QueriesPositionBrowse extends AbstractLookup {
     public void onBtnAllPositions() {
         dsBills.setQuery("select e from supply$QueriesPosition e where e.currentStage='Bills')");
         dsBills.refresh();
+    }
+
+    @Inject
+    protected EmailService emailService;
+
+    //Отправка письма поставщику
+    public void onBtnSendEmail() {
+
+        if (positionsBills.getSelected().isEmpty()) {
+            showNotification(getMessage("Select positions first"), NotificationType.WARNING);
+            return;
+        }
+        Set<QueriesPosition> setPosition =  positionsBills.getSelected();
+
+        //Шаблоны
+        String emailHeader ="To Supplier: %s \n" +
+                            "From Company: %s \n\n";
+
+        String emailBody = "Nomenclature: %s \n" +
+                            "Quantity: %10.2f \n" +
+                            "Price: %10.2f \n\n";
+
+        //Группировка по заказчику, компании
+        Map<Suppliers, Map<Company, List<QueriesPosition>>> groupedBySupAndCompMap = setPosition.stream()
+                .collect(Collectors.groupingBy(t-> t.getVoteResult().getPosSup().getSupplier(),
+                        Collectors.groupingBy(b -> b.getQuery().getCompany())));
+
+        groupedBySupAndCompMap.forEach((s,m) -> {
+
+            m.forEach((c,l)-> {
+
+                String emailHeaderToSend = String.format(emailHeader, s.getName(), c.getName());
+                StringBuilder emailBodyToSend = new StringBuilder();
+                l.forEach(q-> {
+                    String emailBodyPosition = String.format(emailBody, q.getNomenclature().getName(), q.getVoteResult().getQuantity(),q.getVoteResult().getPrice());
+                    emailBodyToSend.append(emailBodyPosition);
+                });
+
+                EmailInfo emailInfo = new EmailInfo(
+                        "piratovi@gmail.com", // recipients
+                        "TestTema", // subject
+                        emailHeaderToSend.concat(emailBodyToSend.toString())
+                        );
+
+                emailService.sendEmailAsync(emailInfo);
+
+            });
+        });
+
+        positionsBills.setSelected(new ArrayList<QueriesPosition>());
+
     }
 
 

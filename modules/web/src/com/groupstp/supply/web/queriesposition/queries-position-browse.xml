@@ -500,6 +500,9 @@ where e.currentStage='Bills']]>
                         <button id="btnAllPositions"
                                 caption="Все позиции"
                                 invoke="onBtnAllPositions"/>
+                        <button id="btnSendEmail"
+                                caption="Отправить @Email"
+                                invoke="onBtnSendEmail"/>
                     </buttonsPanel>
                     <hbox expand="positionsBills"
                           height="500px"
