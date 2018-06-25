@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<window xmlns="http://schemas.haulmont.com/cuba/window.xsd"
+        caption="msg://caption"
+        class="com.groupstp.supply.web.querypositionmovement.Statistics"
+        messagesPack="com.groupstp.supply.web.querypositionmovement"
+        xmlns:chart="http://schemas.haulmont.com/charts/charts.xsd">
+    <dsContext>
+        <collectionDatasource id="positionDs"
+                              class="com.groupstp.supply.entity.QueriesPosition"
+                              maxResults="13">
+            <query>
+                <![CDATA[select e from supply$QueriesPosition e]]>
+            </query>
+        </collectionDatasource>
+        <groupDatasource id="queryPositionMovementsesDs"
+                         class="com.groupstp.supply.entity.QueryPositionMovements"
+                         view="queryPositionMovements-view">
+            <query>
+                <![CDATA[select e from supply$QueryPositionMovements e where e.position in :custom$positions
+order by e.position.id]]>
+            </query>
+        </groupDatasource>
+    </dsContext>
+    <dialogMode height="600"
+                width="800"/>
+    <layout>
+        <tabSheet>
+            <tab id="position"
+                 caption="Tab"
+                 description="msg://position"
+                 margin="true,false,false,false"
+                 spacing="true">
+                <split id="split"
+                       height="100%"
+                       orientation="horizontal"
+                       width="100%">
+                    <table width="100%">
+                        <columns>
+                            <column id="finishTS"/>
+                            <column id="stage"/>
+                        </columns>
+                        <rows datasource="queryPositionMovementsesDs"/>
+                    </table>
+                    <chart:ganttChart id="ganttChart"
+                                      additionalSegmentFields="task"
+                                      balloonDateFormat="JJ:NN"
+                                      brightnessStep="7"
+                                      categoryField="category"
+                                      colorField="color"
+                                      columnWidth="0.5"
+                                      endDateField="end"
+                                      marginRight="70"
+                                      period="HOURS"
+                                      rotate="true"
+                                      segmentsField="segments"
+                                      startDate="2018-05-15"
+                                      startDateField="start"
+                                      theme="LIGHT"
+                                      width="100%">
+                        <chart:graph balloonText="&lt;strong&gt;[[task]]&lt;/strong&gt;: [[open]] - [[value]]"
+                                     fillAlphas="1"
+                                     lineAlpha="1"
+                                     lineColor="WHITE"/>
+                        <chart:valueAxis type="DATE"/>
+                        <chart:valueScrollbar autoGridCount="true"
+                                              color="BLACK"/>
+                        <chart:chartCursor cursorAlpha="0"
+                                           cursorColor="#55bb76"
+                                           fullWidth="true"
+                                           valueBalloonsEnabled="false"
+                                           valueLineAlpha="0.5"
+                                           valueLineBalloonEnabled="true"
+                                           valueLineEnabled="true"
+                                           valueZoomable="true"
+                                           zoomable="false"/>
+                        <chart:export/>
+                    </chart:ganttChart>
+                </split>
+            </tab>
+            <tab id="stage"
+                 caption="Tab"
+                 description="msg://stage"
+                 margin="true,false,false,false"
+                 spacing="true"/>
+            <tab id="executior"
+                 caption="Tab"
+                 description="msg://executor"
+                 margin="true,false,false,false"
+                 spacing="true"/>
+        </tabSheet>
+    </layout>
+</window>

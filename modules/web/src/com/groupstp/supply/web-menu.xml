@@ -19,6 +19,7 @@
               screen="supply$Suppliers.browse"/>
         <item screen="chooseGroupOrder"/>
         <item screen="SendEmail"/>
+        <item screen="statistics"/>
     </menu>
     <menu id="queries"
           insertBefore="administration">

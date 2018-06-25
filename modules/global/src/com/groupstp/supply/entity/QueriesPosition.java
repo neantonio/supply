@@ -45,9 +45,11 @@ public class QueriesPosition extends StandardEntity {
     @Transient
     protected transient QueriesPositionNameCallback nameCallback=null;
 
-    public String getQueryName()    {
+    public String getQueriesPositionName()    {
         if(getNameCallback() ==null) {
-            return nomenclature.toString();
+            if(nomenclature!=null)return nomenclature.toString();
+            else if(specification!=null) return specification;
+            else return getUuid().toString();
         }
         else return getNameCallback().makeName(this);
     }

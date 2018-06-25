@@ -1,9 +1,6 @@
 package com.groupstp.supply.service;
 
 import com.groupstp.supply.entity.*;
-import com.haulmont.cuba.core.global.DataManager;
-import com.haulmont.cuba.core.global.LoadContext;
-import org.eclipse.persistence.jpa.jpql.parser.QueryPosition;
 import org.springframework.stereotype.Service;
 
 import javax.inject.Inject;
@@ -16,8 +13,7 @@ import java.util.*;
 @Service(QueryService.NAME)
 public class QueryServiceBean implements QueryService {
 
-    @Inject
-    private DataManager dataManager;
+
 
     @Inject
     private WorkflowService workflowService;
@@ -32,7 +28,6 @@ public class QueryServiceBean implements QueryService {
         List<Nomenclature> result=new ArrayList<>();
         analogs.forEach(item->result.add(item.getAnalog()));
         return result;
-
     }
 
     @Override
@@ -46,32 +41,64 @@ public class QueryServiceBean implements QueryService {
     }
 
 
-
+    /**
+     * вычисляет статус завки на основе состояния всехее позиций
+     * проверка ведется по времени на этапе и статусу позиции
+     * если нет флага inWork в Query она считается новой
+     * @param query
+     * @return возвращает энум QueryStatus
+     */
     @Override
     public QueryStatus getQueryStatus(Query query) {
-        if((query.getInWork()!=null)&&(query.getInWork())){
-            //проверим есть ли просроченные позиции
-            //а если все завершены, то у заявки статус тоже завершена
-            List<QueriesPosition> queriesPositions=queryDaoService.getQueriesPositionByQuery(query);
-            boolean allFine=true;
-            boolean allDone=true;
-            for(QueriesPosition item:queriesPositions){
-                if(getPassedTimeFromStageBegin(item)>queryDaoService.getTimeForPositionStage(item)*1000*60*60) allFine=false;
-                if((!item.getCurrentStage().equals(Stages.Done))&&(!item.getCurrentStage().equals(Stages.Abortion))) allDone=false;
-            };
-            if(allDone) return QueryStatus.done;
-            else {
-                if (allFine) return QueryStatus.in_work;
-                else return QueryStatus.overdue;
-            }
+        try {
+            if ((query.getInWork() != null) && (query.getInWork())) {
+                //проверим есть ли просроченные позиции
+                //а если все завершены, то у заявки статус тоже завершена
+                List<QueriesPosition> queriesPositions = queryDaoService.getQueriesPositionByQuery(query);
+                boolean allFine = true;
+                boolean allDone = true;
+                boolean allNew = true;
+
+
+                for (QueriesPosition item : queriesPositions) {
+
+                    //нет смысла проверять время для завершенных позиций
+                    if ((!item.getCurrentStage().equals(Stages.Done)) && (!item.getCurrentStage().equals(Stages.Abortion))){
+                        allDone = false;
+                        if (getPassedTimeFromStageBegin(item) > queryDaoService.getTimeForPositionStage(item) * 1000 * 60 * 60)
+                            allFine = false;
+                    }
+
+                    if (item.getCurrentStage() != Stages.New) allNew = false;
+                }
+                ;
+                if (allDone) return QueryStatus.DONE;
+                else {
+                    if (allFine) {
+                        if (allNew) return QueryStatus.NEW_ITEM;
+                        else return QueryStatus.IN_WORK;
+                    } else return QueryStatus.OVERDUE;
+                }
+            } else return QueryStatus.NEW_ITEM;
         }
-        else return QueryStatus.new_item;
+        catch (DataIncompleteException e){
+            return QueryStatus.UNKNOWN;
+        }
     }
 
-    long getPassedTimeFromStageBegin(QueriesPosition position){
+    /**
+     * вычисление времени нахождения позиции на текущем этапе
+     * @param position
+     * @return время прошедшее с перевода позиции на текущий этап
+     * @throws DataIncompleteException если в базе нет соответствующих записей о перемещении позиции в QueryPositionMovement
+     */
+
+    @Override
+    public long getPassedTimeFromStageBegin(QueriesPosition position) throws DataIncompleteException {
         Date now=new Date();
         List<QueryPositionMovements> movements=queryDaoService.getQueryPositionMovement(position);
-        return now.getTime()-movements.get(0).getFinishTS().getTime();
+        if((movements==null)||(movements.size()==0))  throw new DataIncompleteException();
+        return now.getTime()-movements.get(0).getCreateTs().getTime();
     }
 
     @Override
@@ -91,7 +118,7 @@ public class QueryServiceBean implements QueryService {
 
             });
             queryItem.setInWork(true);
-            dataManager.commit(queryItem);
+            queryDaoService.commitQuery(queryItem);
         });
 
         return positionsWithError;
@@ -102,18 +129,6 @@ public class QueryServiceBean implements QueryService {
         List temp=new ArrayList<>();
         temp.add(query);
         return beginQueryProcessing(temp);
-    }
-
-    @Override
-    public void devide(Query query) {
-        queryDaoService.getQueriesPositionByQuery(query).forEach(item->{
-            workflowService.movePositionTo(item,Stages.Divided);
-        });
-    }
-
-    @Override
-    public void devide(QueriesPosition position) {
-        workflowService.movePositionTo(position,Stages.Divided);
     }
 
 
@@ -178,6 +193,7 @@ public class QueryServiceBean implements QueryService {
         List<QueryWorkflowDetail> allWorkflowDetails=queriesPosition.getQuery().getWorkflow().getDetails();
 
         Stages currentStage=queriesPosition.getCurrentStage();
+        result.add(currentStage);
         List<QueryWorkflowDetail> detailsWithCurrentStage=new ArrayList<QueryWorkflowDetail>();
 
         //в цикле выбираем WFD с наибольшим приоритетом для текущей стадии

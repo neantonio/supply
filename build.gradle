@@ -10,6 +10,13 @@ buildscript {
                 password(rootProject.hasProperty('repoPass') ? rootProject['repoPass'] : 'cuba123')
             }
         }
+        maven {
+            url 'https://repo.cuba-platform.com/content/groups/premium'
+            credentials {
+                username(rootProject.hasProperty('premiumRepoUser') ? rootProject['premiumRepoUser'] : System.getenv('CUBA_PREMIUM_USER'))
+                password(rootProject.hasProperty('premiumRepoPass') ? rootProject['premiumRepoPass'] : System.getenv('CUBA_PREMIUM_PASSWORD'))
+            }
+        }
 	maven {
 	    url  "https://dl.bintray.com/mariodavid/cuba-components"
 	}        
@@ -51,6 +58,7 @@ dependencies {
     appComponent("com.haulmont.cuba:cuba-global:$cubaVersion")
     appComponent("de.diedavids.cuba.runtimediagnose:runtime-diagnose-global:1.0.0")
     appComponent("com.haulmont.addon.dnd:cuba-dnd-global:1.2.0")
+    appComponent("com.haulmont.charts:charts-global:$cubaVersion")
 
 }
 

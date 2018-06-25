@@ -51,4 +51,6 @@
             template="com/groupstp/supply/web/queriesposition/queryRegister.xml"/>
     <screen id="SendEmail"
             template="com/groupstp/supply/web/screens/SendEmail.xml"/>
+    <screen id="statistics"
+            template="com/groupstp/supply/web/querypositionmovement/statistics.xml"/>
 </screen-config>

@@ -5,9 +5,7 @@ import com.haulmont.cuba.core.EntityManager;
 import com.haulmont.cuba.core.Persistence;
 import com.haulmont.cuba.core.Transaction;
 import com.haulmont.cuba.core.global.DataManager;
-import com.haulmont.cuba.core.global.LoadContext;
 import com.haulmont.cuba.core.global.Metadata;
-import com.haulmont.cuba.core.global.ValueLoadContext;
 import com.haulmont.cuba.security.entity.Group;
 import com.haulmont.cuba.security.entity.User;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
@@ -52,6 +50,14 @@ public class DataBaseTestContentServiceBean implements DataBaseTestContentServic
     @Resource
     private
     List<String> groupList;
+
+    @Resource
+    private
+    List<Map> commonWorkflowList;
+
+    @Resource
+    private
+    List<Map> cheepWorkflowList;
 
     @Resource
     private
@@ -338,16 +344,35 @@ public class DataBaseTestContentServiceBean implements DataBaseTestContentServic
     public List<QueryWorkflow> createRandomWorkflow(List<String> nameList, List<QueryWorkflow> resultList, Object emo){
         EntityManager em=(EntityManager)emo;
         if(resultList==null) resultList=new ArrayList<>();
+        int i=0;
         for(String workflow:nameList){
             QueryWorkflow queryWorkflow=metadata.create(QueryWorkflow.class);
             queryWorkflow.setName(workflow);
             resultList.add(queryWorkflow);
-            queryWorkflow.setDetails(createQueryWorkflowDetailList(0,queryWorkflow,null));
+            if(i==0)queryWorkflow.setDetails(createQueryWorkflowDetailList(queryWorkflow, commonWorkflowList));
+            if(i==1)queryWorkflow.setDetails(createQueryWorkflowDetailList(queryWorkflow, cheepWorkflowList));
             queryWorkflow.getDetails().forEach(item->em.persist(item));
             if(em!=null)em.persist(queryWorkflow);
+            i++;
         }
 
         return resultList;
+    }
+
+    private List<QueryWorkflowDetail> createQueryWorkflowDetailList( QueryWorkflow queryWorkflow,List<Map> workflowDetailList) {
+        List<QueryWorkflowDetail> result=new ArrayList<>();
+
+        for(Map detailMap:workflowDetailList){
+            QueryWorkflowDetail wfd=new QueryWorkflowDetail();
+            wfd.setPriority((Integer) detailMap.get("priority"));
+            wfd.setSourceStage((Stages) detailMap.get("sourceStage"));
+            wfd.setDestStage((Stages) detailMap.get("destStage"));
+            wfd.setValidation((String) detailMap.get("validation"));
+            wfd.setScript((String) detailMap.get("script"));
+            wfd.setQueryWorkflow(queryWorkflow);
+            result.add(wfd);
+        }
+        return result;
     }
 
     @Override
@@ -380,7 +405,7 @@ public class DataBaseTestContentServiceBean implements DataBaseTestContentServic
             query.setStore((Store) randomDataService.getRandomFromList(storeList));
 
             Date today=new Date();
-            query.setTimeCreation(creationTime);
+            query.setTimeCreation(randomDataService.getRandomDate(creationTime,today));
             query.setUrgency((Urgency) randomDataService.getRandomFromList(urgencyList));
 
             query.setWholeQueryWorkout(randomDataService.getRandomBoolean(80));
@@ -588,7 +613,7 @@ public class DataBaseTestContentServiceBean implements DataBaseTestContentServic
         return result;
     }
 
-     List<QueryWorkflowDetail> createQueryWorkflowDetailList(int sourceStage,QueryWorkflow queryWorkflow,List<QueryWorkflowDetail> details){
+     List<QueryWorkflowDetail> createRandomQueryWorkflowDetailList(int sourceStage, QueryWorkflow queryWorkflow, List<QueryWorkflowDetail> details){
 
         if(details==null)details=new ArrayList<>();
         int lastStage=Stages.values().length-1;
@@ -614,7 +639,7 @@ public class DataBaseTestContentServiceBean implements DataBaseTestContentServic
         for(QueryWorkflowDetail d:justGeneratedDetail){
             if((d.getDestStage()!=Stages.Abortion)&&(d.getDestStage()!=Stages.Divided)&&(d.getDestStage()!=Stages.Done)){
                 int stageIndex=Arrays.asList(Stages.values()).indexOf(d.getDestStage());
-                createQueryWorkflowDetailList(stageIndex,queryWorkflow,details);
+                createRandomQueryWorkflowDetailList(stageIndex,queryWorkflow,details);
             }
         };
 

@@ -299,6 +299,11 @@
         <property name="user"
                   view="_minimal"/>
         <property name="createTs"/>
+        <property name="position"
+                  view="_minimal">
+            <property name="currentStage"/>
+            <property name="specification"/>
+        </property>
     </view>
     <view class="com.groupstp.supply.entity.Nomenclature"
           extends="_minimal"

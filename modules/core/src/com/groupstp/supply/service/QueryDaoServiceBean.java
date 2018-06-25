@@ -87,4 +87,9 @@ public class QueryDaoServiceBean implements QueryDaoService {
                         .setParameter("workflowItem",workflow));
         return dataManager.loadList(loadContext);
     }
+
+    @Override
+    public void commitQuery(Query queryItem) {
+        dataManager.commit(queryItem);
+    }
 }

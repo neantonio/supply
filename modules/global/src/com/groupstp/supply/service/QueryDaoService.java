@@ -27,4 +27,6 @@ public interface QueryDaoService {
     QueriesPosition getQueryPositionCopy(QueriesPosition qp);
 
     List<QueryWorkflowDetail> getAllWorkflowDetails(QueryWorkflow workflow);
+
+    void commitQuery(Query queryItem);
 }

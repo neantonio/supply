@@ -7,10 +7,11 @@ import javax.annotation.Nullable;
 
 public enum QueryStatus implements EnumClass<String> {
 
-    in_work("IN_WORK"),
-    overdue("OVERDUE"),
-    done("DONE"),
-    new_item("NEW");
+    IN_WORK("IN_WORK"),
+    OVERDUE("OVERDUE"),
+    DONE("DONE"),
+    NEW_ITEM("NEW"),
+    UNKNOWN("UNKNOWN");
 
     private String id;
 

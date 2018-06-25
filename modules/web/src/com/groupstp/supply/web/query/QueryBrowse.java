@@ -10,7 +10,6 @@ import com.haulmont.cuba.gui.components.*;
 import com.haulmont.cuba.gui.components.actions.BaseAction;
 import com.haulmont.cuba.gui.data.GroupDatasource;
 import com.haulmont.cuba.gui.xml.layout.ComponentsFactory;
-import com.vaadin.server.Page;
 
 import javax.inject.Inject;
 import java.util.*;
@@ -88,14 +87,14 @@ public class QueryBrowse extends AbstractLookup {
             if (property == null) {
 
                 switch (queryService.getQueryStatus(entity)) {
-                    case done:
-                        return "done-query";
-                    case in_work:
+                    case DONE:
+                        return "DONE-query";
+                    case IN_WORK:
                         return "in-work-query";
-                    case new_item:
+                    case NEW_ITEM:
                         return "new-query";
-                    case overdue:
-                        return "overdue-query";
+                    case OVERDUE:
+                        return "OVERDUE-query";
                     default:
                         return null;
                 }

@@ -35,6 +35,8 @@
 
     </util:map>
 
+
+
     <util:list id="divisionList" value-type="java.lang.String">
         <value>Отдел кадров</value>
         <value>Отдел технического обеспечения</value>
@@ -61,8 +63,8 @@
     </util:list>
 
     <util:list id="workflowList" value-type="java.lang.String">
-        <value>Первый процесс</value>
-        <value>Второй процесс</value>
+        <value>Общий</value>
+        <value>Заявки суммой менее 20000</value>
         <value>Третий процесс</value>
     </util:list>
 
