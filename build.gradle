@@ -261,3 +261,11 @@ task wrapper(type: Wrapper) {
 }
 
 apply from: 'extra.gradle'
+
+task buildWar(type: CubaWarBuilding) {
+    appProperties = ['cuba.automaticDatabaseUpdate' : true]
+    singleWar = false
+    includeContextXml = true
+    includeJdbcDriver = true
+    appHome = 'app_home'
+}

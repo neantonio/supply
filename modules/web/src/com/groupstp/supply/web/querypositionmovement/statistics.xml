@@ -7,7 +7,7 @@
     <dsContext>
         <collectionDatasource id="positionDs"
                               class="com.groupstp.supply.entity.QueriesPosition"
-                              maxResults="13">
+                              maxResults="25">
             <query>
                 <![CDATA[select e from supply$QueriesPosition e]]>
             </query>
@@ -26,17 +26,31 @@ order by e.position.id]]>
     <layout>
         <tabSheet>
             <tab id="position"
-                 caption="Tab"
+                 caption="msg://position"
                  description="msg://position"
                  margin="true,false,false,false"
                  spacing="true">
                 <split id="split"
                        height="100%"
                        orientation="horizontal"
+                       pos="65"
                        width="100%">
-                    <table width="100%">
+                    <table height="833px"
+                           width="100%">
                         <columns>
                             <column id="finishTS"/>
+                            <column id="stage_time"
+                                    caption="msg://stage_time"/>
+                            <column id="all_time"
+                                    caption="msg://all_time"/>
+                            <column id="returns_value"
+                                    caption="msg://returns_value"/>
+                            <column id="price_change"
+                                    caption="msg://price_change"/>
+                            <column id="kpi_time_compare"
+                                    caption="msg://kpi_time_compare"/>
+                            <column id="kpi_price_compare"
+                                    caption="msg://kpi_price_compare"/>
                             <column id="stage"/>
                         </columns>
                         <rows datasource="queryPositionMovementsesDs"/>
@@ -49,6 +63,7 @@ order by e.position.id]]>
                                       colorField="color"
                                       columnWidth="0.5"
                                       endDateField="end"
+                                      height="821px"
                                       marginRight="70"
                                       period="HOURS"
                                       rotate="true"
@@ -78,12 +93,12 @@ order by e.position.id]]>
                 </split>
             </tab>
             <tab id="stage"
-                 caption="Tab"
+                 caption="msg://stage"
                  description="msg://stage"
                  margin="true,false,false,false"
                  spacing="true"/>
             <tab id="executior"
-                 caption="Tab"
+                 caption="msg://executor"
                  description="msg://executor"
                  margin="true,false,false,false"
                  spacing="true"/>

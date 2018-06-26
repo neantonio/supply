@@ -56,7 +56,7 @@ public class Statistics extends AbstractWindow {
                 Date end=movement.getFinishTS()==null?new Date():movement.getFinishTS();
                 segments.add(new MapDataItem(ParamsMap.of("start",start,
                         "end",end ,
-                        "task",messages.getMessage(movement.getStage()) , "color", colors.get((colors.size()-1)%(dataProvider.getItems().size()+1) ))));
+                        "task",messages.getMessage(movement.getStage()) , "color", getColor(movement.getStage() ))));
 
                 i++;
                 if(!iterator.hasNext()) break;
@@ -68,38 +68,13 @@ public class Statistics extends AbstractWindow {
                     "segments", segments)));
         }
 
-//        List<MapDataItem> segments = new ArrayList<>();
-//
-//        segments.add(new MapDataItem(ParamsMap.of("start", "2018-06-16",
-//                "end", "2018-06-27", "task", "Producing specifications")));
-//        segments.add(new MapDataItem(ParamsMap.of("start", "2018-07-05",
-//                "end", "2018-07-18", "task", "Development")));
-//        segments.add(new MapDataItem(ParamsMap.of("start", "2018-07-18",
-//                "end", "2018-07-30", "task", "Testing and QA")));
-//        dataProvider.addItem(new MapDataItem(ParamsMap.of("category", "Module #1", "segments", segments)));
-//
-//        segments = new ArrayList<>();
-//        segments.add(new MapDataItem(ParamsMap.of("start", "2018-06-01",
-//                "end", "2018-07-10", "task", "Gathering requirements", "color", "#cc4748")));
-//        segments.add(new MapDataItem(ParamsMap.of("start", "2018-06-12",
-//                "end", "2018-07-15", "task", "Producing specifications")));
-//        segments.add(new MapDataItem(ParamsMap.of("start", "2018-06-16",
-//                "end", "2018-07-05", "task", "Development")));
-//        segments.add(new MapDataItem(ParamsMap.of("start", "2018-06-10",
-//                "end", "2018-07-18", "task", "Testing and QA")));
-//        dataProvider.addItem(new MapDataItem(ParamsMap.of("category", "Module #1", "segments", segments)));
+
 
         ganttChart.getConfiguration().setDataProvider(dataProvider);
-        
-//        chartDs.refresh();
-//        Collection items=chartDs.getItems();
-//        int i=0;
-//        i++;
+
     }
 
     private String getColor(Stages stage){
-
-
 
         int stageIndex=Arrays.asList(Stages.values()).indexOf(stage);
 

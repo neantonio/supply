@@ -29,4 +29,6 @@ public interface QueryDaoService {
     List<QueryWorkflowDetail> getAllWorkflowDetails(QueryWorkflow workflow);
 
     void commitQuery(Query queryItem);
+
+    List<Employee> getAllEmployees();
 }
