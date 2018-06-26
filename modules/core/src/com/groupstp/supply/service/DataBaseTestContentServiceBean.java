@@ -53,11 +53,11 @@ public class DataBaseTestContentServiceBean implements DataBaseTestContentServic
 
     @Resource
     private
-    List<Map> commonWorkflowList;
+    List<Map> commonWorkflowDetails;
 
     @Resource
     private
-    List<Map> cheepWorkflowList;
+    List<Map> cheepWorkflowDetails;
 
     @Resource
     private
@@ -103,6 +103,8 @@ public class DataBaseTestContentServiceBean implements DataBaseTestContentServic
 
     @Inject
     private QueryService queryService;
+
+    @Inject QueryDaoService queryDaoService;
 
     @Inject
     private Persistence persistence;
@@ -349,8 +351,8 @@ public class DataBaseTestContentServiceBean implements DataBaseTestContentServic
             QueryWorkflow queryWorkflow=metadata.create(QueryWorkflow.class);
             queryWorkflow.setName(workflow);
             resultList.add(queryWorkflow);
-            if(i==0)queryWorkflow.setDetails(createQueryWorkflowDetailList(queryWorkflow, commonWorkflowList));
-            if(i==1)queryWorkflow.setDetails(createQueryWorkflowDetailList(queryWorkflow, cheepWorkflowList));
+            if(i==0)queryWorkflow.setDetails(createQueryWorkflowDetailList(queryWorkflow, commonWorkflowDetails));
+            if(i==1)queryWorkflow.setDetails(createQueryWorkflowDetailList(queryWorkflow, cheepWorkflowDetails));
             queryWorkflow.getDetails().forEach(item->em.persist(item));
             if(em!=null)em.persist(queryWorkflow);
             i++;
@@ -364,10 +366,10 @@ public class DataBaseTestContentServiceBean implements DataBaseTestContentServic
 
         for(Map detailMap:workflowDetailList){
             QueryWorkflowDetail wfd=new QueryWorkflowDetail();
-            wfd.setPriority((Integer) detailMap.get("priority"));
+            wfd.setPriority(Integer.valueOf((String) detailMap.get("priority")));
             wfd.setSourceStage((Stages) detailMap.get("sourceStage"));
             wfd.setDestStage((Stages) detailMap.get("destStage"));
-            wfd.setValidation((String) detailMap.get("validation"));
+            wfd.setValidationScript((String) detailMap.get("validation"));
             wfd.setScript((String) detailMap.get("script"));
             wfd.setQueryWorkflow(queryWorkflow);
             result.add(wfd);
@@ -527,21 +529,77 @@ public class DataBaseTestContentServiceBean implements DataBaseTestContentServic
     @Override
     public void beginBusinessProcess(){
 
-        //перемещаем часть заявок в работу
-//        for(QueriesPosition qp:queriesPositions){
-//            if(randomDataService.getRandomBoolean(80)){
-//                try {
-//                    workflowService.movePosition(qp);
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//        }
-        for(Query query:queries){
+//        Transaction tx = persistence.createTransaction();
+//        EntityManager em = persistence.getEntityManager();
+        EntityManager em=null;
+
+        Date today=new Date();
+        List <Query> queryList=queryDaoService.getAllQueries();
+        for(Query query:queryList){
             if(randomDataService.getRandomBoolean(80)) {
-                queryService.beginQueryProcessing(query);
+                Date moveToWorkTime=randomDataService.getRandomDate(query.getTimeCreation(),today);
+
+                List<QueriesPosition> positions=queryDaoService.getQueriesPositionByQuery(query);
+                positions.forEach(item->{
+                    QueryPositionMovements qpm= movePositionTo(item,Stages.NomControl,moveToWorkTime,null,em);
+
+                    //двигаем позицию дальше
+                    //// TODO: 25.06.2018 сделать сдесь рекурсию
+                    if((today.getTime()-moveToWorkTime.getTime())>1000*60*60*24){
+                        if(randomDataService.getRandomBoolean(80)) {
+                            Date moveTime=randomDataService.getRandomDate(moveToWorkTime,today);
+                            QueryPositionMovements qpm1= movePositionTo(item,Stages.StoreControl,moveTime,qpm,em);
+                            if((today.getTime()-moveTime.getTime())>1000*60*60*24){
+                                Date moveTime2=randomDataService.getRandomDate(moveTime,today);
+                                QueryPositionMovements qpm2= movePositionTo(item,Stages.SupSelection,moveTime2,qpm1,em);
+                                if((today.getTime()-moveTime2.getTime())>1000*60*60*24){
+                                    Date moveTime3=randomDataService.getRandomDate(moveTime2,today);
+                                    QueryPositionMovements qpm3= movePositionTo(item,Stages.SupSelection,moveTime3,qpm2,em);
+                                    if((today.getTime()-moveTime3.getTime())>1000*60*60*24){
+                                        Date moveTime4=randomDataService.getRandomDate(moveTime3,today);
+                                        QueryPositionMovements qpm4= movePositionTo(item,Stages.Comission,moveTime4,qpm3,em);
+                                        if((today.getTime()-moveTime4.getTime())>1000*60*60*24){
+                                            Date moveTime5=randomDataService.getRandomDate(moveTime4,today);
+                                            QueryPositionMovements qpm5= movePositionTo(item,Stages.Bills,moveTime5,qpm4,em);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                });
+
+                query.setInWork(true);
+               dataManager.commit(query);
+
             }
         }
+       // tx.commit();
+    }
+
+    private QueryPositionMovements movePositionTo(QueriesPosition position,Stages stage,Date dateOfMoving,
+                                                  QueryPositionMovements previousQpm,EntityManager em){
+
+        position.setCurrentStage(stage);
+        dataManager.commit(position);
+
+        QueryPositionMovements qpm =metadata.create(QueryPositionMovements.class);
+        qpm.setCreateTs(dateOfMoving);
+        qpm.setPosition(position);
+        qpm.setStage(stage);
+        qpm.setUser(((Employee)randomDataService.getRandomFromList(queryDaoService.getAllEmployees())).getUser());
+
+        dataManager.commit(qpm);
+
+        if(previousQpm!=null){
+            previousQpm.setFinishTS(dateOfMoving);
+            dataManager.commit(previousQpm);
+        }
+
+
+
+        return qpm;
     }
 
      String generateSpecification(Nomenclature nomenclature){

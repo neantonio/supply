@@ -22,6 +22,8 @@
                        value="com.groupstp.supply.service.QueryService"/>
                 <entry key="supply_QueryDaoService"
                        value="com.groupstp.supply.service.QueryDaoService"/>
+                <entry key="supply_StatisticsService"
+                       value="com.groupstp.supply.service.StatisticsService"/>
             </map>
         </property>
     </bean>

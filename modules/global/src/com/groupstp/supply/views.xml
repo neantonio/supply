@@ -303,6 +303,9 @@
                   view="_minimal">
             <property name="currentStage"/>
             <property name="specification"/>
+            <property name="startMinimalPrice"/>
+            <property name="voteResult"
+                      view="_minimal"/>
         </property>
     </view>
     <view class="com.groupstp.supply.entity.Nomenclature"

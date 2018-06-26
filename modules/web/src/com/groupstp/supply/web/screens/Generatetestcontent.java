@@ -49,14 +49,5 @@ public class Generatetestcontent extends AbstractWindow {
         testContentService.beginBusinessProcess();
     }
 
-    public void onTestQueryService(){
-        Set<Query> queries=query.getSelected();
-        Set<QueriesPosition> queriesPositions=queryPosition.getSelected();
 
-//        queries.forEach(item->{
-//            List l=queryService.getQueriesPositionByQuery(item);
-//            QueryStatus status=queryService.getQueryStatus(item);
-//            int i=0;i++;
-//        });
-    }
 }

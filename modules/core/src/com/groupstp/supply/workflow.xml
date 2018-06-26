@@ -3,7 +3,16 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:util="http://www.springframework.org/schema/util"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
 
-    <util:list id="commonWorkflowDetails" value-type="java.util.HashMap">
+    <util:list id="commonWorkflowDetails" value-type="java.util.Map">
+
+        <util:map  map-class="java.util.HashMap">
+            <entry key="priority"><value>0</value></entry>
+            <entry key="sourceStage"><util:constant static-field="com.groupstp.supply.entity.Stages.New" /></entry>
+            <entry key="destStage"><util:constant static-field="com.groupstp.supply.entity.Stages.NomControl" /></entry>
+            <entry key="script"><value>return true</value></entry>
+            <entry key="validation"><value>return true</value></entry>
+        </util:map>
+
         <util:map  map-class="java.util.HashMap">
             <entry key="priority"><value>0</value></entry>
             <entry key="sourceStage"><util:constant static-field="com.groupstp.supply.entity.Stages.NomControl" /></entry>
@@ -144,7 +153,16 @@
     </util:list>
 
 
-    <util:list id="cheepWorkflowDetails" value-type="java.util.HashMap">
+    <util:list id="cheepWorkflowDetails" value-type="java.util.Map">
+
+        <util:map  map-class="java.util.HashMap">
+            <entry key="priority"><value>0</value></entry>
+            <entry key="sourceStage"><util:constant static-field="com.groupstp.supply.entity.Stages.New" /></entry>
+            <entry key="destStage"><util:constant static-field="com.groupstp.supply.entity.Stages.NomControl" /></entry>
+            <entry key="script"><value>return true</value></entry>
+            <entry key="validation"><value>return true</value></entry>
+        </util:map>
+
         <util:map  map-class="java.util.HashMap">
             <entry key="priority"><value>0</value></entry>
             <entry key="sourceStage"><util:constant static-field="com.groupstp.supply.entity.Stages.NomControl" /></entry>

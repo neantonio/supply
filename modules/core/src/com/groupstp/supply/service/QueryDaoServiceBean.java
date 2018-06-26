@@ -92,4 +92,12 @@ public class QueryDaoServiceBean implements QueryDaoService {
     public void commitQuery(Query queryItem) {
         dataManager.commit(queryItem);
     }
+
+    @Override
+    public List<Employee> getAllEmployees() {
+        LoadContext<Employee> loadContext = LoadContext.create(Employee.class)
+                .setQuery(LoadContext.createQuery("select  e from supply$Employee e ")).setView("employee-view");
+
+        return dataManager.loadList(loadContext);
+    }
 }

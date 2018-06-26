@@ -35,10 +35,15 @@ order by e.position.id]]>
                        orientation="horizontal"
                        pos="65"
                        width="100%">
-                    <table height="833px"
+                    <table id="movementsTable"
+                           height="833px"
                            width="100%">
                         <columns>
-                            <column id="finishTS"/>
+                            <column id="createTs"
+                                    caption="msg://created"/>
+                            <column id="finishTS"
+                                    caption="msg://finish"/>
+                            <column id="stage"/>
                             <column id="stage_time"
                                     caption="msg://stage_time"/>
                             <column id="all_time"
@@ -51,7 +56,6 @@ order by e.position.id]]>
                                     caption="msg://kpi_time_compare"/>
                             <column id="kpi_price_compare"
                                     caption="msg://kpi_price_compare"/>
-                            <column id="stage"/>
                         </columns>
                         <rows datasource="queryPositionMovementsesDs"/>
                     </table>

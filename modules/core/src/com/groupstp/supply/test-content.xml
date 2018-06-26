@@ -65,7 +65,7 @@
     <util:list id="workflowList" value-type="java.lang.String">
         <value>Общий</value>
         <value>Заявки суммой менее 20000</value>
-        <value>Третий процесс</value>
+
     </util:list>
 
     <util:list id="groupList" value-type="java.lang.String">

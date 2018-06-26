@@ -78,7 +78,7 @@ public class WorkflowServiceBean implements WorkflowService {
             position.setValue(strStage + "Flag", true);
             position.setValue(strStage + "FlagTS", timeSource.currentTimestamp());
         }
-        if(stage!=Stages.New) createFinishStageRecord(position);
+        if(position.getCurrentStage()!=Stages.New) createFinishStageRecord(position);
         position.setCurrentStage(stage);
         dataManager.commit(position);
         createMovementRecord(position, stage);
