@@ -40,6 +40,10 @@ cuba {
     }
     tomcat {
         dir = "$project.rootDir/deploy/tomcat"
+        port = 8000
+        shutdownPort = 7998
+        ajpPort = 7999
+        
     }
     ide {
         vcs = 'Git'

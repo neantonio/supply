@@ -295,6 +295,10 @@ public class QueriesPositionBrowse extends AbstractLookup {
         openWindow("supply$VoteDialog", WindowManager.OpenType.DIALOG, items);
     }
 
+    /**
+     * Обработчик нажатия кнопки Готово на вкладке Закупочная комиссия
+     * @throws Exception
+     */
     public void onBtnDoneClickComission() throws Exception {
         setVote();
     }
@@ -302,13 +306,17 @@ public class QueriesPositionBrowse extends AbstractLookup {
     @Inject
     private VoteService voteService;
 
+    /**
+     * Записывает голос, если есть победитель в QP
+     * @throws Exception
+     */
     private void setVote() throws Exception {
         GroupTable<QueriesPosition> grpTab = getOpenedStageTable();
         GroupDatasource ds = grpTab.getDatasource();
         Set<QueriesPosition> positions = grpTab.getSelected();
         for (QueriesPosition position: positions) {
-            voteService.setVoteForPosition(position);
             workflowService.movePosition(position);
+            voteService.setVoteForPosition(position);
         }
         ds.refresh();
     }
