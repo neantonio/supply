@@ -21,6 +21,10 @@ import com.haulmont.cuba.gui.xml.layout.ComponentsFactory;
 import javax.inject.Inject;
 import java.util.*;
 
+/**
+ * @author AntonLomako
+ * окно с кнопками для темтов
+ */
 public class Generatetestcontent extends AbstractWindow {
 
     @Inject

@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * @author AntonLomako
  * окно выбора порядка группировки
  * при вызове param должен содержать запись key=params value=map списков
  * map списков должен содержать запись key=availableItems value = список доступных элементов.

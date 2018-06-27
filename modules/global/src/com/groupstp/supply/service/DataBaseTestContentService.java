@@ -8,7 +8,9 @@ import com.haulmont.cuba.security.entity.Group;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-
+/**
+ * @author AntonLomako
+ */
 public interface DataBaseTestContentService {
     String NAME = "supply_DataBaseTestContentService";
 

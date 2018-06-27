@@ -2,11 +2,18 @@ package com.groupstp.supply.service;
 
 import com.groupstp.supply.entity.QueriesPosition;
 import com.groupstp.supply.entity.QueryPositionMovements;
+import com.groupstp.supply.entity.StageTerm;
+import com.groupstp.supply.entity.Stages;
 import org.springframework.stereotype.Service;
 
 import javax.inject.Inject;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
+
+/**
+ * @author AntonLomako
+ */
 
 @Service(StatisticsService.NAME)
 public class StatisticsServiceBean implements StatisticsService {
@@ -73,5 +80,39 @@ public class StatisticsServiceBean implements StatisticsService {
     @Override
     public int getTimeCompareWithKPI(QueriesPosition position) {
         return 0;
+    }
+
+    @Override
+    public Map<Stages, Integer> getStatisticsOfStages(Collection<QueryPositionMovements> movementsCollection,
+                                                      Predicate<QueryPositionMovements> filterCondition) {
+        Map<Stages, Integer> result=new HashMap<>();
+        List<QueryPositionMovements> filteredCollection= movementsCollection.stream().filter(filterCondition).collect(Collectors.toList());
+
+        filteredCollection.forEach(item->{
+            if(result.get(item.getStage())!=null){
+                result.put(item.getStage(),result.get(item.getStage())+1);
+            }
+            else {
+                result.put(item.getStage(),0);
+            }
+        });
+        return result;
+    }
+
+    private List <String> colors=Arrays.asList("#FF6600", "#FCD202", "#B0DE09", "#0D8ECF", "#2A0CD0", "#CD0D74",
+            "#CC0000", "#00CC00", "#0000CC", "#DDDDDD", "#999999", "#333333", "#990000");
+    @Override
+    public String getColor(Stages stage) {
+        int stageIndex= Arrays.asList(Stages.values()).indexOf(stage);
+
+        if(stageIndex<colors.size()) return colors.get(stageIndex);
+        else return "#FF66FF";
+    }
+
+    @Override
+    public boolean isMovementOverdue(QueryPositionMovements qpm) {
+        Date endDate=qpm.getFinishTS()==null? new Date():qpm.getFinishTS();
+        StageTerm stageTerm=queryDaoService.getStageTermForStage(qpm.getStage(),qpm.getPosition().getQuery().getUrgency());
+        return (endDate.getTime()-qpm.getCreateTs().getTime())>stageTerm.getTime()*60*60*1000;
     }
 }

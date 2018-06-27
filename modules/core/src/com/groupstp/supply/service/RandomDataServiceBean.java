@@ -5,9 +5,9 @@ import org.springframework.stereotype.Service;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
-
 /**
- * Created by 79167 on 13.06.2018.
+ * @author AntonLomako
+ * удобный класс для генерации случайных данных
  */
 @Service(RandomDataService.NAME)
 public class RandomDataServiceBean implements RandomDataService {

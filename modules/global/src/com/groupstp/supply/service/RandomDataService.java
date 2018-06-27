@@ -4,7 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * Created by 79167 on 13.06.2018.
+ * @author AntonLomako
  */
 public interface RandomDataService {
     String NAME = "supply_RandomDataService";

@@ -88,6 +88,7 @@ public class WorkflowServiceBean implements WorkflowService {
     QueryDaoService queryDaoService;
 
     /**
+     * @author AntonLomako
      * запись в журнал информации о завершении этапа. извлекается последняя запись с участием позиции и устанавливается finishTS
      * @param position
      */
@@ -112,6 +113,9 @@ public class WorkflowServiceBean implements WorkflowService {
         movement.setPosition(position);
         movement.setStage(stage);
         movement.setUser(userSessionSource.getUserSession().getUser());
+
+        //если позиция на завершающем этапе, то надо поставить ts завершения
+        if((stage==Stages.Abortion)||(stage==Stages.Done)) movement.setCreateTs(new Date());
         dataManager.commit(movement);
     }
 

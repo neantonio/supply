@@ -323,4 +323,17 @@
             <property name="email"/>
         </property>
     </view>
+    <view class="com.groupstp.supply.entity.QueryPositionMovements"
+          extends="queryPositionMovements-view"
+          name="queryPositionMovements-view_1">
+        <property name="position"
+                  view="_minimal">
+            <property name="query"
+                      view="_minimal">
+                <property name="urgency"
+                          view="_minimal"/>
+            </property>
+        </property>
+        <property name="createTs"/>
+    </view>
 </views>

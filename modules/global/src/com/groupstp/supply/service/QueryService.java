@@ -5,7 +5,9 @@ import com.groupstp.supply.entity.*;
 
 import java.util.Date;
 import java.util.List;
-
+/**
+ * @author AntonLomako
+ */
 public interface QueryService {
     String NAME = "supply_QueryService";
 

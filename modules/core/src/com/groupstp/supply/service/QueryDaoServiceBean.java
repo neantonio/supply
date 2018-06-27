@@ -8,6 +8,10 @@ import org.springframework.stereotype.Service;
 import javax.inject.Inject;
 import java.util.List;
 
+/**
+ * @author AntonLomako
+ * получает сущности из базы
+ */
 @Service(QueryDaoService.NAME)
 public class QueryDaoServiceBean implements QueryDaoService {
 

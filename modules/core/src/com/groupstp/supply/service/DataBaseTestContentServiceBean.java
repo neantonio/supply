@@ -22,7 +22,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
 
-
+/**
+ * @author AntonLomako
+ * генерация тестового наполнения для бд.
+ * класс нужен только на этапе тестов, поэтому качество кода здесь особенно страдает
+ */
 @Service(DataBaseTestContentService.NAME)
 public class DataBaseTestContentServiceBean implements DataBaseTestContentService {
 
@@ -130,8 +134,6 @@ public class DataBaseTestContentServiceBean implements DataBaseTestContentServic
 
     public DataBaseTestContentServiceBean(){
 
-
-
         //ищем номенклатуру на номенклатурном контроле
         stageActionMap.put(Stages.NomControl,qp->{
             qp.setPositionUsefulness(randomDataService.getRandomBoolean(80));
@@ -154,7 +156,7 @@ public class DataBaseTestContentServiceBean implements DataBaseTestContentServic
         });
 
         //подбор поставщиков
-
+        //// TODO: 27.06.2018 эмулящия прохождения этапов
     }
 
     @Override

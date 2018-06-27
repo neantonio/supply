@@ -15,6 +15,7 @@ import javax.inject.Inject;
 import java.util.*;
 
 /**
+ * @author AntonLomako
  * реейст позиций
  */
 public class Queryregister extends AbstractWindow {
@@ -56,9 +57,6 @@ public class Queryregister extends AbstractWindow {
     List<Object> availableGroupOrderItems=new ArrayList<>();
 
     Map<Object,String> availableGroupOrderItemsDescription=new HashMap<>();
-
-
-
 
     @Override
     public void init(Map<String, Object> params) {
@@ -118,12 +116,7 @@ public class Queryregister extends AbstractWindow {
                 Hlayout.add(beginDateLabel);
                 if(movement.getFinishTS()!=null){Hlayout.add(finishDateLabel);}
                 Hlayout.add(durationLabel);
-
-
-
                 Hlayout.setSpacing(true);
-
-
                 Vlayout.add(Hlayout);
 
             }

@@ -5,7 +5,9 @@ import com.groupstp.supply.entity.*;
 
 
 import java.util.List;
-
+/**
+ * @author AntonLomako
+ */
 public interface QueryDaoService {
     String NAME = "supply_QueryDaoService";
 

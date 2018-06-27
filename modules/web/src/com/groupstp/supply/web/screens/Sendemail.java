@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * @author AntonLomako
  * окно со спискос получателей, инпутом для темы и текста, кнопками отправить и отмена
  * получатели передаются списком в парамерте receiver
  */
