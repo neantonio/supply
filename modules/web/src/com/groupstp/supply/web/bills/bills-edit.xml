@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<window xmlns="http://schemas.haulmont.com/cuba/window.xsd"
+        caption="msg://editorCaption"
+        class="com.groupstp.supply.web.bills.BillsEdit"
+        datasource="billsDs"
+        focusComponent="fieldGroup"
+        messagesPack="com.groupstp.supply.web.bills">
+    <dsContext>
+        <datasource id="billsDs"
+                    class="com.groupstp.supply.entity.Bills"
+                    view="bills-view"/>
+    </dsContext>
+    <dialogMode height="600"
+                width="800"/>
+    <layout expand="windowActions"
+            spacing="true">
+        <fieldGroup id="fieldGroup"
+                    datasource="billsDs">
+            <column width="250px">
+                <field property="number"/>
+                <field property="timePayment"/>
+                <field property="price"/>
+                <field property="sumControl"/>
+                <field property="supplier"/>
+                <field property="company"/>
+            </column>
+        </fieldGroup>
+        <frame id="windowActions"
+               screen="editWindowActions"/>
+    </layout>
+</window>

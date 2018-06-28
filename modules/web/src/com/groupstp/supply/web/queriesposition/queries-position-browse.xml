@@ -52,6 +52,13 @@ where e.currentStage='Comission']]>
 where e.currentStage='Bills']]>
             </query>
         </groupDatasource>
+        <groupDatasource id="billsesDs"
+                         class="com.groupstp.supply.entity.Bills"
+                         view="bills-view">
+            <query>
+                <![CDATA[select e from supply$Bills e]]>
+            </query>
+        </groupDatasource>
         <groupDatasource id="dsProcuration"
                          class="com.groupstp.supply.entity.QueriesPosition"
                          view="queriesPosition-Procuration">
@@ -383,7 +390,7 @@ where e.currentStage='Procuration']]>
                         <button id="btnDoneComission"
                                 caption="mainMsg://Done"
                                 icon="STEP_FORWARD"
-                                invoke="onBtnDoneClickComission"/>
+                                invoke="onBtnDoneClick"/>
                         <button id="btnCancelComission"
                                 caption="mainMsg://Cancel"
                                 icon="CANCEL"/>
@@ -431,8 +438,6 @@ where e.currentStage='Procuration']]>
                  margin="true,false,false,false"
                  spacing="true">
                 <vbox id="vboxBills"
-                      expand="positionsBills"
-                      height="100%"
                       spacing="true">
                     <filter id="filterBills"
                             applyTo="positionsBills"
@@ -467,23 +472,99 @@ where e.currentStage='Procuration']]>
                         <button id="btnQueryBill"
                                 caption="msg://Query bill"
                                 icon="ENVELOPE"/>
+                        <button id="btnBills"
+                                action="billsTable.create"
+                                caption="Создание счета"/>
+                        <button id="btnAttach"
+                                caption="Прикрепить"
+                                invoke="onBtnAttachClick"/>
+                        <button id="btnUndock"
+                                caption="Открепить"
+                                invoke="onBtnUndockClick"/>
+                        <button id="btnToSupSelection"
+                                caption="Вернуть к Поставщикам"
+                                invoke="onBtnToSupSelection"/>
                     </buttonsPanel>
-                    <groupTable id="positionsBills"
-                                fixedGrouping="true"
-                                presentations="true"
-                                width="100%">
-                        <actions>
-                            <action id="create"/>
-                            <action id="refresh"/>
-                            <action id="edit"/>
-                            <action id="remove"/>
-                        </actions>
-                        <columns>
-                            <column id="bill"/>
-                            <column id="billQuery"/>
-                        </columns>
-                        <rows datasource="dsBills"/>
-                    </groupTable>
+                    <buttonsPanel>
+                        <button id="btnEmptyPositions"
+                                caption="Позиции без счета"
+                                invoke="onBtnEmptyPositions"/>
+                        <button id="btnAllPositions"
+                                caption="Все позиции"
+                                invoke="onBtnAllPositions"/>
+                        <button id="btnSendEmail"
+                                caption="Отправить @Email"
+                                invoke="onBtnSendEmail"/>
+                    </buttonsPanel>
+                    <hbox expand="positionsBills"
+                          height="200px"
+                          spacing="true"
+                          width="100%">
+                        <table id="billsTable"
+                               height="100%"
+                               presentations="true">
+                            <actions>
+                                <action id="create"/>
+                                <action id="refresh"/>
+                                <action id="edit"/>
+                                <action id="remove"/>
+                            </actions>
+                            <columns>
+                                <column id="number"/>
+                                <column id="timePayment"/>
+                                <column id="price"/>
+                                <column id="sumControl"/>
+                                <column id="supplier"/>
+                                <column id="company"/>
+                            </columns>
+                            <rows datasource="billsesDs"/>
+                        </table>
+                        <groupTable id="positionsBills"
+                                    fixedGrouping="true"
+                                    height="100%"
+                                    multiselect="true"
+                                    presentations="true">
+                            <actions>
+                                <action id="create"/>
+                                <action id="refresh"/>
+                                <action id="edit"/>
+                                <action id="remove"/>
+                            </actions>
+                            <columns>
+                                <group>
+                                    <column id="voteResult.posSup.supplier"/>
+                                    <column id="query.contact"/>
+                                </group>
+                                <column id="query"/>
+                                <column id="query.company"/>
+                                <column id="query.division"/>
+                                <column id="query.urgency"/>
+                                <column id="nomenclature"/>
+                                <column id="bills.number"/>
+                                <column id="voteResult.quantity"/>
+                                <column id="voteResult.price"/>
+                            </columns>
+                            <rows datasource="dsBills"/>
+                        </groupTable>
+                    </hbox>
+                    <browserFrame id="imageForBill"
+                                  align="BOTTOM_LEFT"
+                                  caption="Изображение счета"
+                                  height="350px"
+                                  width="500px"/>
+                    <hbox align="BOTTOM_LEFT"
+                          spacing="true">
+                        <upload id="uploadField"/>
+                        <button id="downloadImageBtn"
+                                caption="Скачать"
+                                invoke="onDownloadImageBtnClick"/>
+                        <button id="clearImageBtn"
+                                caption="Удалить"
+                                invoke="onClearImageBtnClick"/>
+                        <button id="OpenInNewTabBtn"
+                                caption="Открыть в новом окне"
+                                invoke="onOpenInNewTabBtnClick"/>
+                    </hbox>
                 </vbox>
             </tab>
             <tab id="tabProcuration"

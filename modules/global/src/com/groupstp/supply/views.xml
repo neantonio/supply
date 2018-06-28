@@ -293,8 +293,39 @@
     <view class="com.groupstp.supply.entity.QueriesPosition"
           extends="_minimal"
           name="queriesPosition-Bills">
-        <property name="bill"/>
-        <property name="billQuery"/>
+        <property name="query"
+                  view="_minimal">
+            <property name="urgency"
+                      view="_minimal"/>
+            <property name="company"
+                      view="_minimal"/>
+            <property name="division"
+                      view="_minimal"/>
+            <property name="contact"
+                      view="_minimal"/>
+        </property>
+        <property name="voteResult"
+                  view="_minimal"/>
+        <property name="bills"
+                  view="_minimal">
+            <property name="number"/>
+        </property>
+        <property name="currentStage"/>
+    </view>
+    <view class="com.groupstp.supply.entity.Bills"
+          extends="_local"
+          name="bills-view">
+        <property name="supplier"
+                  view="_minimal"/>
+        <property name="positions"
+                  view="_minimal">
+            <property name="currentStage"/>
+        </property>
+        <property name="company"
+                  view="_minimal"/>
+        <property name="imageBill"
+                  view="_local">
+        </property>
     </view>
     <view class="com.groupstp.supply.entity.QueriesPosition"
           extends="_local"

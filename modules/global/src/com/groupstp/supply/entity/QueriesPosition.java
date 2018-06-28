@@ -148,19 +148,25 @@ public class QueriesPosition extends StandardEntity {
     @JoinColumn(name = "VOTE_RESULT_ID")
     protected SuppliersSuggestion voteResult;
 
-    @Column(name = "BILL")
-    protected String bill;
 
     @Column(name = "BILL_QUERY")
     protected Boolean billQuery;
 
-    public void setBill(String bill) {
-        this.bill = bill;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "BILLS_ID")
+    protected Bills bills;
+
+    public void setBills(Bills bills) {
+        this.bills = bills;
     }
 
-    public String getBill() {
-        return bill;
+    public Bills getBills() {
+        return bills;
     }
+
+
+
 
     public void setBillQuery(Boolean billQuery) {
         this.billQuery = billQuery;

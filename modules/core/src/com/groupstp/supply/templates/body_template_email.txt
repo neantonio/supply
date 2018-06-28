@@ -1,0 +1,6 @@
+Query positions:
+SendTo ${queriesPosition.voteResult.posSup.supplier.name}
+From ${queriesPosition.query.company.name}
+QueryPositionNomenklature ${queriesPosition.nomenclature.name}
+Quantity ${queriesPosition.voteResult.quantity}
+Price ${queriesPosition.voteResult.price}

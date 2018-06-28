@@ -230,8 +230,8 @@ create table SUPPLY_QUERIES_POSITION (
     PRICE_REDUCE boolean,
     MINIMAL_PRICE double precision,
     VOTE_RESULT_ID uuid,
-    BILL varchar(255),
     BILL_QUERY boolean,
+    BILLS_ID uuid,
     --
     primary key (ID)
 )^
@@ -405,3 +405,25 @@ create table SUPPLY_PROCURATION (
     primary key (ID)
 )^
 -- end SUPPLY_PROCURATION
+-- begin SUPPLY_BILLS
+create table SUPPLY_BILLS (
+    ID uuid,
+    VERSION integer not null,
+    CREATE_TS timestamp,
+    CREATED_BY varchar(50),
+    UPDATE_TS timestamp,
+    UPDATED_BY varchar(50),
+    DELETE_TS timestamp,
+    DELETED_BY varchar(50),
+    --
+    NUMBER_ varchar(20) not null,
+    COMPANY_ID uuid,
+    SUPPLIER_ID uuid not null,
+    TIME_PAYMENT timestamp,
+    PRICE double precision,
+    SUM_CONTROL boolean,
+    IMAGE_BILL_ID uuid,
+    --
+    primary key (ID)
+)^
+-- end SUPPLY_BILLS
