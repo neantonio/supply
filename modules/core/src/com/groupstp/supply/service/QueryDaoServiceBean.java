@@ -15,6 +15,8 @@ import java.util.List;
 @Service(QueryDaoService.NAME)
 public class QueryDaoServiceBean implements QueryDaoService {
 
+    private static final int STANDARD_DURATION = 72;
+
     @Inject
     private DataManager dataManager;
 
@@ -35,7 +37,11 @@ public class QueryDaoServiceBean implements QueryDaoService {
                 .setQuery(LoadContext.createQuery("select st from supply$StageTerm st where st.urgency.id = :urgencyItem and st.stage=:stageItem")
                         .setParameter("urgencyItem",position.getQuery().getUrgency())
                         .setParameter("stageItem",position.getCurrentStage()));
-         int result=dataManager.load(loadContext).getTime();
+        int result=STANDARD_DURATION;
+        try {
+            result = dataManager.load(loadContext).getTime();
+        }
+        catch (Exception e){}
         return result;
     }
 

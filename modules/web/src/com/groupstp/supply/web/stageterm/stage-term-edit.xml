@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<window xmlns="http://schemas.haulmont.com/cuba/window.xsd"
+        caption="msg://editorCaption"
+        class="com.groupstp.supply.web.stageterm.StageTermEdit"
+        datasource="stageTermDs"
+        focusComponent="fieldGroup"
+        messagesPack="com.groupstp.supply.web.stageterm">
+    <dsContext>
+        <datasource id="stageTermDs"
+                    class="com.groupstp.supply.entity.StageTerm"
+                    view="_local"/>
+    </dsContext>
+    <dialogMode height="600"
+                width="800"/>
+    <layout expand="windowActions"
+            spacing="true">
+        <fieldGroup id="fieldGroup"
+                    datasource="stageTermDs">
+            <column width="300px">
+                <field property="stage"/>
+                <field property="time"/>
+            </column>
+        </fieldGroup>
+        <frame id="windowActions"
+               screen="editWindowActions"/>
+    </layout>
+</window>

@@ -31,7 +31,10 @@
     <dialogMode height="600"
                 width="800"/>
     <layout>
-        <vbox spacing="true">
+        <vbox id="vbox"
+              expand="positionsTable"
+              height="100%"
+              spacing="true">
             <filter id="positionFilter"
                     datasource="queriesPositionsDs"/>
             <buttonsPanel id="buttonsPanel">
@@ -44,10 +47,10 @@
                 <button caption="msg://send_email"
                         invoke="onSendEmail"/>
                 <popupView id="popupView"
-                           minimizedValue="msg://quick_filters"
                            align="BOTTOM_LEFT"
-                           >
-                    <vbox width="250px" >
+                           hideOnMouseOut="false"
+                           minimizedValue="msg://quick_filters">
+                    <vbox width="250px">
                         <button id="archiveFilterButton"
                                 caption="msg://archive_filter"
                                 invoke="onArchiveFlagChange"
@@ -62,7 +65,6 @@
                                 width="100%"/>
                     </vbox>
                 </popupView>
-
             </buttonsPanel>
             <groupTable id="positionsTable"
                         editable="true"

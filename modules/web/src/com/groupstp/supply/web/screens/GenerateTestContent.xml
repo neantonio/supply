@@ -18,9 +18,6 @@
             <button id="start_business"
                     caption="запустить бизнесс процесс"
                     invoke="onBusiness"/>
-                            
-
         </buttonsPanel>
-
     </layout>
 </window>

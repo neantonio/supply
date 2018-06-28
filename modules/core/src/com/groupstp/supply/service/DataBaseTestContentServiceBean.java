@@ -30,7 +30,8 @@ import java.util.*;
 @Service(DataBaseTestContentService.NAME)
 public class DataBaseTestContentServiceBean implements DataBaseTestContentService {
 
-    String priceListFileName="C:\\Users\\79167\\Downloads\\pricetin.xls";
+    //String priceListFileName="C:\\Users\\79167\\Downloads\\pricetin.xls";
+    String priceListFileName = "/home/lobo/projects/stp/supply/pricetin.xls";
 
     @Inject
     private DataManager dataManager;
@@ -42,8 +43,6 @@ public class DataBaseTestContentServiceBean implements DataBaseTestContentServic
     @Resource
     private
     Map<String,String> measureMap;
-
-
 
     private Map<String,MeasureUnits> measureUnitMap=new HashMap<>();
 

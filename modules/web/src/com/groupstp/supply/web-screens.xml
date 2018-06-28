@@ -53,4 +53,6 @@
             template="com/groupstp/supply/web/screens/SendEmail.xml"/>
     <screen id="statistics"
             template="com/groupstp/supply/web/querypositionmovement/statistics.xml"/>
+    <screen id="supply$StageTerm.edit"
+            template="com/groupstp/supply/web/stageterm/stage-term-edit.xml"/>
 </screen-config>
