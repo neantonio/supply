@@ -549,7 +549,7 @@ public class QueriesPositionBrowse extends AbstractLookup {
      * Вывести все позиции без Счета в таблицу позиций
      */
     public void onBtnEmptyPositions() {
-        dsBills.setQuery("select e from supply$QueriesPosition e where e.bills is null and e.currentStage='Bills')");
+        dsBills.setQuery("select e from supply$QueriesPosition e where e.bills is null and e.currentStage='Bills'");
         dsBills.refresh();
     }
 
@@ -557,7 +557,7 @@ public class QueriesPositionBrowse extends AbstractLookup {
      * Вывести все позиции в таблицу позиций
      */
     public void onBtnAllPositions() {
-        dsBills.setQuery("select e from supply$QueriesPosition e where e.currentStage='Bills')");
+        dsBills.setQuery("select e from supply$QueriesPosition e where e.currentStage='Bills'");
         dsBills.refresh();
     }
 
