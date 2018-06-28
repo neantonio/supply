@@ -3,23 +3,25 @@ package com.groupstp.supply.web.queriesposition;
 import com.groupstp.supply.entity.*;
 import com.groupstp.supply.service.GroovyTestService;
 import com.groupstp.supply.service.WorkflowService;
-import com.haulmont.bali.util.ParamsMap;
 import com.haulmont.chile.core.model.MetaProperty;
 import com.haulmont.cuba.core.app.EmailService;
 import com.haulmont.cuba.core.entity.Entity;
-import com.haulmont.cuba.core.entity.KeyValueEntity;
+import com.haulmont.cuba.core.entity.FileDescriptor;
 import com.haulmont.cuba.core.global.*;
 import com.haulmont.cuba.gui.WindowManager;
 import com.haulmont.cuba.gui.components.*;
 import com.haulmont.cuba.gui.components.actions.BaseAction;
-import com.haulmont.cuba.gui.data.DsBuilder;
+import com.haulmont.cuba.gui.data.DataSupplier;
 import com.haulmont.cuba.gui.data.GroupDatasource;
-import com.haulmont.cuba.gui.data.impl.GroupDatasourceImpl;
+import com.haulmont.cuba.gui.export.ExportDisplay;
+import com.haulmont.cuba.gui.export.ExportFormat;
+import com.haulmont.cuba.gui.upload.FileUploadingAPI;
 import com.haulmont.cuba.gui.xml.layout.ComponentsFactory;
 import org.dom4j.Element;
 
 import javax.annotation.Nullable;
 import javax.inject.Inject;
+import java.net.URL;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -289,8 +291,30 @@ public class QueriesPositionBrowse extends AbstractLookup {
     @Inject
     private GroupDatasource<QueriesPosition, UUID> dsBills;
 
+    @Inject
+    private GroupDatasource<Bills, UUID> billsesDs;
+
+    @Inject
+    private DataSupplier dataSupplier;
+    @Inject
+    private FileUploadingAPI fileUploadingAPI;
+    @Inject
+    private ExportDisplay exportDisplay;
+    @Inject
+    private FileUploadField uploadField;
+    @Inject
+    private Button downloadImageBtn;
+    @Inject
+    private Button clearImageBtn;
+    @Inject
+    private Button OpenInNewTabBtn;
+    @Inject
+    private BrowserFrame imageForBill;
+
+
     @Override
     public void init(Map<String, Object> params) {
+
         //Генерируемая колонка "Сумма"
         positionsBills.addGeneratedColumn("Сумма", new Table.PrintableColumnGenerator<QueriesPosition, String>() {
             @Override
@@ -312,7 +336,10 @@ public class QueriesPositionBrowse extends AbstractLookup {
             }
         });
 
-        //Значки
+        // События при клике на счет
+        billsTable.setClickListener("number", (item, columnId) -> setClickListenerToBills(item, columnId));
+
+        //Значки прикрепления счета
         positionsBills.setIconProvider(new Table.IconProvider<QueriesPosition>() {
             @Nullable
             @Override
@@ -321,24 +348,132 @@ public class QueriesPositionBrowse extends AbstractLookup {
             }
         });
 
-        // Событие на клик по счету
-        billsTable.setClickListener("number", (item, columnId) -> {
-            Bills clickedBills = (Bills) item;
+        //Вывод изображения счета
+        uploadField.addFileUploadSucceedListener(event -> uploadFieldListenerRealization());
 
-            HashMap<String, Object> items = new HashMap<>();
-            items.put("billId", clickedBills.getId());
-            items.put("supplerId", clickedBills.getSupplier().getId());
-            dsBills.setQuery("select e from supply$QueriesPosition e\n" +
-                    "where e.currentStage='Bills' and (" +
-                    "e.bills.id = :custom$billId\n" +
-                    "or\n" +
-                    "(e.voteResult.posSup.supplier.id = :custom$supplerId and e.bills is null))");
-            dsBills.refresh(items);
+        //Оповещение об ошибках загрузки файла
+        uploadField.addFileUploadErrorListener(event ->
+                showNotification("File upload error", NotificationType.HUMANIZED));
 
-        });
     }
 
-    //Прикрепление позиций к счету
+    /**
+     * События при клике на счет
+     * @param item - счет
+     * @param columnId id столбца таблицы
+     */
+    private void setClickListenerToBills(Entity item, String columnId) {
+        Bills clickedBills = (Bills) item;
+        HashMap<String, Object> items = new HashMap<>();
+        items.put("supplerId", clickedBills.getSupplier().getId());
+        items.put("billId", clickedBills.getId());
+        dsBills.setQuery("select e from supply$QueriesPosition e\n" +
+                "where e.currentStage='Bills' and (" +
+                "e.bills.id = :custom$billId\n" +
+                "or\n" +
+                "(e.voteResult.posSup.supplier.id = :custom$supplerId and e.bills is null))");
+//        dsBills.setQuery("select e from supply$QueriesPosition e where e.currentStage='Bills' and ( (e.voteResult.posSup.supplier.id =:custom$supplerId and e.bills is null) or (e.bills.id =:custom$billId))");
+        dsBills.refresh(items);
+        billsTable.setSelected(clickedBills);
+        displayImage();
+
+    }
+
+    /**
+     * Загрузка изображения и прикрепление к счету
+     */
+    private void uploadFieldListenerRealization() {
+        FileDescriptor fd = uploadField.getFileDescriptor();
+        try {
+            fileUploadingAPI.putFileIntoStorage(uploadField.getFileId(), fd);
+        } catch (FileStorageException e) {
+            throw new RuntimeException("Error saving file to FileStorage", e);
+        }
+        billsTable.getSelected().iterator().next().setImageBill(dataSupplier.commit(fd));
+        billsesDs.commit();
+        displayImage();
+    }
+
+    /**
+     * Скачать изображение счета
+     */
+    public void onDownloadImageBtnClick() {
+        if (billsTable.getSelected().size() != 1) {
+            showNotification(getMessage("Select bill first"), NotificationType.WARNING);
+            return;
+        }
+        FileDescriptor fileDescriptorImageBill = billsTable.getSelected().iterator().next().getImageBill();
+        if (fileDescriptorImageBill != null) {
+            exportDisplay.show(fileDescriptorImageBill, ExportFormat.OCTET_STREAM);
+        } else {
+            showNotification(getMessage("No Image for Bill"), NotificationType.WARNING);
+        }
+    }
+
+    /**
+     * Удалить изображение счета
+     */
+    public void onClearImageBtnClick() {
+
+        if (billsTable.getSelected().size() != 1) {
+            showNotification(getMessage("Select bill first"), NotificationType.WARNING);
+            return;
+        }
+        Bills currentBill = billsTable.getSelected().iterator().next();
+        currentBill.setImageBill(null);
+        billsesDs.commit();
+        displayImage();
+    }
+
+    /**
+     * Метод отображения изображения счета в BrowserFrame imageForBill
+     */
+    private void displayImage() {
+        if (billsTable.getSelected().size() != 1) {
+            showNotification(getMessage("Select bill first"), NotificationType.WARNING);
+            return;
+        }
+        FileDescriptor fileDescriptorImageBill = billsTable.getSelected().iterator().next().getImageBill();
+        if (fileDescriptorImageBill != null) {
+            imageForBill.setSource(FileDescriptorResource.class).setFileDescriptor(fileDescriptorImageBill);
+            updateImageButtons(true);
+        } else {
+            imageForBill.setSource(FileDescriptorResource.class);
+            imageForBill.setAlternateText("Изображения нет");
+            updateImageButtons(false);
+        }
+    }
+
+    /**
+     * Открыть изображение/PDF в новой вкладке
+     */
+    public void onOpenInNewTabBtnClick() {
+
+        if (billsTable.getSelected().size() != 1) {
+            showNotification(getMessage("Select bill first"), NotificationType.WARNING);
+            return;
+        }
+        FileDescriptor fileDescriptorImageBill = billsTable.getSelected().iterator().next().getImageBill();
+        if (fileDescriptorImageBill != null) {
+            exportDisplay.show(fileDescriptorImageBill, ExportFormat.getByExtension(fileDescriptorImageBill.getExtension()));
+        } else {
+            showNotification(getMessage("No Image for Bill"), NotificationType.WARNING);
+        }
+    }
+
+    /**
+     * Активация/Деактивация кнопок для изображения счета
+     * @param enable условие активации
+     */
+    private void updateImageButtons(boolean enable) {
+        downloadImageBtn.setEnabled(enable);
+        clearImageBtn.setEnabled(enable);
+        OpenInNewTabBtn.setEnabled(enable);
+    }
+
+    /**
+     * Прикрепление позиций к счету
+     */
     public void onBtnAttachClick() {
         if (positionsBills.getSelected().size() == 0 || billsTable.getSelected().size() != 1) {
             showNotification(getMessage("Select positions and one bill first"), NotificationType.WARNING);
@@ -356,7 +491,9 @@ public class QueriesPositionBrowse extends AbstractLookup {
         });
     }
 
-    //Открепление позиций от счета
+    /**
+     * Открепление позиций от счета
+     */
     public void onBtnUndockClick() {
         if (positionsBills.getSelected().size() == 0) {
             showNotification(getMessage("Select positions first"), NotificationType.WARNING);
@@ -369,7 +506,9 @@ public class QueriesPositionBrowse extends AbstractLookup {
         });
     }
 
-    //Возвращение на этап подбора поставщиков
+    /**
+     * Возвращение заявки на этап подбора поставщиков
+     */
     public void onBtnToSupSelection() {
 
         if (positionsBills.getSelected().size() == 0 && billsTable.getSelected().size() != 1) {
@@ -406,13 +545,17 @@ public class QueriesPositionBrowse extends AbstractLookup {
         }
     }
 
-    //Все позиции без Счета
+    /**
+     * Вывести все позиции без Счета в таблицу позиций
+     */
     public void onBtnEmptyPositions() {
         dsBills.setQuery("select e from supply$QueriesPosition e where e.bills is null and e.currentStage='Bills')");
         dsBills.refresh();
     }
 
-    //Все позиции
+    /**
+     * Вывести все позиции в таблицу позиций
+     */
     public void onBtnAllPositions() {
         dsBills.setQuery("select e from supply$QueriesPosition e where e.currentStage='Bills')");
         dsBills.refresh();
@@ -421,36 +564,38 @@ public class QueriesPositionBrowse extends AbstractLookup {
     @Inject
     protected EmailService emailService;
 
-    //Отправка письма поставщику
+    /**
+     * Отправка писем поставщикам
+     */
     public void onBtnSendEmail() {
 
         if (positionsBills.getSelected().isEmpty()) {
             showNotification(getMessage("Select positions first"), NotificationType.WARNING);
             return;
         }
-        Set<QueriesPosition> setPosition =  positionsBills.getSelected();
+        Set<QueriesPosition> setPosition = positionsBills.getSelected();
 
         //Шаблоны
-        String emailHeader ="To Supplier: %s \n" +
-                            "From Company: %s \n\n";
+        String emailHeader = "To Supplier: %s \n" +
+                "From Company: %s \n\n";
 
         String emailBody = "Nomenclature: %s \n" +
-                            "Quantity: %10.2f \n" +
-                            "Price: %10.2f \n\n";
+                "Quantity: %10.2f \n" +
+                "Price: %10.2f \n\n";
 
         //Группировка по заказчику, компании
         Map<Suppliers, Map<Company, List<QueriesPosition>>> groupedBySupAndCompMap = setPosition.stream()
-                .collect(Collectors.groupingBy(t-> t.getVoteResult().getPosSup().getSupplier(),
+                .collect(Collectors.groupingBy(t -> t.getVoteResult().getPosSup().getSupplier(),
                         Collectors.groupingBy(b -> b.getQuery().getCompany())));
 
-        groupedBySupAndCompMap.forEach((s,m) -> {
+        groupedBySupAndCompMap.forEach((s, m) -> {
 
-            m.forEach((c,l)-> {
+            m.forEach((c, l) -> {
 
                 String emailHeaderToSend = String.format(emailHeader, s.getName(), c.getName());
                 StringBuilder emailBodyToSend = new StringBuilder();
-                l.forEach(q-> {
-                    String emailBodyPosition = String.format(emailBody, q.getNomenclature().getName(), q.getVoteResult().getQuantity(),q.getVoteResult().getPrice());
+                l.forEach(q -> {
+                    String emailBodyPosition = String.format(emailBody, q.getNomenclature().getName(), q.getVoteResult().getQuantity(), q.getVoteResult().getPrice());
                     emailBodyToSend.append(emailBodyPosition);
                 });
 
@@ -458,7 +603,7 @@ public class QueriesPositionBrowse extends AbstractLookup {
                         "piratovi@gmail.com", // recipients
                         "TestTema", // subject
                         emailHeaderToSend.concat(emailBodyToSend.toString())
-                        );
+                );
 
                 emailService.sendEmailAsync(emailInfo);
 

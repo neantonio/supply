@@ -297,5 +297,10 @@
                   view="_minimal">
             <property name="currentStage"/>
         </property>
+        <property name="company"
+                  view="_minimal"/>
+        <property name="imageBill"
+                  view="_local">
+        </property>
     </view>
 </views>

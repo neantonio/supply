@@ -1,19 +1,14 @@
 package com.groupstp.supply.entity;
 
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
+
+import com.haulmont.cuba.core.entity.FileDescriptor;
 import com.haulmont.cuba.core.entity.StandardEntity;
-import javax.persistence.Column;
+
 import javax.validation.constraints.NotNull;
 import com.haulmont.chile.core.annotations.NumberFormat;
 import java.util.Date;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 import java.util.List;
-import javax.persistence.OneToMany;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 
 @Table(name = "SUPPLY_BILLS")
 @Entity(name = "supply$Bills")
@@ -23,6 +18,10 @@ public class Bills extends StandardEntity {
     @NotNull
     @Column(name = "NUMBER_", nullable = false, unique = true, length = 20)
     protected String number;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "COMPANY_ID")
+    protected Company company;
 
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
@@ -42,6 +41,27 @@ public class Bills extends StandardEntity {
 
     @OneToMany(mappedBy = "bills")
     protected List<QueriesPosition> positions;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "IMAGE_BILL_ID")
+    protected FileDescriptor imageBill;
+
+    public void setImageBill(FileDescriptor imageBill) {
+        this.imageBill = imageBill;
+    }
+
+    public FileDescriptor getImageBill() {
+        return imageBill;
+    }
+
+    public void setCompany(Company company) {
+        this.company = company;
+    }
+
+    public Company getCompany() {
+        return company;
+    }
+
 
     public void setSupplier(Suppliers supplier) {
         this.supplier = supplier;

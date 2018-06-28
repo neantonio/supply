@@ -505,7 +505,7 @@ where e.currentStage='Bills']]>
                                 invoke="onBtnSendEmail"/>
                     </buttonsPanel>
                     <hbox expand="positionsBills"
-                          height="500px"
+                          height="200px"
                           spacing="true"
                           width="100%">
                         <table id="billsTable"
@@ -523,12 +523,13 @@ where e.currentStage='Bills']]>
                                 <column id="price"/>
                                 <column id="sumControl"/>
                                 <column id="supplier"/>
+                                <column id="company"/>
                             </columns>
                             <rows datasource="billsesDs"/>
                         </table>
                         <groupTable id="positionsBills"
                                     fixedGrouping="true"
-                                    height="502px"
+                                    height="100%"
                                     multiselect="true"
                                     presentations="true">
                             <actions>
@@ -553,6 +554,24 @@ where e.currentStage='Bills']]>
                             </columns>
                             <rows datasource="dsBills"/>
                         </groupTable>
+                    </hbox>
+                    <browserFrame id="imageForBill"
+                                  align="BOTTOM_LEFT"
+                                  caption="Изображение счета"
+                                  height="350px"
+                                  width="500px"/>
+                    <hbox align="BOTTOM_LEFT"
+                          spacing="true">
+                        <upload id="uploadField"/>
+                        <button id="downloadImageBtn"
+                                caption="Скачать"
+                                invoke="onDownloadImageBtnClick"/>
+                        <button id="clearImageBtn"
+                                caption="Удалить"
+                                invoke="onClearImageBtnClick"/>
+                        <button id="OpenInNewTabBtn"
+                                caption="Открыть в новом окне"
+                                invoke="onOpenInNewTabBtnClick"/>
                     </hbox>
                 </vbox>
             </tab>
