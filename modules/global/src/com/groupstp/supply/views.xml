@@ -1,0 +1,422 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<views xmlns="http://schemas.haulmont.com/cuba/view.xsd">
+    <view class="com.groupstp.supply.entity.Division"
+          extends="_local"
+          name="division-view">
+        <property name="company"
+                  view="_minimal"/>
+    </view>
+    <view class="com.groupstp.supply.entity.Store"
+          extends="_local"
+          name="store-view">
+        <property name="division"
+                  view="_minimal">
+            <property name="company"
+                      view="_minimal"/>
+        </property>
+    </view>
+    <view class="com.groupstp.supply.entity.Urgency"
+          extends="_local"
+          name="urgency-view">
+        <property name="stageTerm"
+                  view="_minimal">
+            <property name="stage"/>
+            <property name="time"/>
+        </property>
+    </view>
+    <view class="com.groupstp.supply.entity.Query"
+          extends="_local"
+          name="query-view">
+        <property name="urgency"
+                  view="_minimal"/>
+        <property name="workflow"
+                  view="_minimal"/>
+        <property name="company"
+                  view="_minimal"/>
+        <property name="division"
+                  view="_minimal"/>
+        <property name="store"
+                  view="_minimal"/>
+        <property name="contact"
+                  view="_minimal"/>
+        <property name="positions"
+                  view="_minimal">
+            <property name="positionType"/>
+            <property name="numberArticle"/>
+            <property name="nomenclature"
+                      view="_minimal"/>
+            <property name="specification"/>
+            <property name="measureUnit"
+                      view="_minimal"/>
+            <property name="quantity"/>
+            <property name="analogsAllowed"/>
+        </property>
+        <property name="createdBy"/>
+        <property name="createTs"/>
+        <property name="updateTs"/>
+        <property name="updatedBy"/>
+    </view>
+    <view class="com.groupstp.supply.entity.QueriesPosition"
+          extends="_local"
+          name="queriesPosition-view">
+        <property name="nomenclature"
+                  view="_minimal"/>
+        <property name="measureUnit"
+                  view="_minimal"/>
+        <property name="analogs"
+                  view="_minimal"/>
+        <property name="store"
+                  view="_minimal"/>
+        <property name="query"
+                  view="_minimal"/>
+        <property name="specNomenclature"
+                  view="_minimal"/>
+        <property name="nomeclatureChange"
+                  view="_minimal"/>
+        <property name="position"
+                  view="_minimal"/>
+        <property name="srcStore"
+                  view="_minimal"/>
+        <property name="voteResult"
+                  view="_minimal"/>
+    </view>
+    <view class="com.groupstp.supply.entity.Nomenclature"
+          extends="_local"
+          name="nomenclature-view">
+        <property name="unit"
+                  view="_minimal"/>
+        <property name="parent"
+                  view="_minimal"/>
+        <property name="analogs"
+                  view="_minimal">
+            <property name="analog"
+                      view="_minimal"/>
+        </property>
+    </view>
+    <view class="com.groupstp.supply.entity.PositionsAnalogs"
+          extends="_local"
+          name="positionsAnalogs-view">
+        <property name="analog"
+                  view="_minimal"/>
+    </view>
+    <view class="com.groupstp.supply.entity.QueriesPosition"
+          extends="_minimal"
+          name="queriesPosition-analogs">
+        <property name="analogs"
+                  view="_minimal"/>
+    </view>
+    <view class="com.groupstp.supply.entity.QueriesPosition"
+          extends="_minimal"
+          name="queriesPosition-NomControl">
+        <property name="numberArticle"/>
+        <property name="nomenclature"
+                  view="_minimal"/>
+        <property name="specification"/>
+        <property name="measureUnit"
+                  view="_minimal"/>
+        <property name="quantity"/>
+        <property name="analogsAllowed"/>
+        <property name="analogs"
+                  view="_minimal"/>
+        <property name="store"
+                  view="_minimal"/>
+        <property name="positionUsefulness"/>
+        <property name="positionUsefulnessTS"/>
+        <property name="specNomenclature"
+                  view="_minimal"/>
+        <property name="nomeclatureChange"
+                  view="_minimal"/>
+        <property name="analogsCorrectionFlag"/>
+        <property name="nomControlFlag"/>
+        <property name="nomControlFlagTS"/>
+        <property name="currentStage"/>
+        <property name="positionType"/>
+        <property name="query"
+                  view="_minimal">
+            <property name="company"
+                      view="_minimal"/>
+            <property name="division"
+                      view="_minimal"/>
+            <property name="urgency"
+                      view="_minimal"/>
+        </property>
+    </view>
+    <view class="com.groupstp.supply.entity.QueryWorkflow"
+          extends="_local"
+          name="queryWorkflow-view">
+        <property name="details"
+                  view="_minimal">
+            <property name="sourceStage"/>
+            <property name="destStage"/>
+            <property name="priority"/>
+            <property name="validation"/>
+            <property name="validationScript"/>
+            <property name="conditions"/>
+            <property name="script"/>
+        </property>
+    </view>
+    <view class="com.groupstp.supply.entity.QueriesPosition"
+          extends="_minimal"
+          name="queriesPosition-StoreControl">
+        <property name="currentStage"/>
+        <property name="nomenclature"
+                  view="_minimal"/>
+        <property name="nomeclatureChange"
+                  view="_minimal"/>
+        <property name="query"
+                  view="_minimal">
+            <property name="urgency"
+                      view="_minimal"/>
+            <property name="company"
+                      view="_minimal"/>
+            <property name="division"
+                      view="_minimal"/>
+            <property name="store"
+                      view="_minimal"/>
+        </property>
+        <property name="storeControlFlag"/>
+        <property name="srcStore"
+                  view="_minimal"/>
+        <property name="quantity"/>
+        <property name="supplyWorkoutType"/>
+        <property name="inStore"/>
+        <property name="position"
+                  view="_minimal"/>
+        <property name="storeControlFlagTS"/>
+    </view>
+    <view class="com.groupstp.supply.entity.QueriesPosition"
+          extends="_local"
+          name="queriesPosition-SupSelection">
+        <property name="query"
+                  view="_minimal">
+            <property name="urgency"
+                      view="_minimal"/>
+            <property name="workflow"
+                      view="_minimal"/>
+            <property name="company"
+                      view="_minimal"/>
+            <property name="division"
+                      view="_minimal"/>
+            <property name="store"
+                      view="_minimal"/>
+        </property>
+        <property name="position"
+                  view="_minimal"/>
+        <property name="nomenclature"
+                  view="_minimal"/>
+    </view>
+    <view class="com.groupstp.supply.entity.QueriesPosition"
+          extends="_local"
+          name="queriesPosition-full">
+        <property name="query"
+                  view="_minimal">
+            <property name="urgency"
+                      view="_minimal"/>
+            <property name="company"
+                      view="_minimal"/>
+            <property name="division"
+                      view="_minimal"/>
+            <property name="store"
+                      view="_minimal"/>
+            <property name="contact"
+                      view="_minimal">
+                <property name="email"/>
+            </property>
+            <property name="origin"/>
+            <property name="workflow"
+                      view="_minimal">
+                <property name="details"
+                          view="_minimal">
+                    <property name="sourceStage"/>
+                    <property name="destStage"/>
+                    <property name="priority"/>
+                </property>
+            </property>
+            <property name="createdBy"/>
+        </property>
+        <property name="specNomenclature"
+                  view="_minimal"/>
+        <property name="nomeclatureChange"
+                  view="_minimal"/>
+        <property name="position"
+                  view="_minimal"/>
+        <property name="srcStore"
+                  view="_minimal"/>
+        <property name="nomenclature"
+                  view="_minimal">
+            <property name="analogs"
+                      view="_minimal">
+                <property name="analog"
+                          view="_minimal"/>
+            </property>
+        </property>
+        <property name="measureUnit"
+                  view="_minimal"/>
+        <property name="analogs"
+                  view="_minimal"/>
+        <property name="store"
+                  view="_minimal"/>
+        <property name="updateTs"/>
+        <property name="createTs"/>
+    </view>
+    <view class="com.groupstp.supply.entity.PositionSupplier"
+          extends="_local"
+          name="positionSupplier-view">
+        <property name="position"
+                  view="_minimal">
+            <property name="quantity"/>
+        </property>
+        <property name="supplier"
+                  view="_minimal"/>
+    </view>
+    <view class="com.groupstp.supply.entity.Suppliers"
+          extends="_local"
+          name="suppliers-view"/>
+    <view class="com.groupstp.supply.entity.SuppliersSuggestion"
+          extends="_local"
+          name="suppliersSuggestion-view">
+        <property name="posSup"
+                  view="_minimal">
+        </property>
+        <property name="queriesPosition"
+                  view="_minimal"/>
+    </view>
+    <view class="com.groupstp.supply.entity.QueriesPosition"
+          extends="queriesPosition-SupSelection"
+          name="queriesPosition-Analysis">
+    </view>
+    <view class="com.groupstp.supply.entity.QueriesPosition"
+          extends="_local"
+          name="queriesPosition-Comission">
+        <property name="query"
+                  view="_minimal">
+            <property name="company"
+                      view="_minimal"/>
+            <property name="division"
+                      view="_minimal"/>
+        </property>
+        <property name="nomenclature"
+                  view="_minimal"/>
+        <property name="voteResult"
+                  view="_minimal"/>
+    </view>
+    <view class="com.groupstp.supply.entity.Vote"
+          extends="_local"
+          name="vote-view">
+        <property name="position"
+                  view="_minimal">
+            <property name="numberArticle"/>
+        </property>
+        <property name="emp"
+                  view="_minimal"/>
+        <property name="suggestion"
+                  view="_minimal">
+        </property>
+    </view>
+    <view class="com.groupstp.supply.entity.QueriesPosition"
+          extends="_minimal"
+          name="queriesPosition-Bills">
+        <property name="billQuery"/>
+        <property name="query"
+                  view="_minimal">
+            <property name="urgency"
+                      view="_minimal"/>
+            <property name="company"
+                      view="_minimal"/>
+            <property name="division"
+                      view="_minimal"/>
+            <property name="contact"
+                      view="_minimal"/>
+        </property>
+        <property name="voteResult"
+                  view="_minimal"/>
+        <property name="bills"
+                  view="_minimal">
+            <property name="number"/>
+        </property>
+        <property name="currentStage"/>
+    </view>
+    <view class="com.groupstp.supply.entity.QueryPositionMovements"
+          extends="_local"
+          name="queryPositionMovements-view">
+        <property name="user"
+                  view="_minimal"/>
+        <property name="createTs"/>
+        <property name="position"
+                  view="_minimal">
+            <property name="currentStage"/>
+            <property name="specification"/>
+            <property name="startMinimalPrice"/>
+            <property name="voteResult"
+                      view="_minimal"/>
+        </property>
+    </view>
+    <view class="com.groupstp.supply.entity.Nomenclature"
+          extends="_minimal"
+          name="nomenclature-name">
+        <property name="fullName"/>
+    </view>
+    <view class="com.groupstp.supply.entity.Employee"
+          extends="_local"
+          name="employee-view">
+        <property name="user"
+                  view="_minimal">
+            <property name="firstName"/>
+            <property name="lastName"/>
+            <property name="email"/>
+        </property>
+    </view>
+    <view class="com.groupstp.supply.entity.QueryPositionMovements"
+          extends="queryPositionMovements-view"
+          name="queryPositionMovements-view_1">
+        <property name="position"
+                  view="_minimal">
+            <property name="query"
+                      view="_minimal">
+                <property name="urgency"
+                          view="_minimal"/>
+            </property>
+        </property>
+        <property name="createTs"/>
+        <property name="user"
+                  view="_minimal">
+            <property name="createTs"/>
+        </property>
+    </view>
+    <view class="com.groupstp.supply.entity.Bills"
+          extends="_local"
+          name="bills-view">
+        <property name="supplier"
+                  view="_minimal"/>
+        <property name="positions"
+                  view="_minimal">
+            <property name="currentStage"/>
+        </property>
+        <property name="company"
+                  view="_minimal"/>
+        <property name="imageBill"
+                  view="_local">
+        </property>
+    </view>
+    <view class="com.groupstp.supply.entity.QueriesPosition"
+          extends="_local"
+          name="queriesPosition-Procuration"/>
+    <view class="com.groupstp.supply.entity.QueryPositionMovements"
+          extends="_local"
+          name="queryPositionMovements-view_3">
+        <property name="position"
+                  view="_minimal">
+            <property name="query"
+                      view="_minimal">
+                <property name="contact"
+                          view="_minimal"/>
+            </property>
+            <property name="specification"/>
+        </property>
+        <property name="user"
+                  view="_minimal">
+            <property name="createTs"/>
+        </property>
+        <property name="createTs"/>
+    </view>
+</views>

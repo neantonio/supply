@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<window xmlns="http://schemas.haulmont.com/cuba/window.xsd"
+        caption="msg://caption"
+        class="com.groupstp.supply.web.querypositionmovement.Statistics"
+        messagesPack="com.groupstp.supply.web.querypositionmovement"
+        xmlns:chart="http://schemas.haulmont.com/charts/charts.xsd">
+    <dsContext>
+        <collectionDatasource id="positionDs"
+                              class="com.groupstp.supply.entity.QueriesPosition"
+                              maxResults="50"
+                              view="queriesPosition-NomControl">
+            <query>
+                <![CDATA[select e from supply$QueriesPosition e]]>
+            </query>
+        </collectionDatasource>
+        <groupDatasource id="queryPositionMovementsesDs"
+                         class="com.groupstp.supply.entity.QueryPositionMovements"
+                         view="queryPositionMovements-view">
+            <query>
+                <![CDATA[select e from supply$QueryPositionMovements e where e.position in :custom$positions
+order by e.position.id]]>
+            </query>
+        </groupDatasource>
+        <collectionDatasource id="stageStatisticDs"
+                              allowCommit="false"
+                              class="com.groupstp.supply.entity.QueryPositionMovements"
+                              view="queryPositionMovements-view_1">
+            <query>
+                <![CDATA[select e from supply$QueryPositionMovements e where
+
+( (e.finishTS >= :custom$beginDate)  and (e.finishTS <= :custom$endDate))
+or (e.finishTS is null)
+]]>
+            </query>
+        </collectionDatasource>
+        <collectionDatasource id="justForDisplayStagesDs"
+                              class="com.groupstp.supply.entity.QueryPositionMovements"
+                              datasourceClass="com.groupstp.supply.web.querypositionmovement.JustAllStagesDs"
+                              view="queryPositionMovements-view"/>
+        <collectionDatasource id="selectedInStatisticsMovementsDs"
+                              class="com.groupstp.supply.entity.QueryPositionMovements"
+                              view="queryPositionMovements-view_3">
+            <query>
+                <![CDATA[select e from supply$QueryPositionMovements e where e.id in :custom$selectedMovements]]>
+            </query>
+        </collectionDatasource>
+    </dsContext>
+    <dialogMode height="600"
+                width="800"/>
+    <layout>
+        <tabSheet>
+            <tab id="position"
+                 caption="msg://position"
+                 description="msg://position"
+                 margin="true,false,false,false"
+                 spacing="true">
+                <split id="split"
+                       height="100%"
+                       orientation="horizontal"
+                       pos="65"
+                       width="100%">
+                    <table id="movementsTable"
+                           height="833px"
+                           width="100%">
+                        <columns>
+                            <column id="createTs"
+                                    caption="msg://created"/>
+                            <column id="finishTS"
+                                    caption="msg://finish"/>
+                            <column id="stage"/>
+                            <column id="stage_time"
+                                    caption="msg://stage_time"/>
+                            <column id="all_time"
+                                    caption="msg://all_time"/>
+                            <column id="returns_value"
+                                    caption="msg://returns_value"/>
+                            <column id="price_change"
+                                    caption="msg://price_change"/>
+                            <column id="kpi_time_compare"
+                                    caption="msg://kpi_time_compare"/>
+                            <column id="kpi_price_compare"
+                                    caption="msg://kpi_price_compare"/>
+                        </columns>
+                        <rows datasource="queryPositionMovementsesDs"/>
+                    </table>
+                    <chart:ganttChart id="ganttChart"
+                                      additionalSegmentFields="task"
+                                      balloonDateFormat="JJ:NN"
+                                      brightnessStep="7"
+                                      categoryField="category"
+                                      colorField="color"
+                                      columnWidth="0.5"
+                                      endDateField="end"
+                                      height="821px"
+                                      marginRight="70"
+                                      period="HOURS"
+                                      rotate="true"
+                                      segmentsField="segments"
+                                      startDate="2018-05-15"
+                                      startDateField="start"
+                                      theme="LIGHT"
+                                      width="100%">
+                        <chart:graph balloonText="&lt;strong&gt;[[task]]&lt;/strong&gt;: [[open]] - [[value]]"
+                                     fillAlphas="1"
+                                     lineAlpha="1"
+                                     lineColor="WHITE"/>
+                        <chart:valueAxis type="DATE"/>
+                        <chart:valueScrollbar autoGridCount="true"
+                                              color="BLACK"/>
+                        <chart:chartCursor cursorAlpha="0"
+                                           cursorColor="#55bb76"
+                                           fullWidth="true"
+                                           valueBalloonsEnabled="false"
+                                           valueLineAlpha="0.5"
+                                           valueLineBalloonEnabled="true"
+                                           valueLineEnabled="true"
+                                           valueZoomable="true"
+                                           zoomable="false"/>
+                        <chart:export/>
+                    </chart:ganttChart>
+                </split>
+            </tab>
+            <tab id="stage"
+                 caption="msg://stage"
+                 description="msg://stage"
+                 margin="true,false,false,false"
+                 spacing="true">
+                <vbox spacing="true">
+                    <hbox spacing="true">
+                        <dateField id="periodBegin"
+                                   caption="msg://period_begin"/>
+                        <dateField id="periodEnd"
+                                   caption="msg://period_end"/>
+                    </hbox>
+                    <split orientation="horizontal"
+                           width="100%">
+                        <dataGrid id="stagesTable"
+                                  datasource="justForDisplayStagesDs"
+                                  width="100%">
+                            <columns>
+                                <column id="stage"
+                                        collapsingToggleCaption="msg://stage"
+                                        property="stage"/>
+                            </columns>
+                        </dataGrid>
+                        <vbox spacing="true">
+                            <label id="pieChartLabel"
+                                   align="BOTTOM_CENTER"/>
+                            <chart:pieChart id="pieChart"
+                                            angle="30"
+                                            colorField="color"
+                                            depth3D="15"
+                                            pulledField="pulled"
+                                            titleField="title"
+                                            valueField="value"
+                                            width="100%">
+                                <chart:legend autoMargins="false"
+                                              marginRight="80"
+                                              markerType="CIRCLE"
+                                              position="RIGHT"/>
+                                <chart:balloon fixedPosition="true"/>
+                                <chart:export/>
+                            </chart:pieChart>
+                        </vbox>
+                    </split>
+                    <table id="selectedMovements"
+                           width="100%">
+                        <columns>
+                            <column id="position"
+                                    caption="msg://position"/>
+                            <column id="user"/>
+                            <column id="position.query"/>
+                            <column id="createTs"
+                                    caption="msg://created"/>
+                            <column id="finishTS"
+                                    caption="msg://finish"/>
+                        </columns>
+                        <rows datasource="selectedInStatisticsMovementsDs"/>
+                    </table>
+                </vbox>
+            </tab>
+            <tab id="executior"
+                 caption="msg://executor"
+                 description="msg://executor"
+                 margin="true,false,false,false"
+                 spacing="true"/>
+        </tabSheet>
+    </layout>
+</window>

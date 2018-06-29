@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<menu-config xmlns="http://schemas.haulmont.com/cuba/menu.xsd">
+    <item insertBefore="administration"
+          screen="supply$QueriesPosition.workflow"/>
+    <menu id="references"
+          icon="BOOK"
+          insertBefore="administration">
+        <menu id="nomenclature"
+              icon="SHOPPING_CART">
+            <item screen="supply$Nomenclature.browse"/>
+            <item screen="supply$MeasureUnits.browse"/>
+        </menu>
+        <menu id="orgstru">
+            <item screen="supply$Company.browse"/>
+            <item screen="supply$Division.browse"/>
+            <item screen="supply$Store.browse"/>
+        </menu>
+        <item openType="NEW_TAB"
+              screen="supply$Suppliers.browse"/>
+        <item screen="statistics"/>
+    </menu>
+    <menu id="queries"
+          insertBefore="administration">
+        <item screen="supply$Query.browse"/>
+        <menu id="querySettings"
+              description="mainMsg://Queries settings">
+            <item screen="supply$Urgency.browse"/>
+            <item screen="supply$QueryWorkflow.browse"/>
+        </menu>
+        <item screen="queryRegister"/>
+    </menu>
+    <menu id="Test">
+        <item screen="GenerateTestContent"/>
+    </menu>
+</menu-config>

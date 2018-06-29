@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<window xmlns="http://schemas.haulmont.com/cuba/window.xsd"
+        caption="msg://caption"
+        class="com.groupstp.supply.web.screens.Generatetestcontent"
+        messagesPack="com.groupstp.supply.web.screens">
+    <dsContext>
+        <collectionDatasource id="queriesDs"
+                              class="com.groupstp.supply.entity.Query"
+                              maxResults="1">
+            <query>
+                <![CDATA[select e from supply$Query e]]>
+            </query>
+        </collectionDatasource>
+    </dsContext>
+    <dialogMode height="600"
+                width="800"/>
+    <layout>
+        <buttonsPanel>
+            <button id="create_companies"
+                    align="BOTTOM_LEFT"
+                    caption="создать сущности"
+                    invoke="onCreateCompany"/>
+            <textField id="fileName"
+                       caption="путь  к pricetin.xls"/>
+            <button id="clear"
+                    align="BOTTOM_LEFT"
+                    caption="очистить базу"
+                    invoke="onClear"/>
+        </buttonsPanel>
+    </layout>
+</window>

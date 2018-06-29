@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<window xmlns="http://schemas.haulmont.com/cuba/window.xsd"
+        caption="msg://editorCaption"
+        class="com.groupstp.supply.web.nomenclature.NomenclatureGroupEdit"
+        datasource="nomenclatureDs"
+        focusComponent="fieldGroup"
+        messagesPack="com.groupstp.supply.web.nomenclature">
+    <dsContext>
+        <datasource id="nomenclatureDs"
+                    class="com.groupstp.supply.entity.Nomenclature"
+                    view="nomenclature-view"/>
+    </dsContext>
+    <dialogMode height="600"
+                width="800"/>
+    <layout expand="windowActions"
+            spacing="true">
+        <fieldGroup id="fieldGroup"
+                    datasource="nomenclatureDs">
+            <column width="300px">
+                <field property="name"/>
+                <field property="parent"/>
+            </column>
+        </fieldGroup>
+        <frame id="windowActions"
+               screen="editWindowActions"/>
+    </layout>
+</window>

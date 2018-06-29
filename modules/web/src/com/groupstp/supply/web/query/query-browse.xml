@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<window xmlns="http://schemas.haulmont.com/cuba/window.xsd"
+        caption="msg://browseCaption"
+        class="com.groupstp.supply.web.query.QueryBrowse"
+        focusComponent="queriesTable"
+        lookupComponent="queriesTable"
+        messagesPack="com.groupstp.supply.web.query">
+    <dsContext>
+        <groupDatasource id="queriesDs"
+                         class="com.groupstp.supply.entity.Query"
+                         view="query-view">
+            <query>
+                <![CDATA[select e from supply$Query e]]>
+            </query>
+        </groupDatasource>
+    </dsContext>
+    <dialogMode height="600"
+                width="800"/>
+    <layout expand="queriesTable"
+            spacing="true">
+        <filter id="filter"
+                applyTo="queriesTable"
+                datasource="queriesDs">
+            <properties include=".*"/>
+        </filter>
+        <groupTable id="queriesTable"
+                    multiLineCells="true"
+                    multiselect="true"
+                    width="100%">
+            <actions>
+                <action id="create"/>
+                <action id="edit"/>
+                <action id="remove"/>
+                <action id="refresh"/>
+                <action id="excel"/>
+            </actions>
+            <columns>
+                <column id="urgency"/>
+                <column id="query"/>
+                <column id="origin"/>
+                <column id="peridiocity"/>
+                <column id="wholeQueryWorkout"/>
+                <column id="company"/>
+                <column id="division"/>
+                <column id="store"/>
+                <column id="contact"/>
+            </columns>
+            <rows datasource="queriesDs"/>
+            <rowsCount/>
+            <buttonsPanel id="buttonsPanel"
+                          alwaysVisible="true">
+                <button id="createBtn"
+                        action="queriesTable.create"/>
+                <button id="editBtn"
+                        action="queriesTable.edit"/>
+                <button id="removeBtn"
+                        action="queriesTable.remove"/>
+                <button id="refreshBtn"
+                        action="queriesTable.refresh"/>
+                <button id="excelBtn"
+                        action="queriesTable.excel"/>
+                <button id="to_work"
+                        caption="msg://to work"
+                        invoke="onPassToWork"/>
+            </buttonsPanel>
+        </groupTable>
+    </layout>
+</window>

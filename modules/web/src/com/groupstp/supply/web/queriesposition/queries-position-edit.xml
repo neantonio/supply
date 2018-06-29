@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<window xmlns="http://schemas.haulmont.com/cuba/window.xsd"
+        caption="msg://editorCaption"
+        class="com.groupstp.supply.web.queriesposition.QueriesPositionEdit"
+        datasource="queriesPositionDs"
+        messagesPack="com.groupstp.supply.web.queriesposition">
+    <dsContext>
+        <datasource id="queriesPositionDs"
+                    class="com.groupstp.supply.entity.QueriesPosition"
+                    view="queriesPosition-analogs">
+            <collectionDatasource id="analogsDs"
+                                  property="analogs"/>
+        </datasource>
+    </dsContext>
+    <dialogMode forceDialog="true"
+                height="600"
+                resizable="true"/>
+    <layout expand="analogsTable"
+            spacing="true">
+        <table id="analogsTable"
+               editable="true"
+               width="100%">
+            <actions>
+                <action id="create"/>
+                <action id="edit"/>
+                <action id="remove"/>
+            </actions>
+            <columns>
+                <column id="analog"
+                        editable="true"/>
+            </columns>
+            <rows datasource="analogsDs"/>
+            <buttonsPanel>
+                <button id="btnCreate"
+                        caption="mainMsg://Create"
+                        invoke="onBtnCreateClick"/>
+                <button action="analogsTable.edit"/>
+                <button action="analogsTable.remove"/>
+            </buttonsPanel>
+        </table>
+        <frame id="windowActions"
+               screen="extendedEditWindowActions"/>
+    </layout>
+</window>

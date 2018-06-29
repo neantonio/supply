@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<window xmlns="http://schemas.haulmont.com/cuba/window.xsd"
+        caption="msg://browseCaption"
+        class="com.groupstp.supply.web.positionsanalogs.PositionsAnalogsBrowse"
+        focusComponent="positionsAnalogsesTable"
+        lookupComponent="positionsAnalogsesTable"
+        messagesPack="com.groupstp.supply.web.positionsanalogs">
+    <dsContext>
+        <groupDatasource id="analogs"
+                         class="com.groupstp.supply.entity.PositionsAnalogs"
+                         view="positionsAnalogs-view">
+            <query>
+                <![CDATA[select e from supply$PositionsAnalogs e where e.queriesPosition.id=:param$position]]>
+            </query>
+        </groupDatasource>
+    </dsContext>
+    <dialogMode height="600"
+                resizable="true"/>
+    <layout spacing="true">
+        <groupTable id="positionsAnalogsesTable"
+                    editable="true"
+                    height="100%"
+                    width="100%">
+            <actions>
+                <action id="create"/>
+                <action id="edit"/>
+                <action id="remove"/>
+            </actions>
+            <columns>
+                <column id="analog"
+                        editable="true"/>
+            </columns>
+            <rows datasource="analogs"/>
+            <rowsCount/>
+            <buttonsPanel id="buttonsPanel"
+                          alwaysVisible="true">
+                <button id="createBtn"
+                        caption="mainMsg://Create"
+                        invoke="onCreateBtnClick"/>
+                <button id="editBtn"
+                        action="positionsAnalogsesTable.edit"/>
+                <button id="removeBtn"
+                        action="positionsAnalogsesTable.remove"/>
+            </buttonsPanel>
+        </groupTable>
+    </layout>
+</window>
