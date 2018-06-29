@@ -1,8 +1,9 @@
 package com.groupstp.supply.listener;
 
-import org.springframework.stereotype.Component;
-import com.haulmont.cuba.core.listener.AfterCompleteTransactionListener;
 import com.haulmont.cuba.core.entity.Entity;
+import com.haulmont.cuba.core.listener.AfterCompleteTransactionListener;
+import org.springframework.stereotype.Component;
+
 import java.util.Collection;
 
 @Component("supply_VoteTransactionListner")

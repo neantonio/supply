@@ -1,15 +1,15 @@
 package com.groupstp.supply.service;
 
-import com.groupstp.supply.entity.*;
+import com.groupstp.supply.entity.QueriesPosition;
+import com.groupstp.supply.entity.QueryPositionMovements;
+import com.groupstp.supply.entity.QueryWorkflowDetail;
+import com.groupstp.supply.entity.Stages;
 import com.haulmont.cuba.core.global.*;
 import groovy.lang.Binding;
-import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.springframework.stereotype.Service;
 
 import javax.inject.Inject;
-import javax.xml.soap.Detail;
-import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 

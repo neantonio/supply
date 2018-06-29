@@ -1,19 +1,18 @@
 package com.groupstp.supply.web.screens;
 
-import com.google.common.collect.Iterables;
 import com.groupstp.supply.entity.QueriesPosition;
 import com.groupstp.supply.entity.Query;
-import com.groupstp.supply.entity.QueryStatus;
 import com.groupstp.supply.service.DataBaseTestContentService;
 import com.groupstp.supply.service.QueryService;
-
 import com.haulmont.cuba.gui.WindowManager;
-import com.haulmont.cuba.gui.components.*;
-import com.haulmont.cuba.gui.components.actions.BaseAction;
-import com.haulmont.cuba.gui.xml.layout.ComponentsFactory;
+import com.haulmont.cuba.gui.components.AbstractWindow;
+import com.haulmont.cuba.gui.components.GroupTable;
 
 import javax.inject.Inject;
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author AntonLomako

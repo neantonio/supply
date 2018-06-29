@@ -1,9 +1,9 @@
 package com.groupstp.supply.entity;
 
-import javax.persistence.*;
-
 import com.haulmont.chile.core.annotations.Composition;
 import com.haulmont.cuba.core.entity.StandardEntity;
+
+import javax.persistence.*;
 
 @Table(name = "SUPPLY_ANALOGS")
 @Entity(name = "supply$Analogs")

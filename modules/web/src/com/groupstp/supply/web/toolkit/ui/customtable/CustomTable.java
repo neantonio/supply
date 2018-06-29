@@ -1,7 +1,7 @@
 package com.groupstp.supply.web.toolkit.ui.customtable;
 
-import com.vaadin.ui.AbstractJavaScriptComponent;
 import com.vaadin.annotations.JavaScript;
+import com.vaadin.ui.AbstractJavaScriptComponent;
 
 @JavaScript({"customtable-connector.js"})
 public class CustomTable extends AbstractJavaScriptComponent {

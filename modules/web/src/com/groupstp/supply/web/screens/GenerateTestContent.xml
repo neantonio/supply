@@ -3,7 +3,7 @@
         caption="msg://caption"
         class="com.groupstp.supply.web.screens.Generatetestcontent"
         messagesPack="com.groupstp.supply.web.screens"
-        xmlns:dnd="http://schemas.haulmont.com/dnd/0.1/drag-and-drop.xsd">
+>
 
     <dialogMode height="600"
                 width="800"/>

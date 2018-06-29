@@ -1,20 +1,9 @@
 package com.groupstp.supply.web.querypositionmovement;
 
-import com.groupstp.supply.entity.QueriesPosition;
 import com.groupstp.supply.entity.QueryPositionMovements;
 import com.groupstp.supply.entity.Stages;
-import com.groupstp.supply.service.QueryDaoService;
-import com.haulmont.chile.core.datatypes.Datatype;
-import com.haulmont.chile.core.datatypes.Datatypes;
-import com.haulmont.cuba.core.app.keyvalue.KeyValueMetaClass;
-import com.haulmont.cuba.core.app.keyvalue.KeyValueMetaProperty;
-import com.haulmont.cuba.core.entity.KeyValueEntity;
-import com.haulmont.cuba.core.global.AppBeans;
 import com.haulmont.cuba.gui.data.impl.CustomCollectionDatasource;
-import com.haulmont.cuba.gui.data.impl.CustomValueCollectionDatasource;
-import com.sun.prism.PixelFormat;
 
-import javax.inject.Inject;
 import java.util.*;
 
 /**

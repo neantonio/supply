@@ -6,15 +6,15 @@ import com.haulmont.cuba.core.global.DataManager;
 import com.haulmont.cuba.core.global.LoadContext;
 import com.haulmont.cuba.gui.WindowManager;
 import com.haulmont.cuba.gui.components.AbstractWindow;
-import com.haulmont.cuba.gui.components.AbstractFrame;
 import com.haulmont.cuba.gui.components.Accordion;
 import com.haulmont.cuba.gui.components.OptionsGroup;
-import com.haulmont.cuba.gui.data.impl.ValueCollectionDatasourceImpl;
-import com.haulmont.cuba.gui.data.impl.ValueDatasource;
 import com.haulmont.cuba.gui.xml.layout.ComponentsFactory;
 
 import javax.inject.Inject;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public class Vote extends AbstractWindow {
     /**

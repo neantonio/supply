@@ -2,14 +2,13 @@ package com.groupstp.supply.web.query;
 
 import com.groupstp.supply.entity.PositionType;
 import com.groupstp.supply.entity.QueriesPosition;
+import com.groupstp.supply.entity.Query;
 import com.groupstp.supply.entity.Stages;
 import com.groupstp.supply.service.WorkflowService;
-import com.haulmont.bali.util.ParamsMap;
 import com.haulmont.cuba.core.app.UniqueNumbersService;
 import com.haulmont.cuba.core.global.PersistenceHelper;
 import com.haulmont.cuba.gui.WindowManager;
 import com.haulmont.cuba.gui.components.*;
-import com.groupstp.supply.entity.Query;
 
 import javax.inject.Inject;
 import java.util.Collection;

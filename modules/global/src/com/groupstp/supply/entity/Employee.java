@@ -1,12 +1,11 @@
 package com.groupstp.supply.entity;
 
-import javax.persistence.*;
-
+import com.haulmont.chile.core.annotations.NamePattern;
+import com.haulmont.cuba.core.entity.StandardEntity;
 import com.haulmont.cuba.security.entity.User;
 
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import com.haulmont.cuba.core.entity.StandardEntity;
-import com.haulmont.chile.core.annotations.NamePattern;
 
 @NamePattern("%s|user")
 @Table(name = "SUPPLY_EMPLOYEE")

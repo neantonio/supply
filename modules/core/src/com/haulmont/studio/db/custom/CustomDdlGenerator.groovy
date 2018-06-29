@@ -1,7 +1,8 @@
 package com.haulmont.studio.db.custom
 
-import java.sql.DatabaseMetaData
 import groovy.sql.Sql
+
+import java.sql.DatabaseMetaData
 
 /**
  * This class is used by Studio at design time for working with Custom Database.

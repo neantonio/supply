@@ -1,6 +1,8 @@
 package com.groupstp.supply.web.queriesposition;
 
-import com.groupstp.supply.entity.*;
+import com.groupstp.supply.entity.QueriesPosition;
+import com.groupstp.supply.entity.QueryPositionMovements;
+import com.groupstp.supply.entity.Stages;
 import com.groupstp.supply.service.QueryDaoService;
 import com.groupstp.supply.service.WorkflowService;
 import com.haulmont.cuba.gui.WindowManager;
@@ -9,7 +11,6 @@ import com.haulmont.cuba.gui.data.CollectionDatasource;
 import com.haulmont.cuba.gui.xml.layout.ComponentsFactory;
 import com.haulmont.cuba.security.entity.User;
 import com.haulmont.cuba.web.gui.components.WebGroupTable;
-
 
 import javax.inject.Inject;
 import java.util.*;

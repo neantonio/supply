@@ -5,15 +5,12 @@ import com.groupstp.supply.entity.QueryPositionMovements;
 import com.groupstp.supply.entity.Stages;
 import com.groupstp.supply.service.StatisticsService;
 import com.haulmont.bali.util.ParamsMap;
-import com.haulmont.charts.gui.amcharts.model.*;
 import com.haulmont.charts.gui.data.ListDataProvider;
 import com.haulmont.charts.gui.data.MapDataItem;
 import com.haulmont.cuba.gui.components.*;
-import com.haulmont.cuba.gui.components.Label;
 import com.haulmont.cuba.gui.data.CollectionDatasource;
 import com.haulmont.cuba.gui.data.GroupDatasource;
 import com.haulmont.cuba.gui.xml.layout.ComponentsFactory;
-
 
 import javax.inject.Inject;
 import java.text.DateFormat;

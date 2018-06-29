@@ -12,7 +12,6 @@ import com.haulmont.cuba.gui.data.CollectionDatasource;
 import com.haulmont.cuba.gui.data.impl.CustomGroupDatasource;
 import com.haulmont.cuba.security.entity.User;
 
-
 import javax.inject.Inject;
 import java.util.*;
 

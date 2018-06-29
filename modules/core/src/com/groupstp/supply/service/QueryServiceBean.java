@@ -71,7 +71,6 @@ public class QueryServiceBean implements QueryService {
 
                     if (item.getCurrentStage() != Stages.New) allNew = false;
                 }
-                ;
                 if (allDone) return QueryStatus.DONE;
                 else {
                     if (allFine) {
@@ -88,7 +87,7 @@ public class QueryServiceBean implements QueryService {
 
     /**
      * вычисление времени нахождения позиции на текущем этапе
-     * @param position
+     * @param position позиция заявки
      * @return время прошедшее с перевода позиции на текущий этап
      * @throws DataIncompleteException если в базе нет соответствующих записей о перемещении позиции в QueryPositionMovement
      */

@@ -8,7 +8,10 @@ import com.haulmont.chile.core.model.MetaProperty;
 import com.haulmont.cuba.core.app.EmailService;
 import com.haulmont.cuba.core.entity.Entity;
 import com.haulmont.cuba.core.entity.FileDescriptor;
-import com.haulmont.cuba.core.global.*;
+import com.haulmont.cuba.core.global.DataManager;
+import com.haulmont.cuba.core.global.EmailInfo;
+import com.haulmont.cuba.core.global.FileStorageException;
+import com.haulmont.cuba.core.global.Metadata;
 import com.haulmont.cuba.gui.WindowManager;
 import com.haulmont.cuba.gui.components.*;
 import com.haulmont.cuba.gui.components.actions.BaseAction;
@@ -22,14 +25,13 @@ import org.dom4j.Element;
 
 import javax.annotation.Nullable;
 import javax.inject.Inject;
-import java.net.URL;
 import java.util.*;
 import java.util.stream.Collectors;
 
 public class QueriesPositionBrowse extends AbstractLookup {
 
-    @Inject
-    private DataBaseTestContentService dataBaseTestContentService;
+//    @Inject
+//    private DataBaseTestContentService dataBaseTestContentService;
 
     @Inject
     private DataManager dataManager;
@@ -63,21 +65,14 @@ public class QueriesPositionBrowse extends AbstractLookup {
 
     Map<Object,String> nomControlAvailableOrderItemsDescription=new HashMap<>();
 
-    @Override
-    public void init(Map<String, Object> params) {
-
-
-
-    }
-
-    public DataBaseTestContentService getDataBaseTestContentService() {
-        return dataBaseTestContentService;
-    }
-
-    public void setDataBaseTestContentService(DataBaseTestContentService dataBaseTestContentService) {
-
-        this.dataBaseTestContentService = dataBaseTestContentService;
-    }
+//    public DataBaseTestContentService getDataBaseTestContentService() {
+//        return dataBaseTestContentService;
+//    }
+//
+//    public void setDataBaseTestContentService(DataBaseTestContentService dataBaseTestContentService) {
+//
+//        this.dataBaseTestContentService = dataBaseTestContentService;
+//    }
 
     private class QueryLinkGenerator implements Table.ColumnGenerator {
 
@@ -157,6 +152,57 @@ public class QueriesPositionBrowse extends AbstractLookup {
                 e.getItem().setPositionUsefulnessTS(new Date());
             }
         });
+    }
+
+    public void onNomControlGroupOrderChange(){
+        createGroupOrderDialog(nomControlGroupOrder,nomControlAvailableOrderItems,nomControlAvailableOrderItemsDescription,map->{
+            int i=0;
+            List<Map.Entry<String,Object>> entries= (List<Map.Entry<String, Object>>) map.get("currentOrder");
+            Object[] obj =new Object[entries.size()];
+
+            nomControlGroupOrder.clear();;
+
+            for(Map.Entry ent:entries){
+                obj[i]=ent.getValue();
+                i++;
+                nomControlGroupOrder.add(ent.getValue());
+            }
+            positionsNomControl.groupBy(obj);
+        });
+
+
+    }
+
+    interface SomeAction{
+        void execute(Map map);
+    }
+
+
+    //создает окно с перетаскиваемыми элементыми. при завершении выполняет SomeAction с параметром Map, в котором будет запись currentOrder - результирующий порядок
+    public void createGroupOrderDialog(List<Object> currentOrder,List<Object> availableOrderItems,Map<Object,String> itemDescription,SomeAction okAction){
+
+        List<Map.Entry> availableItems=new ArrayList<>();
+        List<Map.Entry> currentOrderEntry=new ArrayList<>();
+
+        for(Object orderItem:availableOrderItems){
+            availableItems.add(new AbstractMap.SimpleEntry<String,Object>(itemDescription.get(orderItem),orderItem));
+        }
+
+        for(Object orderItem:currentOrder){
+            currentOrderEntry.add(new AbstractMap.SimpleEntry<String,Object>(itemDescription.get(orderItem),orderItem));
+        }
+
+        Map<String,Object> map=new HashMap<>();
+        Map<String,Object> param=new HashMap<>();
+        map.put("availableItems",availableItems);
+        map.put("currentOrder",currentOrderEntry);
+        param.put("params",map);
+
+        openWindow("chooseGroupOrder", WindowManager.OpenType.DIALOG,param)
+                .addCloseListener(data->{
+                    if(data.equals("ok"))okAction.execute(map);
+                        });
+
     }
 
     /**
