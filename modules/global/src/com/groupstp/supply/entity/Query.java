@@ -15,6 +15,12 @@ import com.haulmont.chile.core.annotations.NamePattern;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.*;
+import java.util.Date;
+import javax.validation.constraints.NotNull;
+import com.haulmont.chile.core.annotations.MetaProperty;
+import com.haulmont.cuba.core.entity.StandardEntity;
+import com.haulmont.chile.core.annotations.NamePattern;
 import com.haulmont.cuba.core.entity.annotation.Lookup;
 import com.haulmont.cuba.core.entity.annotation.LookupType;
 import com.haulmont.cuba.security.entity.User;
@@ -28,6 +34,41 @@ import javax.persistence.OneToMany;
 @Entity(name = "supply$Query")
 public class Query extends StandardEntity {
     private static final long serialVersionUID = -4851885001969302872L;
+
+
+    public void setNameCallback(QueryNameCallback nameCallback) {
+        this.nameCallback = nameCallback;
+    }
+
+    public QueryNameCallback getNameCallback() {
+        return nameCallback;
+    }
+
+    public interface QueryNameCallback{
+        String makeName(Query query);
+    }
+
+    @Transient
+    protected transient QueryNameCallback nameCallback=null;
+
+
+    /**
+     * генерация имени возможна с использованием nameCallback.
+     * это нужно для информативного отображения сущности при группировке по ней
+     * @return
+     */
+    public String getQueryName()    {
+        if(getNameCallback() ==null) {
+            String name = number.toString();
+            try {
+                name = String.format("%s %td.%tm.%ty", number, timeCreation, timeCreation, timeCreation);
+            } catch (Exception e) {
+                System.console().printf(e.getMessage());
+            }
+            return name;
+        }
+        else return getNameCallback().makeName(this);
+    }
 
     @Column(name = "IN_WORK")
     protected Boolean inWork;
@@ -231,16 +272,5 @@ public class Query extends StandardEntity {
         return comment;
     }
 
-    public String getQueryName()
-    {
-        String name = number.toString();
-        try{
-            name = String.format("%s %td.%tm.%ty", number, timeCreation,timeCreation,timeCreation);
-        }
-        catch (Exception e)
-        {
-            System.console().printf(e.getMessage());
-        }
-        return name;
-    }
+
 }

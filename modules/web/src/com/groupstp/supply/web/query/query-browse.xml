@@ -24,6 +24,8 @@
             <properties include=".*"/>
         </filter>
         <groupTable id="queriesTable"
+                    multiLineCells="true"
+                    multiselect="true"
                     width="100%">
             <actions>
                 <action id="create"/>
@@ -33,13 +35,9 @@
                 <action id="excel"/>
             </actions>
             <columns>
-                <column id="number"/>
-                <column id="timeCreation"/>
-                <column id="comment"/>
                 <column id="urgency"/>
-                <column id="workflow"/>
+                <column id="query"/>
                 <column id="origin"/>
-                <column id="cause"/>
                 <column id="peridiocity"/>
                 <column id="wholeQueryWorkout"/>
                 <column id="company"/>
@@ -61,6 +59,9 @@
                         action="queriesTable.refresh"/>
                 <button id="excelBtn"
                         action="queriesTable.excel"/>
+                <button id="to_work"
+                        caption="msg://to work"
+                        invoke="onPassToWork"/>
             </buttonsPanel>
         </groupTable>
     </layout>

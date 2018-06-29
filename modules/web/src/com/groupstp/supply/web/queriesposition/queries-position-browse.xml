@@ -118,6 +118,9 @@ where e.currentStage='Procuration']]>
                                 caption="msg://Query usefulness"
                                 description="msg://Set whole query usefulness"
                                 invoke="onBtnSetQueryUsefulnessClick"/>
+                        <button id="group_order"
+                                caption="msg://group_order"
+                                invoke="onNomControlGroupOrderChange"/>
                     </buttonsPanel>
                     <groupTable id="positionsNomControl"
                                 editable="true"
@@ -134,6 +137,10 @@ where e.currentStage='Procuration']]>
                                 <column id="query.company"/>
                                 <column id="query.division"/>
                                 <column id="query"/>
+                                <column id="positionType"/>
+                                <column id="positionUsefulness"
+                                        caption="mainMsg://Usefulness"
+                                        editable="true"/>
                             </group>
                             <column id="positionType"/>
                             <column id="numberArticle"/>
@@ -421,6 +428,27 @@ where e.currentStage='Procuration']]>
                             <action id="remove"/>
                         </actions>
                         <columns>
+                            <column id="storeControlFlag"/>
+                            <column id="currentStage"/>
+                            <column id="positionType"/>
+                            <column id="numberArticle"/>
+                            <column id="specification"/>
+                            <column id="quantity"/>
+                            <column id="analogsAllowed"/>
+                            <column id="positionUsefulness"/>
+                            <column id="positionUsefulnessTS"/>
+                            <column id="startMinimalPrice"/>
+                            <column id="analogsCorrectionFlag"/>
+                            <column id="nomControlFlag"/>
+                            <column id="nomControlFlagTS"/>
+                            <column id="inStore"/>
+                            <column id="storeControlFlagTS"/>
+                            <column id="supplyWorkoutType"/>
+                            <column id="supSelectionFlag"/>
+                            <column id="supSelectionFlagTS"/>
+                            <column id="analysisResult"/>
+                            <column id="analysisFlag"/>
+                            <column id="analysisFlagTS"/>
                             <column id="query.company"/>
                             <column id="query.division"/>
                             <column id="nomenclature"/>
@@ -438,6 +466,8 @@ where e.currentStage='Procuration']]>
                  margin="true,false,false,false"
                  spacing="true">
                 <vbox id="vboxBills"
+                      expand="tablesBox"
+                      height="100%"
                       spacing="true">
                     <filter id="filterBills"
                             applyTo="positionsBills"
@@ -496,7 +526,8 @@ where e.currentStage='Procuration']]>
                                 caption="Отправить @Email"
                                 invoke="onBtnSendEmail"/>
                     </buttonsPanel>
-                    <hbox expand="positionsBills"
+                    <hbox id="tablesBox"
+                          expand="positionsBills"
                           height="200px"
                           spacing="true"
                           width="100%">
@@ -611,7 +642,10 @@ where e.currentStage='Procuration']]>
                                 presentations="true"
                                 width="100%">
                         <actions>
+                            <action id="create"/>
                             <action id="refresh"/>
+                            <action id="edit"/>
+                            <action id="remove"/>
                         </actions>
                         <columns>
                             <column id="bill"/>

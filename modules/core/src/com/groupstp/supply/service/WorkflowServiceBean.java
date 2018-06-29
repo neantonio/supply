@@ -3,10 +3,12 @@ package com.groupstp.supply.service;
 import com.groupstp.supply.entity.*;
 import com.haulmont.cuba.core.global.*;
 import groovy.lang.Binding;
+import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.springframework.stereotype.Service;
 
 import javax.inject.Inject;
+import javax.xml.soap.Detail;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
@@ -65,6 +67,7 @@ public class WorkflowServiceBean implements WorkflowService {
      * @param position позиция заявки
      * @param stage этап, на который переводится позиция
      */
+    @Override
     public void movePositionTo(QueriesPosition position, Stages stage) {
         //TODO: add finishTS to current position
         String strStage = position.getCurrentStage().name();
@@ -73,9 +76,25 @@ public class WorkflowServiceBean implements WorkflowService {
             position.setValue(strStage + "Flag", true);
             position.setValue(strStage + "FlagTS", timeSource.currentTimestamp());
         }
+        if(position.getCurrentStage()!=Stages.New) createFinishStageRecord(position);
         position.setCurrentStage(stage);
         dataManager.commit(position);
         createMovementRecord(position, stage);
+    }
+
+    @Inject
+    QueryDaoService queryDaoService;
+
+    /**
+     * @author AntonLomako
+     * запись в журнал информации о завершении этапа. извлекается последняя запись с участием позиции и устанавливается finishTS
+     * @param position
+     */
+    private void createFinishStageRecord(QueriesPosition position){
+        QueryPositionMovements lastMovement=queryDaoService.getQueryPositionMovement(position).get(0);
+        if(lastMovement==null) return;
+        lastMovement.setFinishTS(new Date());
+        dataManager.commit(lastMovement);
     }
 
     @Inject
@@ -92,6 +111,9 @@ public class WorkflowServiceBean implements WorkflowService {
         movement.setPosition(position);
         movement.setStage(stage);
         movement.setUser(userSessionSource.getUserSession().getUser());
+
+        //если позиция на завершающем этапе, то надо поставить ts завершения
+        if((stage==Stages.Abortion)||(stage==Stages.Done)) movement.setCreateTs(new Date());
         dataManager.commit(movement);
     }
 
@@ -132,4 +154,9 @@ public class WorkflowServiceBean implements WorkflowService {
                 .setParameter("sourceStage", queryPosition.getCurrentStage()));
         return  dataManager.loadList(ctx);
     }
+
+
+//    private QueriesPosition getQueryPosition(Query query){
+//
+//    }
 }

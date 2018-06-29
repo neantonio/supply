@@ -1,8 +1,6 @@
 package com.groupstp.supply.entity;
 
-import javax.persistence.Entity;
-import javax.persistence.Table;
-import javax.persistence.Column;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import com.haulmont.cuba.core.entity.StandardEntity;
 import com.haulmont.chile.core.annotations.NamePattern;
@@ -11,15 +9,11 @@ import com.haulmont.cuba.core.entity.annotation.LookupType;
 import com.haulmont.cuba.core.entity.annotation.OnDeleteInverse;
 import com.haulmont.cuba.core.global.DeletePolicy;
 import java.math.BigDecimal;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+
 import com.haulmont.cuba.core.entity.CategorizedEntity;
 import com.haulmont.chile.core.annotations.Composition;
 import com.haulmont.cuba.core.entity.annotation.OnDelete;
 import java.util.List;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 
 @NamePattern("%s|name")
 @Table(name = "SUPPLY_NOMENCLATURE")
@@ -46,7 +40,7 @@ public class Nomenclature extends StandardEntity {
 
     @Lookup(type = LookupType.SCREEN, actions = {"lookup", "open", "clear"})
     @OnDeleteInverse(DeletePolicy.CASCADE)
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY,cascade = CascadeType.PERSIST)
     @JoinColumn(name = "PARENT_ID")
     protected Nomenclature parent;
 

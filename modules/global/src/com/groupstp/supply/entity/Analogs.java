@@ -1,23 +1,22 @@
 package com.groupstp.supply.entity;
 
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
+
+import com.haulmont.chile.core.annotations.Composition;
 import com.haulmont.cuba.core.entity.StandardEntity;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
 
 @Table(name = "SUPPLY_ANALOGS")
 @Entity(name = "supply$Analogs")
 public class Analogs extends StandardEntity {
     private static final long serialVersionUID = -8431851887385452986L;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @Composition
+    @ManyToOne(fetch = FetchType.LAZY,cascade = CascadeType.PERSIST)
     @JoinColumn(name = "NOMENCLATURE_ID")
     protected Nomenclature nomenclature;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @Composition
+    @OneToOne(fetch = FetchType.LAZY,cascade = CascadeType.PERSIST)
     @JoinColumn(name = "ANALOG_ID")
     protected Nomenclature analog;
 

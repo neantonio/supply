@@ -29,6 +29,9 @@ import java.util.stream.Collectors;
 public class QueriesPositionBrowse extends AbstractLookup {
 
     @Inject
+    private DataBaseTestContentService dataBaseTestContentService;
+
+    @Inject
     private DataManager dataManager;
 
     @Inject
@@ -55,6 +58,27 @@ public class QueriesPositionBrowse extends AbstractLookup {
     @Inject
     private ComponentsFactory componentsFactory;
 
+    List<Object> nomControlGroupOrder=new ArrayList<>();
+    List<Object> nomControlAvailableOrderItems=new ArrayList<>();
+
+    Map<Object,String> nomControlAvailableOrderItemsDescription=new HashMap<>();
+
+    @Override
+    public void init(Map<String, Object> params) {
+
+
+
+    }
+
+    public DataBaseTestContentService getDataBaseTestContentService() {
+        return dataBaseTestContentService;
+    }
+
+    public void setDataBaseTestContentService(DataBaseTestContentService dataBaseTestContentService) {
+
+        this.dataBaseTestContentService = dataBaseTestContentService;
+    }
+
     private class QueryLinkGenerator implements Table.ColumnGenerator {
 
         /**
@@ -69,7 +93,7 @@ public class QueriesPositionBrowse extends AbstractLookup {
             LinkButton lnk = (LinkButton) componentsFactory.createComponent(LinkButton.NAME);
             lnk.setAction(new BaseAction("query").
                     withCaption(q.getInstanceName()).
-                    withHandler(e -> openEditor(q, WindowManager.OpenType.DIALOG)));
+                    withHandler(e-> openEditor(q, WindowManager.OpenType.DIALOG)));
             return lnk;
         }
     }
@@ -77,6 +101,28 @@ public class QueriesPositionBrowse extends AbstractLookup {
     @Override
     public void ready() {
         super.ready();
+
+
+        nomControlGroupOrder.add(positionsStoreControl.getColumn("query.urgency").getId());
+        nomControlGroupOrder.add(positionsStoreControl.getColumn("query.company").getId());
+        nomControlGroupOrder.add(positionsStoreControl.getColumn("query.division").getId());
+        nomControlGroupOrder.add(positionsStoreControl.getColumn("query").getId());
+
+        nomControlAvailableOrderItems.add(positionsStoreControl.getColumn("query.urgency").getId());
+        nomControlAvailableOrderItems.add(positionsStoreControl.getColumn("query.company").getId());
+        nomControlAvailableOrderItems.add(positionsStoreControl.getColumn("query.division").getId());
+        nomControlAvailableOrderItems.add(positionsStoreControl.getColumn("query").getId());
+       // nomControlAvailableOrderItems.add(positionsStoreControl.getColumn("positionType").getId());
+        //nomControlAvailableOrderItems.add(positionsStoreControl.getColumn("positionUsefulness").getId());
+
+
+        nomControlAvailableOrderItemsDescription.put(positionsStoreControl.getColumn("query.urgency").getId(),messages.getMainMessage("query.urgency"));
+        nomControlAvailableOrderItemsDescription.put(positionsStoreControl.getColumn("query.company").getId(),messages.getMainMessage("query.company"));
+        nomControlAvailableOrderItemsDescription.put(positionsStoreControl.getColumn("query.division").getId(),messages.getMainMessage("query.division"));
+        nomControlAvailableOrderItemsDescription.put(positionsStoreControl.getColumn("query").getId(),messages.getMainMessage("query"));
+       // nomControlAvailableOrderItemsDescription.put(positionsStoreControl.getColumn("positionType").getId(),messages.getMainMessage("positionType"));
+        //nomControlAvailableOrderItemsDescription.put(positionsStoreControl.getColumn("positionUsefulness").getId(),messages.getMainMessage("positionUsefulness"));
+
         setupNomControl();
         setupStoreControl();
         restorePanel();
@@ -101,16 +147,13 @@ public class QueriesPositionBrowse extends AbstractLookup {
     /**
      * Настройка вкладки номенклатурный контроль
      */
-    private void setupNomControl() {
+    private void setupNomControl()
+    {
         GroupTable<QueriesPosition> p = positionsNomControl;
         p.addGeneratedColumn("queryLink", new QueryLinkGenerator());
-        p.groupBy(new Object[]{
-                p.getColumn("query.urgency").getId(),
-                p.getColumn("query.company").getId(),
-                p.getColumn("query.division").getId(),
-                p.getColumn("query").getId()});
+        p.groupBy(nomControlGroupOrder.toArray());
         dsNomControl.addItemPropertyChangeListener(e -> {
-            if ("positionUsefulness".equals(e.getProperty()) && e.getValue().equals(true)) {
+            if("positionUsefulness".equals(e.getProperty()) && e.getValue().equals(true)) {
                 e.getItem().setPositionUsefulnessTS(new Date());
             }
         });
@@ -228,11 +271,11 @@ public class QueriesPositionBrowse extends AbstractLookup {
 
     /**
      * Копирует текущую позицию
-     *
      * @param position позиция для копирования
      * @return новую позицию
      */
-    private QueriesPosition copyPosition(QueriesPosition position) {
+    private QueriesPosition copyPosition(QueriesPosition position)
+    {
         QueriesPosition src = dataManager.reload(position, "queriesPosition-full");
         QueriesPosition copy = metadata.create(QueriesPosition.class);
         Collection<MetaProperty> properties = position.getMetaClass().getProperties();

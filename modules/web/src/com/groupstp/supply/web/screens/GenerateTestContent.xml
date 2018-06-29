@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<window xmlns="http://schemas.haulmont.com/cuba/window.xsd"
+        caption="msg://caption"
+        class="com.groupstp.supply.web.screens.Generatetestcontent"
+        messagesPack="com.groupstp.supply.web.screens"
+        xmlns:dnd="http://schemas.haulmont.com/dnd/0.1/drag-and-drop.xsd">
+
+    <dialogMode height="600"
+                width="800"/>
+    <layout>
+        <buttonsPanel>
+            <button id="create_companies"
+                    caption="Create entities"
+                    invoke="onCreateCompany"/>
+            <button id="modal"
+                    caption="modal"
+                    invoke="onModal"/>
+            <button id="start_business"
+                    caption="запустить бизнесс процесс"
+                    invoke="onBusiness"/>
+        </buttonsPanel>
+    </layout>
+</window>

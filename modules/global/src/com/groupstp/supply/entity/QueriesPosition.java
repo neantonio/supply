@@ -14,6 +14,9 @@ import com.haulmont.cuba.core.global.DeletePolicy;
 import java.util.List;
 import javax.persistence.OneToMany;
 import java.util.Date;
+
+import com.haulmont.chile.core.annotations.NamePattern;
+import com.haulmont.chile.core.annotations.NumberFormat;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import com.haulmont.chile.core.annotations.NamePattern;
@@ -21,12 +24,33 @@ import java.math.BigDecimal;
 import com.haulmont.chile.core.annotations.NumberFormat;
 import javax.persistence.OneToOne;
 
-@NamePattern("%s|nomenclature")
+@NamePattern("#getQueriesPositionName|nomenclature")
 @Table(name = "SUPPLY_QUERIES_POSITION")
 @Entity(name = "supply$QueriesPosition")
 public class QueriesPosition extends StandardEntity {
     private static final long serialVersionUID = 2816298219119304612L;
 
+
+    public void setNameCallback(QueriesPositionNameCallback nameCallback) {
+        this.nameCallback = nameCallback;
+    }
+
+
+    public QueriesPositionNameCallback getNameCallback() {
+        return nameCallback;
+    }
+
+    public interface QueriesPositionNameCallback{
+        String makeName(QueriesPosition query);
+    }
+
+    /**
+     *
+     *
+     * генерация имени возможна с использованием nameCallback.
+     * это нужно для информативного отображения сущности при группировке по ней
+     * @return
+     */
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "QUERY_ID")
     protected Query query;
@@ -157,6 +181,18 @@ public class QueriesPosition extends StandardEntity {
     @JoinColumn(name = "BILLS_ID")
     protected Bills bills;
 
+    @Transient
+    protected transient QueriesPositionNameCallback nameCallback=null;
+
+    public String getQueriesPositionName()    {
+        if(getNameCallback() ==null) {
+            if(nomenclature!=null)return nomenclature.toString();
+            else if(specification!=null) return specification;
+            else return getUuid().toString();
+        }
+        else return getNameCallback().makeName(this);
+    }
+
     public void setBills(Bills bills) {
         this.bills = bills;
     }
@@ -164,9 +200,6 @@ public class QueriesPosition extends StandardEntity {
     public Bills getBills() {
         return bills;
     }
-
-
-
 
     public void setBillQuery(Boolean billQuery) {
         this.billQuery = billQuery;

@@ -6,16 +6,15 @@ import com.groupstp.supply.entity.Stages;
 import com.groupstp.supply.service.WorkflowService;
 import com.haulmont.bali.util.ParamsMap;
 import com.haulmont.cuba.core.app.UniqueNumbersService;
+import com.haulmont.cuba.core.global.PersistenceHelper;
 import com.haulmont.cuba.gui.WindowManager;
-import com.haulmont.cuba.gui.components.AbstractEditor;
+import com.haulmont.cuba.gui.components.*;
 import com.groupstp.supply.entity.Query;
-import com.haulmont.cuba.gui.components.DataGrid;
-import com.haulmont.cuba.gui.components.Field;
 
 import javax.inject.Inject;
 import java.util.Collection;
+import java.util.Date;
 import java.util.Map;
-import com.haulmont.cuba.gui.components.Component;
 
 public class QueryEdit extends AbstractEditor<Query> {
     @Inject
@@ -24,12 +23,35 @@ public class QueryEdit extends AbstractEditor<Query> {
     @Inject
     private DataGrid<QueriesPosition> positions;
 
-    
+    @Inject
+    private Button okBtn;
+
+
+    public void onOkBtnClick(Component source) {
+        boolean wasNew = PersistenceHelper.isNew(getItem());
+        if(getItem().getTimeCreation()==null) {
+            getItem().setTimeCreation(new Date());
+        }
+        if (wasNew) {
+
+            commit();
+        } else {
+
+            super.commitAndClose();
+        }
+    }
 
     //вызывается после инициализации формы
     @Override
     protected void postInit() {
         super.postInit();
+
+//        if (PersistenceHelper.isNew(getItem())) {
+//            okBtn.setCaption("Save");
+//        } else {
+//            okBtn.setCaption("Save and close");
+//        }
+//        setShowSaveNotification(false);
         //если заявка передана в работу - возможен только просмотр
         Boolean inWork = getItem().getInWork()==null ? false : getItem().getInWork();
         if(inWork)

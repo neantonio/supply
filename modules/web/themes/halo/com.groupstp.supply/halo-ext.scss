@@ -1,0 +1,36 @@
+/* Define your theme modifications inside next mixin */
+@mixin com_groupstp_supply-halo-ext {
+
+
+    .min-height{
+        min-height:50px;
+    }
+
+    .v-table-row.done-query {
+        background-color: lightgray !important;
+    }
+    .v-table-row.in-work-query {
+        background-color: lightyellow !important;
+    }
+    .v-table-row.new-query {
+        background-color: lightgreen !important;
+    }
+    .v-table-row.overdue-query {
+        background-color: lightsalmon !important;
+    }
+
+    .v-table-row-odd.done-query {
+        background-color: white !important;
+    }
+    .v-table-row-odd.in-work-query {
+        background-color: yellow !important;
+    }
+    .v-table-row-odd.new-query {
+        background-color: green !important;
+    }
+    .v-table-row-odd.overdue-query {
+        background-color: salmon !important;
+    }
+
+}
+

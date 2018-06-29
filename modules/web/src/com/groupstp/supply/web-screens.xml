@@ -45,4 +45,16 @@
             template="com/groupstp/supply/web/screens/vote.xml"/>
     <screen id="supply$Bills.edit"
             template="com/groupstp/supply/web/bills/bills-edit.xml"/>
+    <screen id="GenerateTestContent"
+            template="com/groupstp/supply/web/screens/GenerateTestContent.xml"/>
+    <screen id="chooseGroupOrder"
+            template="com/groupstp/supply/web/screens/chooseGroupOrder.xml"/>
+    <screen id="queryRegister"
+            template="com/groupstp/supply/web/queriesposition/queryRegister.xml"/>
+    <screen id="SendEmail"
+            template="com/groupstp/supply/web/screens/SendEmail.xml"/>
+    <screen id="statistics"
+            template="com/groupstp/supply/web/querypositionmovement/statistics.xml"/>
+    <screen id="supply$StageTerm.edit"
+            template="com/groupstp/supply/web/stageterm/stage-term-edit.xml"/>
 </screen-config>

@@ -14,6 +14,16 @@
                        value="com.groupstp.supply.service.WorkflowService"/>
                 <entry key="supply_GroovyTestService"
                        value="com.groupstp.supply.service.GroovyTestService"/>
+                <entry key="supply_DataBaseTestContentService"
+                       value="com.groupstp.supply.service.DataBaseTestContentService"/>
+                <entry key="supply_RandomDataService"
+                       value="com.groupstp.supply.service.RandomDataService"/>
+                <entry key="supply_QueryService"
+                       value="com.groupstp.supply.service.QueryService"/>
+                <entry key="supply_QueryDaoService"
+                       value="com.groupstp.supply.service.QueryDaoService"/>
+                <entry key="supply_StatisticsService"
+                       value="com.groupstp.supply.service.StatisticsService"/>
                 <entry key="supply_VoteService"
                        value="com.groupstp.supply.service.VoteService"/>
             </map>
