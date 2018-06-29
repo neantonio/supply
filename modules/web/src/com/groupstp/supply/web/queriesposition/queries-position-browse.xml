@@ -142,7 +142,6 @@ where e.currentStage='Procuration']]>
                                         caption="mainMsg://Usefulness"
                                         editable="true"/>
                             </group>
-                            <column id="positionType"/>
                             <column id="numberArticle"/>
                             <column id="nomenclature"
                                     editable="true"/>
@@ -155,9 +154,6 @@ where e.currentStage='Procuration']]>
                                     editable="true"/>
                             <column id="store"/>
                             <column id="nomeclatureChange"
-                                    editable="true"/>
-                            <column id="positionUsefulness"
-                                    caption="mainMsg://Usefulness"
                                     editable="true"/>
                         </columns>
                         <rows datasource="dsNomControl"/>
@@ -452,8 +448,6 @@ where e.currentStage='Procuration']]>
                             <column id="query.company"/>
                             <column id="query.division"/>
                             <column id="nomenclature"/>
-                            <column id="quantity"/>
-                            <column id="startMinimalPrice"/>
                             <column id="priceReduce"/>
                             <column id="minimalPrice"/>
                         </columns>
@@ -528,7 +522,6 @@ where e.currentStage='Procuration']]>
                     </buttonsPanel>
                     <hbox id="tablesBox"
                           expand="positionsBills"
-                          height="200px"
                           spacing="true"
                           width="100%">
                         <table id="billsTable"
@@ -648,7 +641,6 @@ where e.currentStage='Procuration']]>
                             <action id="remove"/>
                         </actions>
                         <columns>
-                            <column id="bill"/>
                             <column id="billQuery"/>
                         </columns>
                         <rows datasource="dsProcuration"/>

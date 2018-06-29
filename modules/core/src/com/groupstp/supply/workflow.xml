@@ -102,14 +102,6 @@
         </util:map>
 
         <util:map  map-class="java.util.HashMap">
-            <entry key="priority"><value>0</value></entry>
-            <entry key="sourceStage"><util:constant static-field="com.groupstp.supply.entity.Stages.Bills" /></entry>
-            <entry key="destStage"><util:constant static-field="com.groupstp.supply.entity.Stages.Attoreney" /></entry>
-            <entry key="script"><value>return true</value></entry>
-            <entry key="validation"><value>return true</value></entry>
-        </util:map>
-
-        <util:map  map-class="java.util.HashMap">
             <entry key="priority"><value>1</value></entry>
             <entry key="sourceStage"><util:constant static-field="com.groupstp.supply.entity.Stages.Bills" /></entry>
             <entry key="destStage"><util:constant static-field="com.groupstp.supply.entity.Stages.Abortion" /></entry>
@@ -119,7 +111,7 @@
 
         <util:map  map-class="java.util.HashMap">
             <entry key="priority"><value>0</value></entry>
-            <entry key="sourceStage"><util:constant static-field="com.groupstp.supply.entity.Stages.Attoreney" /></entry>
+            <entry key="sourceStage"><util:constant static-field="com.groupstp.supply.entity.Stages.Logistic" /></entry>
             <entry key="destStage"><util:constant static-field="com.groupstp.supply.entity.Stages.Done" /></entry>
             <entry key="script"><value>return true</value></entry>
             <entry key="validation"><value>return true</value></entry>
@@ -127,7 +119,7 @@
 
         <util:map  map-class="java.util.HashMap">
             <entry key="priority"><value>1</value></entry>
-            <entry key="sourceStage"><util:constant static-field="com.groupstp.supply.entity.Stages.Attoreney" /></entry>
+            <entry key="sourceStage"><util:constant static-field="com.groupstp.supply.entity.Stages.Logistic" /></entry>
             <entry key="destStage"><util:constant static-field="com.groupstp.supply.entity.Stages.Abortion" /></entry>
             <entry key="script"><value>return true</value></entry>
             <entry key="validation"><value>return true</value></entry>
@@ -243,33 +235,10 @@
             <entry key="validation"><value>return true</value></entry>
         </util:map>
 
-        <util:map  map-class="java.util.HashMap">
-            <entry key="priority"><value>0</value></entry>
-            <entry key="sourceStage"><util:constant static-field="com.groupstp.supply.entity.Stages.Bills" /></entry>
-            <entry key="destStage"><util:constant static-field="com.groupstp.supply.entity.Stages.Attoreney" /></entry>
-            <entry key="script"><value>return true</value></entry>
-            <entry key="validation"><value>return true</value></entry>
-        </util:map>
 
         <util:map  map-class="java.util.HashMap">
             <entry key="priority"><value>1</value></entry>
             <entry key="sourceStage"><util:constant static-field="com.groupstp.supply.entity.Stages.Bills" /></entry>
-            <entry key="destStage"><util:constant static-field="com.groupstp.supply.entity.Stages.Abortion" /></entry>
-            <entry key="script"><value>return true</value></entry>
-            <entry key="validation"><value>return true</value></entry>
-        </util:map>
-
-        <util:map  map-class="java.util.HashMap">
-            <entry key="priority"><value>0</value></entry>
-            <entry key="sourceStage"><util:constant static-field="com.groupstp.supply.entity.Stages.Attoreney" /></entry>
-            <entry key="destStage"><util:constant static-field="com.groupstp.supply.entity.Stages.Done" /></entry>
-            <entry key="script"><value>return true</value></entry>
-            <entry key="validation"><value>return true</value></entry>
-        </util:map>
-
-        <util:map  map-class="java.util.HashMap">
-            <entry key="priority"><value>1</value></entry>
-            <entry key="sourceStage"><util:constant static-field="com.groupstp.supply.entity.Stages.Attoreney" /></entry>
             <entry key="destStage"><util:constant static-field="com.groupstp.supply.entity.Stages.Abortion" /></entry>
             <entry key="script"><value>return true</value></entry>
             <entry key="validation"><value>return true</value></entry>
