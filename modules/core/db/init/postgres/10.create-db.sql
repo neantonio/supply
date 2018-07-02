@@ -199,6 +199,7 @@ create table SUPPLY_QUERIES_POSITION (
     DELETED_BY varchar(50),
     --
     QUERY_ID uuid not null,
+    BILLS_FLAG boolean,
     STORE_CONTROL_FLAG boolean,
     CURRENT_STAGE varchar(50) not null,
     POSITION_TYPE varchar(50) not null,
@@ -217,6 +218,7 @@ create table SUPPLY_QUERIES_POSITION (
     ANALOGS_CORRECTION_FLAG boolean,
     NOM_CONTROL_FLAG boolean,
     NOM_CONTROL_FLAG_TS timestamp,
+    BILLS_FLAG_TS timestamp,
     IN_STORE boolean,
     STORE_CONTROL_FLAG_TS timestamp,
     SUPPLY_WORKOUT_TYPE varchar(50),
@@ -402,7 +404,7 @@ create table SUPPLY_BILLS (
     COMPANY_ID uuid,
     SUPPLIER_ID uuid not null,
     TIME_PAYMENT timestamp,
-    PRICE double precision,
+    AMOUNT double precision,
     SUM_CONTROL boolean,
     IMAGE_BILL_ID uuid,
     --

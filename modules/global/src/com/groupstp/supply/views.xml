@@ -391,6 +391,11 @@
         <property name="positions"
                   view="_minimal">
             <property name="currentStage"/>
+            <property name="numberArticle"/>
+            <property name="voteResult"
+                      view="_minimal"/>
+            <property name="billsFlag"/>
+            <property name="billsFlagTS"/>
         </property>
         <property name="company"
                   view="_minimal"/>

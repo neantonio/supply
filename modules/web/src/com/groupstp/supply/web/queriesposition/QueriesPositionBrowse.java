@@ -60,10 +60,10 @@ public class QueriesPositionBrowse extends AbstractLookup {
     @Inject
     private ComponentsFactory componentsFactory;
 
-    List<Object> nomControlGroupOrder=new ArrayList<>();
-    List<Object> nomControlAvailableOrderItems=new ArrayList<>();
+    List<Object> nomControlGroupOrder = new ArrayList<>();
+    List<Object> nomControlAvailableOrderItems = new ArrayList<>();
 
-    Map<Object,String> nomControlAvailableOrderItemsDescription=new HashMap<>();
+    Map<Object, String> nomControlAvailableOrderItemsDescription = new HashMap<>();
 
 //    public DataBaseTestContentService getDataBaseTestContentService() {
 //        return dataBaseTestContentService;
@@ -88,7 +88,7 @@ public class QueriesPositionBrowse extends AbstractLookup {
             LinkButton lnk = (LinkButton) componentsFactory.createComponent(LinkButton.NAME);
             lnk.setAction(new BaseAction("query").
                     withCaption(q.getInstanceName()).
-                    withHandler(e-> openEditor(q, WindowManager.OpenType.DIALOG)));
+                    withHandler(e -> openEditor(q, WindowManager.OpenType.DIALOG)));
             return lnk;
         }
     }
@@ -107,15 +107,15 @@ public class QueriesPositionBrowse extends AbstractLookup {
         nomControlAvailableOrderItems.add(positionsStoreControl.getColumn("query.company").getId());
         nomControlAvailableOrderItems.add(positionsStoreControl.getColumn("query.division").getId());
         nomControlAvailableOrderItems.add(positionsStoreControl.getColumn("query").getId());
-       // nomControlAvailableOrderItems.add(positionsStoreControl.getColumn("positionType").getId());
+        // nomControlAvailableOrderItems.add(positionsStoreControl.getColumn("positionType").getId());
         //nomControlAvailableOrderItems.add(positionsStoreControl.getColumn("positionUsefulness").getId());
 
 
-        nomControlAvailableOrderItemsDescription.put(positionsStoreControl.getColumn("query.urgency").getId(),messages.getMainMessage("query.urgency"));
-        nomControlAvailableOrderItemsDescription.put(positionsStoreControl.getColumn("query.company").getId(),messages.getMainMessage("query.company"));
-        nomControlAvailableOrderItemsDescription.put(positionsStoreControl.getColumn("query.division").getId(),messages.getMainMessage("query.division"));
-        nomControlAvailableOrderItemsDescription.put(positionsStoreControl.getColumn("query").getId(),messages.getMainMessage("query"));
-       // nomControlAvailableOrderItemsDescription.put(positionsStoreControl.getColumn("positionType").getId(),messages.getMainMessage("positionType"));
+        nomControlAvailableOrderItemsDescription.put(positionsStoreControl.getColumn("query.urgency").getId(), messages.getMainMessage("query.urgency"));
+        nomControlAvailableOrderItemsDescription.put(positionsStoreControl.getColumn("query.company").getId(), messages.getMainMessage("query.company"));
+        nomControlAvailableOrderItemsDescription.put(positionsStoreControl.getColumn("query.division").getId(), messages.getMainMessage("query.division"));
+        nomControlAvailableOrderItemsDescription.put(positionsStoreControl.getColumn("query").getId(), messages.getMainMessage("query"));
+        // nomControlAvailableOrderItemsDescription.put(positionsStoreControl.getColumn("positionType").getId(),messages.getMainMessage("positionType"));
         //nomControlAvailableOrderItemsDescription.put(positionsStoreControl.getColumn("positionUsefulness").getId(),messages.getMainMessage("positionUsefulness"));
 
         setupNomControl();
@@ -134,7 +134,7 @@ public class QueriesPositionBrowse extends AbstractLookup {
     }
 
     private void restorePanel() {
-        if(getSettings().get(tabs.getId()).attribute("tabOpened")==null)
+        if (getSettings().get(tabs.getId()).attribute("tabOpened") == null)
             return;
         tabs.setSelectedTab(getSettings().get(tabs.getId()).attribute("tabOpened").getValue());
     }
@@ -142,28 +142,28 @@ public class QueriesPositionBrowse extends AbstractLookup {
     /**
      * Настройка вкладки номенклатурный контроль
      */
-    private void setupNomControl()
-    {
+    private void setupNomControl() {
         GroupTable<QueriesPosition> p = positionsNomControl;
         p.addGeneratedColumn("queryLink", new QueryLinkGenerator());
         p.groupBy(nomControlGroupOrder.toArray());
         dsNomControl.addItemPropertyChangeListener(e -> {
-            if("positionUsefulness".equals(e.getProperty()) && e.getValue().equals(true)) {
+            if ("positionUsefulness".equals(e.getProperty()) && e.getValue().equals(true)) {
                 e.getItem().setPositionUsefulnessTS(new Date());
             }
         });
     }
 
-    public void onNomControlGroupOrderChange(){
-        createGroupOrderDialog(nomControlGroupOrder,nomControlAvailableOrderItems,nomControlAvailableOrderItemsDescription,map->{
-            int i=0;
-            List<Map.Entry<String,Object>> entries= (List<Map.Entry<String, Object>>) map.get("currentOrder");
-            Object[] obj =new Object[entries.size()];
+    public void onNomControlGroupOrderChange() {
+        createGroupOrderDialog(nomControlGroupOrder, nomControlAvailableOrderItems, nomControlAvailableOrderItemsDescription, map -> {
+            int i = 0;
+            List<Map.Entry<String, Object>> entries = (List<Map.Entry<String, Object>>) map.get("currentOrder");
+            Object[] obj = new Object[entries.size()];
 
-            nomControlGroupOrder.clear();;
+            nomControlGroupOrder.clear();
+            ;
 
-            for(Map.Entry ent:entries){
-                obj[i]=ent.getValue();
+            for (Map.Entry ent : entries) {
+                obj[i] = ent.getValue();
                 i++;
                 nomControlGroupOrder.add(ent.getValue());
             }
@@ -173,35 +173,35 @@ public class QueriesPositionBrowse extends AbstractLookup {
 
     }
 
-    interface SomeAction{
+    interface SomeAction {
         void execute(Map map);
     }
 
 
     //создает окно с перетаскиваемыми элементыми. при завершении выполняет SomeAction с параметром Map, в котором будет запись currentOrder - результирующий порядок
-    public void createGroupOrderDialog(List<Object> currentOrder,List<Object> availableOrderItems,Map<Object,String> itemDescription,SomeAction okAction){
+    public void createGroupOrderDialog(List<Object> currentOrder, List<Object> availableOrderItems, Map<Object, String> itemDescription, SomeAction okAction) {
 
-        List<Map.Entry> availableItems=new ArrayList<>();
-        List<Map.Entry> currentOrderEntry=new ArrayList<>();
+        List<Map.Entry> availableItems = new ArrayList<>();
+        List<Map.Entry> currentOrderEntry = new ArrayList<>();
 
-        for(Object orderItem:availableOrderItems){
-            availableItems.add(new AbstractMap.SimpleEntry<String,Object>(itemDescription.get(orderItem),orderItem));
+        for (Object orderItem : availableOrderItems) {
+            availableItems.add(new AbstractMap.SimpleEntry<String, Object>(itemDescription.get(orderItem), orderItem));
         }
 
-        for(Object orderItem:currentOrder){
-            currentOrderEntry.add(new AbstractMap.SimpleEntry<String,Object>(itemDescription.get(orderItem),orderItem));
+        for (Object orderItem : currentOrder) {
+            currentOrderEntry.add(new AbstractMap.SimpleEntry<String, Object>(itemDescription.get(orderItem), orderItem));
         }
 
-        Map<String,Object> map=new HashMap<>();
-        Map<String,Object> param=new HashMap<>();
-        map.put("availableItems",availableItems);
-        map.put("currentOrder",currentOrderEntry);
-        param.put("params",map);
+        Map<String, Object> map = new HashMap<>();
+        Map<String, Object> param = new HashMap<>();
+        map.put("availableItems", availableItems);
+        map.put("currentOrder", currentOrderEntry);
+        param.put("params", map);
 
-        openWindow("chooseGroupOrder", WindowManager.OpenType.DIALOG,param)
-                .addCloseListener(data->{
-                    if(data.equals("ok"))okAction.execute(map);
-                        });
+        openWindow("chooseGroupOrder", WindowManager.OpenType.DIALOG, param)
+                .addCloseListener(data -> {
+                    if (data.equals("ok")) okAction.execute(map);
+                });
 
     }
 
@@ -317,11 +317,11 @@ public class QueriesPositionBrowse extends AbstractLookup {
 
     /**
      * Копирует текущую позицию
+     *
      * @param position позиция для копирования
      * @return новую позицию
      */
-    private QueriesPosition copyPosition(QueriesPosition position)
-    {
+    private QueriesPosition copyPosition(QueriesPosition position) {
         QueriesPosition src = dataManager.reload(position, "queriesPosition-full");
         QueriesPosition copy = metadata.create(QueriesPosition.class);
         Collection<MetaProperty> properties = position.getMetaClass().getProperties();
@@ -339,8 +339,7 @@ public class QueriesPositionBrowse extends AbstractLookup {
      */
     public void onBtnSuppliersClick() {
         GroupTable tab = getOpenedStageTable();
-        if(tab.getSelected().size()==0)
-        {
+        if (tab.getSelected().size() == 0) {
             showNotification(getMessage("Select position first"), NotificationType.WARNING);
             return;
         }
@@ -354,8 +353,7 @@ public class QueriesPositionBrowse extends AbstractLookup {
      */
     public void onBtnSuggestionsClick() {
         GroupTable tab = getOpenedStageTable();
-        if(tab.getSelected().size()==0)
-        {
+        if (tab.getSelected().size() == 0) {
             showNotification(getMessage("Select position first"), NotificationType.WARNING);
             return;
         }
@@ -383,6 +381,7 @@ public class QueriesPositionBrowse extends AbstractLookup {
 
     /**
      * Обработчик нажатия кнопки Готово на вкладке Закупочная комиссия
+     *
      * @throws Exception
      */
     public void onBtnDoneClickComission() throws Exception {
@@ -394,13 +393,14 @@ public class QueriesPositionBrowse extends AbstractLookup {
 
     /**
      * Записывает голос, если есть победитель в QP
+     *
      * @throws Exception
      */
     private void setVote() throws Exception {
         GroupTable<QueriesPosition> grpTab = getOpenedStageTable();
         GroupDatasource ds = grpTab.getDatasource();
         Set<QueriesPosition> positions = grpTab.getSelected();
-        for (QueriesPosition position: positions) {
+        for (QueriesPosition position : positions) {
             workflowService.movePosition(position);
             voteService.setVoteForPosition(position);
         }
@@ -463,6 +463,11 @@ public class QueriesPositionBrowse extends AbstractLookup {
 
         // События при клике на счет
         billsTable.setClickListener("number", (item, columnId) -> setClickListenerToBills(item, columnId));
+        billsTable.setClickListener("timePayment", (item, columnId) -> setClickListenerToBills(item, columnId));
+        billsTable.setClickListener("amount", (item, columnId) -> setClickListenerToBills(item, columnId));
+        billsTable.setClickListener("sumControl", (item, columnId) -> setClickListenerToBills(item, columnId));
+        billsTable.setClickListener("supplier", (item, columnId) -> setClickListenerToBills(item, columnId));
+        billsTable.setClickListener("company", (item, columnId) -> setClickListenerToBills(item, columnId));
 
         //Значки прикрепления счета
         positionsBills.setIconProvider(new Table.IconProvider<QueriesPosition>() {
@@ -483,9 +488,10 @@ public class QueriesPositionBrowse extends AbstractLookup {
     }
 
     /**
-     * События при клике на счет
-     * @param item - счет
+     * @param item     - счет
      * @param columnId id столбца таблицы
+     * @author Andrey Kolosov
+     * События при клике на счет
      */
     private void setClickListenerToBills(Entity item, String columnId) {
         Bills clickedBills = (Bills) item;
@@ -505,6 +511,7 @@ public class QueriesPositionBrowse extends AbstractLookup {
     }
 
     /**
+     * @author Andrey Kolosov
      * Загрузка изображения и прикрепление к счету
      */
     private void uploadFieldListenerRealization() {
@@ -520,6 +527,7 @@ public class QueriesPositionBrowse extends AbstractLookup {
     }
 
     /**
+     * @author Andrey Kolosov
      * Скачать изображение счета
      */
     public void onDownloadImageBtnClick() {
@@ -536,6 +544,7 @@ public class QueriesPositionBrowse extends AbstractLookup {
     }
 
     /**
+     * @author Andrey Kolosov
      * Удалить изображение счета
      */
     public void onClearImageBtnClick() {
@@ -551,6 +560,7 @@ public class QueriesPositionBrowse extends AbstractLookup {
     }
 
     /**
+     * @author Andrey Kolosov
      * Метод отображения изображения счета в BrowserFrame imageForBill
      */
     private void displayImage() {
@@ -570,6 +580,7 @@ public class QueriesPositionBrowse extends AbstractLookup {
     }
 
     /**
+     * @author Andrey Kolosov
      * Открыть изображение/PDF в новой вкладке
      */
     public void onOpenInNewTabBtnClick() {
@@ -587,8 +598,9 @@ public class QueriesPositionBrowse extends AbstractLookup {
     }
 
     /**
-     * Активация/Деактивация кнопок для изображения счета
      * @param enable условие активации
+     * @author Andrey Kolosov
+     * Активация/Деактивация кнопок для изображения счета
      */
     private void updateImageButtons(boolean enable) {
         downloadImageBtn.setEnabled(enable);
@@ -597,6 +609,7 @@ public class QueriesPositionBrowse extends AbstractLookup {
     }
 
     /**
+     * @author Andrey Kolosov
      * Прикрепление позиций к счету
      */
     public void onBtnAttachClick() {
@@ -617,6 +630,7 @@ public class QueriesPositionBrowse extends AbstractLookup {
     }
 
     /**
+     * @author Andrey Kolosov
      * Открепление позиций от счета
      */
     public void onBtnUndockClick() {
@@ -632,6 +646,7 @@ public class QueriesPositionBrowse extends AbstractLookup {
     }
 
     /**
+     * @author Andrey Kolosov
      * Возвращение заявки на этап подбора поставщиков
      */
     public void onBtnToSupSelection() {
@@ -671,6 +686,7 @@ public class QueriesPositionBrowse extends AbstractLookup {
     }
 
     /**
+     * @author Andrey Kolosov
      * Вывести все позиции без Счета в таблицу позиций
      */
     public void onBtnEmptyPositions() {
@@ -679,6 +695,7 @@ public class QueriesPositionBrowse extends AbstractLookup {
     }
 
     /**
+     * @author Andrey Kolosov
      * Вывести все позиции в таблицу позиций
      */
     public void onBtnAllPositions() {
@@ -690,6 +707,7 @@ public class QueriesPositionBrowse extends AbstractLookup {
     protected EmailService emailService;
 
     /**
+     * @author Andrey Kolosov
      * Отправка писем поставщикам
      */
     public void onBtnSendEmail() {
@@ -739,5 +757,37 @@ public class QueriesPositionBrowse extends AbstractLookup {
 
     }
 
+    /**
+     * @author Andrey Kolosov
+     * @throws Exception
+     * перевод всех позиций по одному счету на следующий этап, с проверкой контрольной суммы
+     */
+    public void onBtnDoneClickBillsTab() throws Exception {
+        if (billsTable.getSelected().size() != 1) {
+            showNotification(getMessage("Select bill first"), NotificationType.WARNING);
+            return;
+        }
+
+        Bills currentBill = billsTable.getSelected().iterator().next();
+        Double billSum = currentBill.getAmount();
+        List<QueriesPosition> list = currentBill.getPositions();
+        Double positionSum = list.stream().mapToDouble(q ->
+        {
+            return q.getVoteResult().getPrice() * q.getVoteResult().getQuantity();
+        }).sum();
+
+        if (Math.abs(positionSum / billSum - 1) > 0.01) {
+            showNotification(getMessage("Контроль суммы не пройден"), NotificationType.WARNING);
+        } else {
+            currentBill.setSumControl(true);
+            billsesDs.commit();
+            for (QueriesPosition p : list) {
+                workflowService.movePosition(p);
+            }
+        }
+        dsBills.refresh();
+    }
 
 }
+
+

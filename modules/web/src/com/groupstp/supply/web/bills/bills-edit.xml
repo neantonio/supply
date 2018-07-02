@@ -19,10 +19,11 @@
             <column width="250px">
                 <field property="number"/>
                 <field property="timePayment"/>
-                <field property="price"/>
                 <field property="sumControl"/>
+                <field property="amount"/>
                 <field property="supplier"/>
                 <field property="company"/>
+                <field property="imageBill"/>
             </column>
         </fieldGroup>
         <frame id="windowActions"
