@@ -67,6 +67,21 @@ where e.currentStage='Bills']]>
 where e.currentStage='Procuration']]>
             </query>
         </groupDatasource>
+        <groupDatasource id="dsLogistic"
+                         class="com.groupstp.supply.entity.QueriesPosition">
+            <query>
+                <![CDATA[select e from supply$QueriesPosition e
+where e.currentStage='Logistic']]>
+            </query>
+        </groupDatasource>
+        <collectionDatasource id="dsLogisticStageData"
+                              class="com.groupstp.supply.entity.QueryPositionStageData"
+                              view="queryPositionStageData-view">
+            <query>
+                <![CDATA[select e from supply$QueryPositionStageData e
+where e.position in :custom$positions]]>
+            </query>
+        </collectionDatasource>
     </dsContext>
     <dialogMode height="600"
                 width="800"/>
@@ -230,6 +245,82 @@ where e.currentStage='Procuration']]>
                                     editable="true"/>
                         </columns>
                         <rows datasource="dsStoreControl"/>
+                    </groupTable>
+                </vbox>
+            </tab>
+            <tab id="tabLogistic"
+                 caption="msg://logistic"
+                 description="msg://logistic"
+                 margin="true,false,false,false"
+                 spacing="true">
+                <vbox id="vboxProcuration1"
+                      expand="positionsLogistic"
+                      height="100%"
+                      spacing="true">
+                    <hbox expand="mainButtons"
+                          spacing="true"
+                          width="100%">
+                        <vbox id="mainButtons"
+                              spacing="true">
+                            <buttonsPanel>
+                                <button id="button_33"
+                                        caption="mainMsg://Write"
+                                        description="mainMsg://Write table changes"
+                                        icon="SAVE"
+                                        invoke="onBtnWriteClick"/>
+                                <button id="button_44"
+                                        caption="mainMsg://Done"
+                                        icon="STEP_FORWARD"
+                                        invoke="onLogisticBtnDoneClick"/>
+                                <button id="button_55"
+                                        caption="mainMsg://Cancel"
+                                        icon="CANCEL"/>
+                                <button id="button_111"
+                                        action="positionsStoreControl.refresh"
+                                        caption="mainMsg://Refresh"
+                                        icon="REFRESH_ACTION"/>
+                                <button id="button_22"
+                                        caption="mainMsg://Expand All"
+                                        icon="EXPAND"
+                                        invoke="onBtnExpandAllClick"/>
+                                <button id="button_66"
+                                        caption="mainMsg://Collapse all"
+                                        icon="COMPRESS"
+                                        invoke="onBtnCollapseAllClick"/>
+                                <button id="btnSplit1"
+                                        caption="mainMsg://Split"
+                                        description="mainMsg://Split position"
+                                        icon="ARROWS_V"
+                                        invoke="onBtnSplitClick"/>
+                            </buttonsPanel>
+                            <buttonsPanel>
+                                <button id="storeGet"
+                                        caption="msg://store_get"
+                                        invoke="onStoreGet"/>
+                            </buttonsPanel>
+                        </vbox>
+                        <vbox align="BOTTOM_CENTER"
+                              spacing="true"
+                              width="AUTO">
+                            <groupBox id="cargoStateGroupBox"
+                                      spacing="true">
+                                <vbox id="cargoStateGroupBoxTotalLayout"
+                                      spacing="true"/>
+                                <hbox spacing="true">
+                                    <button id="previousCargoState"/>
+                                    <button id="nextCargoState"/>
+                                </hbox>
+                            </groupBox>
+                        </vbox>
+                    </hbox>
+                    <groupTable id="positionsLogistic"
+                                multiselect="true"
+                                width="100%">
+                        <columns>
+                            <column id="positionType"/>
+                            <column id="quantity"/>
+                        </columns>
+                        <rows datasource="dsLogistic"/>
                     </groupTable>
                 </vbox>
             </tab>

@@ -11,6 +11,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
 import java.util.List;
+import com.haulmont.cuba.core.entity.annotation.OnDeleteInverse;
 
 @NamePattern("#getQueriesPositionName|nomenclature")
 @Table(name = "SUPPLY_QUERIES_POSITION")
@@ -19,26 +20,6 @@ public class QueriesPosition extends StandardEntity {
     private static final long serialVersionUID = 2816298219119304612L;
 
 
-    public void setNameCallback(QueriesPositionNameCallback nameCallback) {
-        this.nameCallback = nameCallback;
-    }
-
-
-    public QueriesPositionNameCallback getNameCallback() {
-        return nameCallback;
-    }
-
-    public interface QueriesPositionNameCallback{
-        String makeName(QueriesPosition query);
-    }
-
-    /**
-     *
-     *
-     * генерация имени возможна с использованием nameCallback.
-     * это нужно для информативного отображения сущности при группировке по ней
-     * @return
-     */
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "QUERY_ID")
     protected Query query;
@@ -169,8 +150,29 @@ public class QueriesPosition extends StandardEntity {
     @JoinColumn(name = "BILLS_ID")
     protected Bills bills;
 
+    public void setNameCallback(QueriesPositionNameCallback nameCallback) {
+        this.nameCallback = nameCallback;
+    }
+
+
+    public QueriesPositionNameCallback getNameCallback() {
+        return nameCallback;
+    }
+
+    public interface QueriesPositionNameCallback{
+        String makeName(QueriesPosition query);
+    }
+
+    /**
+     *
+     *
+     * генерация имени возможна с использованием nameCallback.
+     * это нужно для информативного отображения сущности при группировке по ней
+     * @return
+     */
     @Transient
     protected transient QueriesPositionNameCallback nameCallback=null;
+
 
     public String getQueriesPositionName()    {
         if(getNameCallback() ==null) {

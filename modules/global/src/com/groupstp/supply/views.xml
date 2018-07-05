@@ -419,4 +419,16 @@
         </property>
         <property name="createTs"/>
     </view>
+    <view class="com.groupstp.supply.entity.QueryPositionStageData"
+          extends="_local"
+          name="queryPositionStageData-view">
+        <property name="position"
+                  view="_minimal">
+            <property name="id"/>
+        </property>
+        <property name="dataItems"
+                  view="_minimal">
+            <property name="itemName"/>
+        </property>
+    </view>
 </views>

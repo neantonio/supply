@@ -24,5 +24,7 @@
         <class>com.groupstp.supply.entity.Vote</class>
         <class>com.groupstp.supply.entity.Bills</class>
         <class>com.groupstp.supply.entity.Procuration</class>
+        <class>com.groupstp.supply.entity.QueryPositionStageData</class>
+        <class>com.groupstp.supply.entity.QueryPositionStageDataItem</class>
     </persistence-unit>
 </persistence>

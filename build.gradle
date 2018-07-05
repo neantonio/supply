@@ -267,8 +267,10 @@ task wrapper(type: Wrapper) {
 apply from: 'extra.gradle'
 
 task buildWar(type: CubaWarBuilding) {
+    logbackConfigurationFile = 'etc/war-logback.xml'
+    coreContextXmlPath = 'modules/core/web/META-INF/war-context.xml'
+    webXmlPath = 'modules/web/web/WEB-INF/single-war-web.xml'
     appProperties = ['cuba.automaticDatabaseUpdate' : true]
-    singleWar = false
     includeContextXml = true
     includeJdbcDriver = true
     appHome = 'app_home'
