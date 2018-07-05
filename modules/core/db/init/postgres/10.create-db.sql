@@ -234,6 +234,7 @@ create table SUPPLY_QUERIES_POSITION (
     VOTE_RESULT_ID uuid,
     BILL_QUERY boolean,
     BILLS_ID uuid,
+    DELIVERY_ID uuid,
     --
     primary key (ID)
 )^
@@ -429,3 +430,39 @@ create table SUPPLY_PROCURATION (
     primary key (ID)
 )^
 -- end SUPPLY_PROCURATION
+-- begin SUPPLY_DELIVERY
+create table SUPPLY_DELIVERY (
+    ID uuid,
+    VERSION integer not null,
+    CREATE_TS timestamp,
+    CREATED_BY varchar(50),
+    UPDATE_TS timestamp,
+    UPDATED_BY varchar(50),
+    DELETE_TS timestamp,
+    DELETED_BY varchar(50),
+    --
+    DELIVERY_PLAN date not null,
+    NUMBER_ varchar(20) not null,
+    QUANTITY double precision not null,
+    --
+    primary key (ID)
+)^
+-- end SUPPLY_DELIVERY
+-- begin SUPPLY_DELIVERY_LINE
+create table SUPPLY_DELIVERY_LINE (
+    ID uuid,
+    VERSION integer not null,
+    CREATE_TS timestamp,
+    CREATED_BY varchar(50),
+    UPDATE_TS timestamp,
+    UPDATED_BY varchar(50),
+    DELETE_TS timestamp,
+    DELETED_BY varchar(50),
+    --
+    DELIVERY_ID uuid,
+    QUANTITY double precision not null,
+    DELIVERY_DAY date not null,
+    --
+    primary key (ID)
+)^
+-- end SUPPLY_DELIVERY_LINE

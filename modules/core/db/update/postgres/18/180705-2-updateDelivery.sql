@@ -1,0 +1,3 @@
+alter table SUPPLY_DELIVERY rename column queries_position_id to queries_position_id__u24277 ;
+drop index IDX_SUPPLY_DELIVERY_ON_QUERIES_POSITION ;
+alter table SUPPLY_DELIVERY drop constraint FK_SUPPLY_DELIVERY_ON_QUERIES_POSITION ;

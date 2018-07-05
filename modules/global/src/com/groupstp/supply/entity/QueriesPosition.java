@@ -102,26 +102,6 @@ public class QueriesPosition extends StandardEntity {
     @Column(name = "BILLS_FLAG_TS")
     protected Date billsFlagTS;
 
-    public void setNameCallback(QueriesPositionNameCallback nameCallback) {
-        this.nameCallback = nameCallback;
-    }
-
-
-    public QueriesPositionNameCallback getNameCallback() {
-        return nameCallback;
-    }
-
-    public interface QueriesPositionNameCallback{
-        String makeName(QueriesPosition query);
-    }
-
-    /**
-     *
-     *
-     * генерация имени возможна с использованием nameCallback.
-     * это нужно для информативного отображения сущности при группировке по ней
-     * @return
-     */
     @Column(name="IN_STORE")
     protected Boolean inStore;
 
@@ -176,8 +156,41 @@ public class QueriesPosition extends StandardEntity {
     @JoinColumn(name = "BILLS_ID")
     protected Bills bills;
 
+    @JoinColumn(name = "DELIVERY_ID")
+    @OneToOne(fetch = FetchType.LAZY)
+    protected Delivery delivery;
+
+    public void setNameCallback(QueriesPositionNameCallback nameCallback) {
+        this.nameCallback = nameCallback;
+    }
+
+
+    public QueriesPositionNameCallback getNameCallback() {
+        return nameCallback;
+    }
+
+    public interface QueriesPositionNameCallback{
+        String makeName(QueriesPosition query);
+    }
+
+    /**
+     *
+     *
+     * генерация имени возможна с использованием nameCallback.
+     * это нужно для информативного отображения сущности при группировке по ней
+     * @return
+     */
     @Transient
     protected transient QueriesPositionNameCallback nameCallback=null;
+
+    public void setDelivery(Delivery delivery) {
+        this.delivery = delivery;
+    }
+
+    public Delivery getDelivery() {
+        return delivery;
+    }
+
     public void setBillsFlag(Boolean billsFlag) {
         this.billsFlag = billsFlag;
     }

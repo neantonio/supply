@@ -24,5 +24,7 @@
         <class>com.groupstp.supply.entity.Vote</class>
         <class>com.groupstp.supply.entity.Bills</class>
         <class>com.groupstp.supply.entity.Procuration</class>
+        <class>com.groupstp.supply.entity.Delivery</class>
+        <class>com.groupstp.supply.entity.DeliveryLine</class>
     </persistence-unit>
 </persistence>

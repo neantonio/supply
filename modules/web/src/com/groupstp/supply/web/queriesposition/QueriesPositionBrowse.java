@@ -498,12 +498,11 @@ public class QueriesPositionBrowse extends AbstractLookup {
         HashMap<String, Object> items = new HashMap<>();
         items.put("supplerId", clickedBills.getSupplier().getId());
         items.put("billId", clickedBills.getId());
-        dsBills.setQuery("select e from supply$QueriesPosition e\n" +
+        dsBills.setQuery("select e from supply$QueriesPosition e LEFT JOIN e.voteResult v LEFT JOIN v.posSup p LEFT JOIN p.supplier s LEFT JOIN e.bills b\n" +
                 "where e.currentStage='Bills' and (" +
-                "e.bills.id = :custom$billId\n" +
+                "b.id = :custom$billId\n" +
                 "or\n" +
-                "(e.voteResult.posSup.supplier.id = :custom$supplerId and e.bills is null))");
-//        dsBills.setQuery("select e from supply$QueriesPosition e where e.currentStage='Bills' and ( (e.voteResult.posSup.supplier.id =:custom$supplerId and e.bills is null) or (e.bills.id =:custom$billId))");
+                "(s.id = :custom$supplerId and e.bills is null))");
         dsBills.refresh(items);
         billsTable.setSelected(clickedBills);
         displayImage();

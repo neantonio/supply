@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<window xmlns="http://schemas.haulmont.com/cuba/window.xsd"
+        caption="msg://editorCaption"
+        class="com.groupstp.supply.web.delivery.DeliveryEdit"
+        datasource="deliveryDs"
+        focusComponent="fieldGroup"
+        messagesPack="com.groupstp.supply.web.delivery">
+    <dsContext>
+        <datasource id="deliveryDs"
+                    class="com.groupstp.supply.entity.Delivery"
+                    view="delivery-edit">
+            <collectionDatasource id="deliveryLineDs"
+                                  property="deliveryLine"/>
+        </datasource>
+    </dsContext>
+    <dialogMode height="600"
+                width="800"/>
+    <layout expand="windowActions"
+            spacing="true">
+        <fieldGroup id="fieldGroup"
+                    datasource="deliveryDs">
+            <column width="250px">
+                <field property="deliveryPlan"/>
+                <field property="number"/>
+                <field property="quantity"/>
+            </column>
+        </fieldGroup>
+        <groupBox id="deliveryLineBox"
+                  caption="msg://com.groupstp.supply.entity/Delivery.deliveryLine">
+            <table id="deliveryLineTable"
+                   height="200px"
+                   width="100%">
+                <actions>
+                    <action id="create"/>
+                    <action id="edit"/>
+                    <action id="remove"/>
+                </actions>
+                <columns/>
+                <rows datasource="deliveryLineDs"/>
+                <buttonsPanel>
+                    <button action="deliveryLineTable.create"/>
+                    <button action="deliveryLineTable.edit"/>
+                    <button action="deliveryLineTable.remove"/>
+                </buttonsPanel>
+            </table>
+        </groupBox>
+        <frame id="windowActions"
+               screen="editWindowActions"/>
+    </layout>
+</window>

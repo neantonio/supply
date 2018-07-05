@@ -57,4 +57,12 @@
             template="com/groupstp/supply/web/querypositionmovement/statistics.xml"/>
     <screen id="supply$StageTerm.edit"
             template="com/groupstp/supply/web/stageterm/stage-term-edit.xml"/>
+    <screen id="deliverySchedule"
+            template="com/groupstp/supply/web/queriesposition/deliverySchedule.xml"/>
+    <screen id="supply$DeliveryLine.edit"
+            template="com/groupstp/supply/web/deliveryline/delivery-line-edit.xml"/>
+    <screen id="supply$Delivery.browse"
+            template="com/groupstp/supply/web/delivery/delivery-browse.xml"/>
+    <screen id="supply$Delivery.edit"
+            template="com/groupstp/supply/web/delivery/delivery-edit.xml"/>
 </screen-config>

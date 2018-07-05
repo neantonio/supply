@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<window xmlns="http://schemas.haulmont.com/cuba/window.xsd"
+        caption="msg://Delivery_schedule"
+        class="com.groupstp.supply.web.queriesposition.Deliveryschedule"
+        messagesPack="com.groupstp.supply.web.queriesposition">
+    <dsContext>
+        <groupDatasource id="queriesPositionsDs"
+                         class="com.groupstp.supply.entity.QueriesPosition"
+                         view="queriesPosition-delivery">
+            <query>
+                <![CDATA[select e from supply$QueriesPosition e]]>
+            </query>
+        </groupDatasource>
+    </dsContext>
+    <dialogMode height="600"
+                width="800"/>
+    <layout>
+        <vbox id="vbox"
+              expand="queriesPositionsTable"
+              height="100%"
+              spacing="true">
+            <buttonsPanel>
+            <button id="btnExpandAllBills"
+                    caption="mainMsg://Expand All"
+                    icon="EXPAND"
+                    invoke="onBtnExpandAllClick"/>
+            <button id="btnCollapseAllBills"
+                    caption="mainMsg://Collapse all"
+                    icon="COMPRESS"
+                    invoke="onBtnCollapseAllClick"/>
+            </buttonsPanel>
+            <groupTable id="queriesPositionsTable"
+                        fixedGrouping="true"
+                        height="100%"
+                        presentations="true"
+                        width="100%">
+                <columns>
+                    <group>
+                        <column id="query.company"/>
+                        <column id="query.division"/>
+                        <column id="query.number"/>
+                        <column id="query.contact.name"/>
+                    </group>
+                    <column id="nomenclature.name"/>
+                    <column id="delivery.deliveryPlan"/>
+                    <column id="delivery.number"/>
+                    <column id="delivery.quantity"/>
+                </columns>
+                <rows datasource="queriesPositionsDs"/>
+            </groupTable>
+        </vbox>
+    </layout>
+</window>

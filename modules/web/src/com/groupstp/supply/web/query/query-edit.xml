@@ -131,6 +131,7 @@
             <columns>
                 <column editable="false"
                         property="currentStage"/>
+                <column property="delivery"/>
                 <column property="positionType"/>
                 <column property="numberArticle"/>
                 <column property="nomenclature"/>
