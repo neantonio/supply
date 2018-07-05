@@ -94,7 +94,7 @@ public class QueryBrowse extends AbstractLookup {
                     case NEW_ITEM:
                         return "new-query";
                     case OVERDUE:
-                        return "done-query";
+                        return "overdue-query";
                     default:
                         return null;
                 }

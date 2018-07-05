@@ -249,6 +249,7 @@ public class QueriesPositionBrowse extends AbstractLookup {
         refreshLogistic();          //нужны актуальные данные в датасорсах
         processLogisticStageTableSelection(Collections.emptyList());
 
+        componentsMapForValidation.clear();
         stageDataMap.clear();
         dsLogisticStageData.getItems().forEach(item->{
             stageDataMap.put(item.getPosition(),item);
@@ -377,19 +378,14 @@ public class QueriesPositionBrowse extends AbstractLookup {
                                             stageDataMap.put(entity,data);
                                             pickerField.removeStyleName(errorStyleMap.get(pickerField.getClass()));
                                         });
-                                        pickerField.addValidator(value -> {
-                                           if(positionsLogistic.getSelected().contains(entity)&&(value==null))
-                                               throw new ValidationException(getMessage("set_this_field"));
-                                        });
-
-
 
                                     }
                                 } catch (ClassNotFoundException e) {
                                     e.printStackTrace();
                                 }
                         }
-                        if(logisticStageRequiredFields.contains(entry.getKey())) addComponentToValidationMap(entity,component);
+                        if(logisticStageRequiredFields.contains(entry.getKey()))
+                            addComponentToValidationMap(entity,component);
                     }
                 }
                 else{
@@ -772,7 +768,7 @@ public class QueriesPositionBrowse extends AbstractLookup {
         }
         Collection <QueriesPosition> correctPositions=checkFillingOfRequiredFieldForPositions(positionsLogistic.getSelected());
 
-        refreshLogistic();
+
 
         if(correctPositions.size()>0){
             makeConfirmDialog(
@@ -788,6 +784,9 @@ public class QueriesPositionBrowse extends AbstractLookup {
                         });
                         refreshLogistic();
             });
+        }
+        else {
+            showNotification(getMessage("fill_required_fields"),NotificationType.TRAY);
         }
 
     }

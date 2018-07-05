@@ -22,7 +22,7 @@ public class QueryPositionStageData extends StandardEntity {
     @JoinTable(name = "SUPPLY_QUERY_POSITION_STAGE_DATA_ITEM_LINK",
         joinColumns = @JoinColumn(name = "QUERY_POSITION_STAGE_DATA_ID"),
         inverseJoinColumns = @JoinColumn(name = "QUERY_POSITION_STAGE_DATA_ITEM_ID"))
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.PERSIST)
     @OnDeleteInverse(DeletePolicy.UNLINK)
     @OnDelete(DeletePolicy.CASCADE)
     protected List<QueryPositionStageDataItem> dataItems;
