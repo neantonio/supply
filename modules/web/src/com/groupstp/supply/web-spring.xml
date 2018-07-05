@@ -26,6 +26,8 @@
                        value="com.groupstp.supply.service.StatisticsService"/>
                 <entry key="supply_VoteService"
                        value="com.groupstp.supply.service.VoteService"/>
+                <entry key="supply_PaymentTableService"
+                       value="com.groupstp.supply.service.PaymentTableService"/>
             </map>
         </property>
     </bean>

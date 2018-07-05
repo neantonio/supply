@@ -9,7 +9,9 @@ import javax.validation.constraints.NotNull;
 import com.haulmont.chile.core.annotations.NumberFormat;
 import java.util.Date;
 import java.util.List;
+import com.haulmont.chile.core.annotations.NamePattern;
 
+@NamePattern("%s|number")
 @Table(name = "SUPPLY_BILLS")
 @Entity(name = "supply$Bills")
 public class Bills extends StandardEntity {
