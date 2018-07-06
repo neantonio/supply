@@ -162,10 +162,10 @@ public class DataBaseTestContentServiceBean implements DataBaseTestContentServic
         EntityManager em=(EntityManager)emo;
         if(resultList==null) resultList=new ArrayList<>();
 
-        for(String companyName:ownCompanyList){
-            Company company =createCompany(companyName);
+        for(String companyName:ownCompanyList) {
+            Company company = createCompany(companyName);
             resultList.add(company);
-            if(em!=null)em.persist(company);
+            if (em != null) em.persist(company);
         }
         return resultList;
     }
@@ -496,7 +496,6 @@ public class DataBaseTestContentServiceBean implements DataBaseTestContentServic
         Transaction tx = persistence.createTransaction();
         EntityManager em = persistence.getEntityManager();
         Date today=new Date();
-
 
         createCompanies(ownCompanyList,companies,em);
 

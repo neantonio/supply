@@ -51,7 +51,7 @@ public class Nomenclature extends StandardEntity {
 
     @Composition
     @OnDelete(DeletePolicy.CASCADE)
-    @OneToMany(mappedBy = "nomenclature")
+    @OneToMany(mappedBy = "nomenclature", cascade = CascadeType.PERSIST)
     protected List<Analogs> analogs;
 
     @OneToOne(fetch = FetchType.LAZY, mappedBy = "analog")
