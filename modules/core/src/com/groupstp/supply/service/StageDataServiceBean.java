@@ -29,11 +29,16 @@ public class StageDataServiceBean implements StageDataService {
     @Inject
     private QueryDaoService queryDaoService;
 
+    //ключ-новая; значение - старая QueryPositionStageDataItem
+    private Map<QueryPositionStageDataItem,QueryPositionStageDataItem> dirtyItemsMap=new HashMap<>();
+    private Set<QueryPositionStageData> dirtyData=new HashSet<>();
+
     //основной метод для установки значения. все остальные значения преобразовываются к стрингу
     @Override
     public QueryPositionStageData setData(QueryPositionStageData stageData, String dataName, String data) {
         QueryPositionStageDataItem dataItem=findDataItem(stageData,dataName);
         QueryPositionStageDataItem newDataItem;
+
         boolean saveItem=false;
         if(dataItem.getItemValue()!=null)newDataItem=initNewDataItems(stageData,dataItem);
         else {
@@ -50,7 +55,34 @@ public class StageDataServiceBean implements StageDataService {
             return (QueryPositionStageData)queryDaoService.saveEntity(stageData);
         }
 
+//        if(dataItem.getItemValue()==null)dataItem.setItemType(data);
+//        else {
+//
+//            //если редактирование происходит уже не в первый раз, тогда изменяем поле
+//            if(dirtyItemsMap.get(dataItem)!=null){
+//                dirtyItemsMap.get(dataItem).setItemValue(data);
+//            }
+//            //а если в первый, то создаем новую сущность и кладем ее в мар
+//            else{
+//                newDataItem=initNewDataItems(stageData,dataItem);
+//                dirtyItemsMap.put(newDataItem,dataItem);
+//                dirtyData.add(stageData);
+//            }
+//        }
+//        return stageData;
+
     }
+
+    @Override
+    public void saveChanges(){
+        dirtyData.forEach(item->{
+            queryDaoService.saveEntity(item);
+        });
+        dirtyData.clear();
+        dirtyItemsMap.clear();
+    }
+
+
 
     @Override
     public  QueryPositionStageData setData(QueryPositionStageData stageData, String dataName, Date data) {

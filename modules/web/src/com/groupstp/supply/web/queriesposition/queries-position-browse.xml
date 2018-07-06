@@ -660,17 +660,21 @@ where e.position in :custom$positions]]>
                         </vbox>
                         <vbox align="BOTTOM_CENTER"
                               spacing="true"
-                              width="400px">
+
+                              width="AUTO">
+
                             <groupBox id="cargoStateGroupBox"
                                       spacing="true">
                                 <vbox id="cargoStateGroupBoxTotalLayout"
                                       spacing="true"/>
+
                                 <hbox spacing="true"
                                       width="100%">
                                     <button id="previousCargoState"
                                             width="100%"/>
                                     <button id="nextCargoState"
                                             width="100%"/>
+
                                 </hbox>
                             </groupBox>
                         </vbox>
@@ -680,8 +684,10 @@ where e.position in :custom$positions]]>
                                 width="100%">
                         <columns>
                             <column id="positionType"/>
+
                             <column id="nomenclature.unit.name"
                                     caption="msg://unit"/>
+
                             <column id="quantity"/>
                         </columns>
                         <rows datasource="dsLogistic"/>
