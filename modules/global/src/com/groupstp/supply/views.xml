@@ -249,6 +249,8 @@
                 <property name="analog"
                           view="_minimal"/>
             </property>
+            <property name="unit"
+                      view="_minimal"/>
         </property>
         <property name="measureUnit"
                   view="_minimal"/>
@@ -258,6 +260,12 @@
                   view="_minimal"/>
         <property name="updateTs"/>
         <property name="createTs"/>
+        <property name="bills"
+                  view="_minimal"/>
+        <property name="voteResult"
+                  view="_minimal"/>
+        <property name="createdBy"/>
+        <property name="updatedBy"/>
     </view>
     <view class="com.groupstp.supply.entity.PositionSupplier"
           extends="_local"
@@ -430,5 +438,42 @@
                   view="_minimal">
             <property name="itemName"/>
         </property>
+    </view>
+    <view class="com.groupstp.supply.entity.QueriesPosition"
+          extends="queriesPosition-full"
+          name="queriesPosition-logistic">
+        <property name="position"
+                  view="_minimal">
+            <property name="query"
+                      view="_minimal"/>
+            <property name="storeControlFlag"/>
+            <property name="currentStage"/>
+            <property name="positionType"/>
+            <property name="numberArticle"/>
+            <property name="specification"/>
+            <property name="measureUnit"
+                      view="_minimal"/>
+            <property name="quantity"/>
+            <property name="analogsAllowed"/>
+            <property name="analogs"
+                      view="_minimal"/>
+            <property name="store"
+                      view="_minimal"/>
+            <property name="positionUsefulness"/>
+            <property name="positionUsefulnessTS"/>
+            <property name="specNomenclature"
+                      view="_minimal"/>
+            <property name="startMinimalPrice"/>
+            <property name="nomeclatureChange"
+                      view="_minimal"/>
+            <property name="bills"
+                      view="_minimal"/>
+        </property>
+        <property name="voteResult"
+                  view="_minimal"/>
+        <property name="bills"
+                  view="_minimal"/>
+        <property name="createdBy"/>
+        <property name="updatedBy"/>
     </view>
 </views>

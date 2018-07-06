@@ -257,7 +257,7 @@ public class QueriesPositionBrowse extends AbstractLookup {
 
         logisticStageDataItemsDescription.entrySet().forEach(entry->{
 
-            positionsLogistic.addGeneratedColumn(entry.getKey(),entity -> {
+            positionsLogistic.addGeneratedColumn(getMessage(entry.getKey()),entity -> {
                 QueryPositionStageData stageData=stageDataService.
                         getOrCreateStageDataForPositionFromCollectionAndDescription(dsLogisticStageData.getItems(),
                                 entity,
@@ -338,14 +338,15 @@ public class QueriesPositionBrowse extends AbstractLookup {
                                     if(Class.forName("com.groupstp.supply.entity."+entry.getValue()).isEnum()){
                                         component=componentsFactory.createComponent(PopupButton.NAME);
                                         PopupButton popupButton=(PopupButton) component;
-                                        popupButton.setCaption(stageDataService.getStringData(stageDataMap.get(entity),entry.getKey()));
+                                        String caption=stageDataService.getStringData(stageDataMap.get(entity),entry.getKey());
+                                        if(caption!=null)popupButton.setCaption(getMessage(caption));
                                         popupButton.setWidth("100%");
 
                                         VBoxLayout layout=(VBoxLayout)componentsFactory.createComponent(VBoxLayout.NAME);
 
                                         Arrays.asList(Class.forName("com.groupstp.supply.entity."+entry.getValue()).getEnumConstants()).forEach(item->{
                                             Button button=(Button)componentsFactory.createComponent(Button.NAME);
-                                            button.setCaption(item.toString());
+                                            button.setCaption(getMessage(item.toString()));
                                             button.setWidth("100%");
                                             button.setAction(new BaseAction("") {
                                                 @Override
@@ -355,6 +356,7 @@ public class QueriesPositionBrowse extends AbstractLookup {
                                                     dsLogisticStageData.addItem(data);
                                                     stageDataMap.put(entity,data);
                                                     refreshLogistic();
+                                                    processLogisticStageTableSelection(positionsLogistic.getSelected());
                                                 }
                                             });
                                             layout.add(button);
@@ -369,6 +371,7 @@ public class QueriesPositionBrowse extends AbstractLookup {
                                         Session session = metadata.getSession();
                                         MetaClass metaClass1 = session.getClassNN(queryDaoService.getMetaclassPrefix(entry.getValue())+ entry.getValue());
                                         pickerField.setMetaClass(metaClass1);
+
 
                                         pickerField.setValue(stageDataService.getEntityData(stageDataMap.get(entity),entry.getKey()));
                                         pickerField.addValueChangeListener(value->{
@@ -422,8 +425,10 @@ public class QueriesPositionBrowse extends AbstractLookup {
                                     label.setValue(entity1);
                                 }
 
+                            //если класс не грузится то отображаем как сущность
                             } catch (ClassNotFoundException e) {
-                                e.printStackTrace();
+                                StandardEntity entity1=stageDataService.getEntityData(stageDataMap.get(entity),entry.getKey());
+                                label.setValue(entity1);
                             }
                     }
                 }
@@ -481,6 +486,21 @@ public class QueriesPositionBrowse extends AbstractLookup {
         return correctPositions;
     }
 
+    private void moveCargoOfSelectedItemsToStage(CargoState state){
+        positionsLogistic.getSelected().forEach(item->{
+            dsLogisticStageData.excludeItem(stageDataMap.get(item));
+            QueryPositionStageData data=stageDataService.setData(stageDataMap.get(item),"cargo_state",state.toString());
+            dsLogisticStageData.addItem(data);
+            stageDataMap.put(item,data);
+            processLogisticStageTableSelection(positionsLogistic.getSelected());
+
+        });
+        refreshLogistic();
+    }
+
+    private int selectedState;
+    private int getSelectedState(){return selectedState;}
+
     /**
      * @author AntonLomako
      * обработка выбранных ячеек для определения текста кнопок переещения по этапам логистики и их активности
@@ -492,7 +512,7 @@ public class QueriesPositionBrowse extends AbstractLookup {
 
         Map <String,Integer> cargoStateTotal=new HashMap<>();
         int totalCargoStateSelected=0;// без пустых статусов
-        int selectedState=-1;
+       selectedState=-1;
 
         List<CargoState> cargoStates=Arrays.asList(CargoState.values());
 
@@ -518,22 +538,25 @@ public class QueriesPositionBrowse extends AbstractLookup {
             if(cargoStateTotal.entrySet().size()>1) changeCargoStateButtonsAreEnable=false;
         }
 
-        cargoStateGroupBox.setCaption("selected_total: "+String.valueOf(totalCargoStateSelected));
+        cargoStateGroupBox.setCaption(getMessage("selected_total")+": "+String.valueOf(totalCargoStateSelected));
         cargoStateGroupBoxTotalLayout.removeAll();
 
         cargoStateTotal.entrySet().forEach(entry->{
             Label label=(Label)componentsFactory.createComponent(Label.NAME);
-            label.setValue(entry.getKey()+" :"+String.valueOf(entry.getValue()));
+            label.setValue(getMessage(entry.getKey())+" :"+String.valueOf(entry.getValue()));
             cargoStateGroupBoxTotalLayout.add(label,0);
         });
 
+        initCargoStateButtons();
+
         if(changeCargoStateButtonsAreEnable&&!selectedLastState){
-            nextCargoState.setEnabled(true);
-            nextCargoState.setCaption(getMessage("cargo ")+cargoStates.get(selectedState+1));
+            nextCargoState.setVisible(true);
+            nextCargoState.setCaption(getMessage("cargo_to")+" '" +getMessage(cargoStates.get(selectedState+1).toString())+"'");
+
         }
         else{
-            nextCargoState.setEnabled(false);
-            nextCargoState.setCaption(getMessage("next_move_impossible"));
+            nextCargoState.setVisible(false);
+            //nextCargoState.setCaption(getMessage("next_move_impossible"));
         }
 
         if(changeCargoStateButtonsAreEnable&&!selectedFirstState){
@@ -542,15 +565,41 @@ public class QueriesPositionBrowse extends AbstractLookup {
             }
             else {
                 previousCargoState.setVisible(true);
-                previousCargoState.setEnabled(true);
-                previousCargoState.setCaption(getMessage("cargo ") + cargoStates.get(selectedState - 1));
+                //previousCargoState.setEnabled(true);
+                previousCargoState.setCaption(getMessage("cargo_to")+" '" + getMessage(cargoStates.get(selectedState - 1).toString())+"'");
             }
         }
         else{
-            previousCargoState.setEnabled(false);
-            previousCargoState.setCaption(getMessage("back_move_impossible"));
+            previousCargoState.setVisible(false);
+            //previousCargoState.setCaption(getMessage("back_move_impossible"));
         }
 
+        if(!changeCargoStateButtonsAreEnable){
+            Label label=(Label)componentsFactory.createComponent(Label.NAME);
+            label.setValue(getMessage("impossible_move"));
+            cargoStateGroupBoxTotalLayout.add(label);
+        }
+
+
+    }
+
+    private void initCargoStateButtons(){
+        if(nextCargoState.getAction()==null) {
+            nextCargoState.setAction(new BaseAction("") {
+                @Override
+                public void actionPerform(Component component) {
+                    moveCargoOfSelectedItemsToStage(CargoState.values()[getSelectedState()+1]);
+                }
+            });
+        }
+        if(previousCargoState.getAction()==null) {
+            previousCargoState.setAction(new BaseAction("") {
+                @Override
+                public void actionPerform(Component component) {
+                    moveCargoOfSelectedItemsToStage(CargoState.values()[getSelectedState()-1]);
+                }
+            });
+        }
     }
 
     /**
@@ -768,12 +817,10 @@ public class QueriesPositionBrowse extends AbstractLookup {
         }
         Collection <QueriesPosition> correctPositions=checkFillingOfRequiredFieldForPositions(positionsLogistic.getSelected());
 
-
-
         if(correctPositions.size()>0){
             makeConfirmDialog(
                     getMessage("position_moving")
-                    ,getMessage("correct_position_value")+": "+String.valueOf(correctPositions.size())+". "+getMessage("move_them_to_-next_stage")+"?"
+                    ,getMessage("correct_position_value")+": "+String.valueOf(correctPositions.size())+". "+getMessage("move_them_to_next_stage")+"?"
                     ,()->{
                         correctPositions.forEach(item->{
                             try {

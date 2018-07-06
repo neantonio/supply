@@ -17,7 +17,10 @@ public interface StageDataService {
 
     //методы добавления данных. для каждого типа своя обработка
     QueryPositionStageData setData(QueryPositionStageData stageData,String dataName,String data);
-    QueryPositionStageData setData(QueryPositionStageData stageData,String dataName,Date data);
+
+    void saveChanges();
+
+    QueryPositionStageData setData(QueryPositionStageData stageData, String dataName, Date data);
     QueryPositionStageData setData(QueryPositionStageData stageData,String dataName,Integer data);
     QueryPositionStageData setData(QueryPositionStageData stageData,String dataName,Double data);
     QueryPositionStageData setData(QueryPositionStageData stageData,String dataName,StandardEntity data);
