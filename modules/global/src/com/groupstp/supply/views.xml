@@ -216,6 +216,11 @@
                   view="_minimal"/>
         <property name="nomenclature"
                   view="_minimal"/>
+        <property name="delivery"
+                  view="_minimal">
+            <property name="deliveryPlan"/>
+            <property name="quantity"/>
+        </property>
     </view>
     <view class="com.groupstp.supply.entity.QueriesPosition"
           extends="_local"

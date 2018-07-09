@@ -277,6 +277,9 @@ where e.currentStage='Procuration']]>
                         <button id="btnSuggestions"
                                 caption="mainMsg://Suggestions"
                                 invoke="onBtnSuggestionsClick"/>
+                        <button id="btnDeliverySupStage"
+                                caption="Добавить Груз"
+                                invoke="onBtnDeliveryClick"/>
                     </buttonsPanel>
                     <groupTable id="positionsSupSelection"
                                 fixedGrouping="true"
@@ -297,6 +300,7 @@ where e.currentStage='Procuration']]>
                             <column id="query"/>
                             <column id="nomenclature"/>
                             <column id="quantity"/>
+                            <column id="delivery"/>
                         </columns>
                         <rows datasource="dsSupSelection"/>
                     </groupTable>
@@ -346,6 +350,9 @@ where e.currentStage='Procuration']]>
                         <button id="btnSuggestionsAnalysis"
                                 caption="mainMsg://Suggestions"
                                 invoke="onBtnSuggestionsClick"/>
+                        <button id="btnDeliveryAnalysisStage"
+                                caption="Добавить Груз"
+                                invoke="onBtnDeliveryClick"/>
                     </buttonsPanel>
                     <groupTable id="positionsAnalysis"
                                 fixedGrouping="true"
@@ -366,6 +373,7 @@ where e.currentStage='Procuration']]>
                             <column id="query"/>
                             <column id="nomenclature"/>
                             <column id="quantity"/>
+                            <column id="delivery"/>
                         </columns>
                         <rows datasource="dsAnalysis"/>
                     </groupTable>

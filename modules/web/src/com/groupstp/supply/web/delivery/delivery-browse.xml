@@ -47,5 +47,9 @@
                         action="deliveriesTable.remove"/>
             </buttonsPanel>
         </groupTable>
+        <button id="buttonAddDelivery"
+                caption="Прикрепить груз"
+                visible="false"
+                invoke="onBtnAddClick"/>
     </layout>
 </window>

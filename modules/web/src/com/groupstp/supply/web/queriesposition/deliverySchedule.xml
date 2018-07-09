@@ -8,7 +8,8 @@
                          class="com.groupstp.supply.entity.QueriesPosition"
                          view="queriesPosition-delivery">
             <query>
-                <![CDATA[select e from supply$QueriesPosition e]]>
+                <![CDATA[select e from supply$QueriesPosition e
+Where e.currentStage='Logistic']]>
             </query>
         </groupDatasource>
     </dsContext>
@@ -19,21 +20,39 @@
               expand="queriesPositionsTable"
               height="100%"
               spacing="true">
+            <filter id="filter"
+                    applyTo="queriesPositionsTable"
+                    datasource="queriesPositionsDs">
+                <properties include=".*"/>
+            </filter>
             <buttonsPanel>
-            <button id="btnExpandAllBills"
-                    caption="mainMsg://Expand All"
-                    icon="EXPAND"
-                    invoke="onBtnExpandAllClick"/>
-            <button id="btnCollapseAllBills"
-                    caption="mainMsg://Collapse all"
-                    icon="COMPRESS"
-                    invoke="onBtnCollapseAllClick"/>
+                <button id="btnExpandAllDelivery"
+                        caption="mainMsg://Expand All"
+                        icon="EXPAND"
+                        invoke="onBtnExpandAllClick"/>
+                <button id="btnCollapseAllDelivery"
+                        caption="mainMsg://Collapse all"
+                        icon="COMPRESS"
+                        invoke="onBtnCollapseAllClick"/>
+                <button id="btnHideNullColumnDelivery"
+                        caption="Скрыть пустые столбцы"
+                        icon="COMPRESS"
+                        invoke="onBtnHideNullColumnDelivery"/>
+                <button id="btnShowNullColumnDelivery"
+                        caption="Показать все столбцы"
+                        icon="COMPRESS"
+                        invoke="onBtnShowNullColumnDelivery"/>
+                <button id="refreshBtn"
+                        caption="Обновить"
+                        invoke="onBtnRefresh"/>
             </buttonsPanel>
             <groupTable id="queriesPositionsTable"
                         fixedGrouping="true"
-                        height="100%"
                         presentations="true"
                         width="100%">
+                <actions>
+                    <action id="refresh"/>
+                </actions>
                 <columns>
                     <group>
                         <column id="query.company"/>

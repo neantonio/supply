@@ -771,9 +771,7 @@ public class QueriesPositionBrowse extends AbstractLookup {
         Double billSum = currentBill.getAmount();
         List<QueriesPosition> list = currentBill.getPositions();
         Double positionSum = list.stream().mapToDouble(q ->
-        {
-            return q.getVoteResult().getPrice() * q.getVoteResult().getQuantity();
-        }).sum();
+                q.getVoteResult().getPrice() * q.getVoteResult().getQuantity()).sum();
 
         if (Math.abs(positionSum / billSum - 1) > 0.01) {
             showNotification(getMessage("Контроль суммы не пройден"), NotificationType.WARNING);
@@ -787,6 +785,20 @@ public class QueriesPositionBrowse extends AbstractLookup {
         dsBills.refresh();
     }
 
+    /**
+     * @author Andrey Kolosov
+     * Открывает список грузов
+     */
+    public void onBtnDeliveryClick() {
+        GroupTable tab = getOpenedStageTable();
+        if (tab.getSelected().size() == 0) {
+            showNotification(getMessage("Select position first"), NotificationType.WARNING);
+            return;
+        }
+        HashMap<String, Object> items = new HashMap<>();
+        items.put("position", tab.getSelected());
+        openWindow("supply$Delivery.browse", WindowManager.OpenType.DIALOG, items);
+    }
 }
 
 

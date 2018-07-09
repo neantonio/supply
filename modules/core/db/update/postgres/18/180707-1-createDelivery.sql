@@ -1,4 +1,4 @@
-create table SUPPLY_DELIVERY_LINE (
+create table SUPPLY_DELIVERY (
     ID uuid,
     VERSION integer not null,
     CREATE_TS timestamp,
@@ -8,9 +8,9 @@ create table SUPPLY_DELIVERY_LINE (
     DELETE_TS timestamp,
     DELETED_BY varchar(50),
     --
-    DELIVERY_ID uuid,
+    DELIVERY_PLAN date not null,
+    NUMBER_ varchar(20) not null,
     QUANTITY double precision not null,
-    DELIVERY_DAY date not null,
     --
     primary key (ID)
 );
