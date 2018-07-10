@@ -82,6 +82,16 @@ public class WorkflowServiceBean implements WorkflowService {
         createMovementRecord(position, stage);
     }
 
+    /**
+     * Возвращает все движения позиции заявки
+     * @param position позиция заявки
+     */
+    @Override
+    public List<QueryPositionMovements> getQueryPositionMovement(QueriesPosition position){
+
+        return queryDaoService.getQueryPositionMovement(position);
+    }
+
     @Inject
     QueryDaoService queryDaoService;
 

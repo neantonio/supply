@@ -21,17 +21,16 @@ import com.haulmont.cuba.gui.export.ExportDisplay;
 import com.haulmont.cuba.gui.export.ExportFormat;
 import com.haulmont.cuba.gui.upload.FileUploadingAPI;
 import com.haulmont.cuba.gui.xml.layout.ComponentsFactory;
+import javafx.stage.Stage;
 import org.dom4j.Element;
 
 import javax.annotation.Nullable;
 import javax.inject.Inject;
+import javax.inject.Named;
 import java.util.*;
 import java.util.stream.Collectors;
 
 public class QueriesPositionBrowse extends AbstractLookup {
-
-//    @Inject
-//    private DataBaseTestContentService dataBaseTestContentService;
 
     @Inject
     private DataManager dataManager;
@@ -52,6 +51,12 @@ public class QueriesPositionBrowse extends AbstractLookup {
     private GroupTable<QueriesPosition> positionsSupSelection;
 
     @Inject
+    private GroupTable<QueriesPosition> positionsAnalysis;
+
+    @Inject
+    private GroupTable<QueriesPosition> positionsProcuration;
+
+    @Inject
     private WorkflowService workflowService;
 
     @Inject
@@ -59,6 +64,45 @@ public class QueriesPositionBrowse extends AbstractLookup {
 
     @Inject
     private ComponentsFactory componentsFactory;
+
+    @Inject
+    private GroupTable<QueriesPosition> positionsBills;
+
+    @Inject
+    private Table<Bills> billsTable;
+
+    @Inject
+    private GroupDatasource<QueriesPosition, UUID> dsBills;
+
+    @Inject
+    private GroupDatasource<Bills, UUID> billsesDs;
+
+    @Inject
+    private DataSupplier dataSupplier;
+
+    @Inject
+    private FileUploadingAPI fileUploadingAPI;
+
+    @Inject
+    private ExportDisplay exportDisplay;
+
+    @Inject
+    private FileUploadField uploadField;
+
+    @Inject
+    private Button downloadImageBtn;
+
+    @Inject
+    private Button clearImageBtn;
+
+    @Inject
+    private Button OpenInNewTabBtn;
+
+    @Inject
+    private BrowserFrame imageForBill;
+
+    @Inject
+    private GroovyTestService groovyTestService;
 
     List<Object> nomControlGroupOrder=new ArrayList<>();
     List<Object> nomControlAvailableOrderItems=new ArrayList<>();
@@ -219,6 +263,18 @@ public class QueriesPositionBrowse extends AbstractLookup {
     }
 
     /**
+     * Проставляем queryLink в остальных таблицах, где еще нет.
+     */
+
+    private void addLinkOpenButtonToTables(){
+        final String title = "Ссылка";
+        positionsSupSelection.addGeneratedColumn(title, new QueryLinkGenerator());
+        positionsAnalysis.addGeneratedColumn(title, new QueryLinkGenerator());
+        positionsComission.addGeneratedColumn(title, new QueryLinkGenerator());
+        positionsProcuration.addGeneratedColumn(title, new QueryLinkGenerator());
+    }
+
+    /**
      * Обработчик нажатия на кнопку Целесообразность заявки, устаналивает признак целесообразности для всех позиций заявки
      */
     public void onBtnSetQueryUsefulnessClick() {
@@ -246,15 +302,31 @@ public class QueriesPositionBrowse extends AbstractLookup {
         getOpenedStageTable().collapseAll();
     }
 
-    @Inject
-    private GroovyTestService groovyTestService;
-
     /**
      * Для списка выделенных позиций пытается первести их на следующий этап
      */
     public void onBtnDoneClick() throws Exception {
         movePositions();
     }
+
+
+    public void onBtnCancelClick() throws Exception{
+        movePositionsToCancelStage();
+    }
+
+    private void movePositionsToCancelStage() {
+        GroupTable<QueriesPosition> grpTab = getOpenedStageTable();
+        Set<QueriesPosition> positions = grpTab.getSelected();
+        for (QueriesPosition position : positions) {
+            movePositionTo(position,Stages.Abortion);
+        }
+    }
+
+    private Set<QueriesPosition> getSelectedPosition() throws Exception {
+        GroupTable<QueriesPosition> grpTab = getOpenedStageTable();
+        return grpTab.getSelected();
+    }
+
 
     private void movePositions() throws Exception {
         GroupTable<QueriesPosition> grpTab = getOpenedStageTable();
@@ -267,6 +339,89 @@ public class QueriesPositionBrowse extends AbstractLookup {
         }
         ds.refresh();
     }
+
+    private void movePositionTo(QueriesPosition position,Stages stage) {
+        GroupTable<QueriesPosition> grpTab = getOpenedStageTable();
+        GroupDatasource ds = grpTab.getDatasource();
+        workflowService.movePositionTo(position,stage);
+        ds.refresh();
+    }
+
+    private void initReturnButtons(){
+        Collection<TabSheet.Tab> tabsColl = tabs.getTabs();
+        tabsColl.forEach((t) -> {
+            try {
+                PopupButton returnButton = (PopupButton) getComponentNN("btnReturn_" + t.getName());
+
+            returnButton.addPopupVisibilityListener((e) -> {
+                returnButton.removeAllActions();
+                if(returnButton.isPopupVisible()){
+                    try {
+                        Set<QueriesPosition> selected = getSelectedPosition();
+                        if(selected.size() > 1){
+                            showNotification("Выберите только одну позицию");
+                            return;
+                        }
+                        else if(selected.size() == 0){
+                            showNotification("Выберите позицию");
+                            return;
+                        }
+                        else {
+                            QueriesPosition position = selected.iterator().next();
+                            Stages curStage =  position.getCurrentStage();
+                            List<QueryPositionMovements> movements = workflowService.getQueryPositionMovement(position);
+                            movements.forEach((i)->{
+                                //Delete current stage
+                                if(curStage.getId().equals(i.getStage().getId()))
+                                    return;
+                                returnButton.addAction(new BaseAction(i.getStage().getId()) {
+                                    @Override
+                                    public void actionPerform(Component component) {
+                                        movePositionTo(position,i.getStage());
+
+                                    }
+                                });
+                            });
+                            returnButton.addAction(new BaseAction("Новая") {
+                                @Override
+                                public void actionPerform(Component component) {
+                                    movePositionTo(position, Stages.New);
+
+
+                                }
+                            });
+                        }
+
+                    }
+                    catch (Exception ex){
+
+                    }
+                }
+                else {
+                    //Приходится добавлять пустое действие, без него не срабатывает PopupVisibilityListener
+                    returnButton.addAction(new BaseAction("blankAction") {
+                        @Override
+                        public void actionPerform(Component component) {
+                        }
+                    });
+                }
+            });
+
+            }
+            catch (IllegalArgumentException e){
+
+            }
+        });
+
+
+    }
+
+    /**
+     * Обработчик нажатия кнопки Возврат.
+     * Записывает изменния таблицы в БД.
+     */
+  //  public void onBtnReturnClick() {
+   // }
 
     /**
      * Обработчик нажатия кнопки Записать.
@@ -407,38 +562,10 @@ public class QueriesPositionBrowse extends AbstractLookup {
         ds.refresh();
     }
 
-    @Inject
-    private GroupTable<QueriesPosition> positionsBills;
-
-    @Inject
-    private Table<Bills> billsTable;
-
-    @Inject
-    private GroupDatasource<QueriesPosition, UUID> dsBills;
-
-    @Inject
-    private GroupDatasource<Bills, UUID> billsesDs;
-
-    @Inject
-    private DataSupplier dataSupplier;
-    @Inject
-    private FileUploadingAPI fileUploadingAPI;
-    @Inject
-    private ExportDisplay exportDisplay;
-    @Inject
-    private FileUploadField uploadField;
-    @Inject
-    private Button downloadImageBtn;
-    @Inject
-    private Button clearImageBtn;
-    @Inject
-    private Button OpenInNewTabBtn;
-    @Inject
-    private BrowserFrame imageForBill;
-
 
     @Override
     public void init(Map<String, Object> params) {
+
 
         //Генерируемая колонка "Сумма"
         positionsBills.addGeneratedColumn("Сумма", new Table.PrintableColumnGenerator<QueriesPosition, String>() {
@@ -480,7 +607,11 @@ public class QueriesPositionBrowse extends AbstractLookup {
         uploadField.addFileUploadErrorListener(event ->
                 showNotification("File upload error", NotificationType.HUMANIZED));
 
+        initReturnButtons();
+        addLinkOpenButtonToTables();
     }
+
+
 
     /**
      * События при клике на счет
