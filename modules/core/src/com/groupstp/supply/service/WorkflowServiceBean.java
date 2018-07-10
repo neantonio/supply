@@ -91,6 +91,8 @@ public class WorkflowServiceBean implements WorkflowService {
      * @param position
      */
     private void createFinishStageRecord(QueriesPosition position){
+        List<QueryPositionMovements> movementsList=queryDaoService.getQueryPositionMovement(position);
+        if((movementsList==null)||(movementsList.size()==0))return;     //// TODO: 06.07.2018 неплохо бы кинуть здесь исключение 
         QueryPositionMovements lastMovement=queryDaoService.getQueryPositionMovement(position).get(0);
         if(lastMovement==null) return;
         lastMovement.setFinishTS(new Date());
