@@ -283,6 +283,8 @@
                   view="_minimal"/>
         <property name="createdBy"/>
         <property name="updatedBy"/>
+        <property name="delivery"
+                  view="_minimal"/>
     </view>
     <view class="com.groupstp.supply.entity.PositionSupplier"
           extends="_local"

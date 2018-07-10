@@ -402,6 +402,7 @@ create table SUPPLY_BILLS (
     DELETED_BY varchar(50),
     --
     NUMBER_ varchar(20) not null,
+    PRICE double precision,
     COMPANY_ID uuid,
     SUPPLIER_ID uuid not null,
     TIME_PAYMENT timestamp,
