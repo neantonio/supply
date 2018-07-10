@@ -8,6 +8,7 @@ import com.groupstp.supply.service.QueryDaoService;
 import com.groupstp.supply.service.WorkflowService;
 import com.haulmont.cuba.gui.WindowManager;
 import com.haulmont.cuba.gui.components.*;
+import com.haulmont.cuba.gui.components.actions.BaseAction;
 import com.haulmont.cuba.gui.data.CollectionDatasource;
 import com.haulmont.cuba.gui.xml.layout.ComponentsFactory;
 import com.haulmont.cuba.security.entity.User;
@@ -67,8 +68,21 @@ public class Queryregister extends AbstractWindow {
 
         addPositionHistoryPopupColumn();
         addPositionInfoColumn();
+        //addPositionClickListener();
         initGrouping();
     }
+
+//    private void addPositionClickListener(){
+//        positionsTable.setItemClickAction(new BaseAction("clickItem") {
+//            @Override
+//            public void actionPerform(Component component) {
+//                openEditor(positionsTable.getSingleSelected(),WindowManager.OpenType.DIALOG);
+//            }
+//        });
+//
+//
+//
+//    }
 
     private void addPositionHistoryPopupColumn(){
         Date today=new Date();
