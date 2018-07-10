@@ -1,4 +1,4 @@
-create table SUPPLY_PROCURATION (
+create table SUPPLY_BILLS (
     ID uuid,
     VERSION integer not null,
     CREATE_TS timestamp,
@@ -9,8 +9,12 @@ create table SUPPLY_PROCURATION (
     DELETED_BY varchar(50),
     --
     NUMBER_ varchar(20) not null,
-    EMPLOYEE_ID uuid,
-    DATE_ date,
+    COMPANY_ID uuid,
+    SUPPLIER_ID uuid not null,
+    TIME_PAYMENT timestamp,
+    PRICE double precision,
+    SUM_CONTROL boolean,
+    IMAGE_BILL_ID uuid,
     --
     primary key (ID)
 );

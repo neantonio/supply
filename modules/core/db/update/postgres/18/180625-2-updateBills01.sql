@@ -1,2 +1,0 @@
-alter table SUPPLY_BILLS add constraint FK_SUPPLY_BILLS_ON_IMAGE_BILL foreign key (IMAGE_BILL_ID) references SYS_FILE(ID);
-create index IDX_SUPPLY_BILLS_ON_IMAGE_BILL on SUPPLY_BILLS (IMAGE_BILL_ID);

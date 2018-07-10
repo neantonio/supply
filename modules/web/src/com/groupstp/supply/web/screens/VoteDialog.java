@@ -70,6 +70,8 @@ public class VoteDialog extends AbstractWindow {
                 grp.setOptionsList(l);
             }
 
+
+
             LoadContext<Vote> vctx = LoadContext.create(Vote.class)
                     .setQuery(LoadContext.createQuery("select v from supply$Vote v where v.position.id in :positions and v.emp.id=:user")
                             .setParameter("positions", qp)

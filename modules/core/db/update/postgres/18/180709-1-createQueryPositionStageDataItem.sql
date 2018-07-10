@@ -9,10 +9,10 @@ create table SUPPLY_QUERY_POSITION_STAGE_DATA_ITEM (
     DELETED_BY varchar(50),
     --
     ITEM_NAME varchar(255),
+    QUERY_POSITION_STAGE_DATA_ID uuid,
     USER_ID uuid,
     ITEM_TYPE varchar(255),
     ITEM_VALUE varchar(255),
-    QUERY_POSITION_STAGE_DATA_ID uuid,
     --
     primary key (ID)
 );

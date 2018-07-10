@@ -14,7 +14,7 @@ where e.currentStage='NomControl']]>
         </groupDatasource>
         <groupDatasource id="dsStoreControl"
                          class="com.groupstp.supply.entity.QueriesPosition"
-                         view="queriesPosition-StoreControl">
+                         view="queriesPosition-full">
             <query>
                 <![CDATA[select e from supply$QueriesPosition e
 where e.currentStage='StoreControl']]>
@@ -431,6 +431,7 @@ where e.position in :custom$positions]]>
                     </buttonsPanel>
                     <groupTable id="positionsComission"
                                 fixedGrouping="true"
+                                multiselect="true"
                                 presentations="true"
                                 width="100%">
                         <actions>
@@ -660,7 +661,7 @@ where e.position in :custom$positions]]>
                         </vbox>
                         <vbox align="BOTTOM_CENTER"
                               spacing="true"
-                              width="400px">
+                              width="AUTO">
                             <groupBox id="cargoStateGroupBox"
                                       spacing="true">
                                 <vbox id="cargoStateGroupBoxTotalLayout"

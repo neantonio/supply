@@ -960,6 +960,7 @@ public class QueriesPositionBrowse extends AbstractLookup {
         openWindow("supply$PositionSupplier.browse", WindowManager.OpenType.DIALOG, items);
     }
 
+
     /**
      * Открывает ввод предложений
      */
@@ -972,6 +973,9 @@ public class QueriesPositionBrowse extends AbstractLookup {
         }
         HashMap<String, Object> items = new HashMap<>();
         items.put("positions", tab.getSelected());
+
+
+
         openWindow("supply$SuppliersSuggestion.browse", WindowManager.OpenType.DIALOG, items);
     }
 

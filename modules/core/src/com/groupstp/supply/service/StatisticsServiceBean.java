@@ -69,6 +69,7 @@ public class StatisticsServiceBean implements StatisticsService {
     @Override
     public double getPriceChangeOfNMP(QueriesPosition position) {
         if(position.getVoteResult()==null) return 0;
+        if(position.getStartMinimalPrice()==null) return 0;
         return position.getStartMinimalPrice()-position.getVoteResult().getPrice();
     }
 
