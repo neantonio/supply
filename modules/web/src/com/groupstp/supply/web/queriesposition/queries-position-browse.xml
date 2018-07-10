@@ -293,6 +293,9 @@ where e.position in :custom$positions]]>
                         <button id="btnSuggestions"
                                 caption="mainMsg://Suggestions"
                                 invoke="onBtnSuggestionsClick"/>
+                        <button id="btnDeliverySupStage"
+                                caption="Добавить Груз"
+                                invoke="onBtnDeliveryClick"/>
                     </buttonsPanel>
                     <groupTable id="positionsSupSelection"
                                 fixedGrouping="true"
@@ -313,6 +316,7 @@ where e.position in :custom$positions]]>
                             <column id="query"/>
                             <column id="nomenclature"/>
                             <column id="quantity"/>
+                            <column id="delivery"/>
                         </columns>
                         <rows datasource="dsSupSelection"/>
                     </groupTable>
@@ -362,6 +366,9 @@ where e.position in :custom$positions]]>
                         <button id="btnSuggestionsAnalysis"
                                 caption="mainMsg://Suggestions"
                                 invoke="onBtnSuggestionsClick"/>
+                        <button id="btnDeliveryAnalysisStage"
+                                caption="Добавить Груз"
+                                invoke="onBtnDeliveryClick"/>
                     </buttonsPanel>
                     <groupTable id="positionsAnalysis"
                                 fixedGrouping="true"
@@ -382,6 +389,7 @@ where e.position in :custom$positions]]>
                             <column id="query"/>
                             <column id="nomenclature"/>
                             <column id="quantity"/>
+                            <column id="delivery"/>
                         </columns>
                         <rows datasource="dsAnalysis"/>
                     </groupTable>
@@ -494,7 +502,7 @@ where e.position in :custom$positions]]>
                         <button id="btnDoneBills"
                                 caption="mainMsg://Done"
                                 icon="STEP_FORWARD"
-                                invoke="onBtnDoneClick"/>
+                                invoke="onBtnDoneClickBillsTab"/>
                         <button id="btnCancelBills"
                                 caption="mainMsg://Cancel"
                                 icon="CANCEL"/>
@@ -512,7 +520,8 @@ where e.position in :custom$positions]]>
                                 invoke="onBtnCollapseAllClick"/>
                         <button id="btnQueryBill"
                                 caption="msg://Query bill"
-                                icon="ENVELOPE"/>
+                                icon="ENVELOPE"
+                                invoke="onBtnSendEmail"/>
                         <button id="btnBills"
                                 action="billsTable.create"
                                 caption="Создание счета"/>
@@ -533,9 +542,6 @@ where e.position in :custom$positions]]>
                         <button id="btnAllPositions"
                                 caption="Все позиции"
                                 invoke="onBtnAllPositions"/>
-                        <button id="btnSendEmail"
-                                caption="Отправить @Email"
-                                invoke="onBtnSendEmail"/>
                     </buttonsPanel>
                     <hbox id="tablesBox"
                           expand="positionsBills"
@@ -553,7 +559,7 @@ where e.position in :custom$positions]]>
                             <columns>
                                 <column id="number"/>
                                 <column id="timePayment"/>
-                                <column id="price"/>
+                                <column id="amount"/>
                                 <column id="sumControl"/>
                                 <column id="supplier"/>
                                 <column id="company"/>

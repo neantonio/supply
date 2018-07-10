@@ -24,6 +24,9 @@ public class QueriesPosition extends StandardEntity {
     @JoinColumn(name = "QUERY_ID")
     protected Query query;
 
+    @Column(name = "BILLS_FLAG")
+    protected Boolean billsFlag;
+
     @Column(name = "STORE_CONTROL_FLAG")
     protected Boolean storeControlFlag;
 
@@ -96,6 +99,10 @@ public class QueriesPosition extends StandardEntity {
     @Column(name = "NOM_CONTROL_FLAG_TS")
     protected Date nomControlFlagTS;
 
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "BILLS_FLAG_TS")
+    protected Date billsFlagTS;
+
     @Column(name="IN_STORE")
     protected Boolean inStore;
 
@@ -150,6 +157,10 @@ public class QueriesPosition extends StandardEntity {
     @JoinColumn(name = "BILLS_ID")
     protected Bills bills;
 
+    @JoinColumn(name = "DELIVERY_ID")
+    @OneToOne(fetch = FetchType.LAZY)
+    protected Delivery delivery;
+
     public void setNameCallback(QueriesPositionNameCallback nameCallback) {
         this.nameCallback = nameCallback;
     }
@@ -172,6 +183,31 @@ public class QueriesPosition extends StandardEntity {
      */
     @Transient
     protected transient QueriesPositionNameCallback nameCallback=null;
+
+    public void setDelivery(Delivery delivery) {
+        this.delivery = delivery;
+    }
+
+    public Delivery getDelivery() {
+        return delivery;
+    }
+
+    public void setBillsFlag(Boolean billsFlag) {
+        this.billsFlag = billsFlag;
+    }
+
+    public Boolean getBillsFlag() {
+        return billsFlag;
+    }
+
+    public void setBillsFlagTS(Date billsFlagTS) {
+        this.billsFlagTS = billsFlagTS;
+    }
+
+    public Date getBillsFlagTS() {
+        return billsFlagTS;
+    }
+
 
 
     public String getQueriesPositionName()    {

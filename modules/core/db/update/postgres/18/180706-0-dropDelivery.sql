@@ -1,0 +1,3 @@
+alter table supply_delivery rename to SUPPLY_DELIVERY__U84990 ;
+alter table supply_delivery_line drop constraint FK_SUPPLY_DELIVERY_LINE_ON_DELIVERY ;
+alter table supply_queries_position drop constraint FK_SUPPLY_QUERIES_POSITION_ON_DELIVERY ;

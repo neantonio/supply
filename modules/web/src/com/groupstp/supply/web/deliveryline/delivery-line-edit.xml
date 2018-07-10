@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<window xmlns="http://schemas.haulmont.com/cuba/window.xsd"
+        caption="msg://editorCaption"
+        class="com.groupstp.supply.web.deliveryline.DeliveryLineEdit"
+        datasource="deliveryLineDs"
+        focusComponent="fieldGroup"
+        messagesPack="com.groupstp.supply.web.deliveryline">
+    <dsContext>
+        <datasource id="deliveryLineDs"
+                    class="com.groupstp.supply.entity.DeliveryLine"
+                    view="deliveryLine-simple"/>
+    </dsContext>
+    <dialogMode height="600"
+                width="800"/>
+    <layout expand="windowActions"
+            spacing="true">
+        <fieldGroup id="fieldGroup"
+                    datasource="deliveryLineDs">
+            <column width="250px">
+                <field property="quantity"/>
+                <field property="deliveryDay"/>
+            </column>
+        </fieldGroup>
+        <frame id="windowActions"
+               screen="editWindowActions"/>
+    </layout>
+</window>

@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<window xmlns="http://schemas.haulmont.com/cuba/window.xsd"
+        caption="msg://Delivery_schedule"
+        class="com.groupstp.supply.web.queriesposition.Deliveryschedule"
+        messagesPack="com.groupstp.supply.web.queriesposition">
+    <dsContext>
+        <groupDatasource id="queriesPositionsDs"
+                         class="com.groupstp.supply.entity.QueriesPosition"
+                         view="queriesPosition-delivery">
+            <query>
+                <![CDATA[select e from supply$QueriesPosition e
+Where e.currentStage='Logistic']]>
+            </query>
+        </groupDatasource>
+    </dsContext>
+    <dialogMode height="600"
+                width="800"/>
+    <layout>
+        <vbox id="vbox"
+              expand="queriesPositionsTable"
+              height="100%"
+              spacing="true">
+            <filter id="filter"
+                    applyTo="queriesPositionsTable"
+                    datasource="queriesPositionsDs">
+                <properties include=".*"/>
+            </filter>
+            <buttonsPanel>
+                <button id="btnExpandAllDelivery"
+                        caption="mainMsg://Expand All"
+                        icon="EXPAND"
+                        invoke="onBtnExpandAllClick"/>
+                <button id="btnCollapseAllDelivery"
+                        caption="mainMsg://Collapse all"
+                        icon="COMPRESS"
+                        invoke="onBtnCollapseAllClick"/>
+                <button id="btnHideNullColumnDelivery"
+                        caption="Скрыть пустые столбцы"
+                        icon="COMPRESS"
+                        invoke="onBtnHideNullColumnDelivery"/>
+                <button id="btnShowNullColumnDelivery"
+                        caption="Показать все столбцы"
+                        icon="COMPRESS"
+                        invoke="onBtnShowNullColumnDelivery"/>
+                <button id="refreshBtn"
+                        caption="Обновить"
+                        invoke="onBtnRefresh"/>
+            </buttonsPanel>
+            <groupTable id="queriesPositionsTable"
+                        fixedGrouping="true"
+                        presentations="true"
+                        width="100%">
+                <actions>
+                    <action id="refresh"/>
+                </actions>
+                <columns>
+                    <group>
+                        <column id="query.company"/>
+                        <column id="query.division"/>
+                        <column id="query.number"/>
+                        <column id="query.contact.name"/>
+                    </group>
+                    <column id="nomenclature.name"/>
+                    <column id="delivery.deliveryPlan"/>
+                    <column id="delivery.number"/>
+                    <column id="delivery.quantity"/>
+                </columns>
+                <rows datasource="queriesPositionsDs"/>
+            </groupTable>
+        </vbox>
+    </layout>
+</window>

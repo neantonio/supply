@@ -689,8 +689,7 @@ public class QueriesPositionBrowse extends AbstractLookup {
     /**
      * Настройка вкладки номенклатурный контроль
      */
-    private void setupNomControl()
-    {
+    private void setupNomControl() {
         GroupTable<QueriesPosition> p = positionsNomControl;
         p.addGeneratedColumn("queryLink", new QueryLinkGenerator());
         p.groupBy(nomControlGroupOrder.toArray());
@@ -931,8 +930,7 @@ public class QueriesPositionBrowse extends AbstractLookup {
      * @param position позиция для копирования
      * @return новую позицию
      */
-    private QueriesPosition copyPosition(QueriesPosition position)
-    {
+    private QueriesPosition copyPosition(QueriesPosition position) {
         QueriesPosition src = dataManager.reload(position, "queriesPosition-full");
         QueriesPosition copy = metadata.create(QueriesPosition.class);
         Collection<MetaProperty> properties = position.getMetaClass().getProperties();
@@ -950,8 +948,7 @@ public class QueriesPositionBrowse extends AbstractLookup {
      */
     public void onBtnSuppliersClick() {
         GroupTable tab = getOpenedStageTable();
-        if(tab.getSelected().size()==0)
-        {
+        if (tab.getSelected().size() == 0) {
             showNotification(getMessage("Select position first"), NotificationType.WARNING);
             return;
         }
@@ -960,22 +957,17 @@ public class QueriesPositionBrowse extends AbstractLookup {
         openWindow("supply$PositionSupplier.browse", WindowManager.OpenType.DIALOG, items);
     }
 
-
     /**
      * Открывает ввод предложений
      */
     public void onBtnSuggestionsClick() {
         GroupTable tab = getOpenedStageTable();
-        if(tab.getSelected().size()==0)
-        {
+        if (tab.getSelected().size() == 0) {
             showNotification(getMessage("Select position first"), NotificationType.WARNING);
             return;
         }
         HashMap<String, Object> items = new HashMap<>();
         items.put("positions", tab.getSelected());
-
-
-
         openWindow("supply$SuppliersSuggestion.browse", WindowManager.OpenType.DIALOG, items);
     }
 
@@ -1080,6 +1072,11 @@ public class QueriesPositionBrowse extends AbstractLookup {
 
         // События при клике на счет
         billsTable.setClickListener("number", (item, columnId) -> setClickListenerToBills(item, columnId));
+        billsTable.setClickListener("timePayment", (item, columnId) -> setClickListenerToBills(item, columnId));
+        billsTable.setClickListener("amount", (item, columnId) -> setClickListenerToBills(item, columnId));
+        billsTable.setClickListener("sumControl", (item, columnId) -> setClickListenerToBills(item, columnId));
+        billsTable.setClickListener("supplier", (item, columnId) -> setClickListenerToBills(item, columnId));
+        billsTable.setClickListener("company", (item, columnId) -> setClickListenerToBills(item, columnId));
 
         //Значки прикрепления счета
         positionsBills.setIconProvider(new Table.IconProvider<QueriesPosition>() {
@@ -1100,21 +1097,21 @@ public class QueriesPositionBrowse extends AbstractLookup {
     }
 
     /**
-     * События при клике на счет
-     * @param item - счет
+     * @param item     - счет
      * @param columnId id столбца таблицы
+     * @author Andrey Kolosov
+     * События при клике на счет
      */
     private void setClickListenerToBills(Entity item, String columnId) {
         Bills clickedBills = (Bills) item;
         HashMap<String, Object> items = new HashMap<>();
         items.put("supplerId", clickedBills.getSupplier().getId());
         items.put("billId", clickedBills.getId());
-        dsBills.setQuery("select e from supply$QueriesPosition e\n" +
+        dsBills.setQuery("select e from supply$QueriesPosition e LEFT JOIN e.voteResult v LEFT JOIN v.posSup p LEFT JOIN p.supplier s LEFT JOIN e.bills b\n" +
                 "where e.currentStage='Bills' and (" +
-                "e.bills.id = :custom$billId\n" +
+                "b.id = :custom$billId\n" +
                 "or\n" +
-                "(e.voteResult.posSup.supplier.id = :custom$supplerId and e.bills is null))");
-//        dsBills.setQuery("select e from supply$QueriesPosition e where e.currentStage='Bills' and ( (e.voteResult.posSup.supplier.id =:custom$supplerId and e.bills is null) or (e.bills.id =:custom$billId))");
+                "(s.id = :custom$supplerId and e.bills is null))");
         dsBills.refresh(items);
         billsTable.setSelected(clickedBills);
         displayImage();
@@ -1122,6 +1119,7 @@ public class QueriesPositionBrowse extends AbstractLookup {
     }
 
     /**
+     * @author Andrey Kolosov
      * Загрузка изображения и прикрепление к счету
      */
     private void uploadFieldListenerRealization() {
@@ -1137,6 +1135,7 @@ public class QueriesPositionBrowse extends AbstractLookup {
     }
 
     /**
+     * @author Andrey Kolosov
      * Скачать изображение счета
      */
     public void onDownloadImageBtnClick() {
@@ -1153,6 +1152,7 @@ public class QueriesPositionBrowse extends AbstractLookup {
     }
 
     /**
+     * @author Andrey Kolosov
      * Удалить изображение счета
      */
     public void onClearImageBtnClick() {
@@ -1168,6 +1168,7 @@ public class QueriesPositionBrowse extends AbstractLookup {
     }
 
     /**
+     * @author Andrey Kolosov
      * Метод отображения изображения счета в BrowserFrame imageForBill
      */
     private void displayImage() {
@@ -1187,6 +1188,7 @@ public class QueriesPositionBrowse extends AbstractLookup {
     }
 
     /**
+     * @author Andrey Kolosov
      * Открыть изображение/PDF в новой вкладке
      */
     public void onOpenInNewTabBtnClick() {
@@ -1204,8 +1206,9 @@ public class QueriesPositionBrowse extends AbstractLookup {
     }
 
     /**
-     * Активация/Деактивация кнопок для изображения счета
      * @param enable условие активации
+     * @author Andrey Kolosov
+     * Активация/Деактивация кнопок для изображения счета
      */
     private void updateImageButtons(boolean enable) {
         downloadImageBtn.setEnabled(enable);
@@ -1214,6 +1217,7 @@ public class QueriesPositionBrowse extends AbstractLookup {
     }
 
     /**
+     * @author Andrey Kolosov
      * Прикрепление позиций к счету
      */
     public void onBtnAttachClick() {
@@ -1234,6 +1238,7 @@ public class QueriesPositionBrowse extends AbstractLookup {
     }
 
     /**
+     * @author Andrey Kolosov
      * Открепление позиций от счета
      */
     public void onBtnUndockClick() {
@@ -1249,6 +1254,7 @@ public class QueriesPositionBrowse extends AbstractLookup {
     }
 
     /**
+     * @author Andrey Kolosov
      * Возвращение заявки на этап подбора поставщиков
      */
     public void onBtnToSupSelection() {
@@ -1288,6 +1294,7 @@ public class QueriesPositionBrowse extends AbstractLookup {
     }
 
     /**
+     * @author Andrey Kolosov
      * Вывести все позиции без Счета в таблицу позиций
      */
     public void onBtnEmptyPositions() {
@@ -1296,6 +1303,7 @@ public class QueriesPositionBrowse extends AbstractLookup {
     }
 
     /**
+     * @author Andrey Kolosov
      * Вывести все позиции в таблицу позиций
      */
     public void onBtnAllPositions() {
@@ -1307,6 +1315,7 @@ public class QueriesPositionBrowse extends AbstractLookup {
     protected EmailService emailService;
 
     /**
+     * @author Andrey Kolosov
      * Отправка писем поставщикам
      */
     public void onBtnSendEmail() {
@@ -1356,5 +1365,47 @@ public class QueriesPositionBrowse extends AbstractLookup {
 
     }
 
+    /**
+     * @author Andrey Kolosov
+     * @throws Exception
+     * перевод всех позиций по одному счету на следующий этап, с проверкой контрольной суммы
+     */
+    public void onBtnDoneClickBillsTab() throws Exception {
+        if (billsTable.getSelected().size() != 1) {
+            showNotification(getMessage("Select bill first"), NotificationType.WARNING);
+            return;
+        }
 
+        Bills currentBill = billsTable.getSelected().iterator().next();
+        Double billSum = currentBill.getAmount();
+        List<QueriesPosition> list = currentBill.getPositions();
+        Double positionSum = list.stream().mapToDouble(q ->
+                q.getVoteResult().getPrice() * q.getVoteResult().getQuantity()).sum();
+
+        if (Math.abs(positionSum / billSum - 1) > 0.01) {
+            showNotification(getMessage("Контроль суммы не пройден"), NotificationType.WARNING);
+        } else {
+            currentBill.setSumControl(true);
+            billsesDs.commit();
+            for (QueriesPosition p : list) {
+                workflowService.movePosition(p);
+            }
+        }
+        dsBills.refresh();
+    }
+
+    /**
+     * @author Andrey Kolosov
+     * Открывает список грузов
+     */
+    public void onBtnDeliveryClick() {
+        GroupTable tab = getOpenedStageTable();
+        if (tab.getSelected().size() == 0) {
+            showNotification(getMessage("Select position first"), NotificationType.WARNING);
+            return;
+        }
+        HashMap<String, Object> items = new HashMap<>();
+        items.put("position", tab.getSelected());
+        openWindow("supply$Delivery.browse", WindowManager.OpenType.DIALOG, items);
+    }
 }

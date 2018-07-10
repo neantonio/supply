@@ -199,6 +199,7 @@ create table SUPPLY_QUERIES_POSITION (
     DELETED_BY varchar(50),
     --
     QUERY_ID uuid not null,
+    BILLS_FLAG boolean,
     STORE_CONTROL_FLAG boolean,
     CURRENT_STAGE varchar(50) not null,
     POSITION_TYPE varchar(50) not null,
@@ -217,6 +218,7 @@ create table SUPPLY_QUERIES_POSITION (
     ANALOGS_CORRECTION_FLAG boolean,
     NOM_CONTROL_FLAG boolean,
     NOM_CONTROL_FLAG_TS timestamp,
+    BILLS_FLAG_TS timestamp,
     IN_STORE boolean,
     STORE_CONTROL_FLAG_TS timestamp,
     SUPPLY_WORKOUT_TYPE varchar(50),
@@ -232,6 +234,7 @@ create table SUPPLY_QUERIES_POSITION (
     VOTE_RESULT_ID uuid,
     BILL_QUERY boolean,
     BILLS_ID uuid,
+    DELIVERY_ID uuid,
     --
     primary key (ID)
 )^
@@ -402,7 +405,7 @@ create table SUPPLY_BILLS (
     COMPANY_ID uuid,
     SUPPLIER_ID uuid not null,
     TIME_PAYMENT timestamp,
-    PRICE double precision,
+    AMOUNT double precision,
     SUM_CONTROL boolean,
     IMAGE_BILL_ID uuid,
     --
@@ -471,3 +474,39 @@ create table SUPPLY_QUERY_POSITION_STAGE_DATA_ITEM_LINK (
     primary key (QUERY_POSITION_STAGE_DATA_ID, QUERY_POSITION_STAGE_DATA_ITEM_ID)
 )^
 -- end SUPPLY_QUERY_POSITION_STAGE_DATA_ITEM_LINK
+-- begin SUPPLY_DELIVERY
+create table SUPPLY_DELIVERY (
+    ID uuid,
+    VERSION integer not null,
+    CREATE_TS timestamp,
+    CREATED_BY varchar(50),
+    UPDATE_TS timestamp,
+    UPDATED_BY varchar(50),
+    DELETE_TS timestamp,
+    DELETED_BY varchar(50),
+    --
+    DELIVERY_PLAN date not null,
+    NUMBER_ varchar(20) not null,
+    QUANTITY double precision not null,
+    --
+    primary key (ID)
+)^
+-- end SUPPLY_DELIVERY
+-- begin SUPPLY_DELIVERY_LINE
+create table SUPPLY_DELIVERY_LINE (
+    ID uuid,
+    VERSION integer not null,
+    CREATE_TS timestamp,
+    CREATED_BY varchar(50),
+    UPDATE_TS timestamp,
+    UPDATED_BY varchar(50),
+    DELETE_TS timestamp,
+    DELETED_BY varchar(50),
+    --
+    DELIVERY_ID uuid,
+    QUANTITY double precision not null,
+    DELIVERY_DAY date not null,
+    --
+    primary key (ID)
+)^
+-- end SUPPLY_DELIVERY_LINE

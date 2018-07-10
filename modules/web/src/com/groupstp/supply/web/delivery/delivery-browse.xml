@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<window xmlns="http://schemas.haulmont.com/cuba/window.xsd"
+        caption="msg://browseCaption"
+        class="com.groupstp.supply.web.delivery.DeliveryBrowse"
+        focusComponent="deliveriesTable"
+        lookupComponent="deliveriesTable"
+        messagesPack="com.groupstp.supply.web.delivery">
+    <dsContext>
+        <groupDatasource id="deliveriesDs"
+                         class="com.groupstp.supply.entity.Delivery"
+                         view="delivery-edit">
+            <query>
+                <![CDATA[select e from supply$Delivery e]]>
+            </query>
+        </groupDatasource>
+    </dsContext>
+    <dialogMode height="600"
+                width="800"/>
+    <layout expand="deliveriesTable"
+            spacing="true">
+        <filter id="filter"
+                applyTo="deliveriesTable"
+                datasource="deliveriesDs">
+            <properties include=".*"/>
+        </filter>
+        <groupTable id="deliveriesTable"
+                    width="100%">
+            <actions>
+                <action id="create"/>
+                <action id="edit"/>
+                <action id="remove"/>
+            </actions>
+            <columns>
+                <column id="deliveryPlan"/>
+                <column id="number"/>
+                <column id="quantity"/>
+            </columns>
+            <rows datasource="deliveriesDs"/>
+            <rowsCount/>
+            <buttonsPanel id="buttonsPanel"
+                          alwaysVisible="true">
+                <button id="createBtn"
+                        action="deliveriesTable.create"/>
+                <button id="editBtn"
+                        action="deliveriesTable.edit"/>
+                <button id="removeBtn"
+                        action="deliveriesTable.remove"/>
+            </buttonsPanel>
+        </groupTable>
+        <button id="buttonAddDelivery"
+                caption="Прикрепить груз"
+                visible="false"
+                invoke="onBtnAddClick"/>
+    </layout>
+</window>
