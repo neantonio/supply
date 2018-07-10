@@ -18,6 +18,7 @@
         <item openType="NEW_TAB"
               screen="supply$Suppliers.browse"/>
         <item screen="statistics"/>
+        <item screen="supply$PaymentTable"/>
     </menu>
     <menu id="queries"
           insertBefore="administration">

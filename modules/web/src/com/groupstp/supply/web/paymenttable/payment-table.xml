@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<window xmlns="http://schemas.haulmont.com/cuba/window.xsd"
+        caption="msg://browseCaption"
+        class="com.groupstp.supply.web.paymenttable.PaymentTable"
+        focusComponent="paymentTable"
+        lookupComponent="paymentTable"
+        messagesPack="com.groupstp.supply.web.queriesposition">
+    <dsContext>
+        <collectionDatasource id="paymentTableDs"
+                              class="com.groupstp.supply.entity.QueriesPosition"
+                              view="queriesPosition-payment-table">
+            <query>
+                <![CDATA[select e from supply$QueriesPosition e]]>
+            </query>
+        </collectionDatasource>
+        <groupDatasource id="paymentGroupTableDs"
+                         class="com.groupstp.supply.entity.PaymentTableItem"
+                         datasourceClass="com.groupstp.supply.web.paymenttable.PaymentGroupTableDs">
+        </groupDatasource>
+    </dsContext>
+    <dialogMode height="600"
+                width="800"/>
+    <layout expand="paymentTable"
+            spacing="true">
+        <filter id="filter"
+                applyTo="paymentTable"
+                datasource="paymentGroupTableDs">
+            <properties include=".*"/>
+        </filter>
+        <groupTable id="paymentTable"
+                    aggregatable="true"
+                    columnControlVisible="false"
+                    contextMenuEnabled="false"
+                    fixedGrouping="true"
+                    reorderingAllowed="false"
+                    settingsEnabled="false"
+                    showSelection="false"
+                    showTotalAggregation="false"
+                    sortable="false"
+                    width="100%">
+            <actions>
+                <action id="create"/>
+                <action id="edit"/>
+                <action id="remove"/>
+                <action id="nextMonth"
+                         invoke="selectNextMonth"/>
+                <action id="prevMonth"
+                        invoke="selectPrevMonth"/>
+            </actions>
+            <columns>
+                <group>
+                    <column id="bills"
+                            caption="Счет"/>
+                    <column id="query.number"
+                            caption="Заявка"/>
+                </group>
+                <column id="query.division"/>
+                <column id="query.contact"/>
+                <column id="query.company"/>
+                <column id="position"
+                        caption="Позиция"/>
+                <column id="timePayment"
+                        caption="Дата оплаты"/>
+                <column id="firstDecade"
+                        caption="1-11">
+                    <aggregation type="SUM"/>
+                </column>
+                <column id="secondDecade"
+                        caption="11-20">
+                    <aggregation type="SUM"/>
+                </column>
+                <column id="thirdDecade"
+                        caption="21-31">
+                    <aggregation type="SUM"/>
+                </column>
+            </columns>
+            <rows datasource="paymentGroupTableDs"/>
+            <buttonsPanel width="100%">
+                <hbox id="weekNavigationBox"
+                      align="MIDDLE_RIGHT"
+                      spacing="true">
+                    <linkButton id="showNextMonth"
+                                align="MIDDLE_CENTER"
+                                action="paymentTable.prevMonth"
+                                icon="font-icon:CHEVRON_LEFT"/>
+                    <label      id="centerMonthTitle"
+                                align="MIDDLE_CENTER"
+                                value=""/>
+                    <linkButton id="showPrevMonth"
+                                align="MIDDLE_RIGHT"
+                                action="paymentTable.nextMonth"
+                                icon="font-icon:CHEVRON_RIGHT"/>
+                </hbox>
+                <label id="rightMonthTitle"
+                       align="BOTTOM_RIGHT"
+                       stylename="h3"
+                       value=""/>
+            </buttonsPanel>
+        </groupTable>
+    </layout>
+</window>
