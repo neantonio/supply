@@ -1,5 +1,6 @@
 package com.groupstp.supply.web.queriesposition;
 
+import com.groupstp.supply.entity.Delivery;
 import com.groupstp.supply.entity.DeliveryLine;
 import com.groupstp.supply.entity.QueriesPosition;
 import com.haulmont.cuba.gui.components.*;
@@ -128,7 +129,15 @@ public class Deliveryschedule extends AbstractWindow {
         Collection<QueriesPosition> queriesPositionList = queriesPositionsDs.getItems();
 
         for (QueriesPosition q : queriesPositionList) {
-            List<DeliveryLine> deliveryLines = q.getDelivery().getDeliveryLine();
+            Delivery delivery = q.getDelivery();
+            if (delivery == null) {
+                continue;
+            }
+            List<DeliveryLine> deliveryLines = delivery.getDeliveryLine();
+
+            if (deliveryLines == null) {
+                continue;
+            }
             for (DeliveryLine d : deliveryLines) {
                 LocalDate date = new java.sql.Date(d.getDeliveryDay().getTime()).toLocalDate();
                 String nameColumn = monthStringMap.get(date.getMonth());

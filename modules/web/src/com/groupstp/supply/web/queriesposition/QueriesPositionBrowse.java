@@ -974,6 +974,8 @@ public class QueriesPositionBrowse extends AbstractLookup {
     @Inject
     private GroupTable<QueriesPosition> positionsComission;
 
+    @Inject
+    private GroupDatasource dsComission;
     /**
      * Открывает голосование
      */
@@ -985,7 +987,9 @@ public class QueriesPositionBrowse extends AbstractLookup {
         }
         HashMap<String, Object> items = new HashMap<>();
         items.put("positions", positionsComission.getSelected());
-        openWindow("supply$VoteDialog", WindowManager.OpenType.DIALOG, items);
+        openWindow("supply$VoteDialog", WindowManager.OpenType.DIALOG, items).addCloseListener(event->{
+            dsComission.refresh();
+        });
     }
 
     /**
@@ -1094,6 +1098,8 @@ public class QueriesPositionBrowse extends AbstractLookup {
         uploadField.addFileUploadErrorListener(event ->
                 showNotification("File upload error", NotificationType.HUMANIZED));
 
+
+
     }
 
     /**
@@ -1123,15 +1129,19 @@ public class QueriesPositionBrowse extends AbstractLookup {
      * Загрузка изображения и прикрепление к счету
      */
     private void uploadFieldListenerRealization() {
+        if (billsTable.getSelected().size() != 1) {
+            showNotification(getMessage("Select bill first"), NotificationType.WARNING);
+        } else {
         FileDescriptor fd = uploadField.getFileDescriptor();
         try {
             fileUploadingAPI.putFileIntoStorage(uploadField.getFileId(), fd);
         } catch (FileStorageException e) {
             throw new RuntimeException("Error saving file to FileStorage", e);
         }
-        billsTable.getSelected().iterator().next().setImageBill(dataSupplier.commit(fd));
-        billsesDs.commit();
-        displayImage();
+            billsTable.getSelected().iterator().next().setImageBill(dataSupplier.commit(fd));
+            billsesDs.commit();
+            displayImage();
+        }
     }
 
     /**
@@ -1227,7 +1237,7 @@ public class QueriesPositionBrowse extends AbstractLookup {
         }
         Bills currentBill = billsTable.getSelected().iterator().next();
         positionsBills.getSelected().forEach(p -> {
-            if (p.getVoteResult().getPosSup().getSupplier().getId().equals(currentBill.getSupplier().getId())) {
+            if (p.getVoteResult()!=null&&p.getVoteResult().getPosSup().getSupplier().getId().equals(currentBill.getSupplier().getId())) {
                 p.setBills(currentBill);
                 dsBills.setItem(p);
                 dsBills.commit();
@@ -1268,7 +1278,7 @@ public class QueriesPositionBrowse extends AbstractLookup {
         if (billsTable.getSelected().size() == 1) {
             Bills currentBill = billsTable.getSelected().iterator().next();
             dsBills.getItems().forEach(e -> {
-                if (e.getBills().getId().equals(currentBill.getId())) {
+                if (e.getBills() != null && e.getBills().getId().equals(currentBill.getId())) {
                     e.setCurrentStage(Stages.SupSelection);
                     dsBills.setItem(e);
                     dsBills.commit();
@@ -1406,6 +1416,8 @@ public class QueriesPositionBrowse extends AbstractLookup {
         }
         HashMap<String, Object> items = new HashMap<>();
         items.put("position", tab.getSelected());
-        openWindow("supply$Delivery.browse", WindowManager.OpenType.DIALOG, items);
+        openWindow("supply$Delivery.browse", WindowManager.OpenType.DIALOG, items).addCloseListener(event->{
+            tab.getDatasource().refresh();
+        });
     }
 }
