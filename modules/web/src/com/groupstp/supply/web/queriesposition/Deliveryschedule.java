@@ -2,7 +2,9 @@ package com.groupstp.supply.web.queriesposition;
 
 import com.groupstp.supply.entity.DeliveryLine;
 import com.groupstp.supply.entity.QueriesPosition;
-import com.haulmont.cuba.gui.components.*;
+import com.haulmont.cuba.gui.components.AbstractWindow;
+import com.haulmont.cuba.gui.components.GroupTable;
+import com.haulmont.cuba.gui.components.Label;
 import com.haulmont.cuba.gui.data.CollectionDatasource;
 import com.haulmont.cuba.gui.data.GroupDatasource;
 import com.haulmont.cuba.gui.xml.layout.ComponentsFactory;

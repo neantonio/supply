@@ -2,7 +2,6 @@ package com.groupstp.supply.web.queriesposition;
 
 import com.groupstp.supply.entity.QueriesPosition;
 import com.groupstp.supply.entity.QueryPositionStageData;
-import com.groupstp.supply.entity.QueryPositionStageDataItem;
 import com.groupstp.supply.service.StageDataService;
 import com.haulmont.chile.core.model.MetaClass;
 import com.haulmont.chile.core.model.Session;

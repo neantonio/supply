@@ -2,7 +2,6 @@ package com.groupstp.supply.web.supplierssuggestion;
 
 import com.groupstp.supply.entity.PositionSupplier;
 import com.groupstp.supply.entity.QueriesPosition;
-import com.groupstp.supply.entity.QueryPositionMovements;
 import com.groupstp.supply.entity.SuppliersSuggestion;
 import com.haulmont.cuba.core.global.DataManager;
 import com.haulmont.cuba.core.global.LoadContext;
@@ -10,16 +9,15 @@ import com.haulmont.cuba.core.global.Metadata;
 import com.haulmont.cuba.gui.WindowManager;
 import com.haulmont.cuba.gui.components.AbstractLookup;
 import com.haulmont.cuba.gui.components.Button;
+import com.haulmont.cuba.gui.components.Component;
 import com.haulmont.cuba.gui.components.GroupTable;
 import com.haulmont.cuba.gui.data.GroupDatasource;
 
 import javax.inject.Inject;
-import javax.print.attribute.standard.DialogTypeSelection;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
-import com.haulmont.cuba.gui.components.Component;
 
 public class SuppliersSuggestionBrowse extends AbstractLookup {
     @Inject

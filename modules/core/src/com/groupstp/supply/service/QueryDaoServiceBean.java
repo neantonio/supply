@@ -1,12 +1,16 @@
 package com.groupstp.supply.service;
 
 import com.groupstp.supply.entity.*;
+import com.haulmont.cuba.core.EntityManager;
+import com.haulmont.cuba.core.Transaction;
+import com.haulmont.cuba.core.entity.StandardEntity;
 import com.haulmont.cuba.core.global.DataManager;
 import com.haulmont.cuba.core.global.LoadContext;
 import org.springframework.stereotype.Service;
 
 import javax.inject.Inject;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * @author AntonLomako
@@ -19,6 +23,9 @@ public class QueryDaoServiceBean implements QueryDaoService {
 
     @Inject
     private DataManager dataManager;
+
+    @Inject
+    private com.haulmont.cuba.core.Persistence persistence;
 
     @Override
     public List<QueriesPosition> getQueriesPositionByQuery(Query query) {
@@ -109,5 +116,39 @@ public class QueryDaoServiceBean implements QueryDaoService {
                 .setQuery(LoadContext.createQuery("select  e from supply$Employee e ")).setView("employee-view");
 
         return dataManager.loadList(loadContext);
+    }
+
+    @Override
+    public StandardEntity saveEntity(StandardEntity entity) {
+        StandardEntity result;
+        Transaction tx = persistence.createTransaction();
+        EntityManager em = persistence.getEntityManager();
+        result=em.merge(entity);
+        tx.commit();
+        return result;
+    }
+
+    @Override
+    public StandardEntity getEntity(String entityType, String entityUUID) {
+        if((entityType==null)||(entityUUID==null))return null;
+
+        Transaction tx = persistence.createTransaction();
+        EntityManager em = persistence.getEntityManager();
+        Object en=em.createQuery(
+                "SELECT e FROM "+getMetaclassPrefix(entityType)+entityType+" e where e.id=:id")
+                .setParameter("id",UUID.fromString(entityUUID))
+                .getSingleResult();
+
+
+        tx.commit();
+
+        return (StandardEntity)en;
+    }
+
+    @Override
+    public String getMetaclassPrefix(String entityType) {
+        //// TODO: 04.07.2018  сделать более подробно
+       if(entityType.equals("User")) return "sec$";
+        else return "supply$";
     }
 }

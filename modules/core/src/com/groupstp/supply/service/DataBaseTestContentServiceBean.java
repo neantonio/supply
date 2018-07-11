@@ -29,8 +29,8 @@ import java.util.*;
 @Service(DataBaseTestContentService.NAME)
 public class DataBaseTestContentServiceBean implements DataBaseTestContentService {
 
-    //String priceListFileName="C:\\Users\\79167\\Downloads\\pricetin.xls";
-    String priceListFileName = "/home/lobo/projects/stp/supply/pricetin.xls";
+//    String priceListFileName="C:\\Users\\79167\\Downloads\\pricetin.xls";
+//    String priceListFileName = "/home/lobo/projects/stp/supply/pricetin.xls";
 
     @Inject
     private DataManager dataManager;
@@ -162,10 +162,10 @@ public class DataBaseTestContentServiceBean implements DataBaseTestContentServic
         EntityManager em=(EntityManager)emo;
         if(resultList==null) resultList=new ArrayList<>();
 
-        for(String companyName:ownCompanyList) {
-            Company company = createCompany(companyName);
+        for(String companyName:ownCompanyList){
+            Company company =createCompany(companyName);
             resultList.add(company);
-            if (em != null) em.persist(company);
+            if(em!=null)em.persist(company);
         }
         return resultList;
     }
@@ -476,7 +476,7 @@ public class DataBaseTestContentServiceBean implements DataBaseTestContentServic
 
 
 
-    public void createEntities(){
+    public void createEntities(String priceListFileName){
 
         companies.clear();
         divisions.clear();
@@ -522,6 +522,36 @@ public class DataBaseTestContentServiceBean implements DataBaseTestContentServic
 
         createQueriesPositions(queries,nomenclatureList,queriesPositions,1,4,em);
 
+        tx.commit();
+    }
+
+    @Override
+    public void clearDataBase() {
+        Transaction tx = persistence.createTransaction();
+        com.haulmont.cuba.core.Query query = persistence.getEntityManager().createNativeQuery(
+                 "delete from supply_query_position_movements;\n" +
+                        "delete from supply_stage_term;\n" +
+                        "delete from supply_queries_position;\n" +
+                        "delete from supply_query;\n" +
+                        "delete from supply_query_workflow_detail;\n" +
+                        "delete from supply_query_workflow;\n" +
+                        "delete from supply_employee;\n" +
+                        "delete from sec_user_role;\n" +
+                        "delete from sec_user_setting;\n" +
+                        "delete from sec_filter;\n" +
+                        "delete from sec_user  where (login!='admin' and login!='anonymous');\n" +
+                        "delete from sec_group where created_by='admin';\n" +
+                        "\n" +
+                        " delete from supply_query_workflow_detail;\n" +
+                        " delete from supply_query_workflow;\n" +
+                        " delete from supply_analogs;\n" +
+                        " delete from supply_nomenclature;\n" +
+                        " delete from supply_measure_units;\n" +
+                        " delete from supply_store;\n" +
+                        " delete from supply_division;\n" +
+                        "delete from supply_company;\n" +
+                        "delete from supply_urgency;");
+        query.executeUpdate();
         tx.commit();
     }
 
@@ -927,6 +957,7 @@ class NomenclatureWrapper{
                 Analogs analogs=metadata.create(Analogs.class);
                 analogs.setAnalog((Nomenclature)randomDataService.getRandomFromList(leftNomenclatures));
                 analogs.setNomenclature(selfReflection);
+                selfReflection.setAnalogss(analogs);
                 leftNomenclatures.remove(analogs.getAnalog());
                 analogList.add(analogs);
             }

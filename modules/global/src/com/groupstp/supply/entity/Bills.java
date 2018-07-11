@@ -1,15 +1,14 @@
 package com.groupstp.supply.entity;
 
-import javax.persistence.*;
-
+import com.haulmont.chile.core.annotations.NamePattern;
+import com.haulmont.chile.core.annotations.NumberFormat;
 import com.haulmont.cuba.core.entity.FileDescriptor;
 import com.haulmont.cuba.core.entity.StandardEntity;
 
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import com.haulmont.chile.core.annotations.NumberFormat;
 import java.util.Date;
 import java.util.List;
-import com.haulmont.chile.core.annotations.NamePattern;
 
 @NamePattern("%s|number")
 @Table(name = "SUPPLY_BILLS")

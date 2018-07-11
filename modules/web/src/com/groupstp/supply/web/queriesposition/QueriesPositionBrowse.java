@@ -21,13 +21,10 @@ import com.haulmont.cuba.gui.export.ExportDisplay;
 import com.haulmont.cuba.gui.export.ExportFormat;
 import com.haulmont.cuba.gui.upload.FileUploadingAPI;
 import com.haulmont.cuba.gui.xml.layout.ComponentsFactory;
-import com.haulmont.cuba.gui.xml.layout.loaders.PickerFieldLoader;
 import com.haulmont.cuba.web.gui.components.WebDateField;
 import com.haulmont.cuba.web.gui.components.WebPickerField;
 import com.haulmont.cuba.web.gui.components.WebTextField;
 import com.vaadin.event.ItemClickEvent;
-import com.vaadin.ui.ListSelect;
-import com.vaadin.ui.Notification;
 import org.dom4j.Element;
 
 import javax.annotation.Nullable;

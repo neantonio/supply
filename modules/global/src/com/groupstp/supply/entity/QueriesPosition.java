@@ -11,7 +11,6 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
 import java.util.List;
-import com.haulmont.cuba.core.entity.annotation.OnDeleteInverse;
 
 @NamePattern("#getQueriesPositionName|nomenclature")
 @Table(name = "SUPPLY_QUERIES_POSITION")
