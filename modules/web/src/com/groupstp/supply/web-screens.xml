@@ -26,7 +26,7 @@
     <screen id="supply$PositionsAnalogs.browse"
             template="com/groupstp/supply/web/positionsanalogs/positions-analogs-browse.xml"/>
     <screen id="supply$QueriesPosition.editAnalogs"
-            template="com/groupstp/supply/web/queriesposition/queries-position-edit.xml"/>
+            template="com/groupstp/supply/web/queriesposition/queries-position-edit_analogs.xml"/>
     <screen id="supply$QueriesPosition.workflow"
             template="com/groupstp/supply/web/queriesposition/queries-position-browse.xml"/>
     <screen id="supply$QueryWorkflowDetail.edit"
@@ -59,4 +59,6 @@
             template="com/groupstp/supply/web/stageterm/stage-term-edit.xml"/>
     <screen id="supply$PaymentTable"
             template="/com/groupstp/supply/web/paymenttable/payment-table.xml"/>
+    <screen id="supply$QueriesPosition.edit"
+            template="com/groupstp/supply/web/queriesposition/queries-position-edit.xml"/>
 </screen-config>

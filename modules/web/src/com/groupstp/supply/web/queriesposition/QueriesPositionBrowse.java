@@ -21,12 +21,10 @@ import com.haulmont.cuba.gui.export.ExportDisplay;
 import com.haulmont.cuba.gui.export.ExportFormat;
 import com.haulmont.cuba.gui.upload.FileUploadingAPI;
 import com.haulmont.cuba.gui.xml.layout.ComponentsFactory;
-import javafx.stage.Stage;
 import org.dom4j.Element;
 
 import javax.annotation.Nullable;
 import javax.inject.Inject;
-import javax.inject.Named;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -133,6 +131,24 @@ public class QueriesPositionBrowse extends AbstractLookup {
             lnk.setAction(new BaseAction("query").
                     withCaption(q.getInstanceName()).
                     withHandler(e-> openEditor(q, WindowManager.OpenType.DIALOG)));
+            return lnk;
+        }
+    }
+
+    private class OpenLinkGenerator implements Table.ColumnGenerator {
+
+        /**
+         * Called by {@link Table} when rendering a column for which the generator was created.
+         *
+         * @param entity an entity instance represented by the current row
+         * @return a component to be rendered inside of the cell
+         */
+        @Override
+        public Component generateCell(Entity entity) {
+            LinkButton lnk = (LinkButton) componentsFactory.createComponent(LinkButton.NAME);
+            lnk.setAction(new BaseAction("Ссылка").
+                    withCaption("Открыть").
+                    withHandler(e-> openEditor(entity, WindowManager.OpenType.DIALOG)));
             return lnk;
         }
     }
@@ -266,12 +282,14 @@ public class QueriesPositionBrowse extends AbstractLookup {
      * Проставляем queryLink в остальных таблицах, где еще нет.
      */
 
-    private void addLinkOpenButtonToTables(){
+    private void addLinkOpenButton(){
         final String title = "Ссылка";
-        positionsSupSelection.addGeneratedColumn(title, new QueryLinkGenerator());
-        positionsAnalysis.addGeneratedColumn(title, new QueryLinkGenerator());
-        positionsComission.addGeneratedColumn(title, new QueryLinkGenerator());
-        positionsProcuration.addGeneratedColumn(title, new QueryLinkGenerator());
+        positionsNomControl.addGeneratedColumn(title, new OpenLinkGenerator());
+        positionsStoreControl.addGeneratedColumn(title, new OpenLinkGenerator());
+        positionsSupSelection.addGeneratedColumn(title, new OpenLinkGenerator());
+        positionsAnalysis.addGeneratedColumn(title, new OpenLinkGenerator());
+        positionsComission.addGeneratedColumn(title, new OpenLinkGenerator());
+        positionsProcuration.addGeneratedColumn(title, new OpenLinkGenerator());
     }
 
     /**
@@ -381,14 +399,6 @@ public class QueriesPositionBrowse extends AbstractLookup {
 
                                     }
                                 });
-                            });
-                            returnButton.addAction(new BaseAction("Новая") {
-                                @Override
-                                public void actionPerform(Component component) {
-                                    movePositionTo(position, Stages.New);
-
-
-                                }
                             });
                         }
 
@@ -608,7 +618,7 @@ public class QueriesPositionBrowse extends AbstractLookup {
                 showNotification("File upload error", NotificationType.HUMANIZED));
 
         initReturnButtons();
-        addLinkOpenButtonToTables();
+        addLinkOpenButton();
     }
 
 

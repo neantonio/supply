@@ -1,11 +1,9 @@
 package com.groupstp.supply.web.queriesposition;
 
-import com.groupstp.supply.entity.PositionType;
-import com.groupstp.supply.entity.QueriesPosition;
-import com.groupstp.supply.entity.QueryPositionMovements;
-import com.groupstp.supply.entity.Stages;
+import com.groupstp.supply.entity.*;
 import com.groupstp.supply.service.QueryDaoService;
 import com.groupstp.supply.service.WorkflowService;
+import com.haulmont.cuba.core.entity.Entity;
 import com.haulmont.cuba.gui.WindowManager;
 import com.haulmont.cuba.gui.components.*;
 import com.haulmont.cuba.gui.components.actions.BaseAction;
@@ -54,7 +52,7 @@ public class Queryregister extends AbstractWindow {
     private WorkflowService workflowService;
 
     @Inject
-    private ComponentsFactory factory;
+    private ComponentsFactory componentsFactory;
 
     List<Object> currentGroupOrderItems=new ArrayList<>();
     List<Object> availableGroupOrderItems=new ArrayList<>();
@@ -70,6 +68,7 @@ public class Queryregister extends AbstractWindow {
         addPositionHistoryPopupColumn();
         addPositionInfoColumn();
         //addPositionClickListener();
+        addLinkOpenButton();
         initGrouping();
     }
 
@@ -84,6 +83,23 @@ public class Queryregister extends AbstractWindow {
 //
 //
 //    }
+    private class OpenLinkGenerator implements Table.ColumnGenerator {
+
+        /**
+         * Called by {@link Table} when rendering a column for which the generator was created.
+         *
+         * @param entity an entity instance represented by the current row
+         * @return a component to be rendered inside of the cell
+         */
+        @Override
+        public Component generateCell(Entity entity) {
+            LinkButton lnk = (LinkButton) componentsFactory.createComponent(LinkButton.NAME);
+            lnk.setAction(new BaseAction("Ссылка").
+                    withCaption("Открыть").
+                    withHandler(e-> openEditor(entity, WindowManager.OpenType.DIALOG)));
+            return lnk;
+        }
+    }
 
     private void addPositionHistoryPopupColumn(){
         Date today=new Date();
@@ -93,17 +109,17 @@ public class Queryregister extends AbstractWindow {
             List<QueryPositionMovements> queryPositionMovementsList = queryDaoService.getQueryPositionMovement(queriesPosition);
 
             if (queryPositionMovementsList.size()>0) {
-                PopupView popup=(PopupView) factory.createComponent(PopupView.NAME);
+                PopupView popup=(PopupView) componentsFactory.createComponent(PopupView.NAME);
                 popup.setMinimizedValue("история");
-                VBoxLayout Vlayout=(VBoxLayout) factory.createComponent(VBoxLayout.NAME);
+                VBoxLayout Vlayout=(VBoxLayout) componentsFactory.createComponent(VBoxLayout.NAME);
 
                 for(QueryPositionMovements movement:queryPositionMovementsList ){
 
-                    HBoxLayout Hlayout=(HBoxLayout) factory.createComponent(HBoxLayout.NAME);
+                    HBoxLayout Hlayout=(HBoxLayout) componentsFactory.createComponent(HBoxLayout.NAME);
 
                     //извлекаем время завершения из журнала, если его нет, то этап длится до сих пор
-                    Label finishDateLabel= (Label) factory.createComponent(Label.NAME);
-                    Label durationLabel= (Label) factory.createComponent(Label.NAME);
+                    Label finishDateLabel= (Label) componentsFactory.createComponent(Label.NAME);
+                    Label durationLabel= (Label) componentsFactory.createComponent(Label.NAME);
                     long hourDuration=0;
                     if(movement.getFinishTS()!=null){
                         finishDateLabel.setValue(messages.getMainMessage("date_finish")+": "+String.format("%td.%tm.%ty",movement.getFinishTS(),movement.getFinishTS(),movement.getFinishTS()));
@@ -124,13 +140,13 @@ public class Queryregister extends AbstractWindow {
                     durationLabel.setValue(messages.getMainMessage("duration")+": "+durationStringValue);
 
 
-                    Label beginDateLabel= (Label) factory.createComponent(Label.NAME);
+                    Label beginDateLabel= (Label) componentsFactory.createComponent(Label.NAME);
                     beginDateLabel.setValue(messages.getMainMessage("date_begin")+": "+String.format("%td.%tm.%ty",movement.getCreateTs(),movement.getCreateTs(),movement.getCreateTs()));
 
-                    Label userLabel= (Label) factory.createComponent(Label.NAME);
+                    Label userLabel= (Label) componentsFactory.createComponent(Label.NAME);
                     userLabel.setValue(messages.getMainMessage("user")+": "+movement.getUser().getName());
 
-                    Label stageLabel= (Label) factory.createComponent(Label.NAME);
+                    Label stageLabel= (Label) componentsFactory.createComponent(Label.NAME);
                     stageLabel.setValue(messages.getMainMessage("stage")+": "+movement.getStage());
 
                     Hlayout.add(stageLabel);
@@ -152,15 +168,20 @@ public class Queryregister extends AbstractWindow {
         });
     }
 
+    private void addLinkOpenButton(){
+        final String title = "Ссылка";
+        positionsTable.addGeneratedColumn(title, new OpenLinkGenerator());
+    }
+
     private void addPositionInfoColumn(){
         positionsTable.addGeneratedColumn("positionInfo",queriesPosition -> {
 
-            VBoxLayout vlayout=(VBoxLayout) factory.createComponent(VBoxLayout.NAME);
+            VBoxLayout vlayout=(VBoxLayout) componentsFactory.createComponent(VBoxLayout.NAME);
 
-            Label stageLabel= (Label) factory.createComponent(Label.NAME);
+            Label stageLabel= (Label) componentsFactory.createComponent(Label.NAME);
             stageLabel.setValue(messages.getMainMessage("stage")+": "+queriesPosition.getCurrentStage());
 
-            Label nomLabel= (Label) factory.createComponent(Label.NAME);
+            Label nomLabel= (Label) componentsFactory.createComponent(Label.NAME);
             if(queriesPosition.getPositionType()== PositionType.nomenclature){
                 nomLabel.setValue(messages.getMainMessage("nomenclature")+": "+queriesPosition.getNomenclature().getName());
             }
@@ -336,6 +357,7 @@ public class Queryregister extends AbstractWindow {
                 });
 
     }
+
 
     interface SomeAction{
         void execute(Map map);
