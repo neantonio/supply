@@ -88,13 +88,13 @@ public class QueryBrowse extends AbstractLookup {
 
                 switch (queryService.getQueryStatus(entity)) {
                     case DONE:
-                        return "DONE-query";
+                        return "done-query";
                     case IN_WORK:
                         return "in-work-query";
                     case NEW_ITEM:
                         return "new-query";
                     case OVERDUE:
-                        return "OVERDUE-query";
+                        return "overdue-query";
                     default:
                         return null;
                 }

@@ -74,6 +74,8 @@
                         presentations="true"
                         width="100%">
                 <columns>
+                    <column id="positionInfo"
+                            caption="msg://position"/>
                     <column id="currentStage"/>
                     <column id="analogsAllowed"
                             caption="msg://stage_overdue_flag"/>

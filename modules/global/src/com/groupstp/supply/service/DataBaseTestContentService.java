@@ -53,6 +53,7 @@ public interface DataBaseTestContentService {
                                                  int maxValuePerQuery,
                                                  Object emo);
 
-    void createEntities();
+    void createEntities(String priceListFileName);
+    void clearDataBase();
     void beginBusinessProcess();
 }

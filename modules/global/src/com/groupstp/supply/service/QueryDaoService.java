@@ -2,6 +2,7 @@ package com.groupstp.supply.service;
 
 
 import com.groupstp.supply.entity.*;
+import com.haulmont.cuba.core.entity.StandardEntity;
 
 import java.util.List;
 /**
@@ -32,4 +33,10 @@ public interface QueryDaoService {
     void commitQuery(Query queryItem);
 
     List<Employee> getAllEmployees();
+
+    StandardEntity saveEntity(StandardEntity entity);
+
+    StandardEntity getEntity(String entityType, String entityUUID);
+
+    String getMetaclassPrefix(String entityType);
 }

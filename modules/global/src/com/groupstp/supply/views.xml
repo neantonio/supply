@@ -79,6 +79,18 @@
                   view="_minimal"/>
         <property name="voteResult"
                   view="_minimal"/>
+        <property name="delivery"
+                  view="_minimal">
+            <property name="deliveryPlan"/>
+            <property name="quantity"/>
+            <property name="deliveryLine"
+                      view="_minimal">
+                <property name="quantity"/>
+                <property name="deliveryDay"/>
+            </property>
+            <property name="queriesPosition"
+                      view="_minimal"/>
+        </property>
     </view>
     <view class="com.groupstp.supply.entity.Nomenclature"
           extends="_local"
@@ -204,6 +216,11 @@
                   view="_minimal"/>
         <property name="nomenclature"
                   view="_minimal"/>
+        <property name="delivery"
+                  view="_minimal">
+            <property name="deliveryPlan"/>
+            <property name="quantity"/>
+        </property>
     </view>
     <view class="com.groupstp.supply.entity.QueriesPosition"
           extends="_local"
@@ -249,6 +266,8 @@
                 <property name="analog"
                           view="_minimal"/>
             </property>
+            <property name="unit"
+                      view="_minimal"/>
         </property>
         <property name="measureUnit"
                   view="_minimal"/>
@@ -258,6 +277,14 @@
                   view="_minimal"/>
         <property name="updateTs"/>
         <property name="createTs"/>
+        <property name="bills"
+                  view="_minimal"/>
+        <property name="voteResult"
+                  view="_minimal"/>
+        <property name="createdBy"/>
+        <property name="updatedBy"/>
+        <property name="delivery"
+                  view="_minimal"/>
     </view>
     <view class="com.groupstp.supply.entity.PositionSupplier"
           extends="_local"
@@ -378,6 +405,10 @@
             </property>
         </property>
         <property name="createTs"/>
+        <property name="user"
+                  view="_minimal">
+            <property name="createTs"/>
+        </property>
     </view>
     <view class="com.groupstp.supply.entity.Bills"
           extends="_local"
@@ -387,6 +418,11 @@
         <property name="positions"
                   view="_minimal">
             <property name="currentStage"/>
+            <property name="numberArticle"/>
+            <property name="voteResult"
+                      view="_minimal"/>
+            <property name="billsFlag"/>
+            <property name="billsFlagTS"/>
         </property>
         <property name="company"
                   view="_minimal"/>
@@ -397,4 +433,127 @@
     <view class="com.groupstp.supply.entity.QueriesPosition"
           extends="_local"
           name="queriesPosition-Procuration"/>
+    <view class="com.groupstp.supply.entity.QueryPositionMovements"
+          extends="_local"
+          name="queryPositionMovements-view_3">
+        <property name="position"
+                  view="_minimal">
+            <property name="query"
+                      view="_minimal">
+                <property name="contact"
+                          view="_minimal"/>
+            </property>
+            <property name="specification"/>
+        </property>
+        <property name="user"
+                  view="_minimal">
+            <property name="createTs"/>
+        </property>
+        <property name="createTs"/>
+    </view>
+    <view class="com.groupstp.supply.entity.DeliveryLine"
+          extends="_local"
+          name="deliveryLine-simple"/>
+    <view class="com.groupstp.supply.entity.Delivery"
+          extends="_local"
+          name="delivery-edit">
+        <property name="deliveryLine"
+                  view="deliveryLine-simple"/>
+        <property name="queriesPosition"
+                  view="_minimal"/>
+    </view>
+    <view class="com.groupstp.supply.entity.QueriesPosition"
+          extends="_local"
+          name="queriesPosition-delivery">
+        <property name="delivery"
+                  view="_local">
+            <property name="deliveryLine"
+                      view="_minimal">
+                <property name="quantity"/>
+                <property name="deliveryDay"/>
+            </property>
+        </property>
+        <property name="query"
+                  view="_minimal">
+            <property name="company"
+                      view="_minimal"/>
+            <property name="division"
+                      view="_minimal"/>
+            <property name="contact"
+                      view="_minimal"/>
+        </property>
+        <property name="nomenclature"
+                  view="_minimal"/>
+    </view>
+    <view class="com.groupstp.supply.entity.QueryPositionStageData"
+          extends="_local"
+          name="queryPositionStageData-view">
+        <property name="position"
+                  view="_minimal">
+            <property name="id"/>
+        </property>
+        <property name="dataItems"
+                  view="_minimal">
+            <property name="itemName"/>
+        </property>
+    </view>
+    <view class="com.groupstp.supply.entity.QueriesPosition"
+          extends="queriesPosition-full"
+          name="queriesPosition-logistic">
+        <property name="position"
+                  view="_minimal">
+            <property name="query"
+                      view="_minimal"/>
+            <property name="storeControlFlag"/>
+            <property name="currentStage"/>
+            <property name="positionType"/>
+            <property name="numberArticle"/>
+            <property name="specification"/>
+            <property name="measureUnit"
+                      view="_minimal"/>
+            <property name="quantity"/>
+            <property name="analogsAllowed"/>
+            <property name="analogs"
+                      view="_minimal"/>
+            <property name="store"
+                      view="_minimal"/>
+            <property name="positionUsefulness"/>
+            <property name="positionUsefulnessTS"/>
+            <property name="specNomenclature"
+                      view="_minimal"/>
+            <property name="startMinimalPrice"/>
+            <property name="nomeclatureChange"
+                      view="_minimal"/>
+            <property name="bills"
+                      view="_minimal"/>
+        </property>
+        <property name="voteResult"
+                  view="_minimal"/>
+        <property name="bills"
+                  view="_minimal"/>
+        <property name="createdBy"/>
+        <property name="updatedBy"/>
+    </view>
+    <view class="com.groupstp.supply.entity.QueriesPosition"
+          extends="_local"
+          name="queriesPosition-payment-table">
+        <property name="query"
+                  view="_minimal">
+            <property name="company"
+                      view="_minimal"/>
+            <property name="division"
+                      view="_minimal"/>
+            <property name="store"
+                      view="_minimal"/>
+            <property name="contact"
+                      view="_minimal"/>
+        </property>
+        <property name="bills"
+                  view="_minimal">
+            <property name="timePayment"/>
+            <property name="price"/>
+        </property>
+        <property name="nomenclature"
+                  view="_minimal"/>
+    </view>
 </views>

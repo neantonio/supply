@@ -14,7 +14,7 @@ where e.currentStage='NomControl']]>
         </groupDatasource>
         <groupDatasource id="dsStoreControl"
                          class="com.groupstp.supply.entity.QueriesPosition"
-                         view="queriesPosition-StoreControl">
+                         view="queriesPosition-full">
             <query>
                 <![CDATA[select e from supply$QueriesPosition e
 where e.currentStage='StoreControl']]>
@@ -67,6 +67,22 @@ where e.currentStage='Bills']]>
 where e.currentStage='Procuration']]>
             </query>
         </groupDatasource>
+        <groupDatasource id="dsLogistic"
+                         class="com.groupstp.supply.entity.QueriesPosition"
+                         view="queriesPosition-full">
+            <query>
+                <![CDATA[select e from supply$QueriesPosition e
+where e.currentStage='Logistic']]>
+            </query>
+        </groupDatasource>
+        <collectionDatasource id="dsLogisticStageData"
+                              class="com.groupstp.supply.entity.QueryPositionStageData"
+                              view="queryPositionStageData-view">
+            <query>
+                <![CDATA[select e from supply$QueryPositionStageData e
+where e.position in :custom$positions]]>
+            </query>
+        </collectionDatasource>
     </dsContext>
     <dialogMode height="600"
                 width="800"/>
@@ -277,6 +293,9 @@ where e.currentStage='Procuration']]>
                         <button id="btnSuggestions"
                                 caption="mainMsg://Suggestions"
                                 invoke="onBtnSuggestionsClick"/>
+                        <button id="btnDeliverySupStage"
+                                caption="Добавить Груз"
+                                invoke="onBtnDeliveryClick"/>
                     </buttonsPanel>
                     <groupTable id="positionsSupSelection"
                                 fixedGrouping="true"
@@ -297,6 +316,7 @@ where e.currentStage='Procuration']]>
                             <column id="query"/>
                             <column id="nomenclature"/>
                             <column id="quantity"/>
+                            <column id="delivery"/>
                         </columns>
                         <rows datasource="dsSupSelection"/>
                     </groupTable>
@@ -346,6 +366,9 @@ where e.currentStage='Procuration']]>
                         <button id="btnSuggestionsAnalysis"
                                 caption="mainMsg://Suggestions"
                                 invoke="onBtnSuggestionsClick"/>
+                        <button id="btnDeliveryAnalysisStage"
+                                caption="Добавить Груз"
+                                invoke="onBtnDeliveryClick"/>
                     </buttonsPanel>
                     <groupTable id="positionsAnalysis"
                                 fixedGrouping="true"
@@ -366,6 +389,7 @@ where e.currentStage='Procuration']]>
                             <column id="query"/>
                             <column id="nomenclature"/>
                             <column id="quantity"/>
+                            <column id="delivery"/>
                         </columns>
                         <rows datasource="dsAnalysis"/>
                     </groupTable>
@@ -415,6 +439,7 @@ where e.currentStage='Procuration']]>
                     </buttonsPanel>
                     <groupTable id="positionsComission"
                                 fixedGrouping="true"
+                                multiselect="true"
                                 presentations="true"
                                 width="100%">
                         <actions>
@@ -477,7 +502,7 @@ where e.currentStage='Procuration']]>
                         <button id="btnDoneBills"
                                 caption="mainMsg://Done"
                                 icon="STEP_FORWARD"
-                                invoke="onBtnDoneClick"/>
+                                invoke="onBtnDoneClickBillsTab"/>
                         <button id="btnCancelBills"
                                 caption="mainMsg://Cancel"
                                 icon="CANCEL"/>
@@ -495,7 +520,8 @@ where e.currentStage='Procuration']]>
                                 invoke="onBtnCollapseAllClick"/>
                         <button id="btnQueryBill"
                                 caption="msg://Query bill"
-                                icon="ENVELOPE"/>
+                                icon="ENVELOPE"
+                                invoke="onBtnSendEmail"/>
                         <button id="btnBills"
                                 action="billsTable.create"
                                 caption="Создание счета"/>
@@ -516,9 +542,6 @@ where e.currentStage='Procuration']]>
                         <button id="btnAllPositions"
                                 caption="Все позиции"
                                 invoke="onBtnAllPositions"/>
-                        <button id="btnSendEmail"
-                                caption="Отправить @Email"
-                                invoke="onBtnSendEmail"/>
                     </buttonsPanel>
                     <hbox id="tablesBox"
                           expand="positionsBills"
@@ -536,7 +559,7 @@ where e.currentStage='Procuration']]>
                             <columns>
                                 <column id="number"/>
                                 <column id="timePayment"/>
-                                <column id="price"/>
+                                <column id="amount"/>
                                 <column id="sumControl"/>
                                 <column id="supplier"/>
                                 <column id="company"/>
@@ -589,6 +612,87 @@ where e.currentStage='Procuration']]>
                                 caption="Открыть в новом окне"
                                 invoke="onOpenInNewTabBtnClick"/>
                     </hbox>
+                </vbox>
+            </tab>
+            <tab id="tabLogistic"
+                 caption="msg://logistic"
+                 description="msg://logistic"
+                 margin="true,false,false,false"
+                 spacing="true">
+                <vbox id="vboxProcuration1"
+                      expand="positionsLogistic"
+                      height="100%"
+                      spacing="true">
+                    <hbox expand="mainButtons"
+                          spacing="true"
+                          width="100%">
+                        <vbox id="mainButtons"
+                              spacing="true">
+                            <buttonsPanel>
+                                <button id="button_33"
+                                        caption="mainMsg://Write"
+                                        description="mainMsg://Write table changes"
+                                        icon="SAVE"
+                                        invoke="onBtnWriteClick"/>
+                                <button id="button_44"
+                                        caption="mainMsg://Done"
+                                        icon="STEP_FORWARD"
+                                        invoke="onLogisticBtnDoneClick"/>
+                                <button id="button_55"
+                                        caption="mainMsg://Cancel"
+                                        icon="CANCEL"/>
+                                <button id="button_111"
+                                        action="positionsStoreControl.refresh"
+                                        caption="mainMsg://Refresh"
+                                        icon="REFRESH_ACTION"/>
+                                <button id="button_22"
+                                        caption="mainMsg://Expand All"
+                                        icon="EXPAND"
+                                        invoke="onBtnExpandAllClick"/>
+                                <button id="button_66"
+                                        caption="mainMsg://Collapse all"
+                                        icon="COMPRESS"
+                                        invoke="onBtnCollapseAllClick"/>
+                                <button id="btnSplit1"
+                                        caption="mainMsg://Split"
+                                        description="mainMsg://Split position"
+                                        icon="ARROWS_V"
+                                        invoke="onBtnSplitClick"/>
+                            </buttonsPanel>
+                            <buttonsPanel>
+                                <button id="storeGet"
+                                        caption="msg://store_get"
+                                        invoke="onStoreGet"/>
+                            </buttonsPanel>
+                        </vbox>
+                        <vbox align="BOTTOM_CENTER"
+                              spacing="true"
+                              width="AUTO">
+                            <groupBox id="cargoStateGroupBox"
+                                      spacing="true">
+                                <vbox id="cargoStateGroupBoxTotalLayout"
+                                      spacing="true"/>
+                                <hbox spacing="true"
+                                      width="100%">
+                                    <button id="previousCargoState"
+                                            width="100%"/>
+                                    <button id="nextCargoState"
+                                            width="100%"/>
+                                </hbox>
+                            </groupBox>
+                        </vbox>
+                    </hbox>
+                    <groupTable id="positionsLogistic"
+                                multiselect="true"
+                                width="100%">
+                        <columns>
+                            <column id="positionType"/>
+                            <column id="nomenclature.unit.name"
+                                    caption="msg://unit"/>
+                            <column id="quantity"/>
+                        </columns>
+                        <rows datasource="dsLogistic"/>
+                    </groupTable>
                 </vbox>
             </tab>
             <tab id="tabProcuration"

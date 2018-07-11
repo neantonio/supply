@@ -11,6 +11,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
 import java.util.List;
+import com.haulmont.cuba.core.entity.annotation.OnDeleteInverse;
 
 @NamePattern("#getQueriesPositionName|nomenclature")
 @Table(name = "SUPPLY_QUERIES_POSITION")
@@ -19,29 +20,12 @@ public class QueriesPosition extends StandardEntity {
     private static final long serialVersionUID = 2816298219119304612L;
 
 
-    public void setNameCallback(QueriesPositionNameCallback nameCallback) {
-        this.nameCallback = nameCallback;
-    }
-
-
-    public QueriesPositionNameCallback getNameCallback() {
-        return nameCallback;
-    }
-
-    public interface QueriesPositionNameCallback{
-        String makeName(QueriesPosition query);
-    }
-
-    /**
-     *
-     *
-     * генерация имени возможна с использованием nameCallback.
-     * это нужно для информативного отображения сущности при группировке по ней
-     * @return
-     */
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "QUERY_ID")
     protected Query query;
+
+    @Column(name = "BILLS_FLAG")
+    protected Boolean billsFlag;
 
     @Column(name = "STORE_CONTROL_FLAG")
     protected Boolean storeControlFlag;
@@ -115,6 +99,10 @@ public class QueriesPosition extends StandardEntity {
     @Column(name = "NOM_CONTROL_FLAG_TS")
     protected Date nomControlFlagTS;
 
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "BILLS_FLAG_TS")
+    protected Date billsFlagTS;
+
     @Column(name="IN_STORE")
     protected Boolean inStore;
 
@@ -169,12 +157,62 @@ public class QueriesPosition extends StandardEntity {
     @JoinColumn(name = "BILLS_ID")
     protected Bills bills;
 
+    @JoinColumn(name = "DELIVERY_ID")
+    @OneToOne(fetch = FetchType.LAZY)
+    protected Delivery delivery;
+
+    public void setNameCallback(QueriesPositionNameCallback nameCallback) {
+        this.nameCallback = nameCallback;
+    }
+
+
+    public QueriesPositionNameCallback getNameCallback() {
+        return nameCallback;
+    }
+
+    public interface QueriesPositionNameCallback{
+        String makeName(QueriesPosition query);
+    }
+
+    /**
+     *
+     *
+     * генерация имени возможна с использованием nameCallback.
+     * это нужно для информативного отображения сущности при группировке по ней
+     * @return
+     */
     @Transient
     protected transient QueriesPositionNameCallback nameCallback=null;
 
+    public void setDelivery(Delivery delivery) {
+        this.delivery = delivery;
+    }
+
+    public Delivery getDelivery() {
+        return delivery;
+    }
+
+    public void setBillsFlag(Boolean billsFlag) {
+        this.billsFlag = billsFlag;
+    }
+
+    public Boolean getBillsFlag() {
+        return billsFlag;
+    }
+
+    public void setBillsFlagTS(Date billsFlagTS) {
+        this.billsFlagTS = billsFlagTS;
+    }
+
+    public Date getBillsFlagTS() {
+        return billsFlagTS;
+    }
+
+
+
     public String getQueriesPositionName()    {
         if(getNameCallback() ==null) {
-            if(nomenclature!=null)return nomenclature.toString();
+            if(nomenclature!=null)return nomenclature.getName();
             else if(specification!=null) return specification;
             else return getUuid().toString();
         }

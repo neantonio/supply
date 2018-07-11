@@ -5,12 +5,16 @@ import com.groupstp.supply.entity.QueryPositionMovements;
 import com.groupstp.supply.entity.Stages;
 import com.groupstp.supply.service.StatisticsService;
 import com.haulmont.bali.util.ParamsMap;
+import com.haulmont.charts.gui.amcharts.model.*;
 import com.haulmont.charts.gui.data.ListDataProvider;
 import com.haulmont.charts.gui.data.MapDataItem;
 import com.haulmont.cuba.gui.components.*;
+import com.haulmont.cuba.gui.components.Label;
 import com.haulmont.cuba.gui.data.CollectionDatasource;
 import com.haulmont.cuba.gui.data.GroupDatasource;
 import com.haulmont.cuba.gui.xml.layout.ComponentsFactory;
+import org.jsoup.select.Collector;
+
 
 import javax.inject.Inject;
 import java.text.DateFormat;
@@ -33,6 +37,9 @@ public class Statistics extends AbstractWindow {
 
     @Inject
     private CollectionDatasource positionDs;
+
+    @Inject
+    private CollectionDatasource selectedInStatisticsMovementsDs;
 
     @Inject
     private CollectionDatasource justForDisplayStagesDs;
@@ -58,6 +65,9 @@ public class Statistics extends AbstractWindow {
     @Inject
     private Label pieChartLabel;
 
+    @Inject
+    private Table<QueryPositionMovements> selectedMovements;
+
 
     @Inject
     com.haulmont.charts.gui.components.charts.GanttChart ganttChart;
@@ -65,13 +75,13 @@ public class Statistics extends AbstractWindow {
     @Inject
     com.haulmont.charts.gui.components.charts.PieChart pieChart;
 
-    private Map<String,Map<Stages,Integer>> statisticsMap=new HashMap<>();
+    private Map<String,Map<Stages,List<QueryPositionMovements>>> statisticsMap=new HashMap<>();
 
-    private final Map<Stages,Integer> begin_value_map=new HashMap<>();
-    private final Map<Stages,Integer> income_value_map=new HashMap<>();
-    private final Map<Stages,Integer> processed_value_map=new HashMap<>();
-    private final Map<Stages,Integer> end_value_map=new HashMap<>();
-    private final Map<Stages,Integer> overdue_value_map=new HashMap<>();
+    private final Map<Stages,List<QueryPositionMovements>> begin_value_map=new HashMap<>();
+    private final Map<Stages,List<QueryPositionMovements>> income_value_map=new HashMap<>();
+    private final Map<Stages,List<QueryPositionMovements>> processed_value_map=new HashMap<>();
+    private final Map<Stages,List<QueryPositionMovements>> end_value_map=new HashMap<>();
+    private final Map<Stages,List<QueryPositionMovements>> overdue_value_map=new HashMap<>();
 
     private final Map<Stages,Boolean> selectedStageMap=new HashMap<>();
 
@@ -128,10 +138,17 @@ public class Statistics extends AbstractWindow {
 
         queryPositionMovementsesDs.refresh(ParamsMap.of("positions",positionDs.getItems()));
 
-        Collection movements= queryPositionMovementsesDs.getItems();
+        Collection<QueryPositionMovements> movementsCollection= queryPositionMovementsesDs.getItems();
+        List<QueryPositionMovements> movements=new ArrayList(movementsCollection);
+
+        movements.sort((item1,item2)->{
+            return item1.getPosition().getId().compareTo(item2.getPosition().getId());
+        });
 
 
         Iterator iterator=movements.iterator();
+        if(!iterator.hasNext()) return;
+
         QueryPositionMovements movement= (QueryPositionMovements)iterator.next();
         DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
         for(int i=0;i<movements.size();){
@@ -139,7 +156,7 @@ public class Statistics extends AbstractWindow {
             QueriesPosition currentPosition=movement.getPosition();
             List<MapDataItem> segments = new ArrayList<>();
 
-            while(movement.getPosition()==currentPosition){
+            while(movement.getPosition().getId().equals(currentPosition.getId())){
 
                 Date start= movement.getCreateTs();
                 Date end=movement.getFinishTS()==null?new Date():movement.getFinishTS();
@@ -156,8 +173,6 @@ public class Statistics extends AbstractWindow {
                             :currentPosition.getNomenclature().getName(),
                     "segments", segments)));
         }
-
-
 
         ganttChart.getConfiguration().setDataProvider(dataProvider);
     }
@@ -218,7 +233,9 @@ public class Statistics extends AbstractWindow {
             stagesTable.addGeneratedColumn(entry.getKey(),new DataGrid.ColumnGenerator<QueryPositionMovements, Integer>(){
                 @Override
                 public Integer getValue(DataGrid.ColumnGeneratorEvent<QueryPositionMovements> event){
-                    return entry.getValue().get( event.getItem().getStage());
+                    List l= entry.getValue().get( event.getItem().getStage());
+                    if (l!=null) return l.size();
+                    else return null;
                 }
                 @Override
                 public Class<Integer> getType(){
@@ -228,13 +245,19 @@ public class Statistics extends AbstractWindow {
             stagesTable.addItemClickListener(clickEvent->{
                 selectStage(clickEvent.getItem().getStage());
 
-                Map stat=statisticsMap.get(clickEvent.getColumnId());
+                Map<Stages,List<QueryPositionMovements>> stat=statisticsMap.get(clickEvent.getColumnId());
                 if(stat!=null)  {
-//                   if(!clickEvent.getColumnId().equals(lastSelectedStatisticsColumnId)){
-                       initPieChartAndLabel(stat,clickEvent.getColumnId());
-                       lastSelectedStatisticsColumnId=clickEvent.getColumnId();
-//                   }
+                    if(!clickEvent.getColumnId().equals(lastSelectedStatisticsColumnId)){
+                        pieChart.setStartDuration(0.5);
+                    }
+                    initPieChartAndLabel(stat,clickEvent.getColumnId());
+                    lastSelectedStatisticsColumnId=clickEvent.getColumnId();
+                    List<QueryPositionMovements> l=stat.get(clickEvent.getItem().getStage());
 
+                    selectedInStatisticsMovementsDs.refresh(ParamsMap.of("selectedMovements",
+                            l.stream().map(i->i.getId()).collect(Collectors.toList())));
+
+                    pieChart.repaint();
                 }
 
             });
@@ -260,7 +283,7 @@ public class Statistics extends AbstractWindow {
             selectedStageMap.put(entry.getKey(),false);
         });
         selectedStageMap.put(stage,true);
-        pieChart.repaint();
+
     }
 
     /**
@@ -268,15 +291,15 @@ public class Statistics extends AbstractWindow {
      * @param statisticItems
      * @param title
      */
-    private void initPieChartAndLabel(Map<Stages,Integer> statisticItems,String title){
+    private void initPieChartAndLabel(Map<Stages,List<QueryPositionMovements>> statisticItems,String title){
 
         ListDataProvider dataProvider = new ListDataProvider();
         statisticItems.entrySet().forEach(entry->{
             dataProvider.addItem(
-            new MapDataItem().add("title",entry.getKey())
-                    .add("value", entry.getValue())
-                    .add("color",statisticsService.getColor(entry.getKey()))
-                    .add("pulled",selectedStageMap.get(entry.getKey()))
+                    new MapDataItem().add("title",entry.getKey())
+                            .add("value", entry.getValue().size())
+                            .add("color",statisticsService.getColor(entry.getKey()))
+                            .add("pulled",selectedStageMap.get(entry.getKey()))
             );
 
 
@@ -382,18 +405,22 @@ public class Statistics extends AbstractWindow {
      * @param filterCondition фильтрующее условие в виде функционального интерфейса
      * @return
      */
-    private Map<Stages, Integer> getStatisticsOfStages(Collection<QueryPositionMovements> movementsCollection,
-                                               Predicate<QueryPositionMovements> filterCondition,Map<Stages,Integer> targetMap) {
+    private Map<Stages, List<QueryPositionMovements>> getStatisticsOfStages(Collection<QueryPositionMovements> movementsCollection,
+                                                                            Predicate<QueryPositionMovements> filterCondition,Map<Stages,List<QueryPositionMovements>> targetMap) {
 
         targetMap.clear();
         List<QueryPositionMovements> filteredCollection= movementsCollection.stream().filter(filterCondition).collect(Collectors.toList());
 
         filteredCollection.forEach(item->{
             if(targetMap.get(item.getStage())!=null){
-                targetMap.put(item.getStage(),targetMap.get(item.getStage())+1);
+                targetMap.get(item.getStage()).add(item);
+
             }
             else {
-                targetMap.put(item.getStage(),1);
+                //// TODO: 28.06.2018 отказаться от создания листа в пользу его очищения
+                List<QueryPositionMovements> list=new ArrayList<QueryPositionMovements>();
+                list.add(item);
+                targetMap.put(item.getStage(),list);
             }
         });
         return targetMap;
@@ -404,10 +431,10 @@ public class Statistics extends AbstractWindow {
      * @param stageData
      * @return
      */
-    private int getStagesTotal( Map<Stages,Integer> stageData){
+    private int getStagesTotal( Map<Stages,List<QueryPositionMovements>> stageData){
         int result=0;
-        for(Integer i:stageData.values()){
-            result+=i;
+        for(List l:stageData.values()){
+            if(l!=null)result+=l.size();
         }
         return result;
     }

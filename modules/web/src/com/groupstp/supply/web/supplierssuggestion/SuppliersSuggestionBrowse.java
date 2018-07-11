@@ -9,6 +9,7 @@ import com.haulmont.cuba.core.global.LoadContext;
 import com.haulmont.cuba.core.global.Metadata;
 import com.haulmont.cuba.gui.WindowManager;
 import com.haulmont.cuba.gui.components.AbstractLookup;
+import com.haulmont.cuba.gui.components.Button;
 import com.haulmont.cuba.gui.components.GroupTable;
 import com.haulmont.cuba.gui.data.GroupDatasource;
 
@@ -28,6 +29,11 @@ public class SuppliersSuggestionBrowse extends AbstractLookup {
 
     @Inject
     private GroupTable<SuppliersSuggestion> tab;
+
+    @Inject
+    private Button btnCommit;
+
+    private boolean addingMode=true;
 
     /**
      * Вызывается после полной инициализации и отображения
@@ -50,6 +56,7 @@ public class SuppliersSuggestionBrowse extends AbstractLookup {
     public void init(Map<String, Object> params) {
         super.init(params);
         Set<QueriesPosition> positions = (Set<QueriesPosition>) params.get("positions");
+
         addValues(positions);
     }
 
@@ -61,6 +68,8 @@ public class SuppliersSuggestionBrowse extends AbstractLookup {
      * @param positions - список позиций заявок, для которых создаются предложения поставщиков
      */
     private void addValues(Set<QueriesPosition> positions) {
+
+        //выбрать поставщиков позиции от которых нет предложения
         LoadContext<PositionSupplier> ctx = LoadContext.create(PositionSupplier.class).
                 setQuery(LoadContext.createQuery("select ps from supply$PositionSupplier ps where ps.position in :positions " +
                         "AND ps NOT IN (select ss.posSup from  supply$SuppliersSuggestion ss) ")
@@ -72,7 +81,7 @@ public class SuppliersSuggestionBrowse extends AbstractLookup {
             ss.setQuantity(ps.getPosition().getQuantity());
             ss.setPrice(0.);
             ss.setTerm(0);
-            dataManager.commit(ss);
+            //dataManager.commit(ss);
             suppliersSuggestionsDs.addItem(ss);
         }
 
@@ -99,6 +108,10 @@ public class SuppliersSuggestionBrowse extends AbstractLookup {
      * @param source компонент, вызвавший действие
      */
     public void onCommit(Component source) {
+
         suppliersSuggestionsDs.commit();
+
     }
+
+    
 }

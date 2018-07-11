@@ -17,9 +17,8 @@
         </menu>
         <item openType="NEW_TAB"
               screen="supply$Suppliers.browse"/>
-        <item screen="chooseGroupOrder"/>
-        <item screen="SendEmail"/>
         <item screen="statistics"/>
+        <item screen="supply$PaymentTable"/>
     </menu>
     <menu id="queries"
           insertBefore="administration">
@@ -30,6 +29,7 @@
             <item screen="supply$QueryWorkflow.browse"/>
         </menu>
         <item screen="queryRegister"/>
+        <item screen="deliverySchedule"/>
     </menu>
     <menu id="Test">
         <item screen="GenerateTestContent"/>

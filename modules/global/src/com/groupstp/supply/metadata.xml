@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <metadata xmlns="http://schemas.haulmont.com/cuba/metadata.xsd">
-
-    <metadata-model root-package="com.groupstp.supply" namespace="supply"/>
-
+    <metadata-model namespace="supply"
+                    root-package="com.groupstp.supply">
+        <class>com.groupstp.supply.entity.PaymentTableItem</class>
+    </metadata-model>
 </metadata>

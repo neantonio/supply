@@ -59,8 +59,7 @@ ss.posSup in (select ps from supply$PositionSupplier ps where ps.position in :pa
             </columns>
             <rows datasource="suppliersSuggestionsDs"/>
             <rowsCount/>
-            <buttonsPanel id="buttonsPanel"
-                          alwaysVisible="true">
+            <buttonsPanel>
                 <button id="createBtn"
                         caption="mainMsg://Add"
                         icon="CREATE_ACTION"
@@ -69,7 +68,8 @@ ss.posSup in (select ps from supply$PositionSupplier ps where ps.position in :pa
                         action="tab.remove"/>
                 <button id="btnCommit"
                         action="tab.commit"
-                        caption="msg://commit"/>
+                        caption="msg://commit"
+                        invoke="onCommit"/>
             </buttonsPanel>
         </groupTable>
     </layout>

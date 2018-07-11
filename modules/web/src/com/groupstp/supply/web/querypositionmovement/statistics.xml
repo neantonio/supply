@@ -7,7 +7,8 @@
     <dsContext>
         <collectionDatasource id="positionDs"
                               class="com.groupstp.supply.entity.QueriesPosition"
-                              maxResults="25">
+                              maxResults="50"
+                              view="queriesPosition-NomControl">
             <query>
                 <![CDATA[select e from supply$QueriesPosition e]]>
             </query>
@@ -25,16 +26,24 @@ order by e.position.id]]>
                               class="com.groupstp.supply.entity.QueryPositionMovements"
                               view="queryPositionMovements-view_1">
             <query>
-                <![CDATA[select e from supply$QueryPositionMovements e where 
+                <![CDATA[select e from supply$QueryPositionMovements e where
 
 ( (e.finishTS >= :custom$beginDate)  and (e.finishTS <= :custom$endDate))
-or (e.finishTS is null) 
+or (e.finishTS is null)
 ]]>
             </query>
         </collectionDatasource>
         <collectionDatasource id="justForDisplayStagesDs"
                               class="com.groupstp.supply.entity.QueryPositionMovements"
-                              datasourceClass="com.groupstp.supply.web.querypositionmovement.JustAllStagesDs"/>
+                              datasourceClass="com.groupstp.supply.web.querypositionmovement.JustAllStagesDs"
+                              view="queryPositionMovements-view"/>
+        <collectionDatasource id="selectedInStatisticsMovementsDs"
+                              class="com.groupstp.supply.entity.QueryPositionMovements"
+                              view="queryPositionMovements-view_3">
+            <query>
+                <![CDATA[select e from supply$QueryPositionMovements e where e.id in :custom$selectedMovements]]>
+            </query>
+        </collectionDatasource>
     </dsContext>
     <dialogMode height="600"
                 width="800"/>
@@ -138,14 +147,13 @@ or (e.finishTS is null)
                             <label id="pieChartLabel"
                                    align="BOTTOM_CENTER"/>
                             <chart:pieChart id="pieChart"
+                                            angle="30"
+                                            colorField="color"
+                                            depth3D="15"
+                                            pulledField="pulled"
                                             titleField="title"
                                             valueField="value"
-                                            colorField="color"
-                                            width="100%"
-                                            depth3D="15"
-                                            angle="30"
-                                            pulledField="pulled"
-                                            >
+                                            width="100%">
                                 <chart:legend autoMargins="false"
                                               marginRight="80"
                                               markerType="CIRCLE"
@@ -155,6 +163,20 @@ or (e.finishTS is null)
                             </chart:pieChart>
                         </vbox>
                     </split>
+                    <table id="selectedMovements"
+                           width="100%">
+                        <columns>
+                            <column id="position"
+                                    caption="msg://position"/>
+                            <column id="user"/>
+                            <column id="position.query"/>
+                            <column id="createTs"
+                                    caption="msg://created"/>
+                            <column id="finishTS"
+                                    caption="msg://finish"/>
+                        </columns>
+                        <rows datasource="selectedInStatisticsMovementsDs"/>
+                    </table>
                 </vbox>
             </tab>
             <tab id="executior"

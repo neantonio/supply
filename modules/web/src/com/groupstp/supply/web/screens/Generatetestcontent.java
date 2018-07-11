@@ -5,8 +5,8 @@ import com.groupstp.supply.entity.Query;
 import com.groupstp.supply.service.DataBaseTestContentService;
 import com.groupstp.supply.service.QueryService;
 import com.haulmont.cuba.gui.WindowManager;
-import com.haulmont.cuba.gui.components.AbstractWindow;
-import com.haulmont.cuba.gui.components.GroupTable;
+import com.haulmont.cuba.gui.components.*;
+import com.haulmont.cuba.gui.data.CollectionDatasource;
 
 import javax.inject.Inject;
 import java.util.Arrays;
@@ -32,6 +32,12 @@ public class Generatetestcontent extends AbstractWindow {
     @Inject
     private GroupTable<QueriesPosition> queryPosition;
 
+    @Inject
+    private TextField fileName;
+
+    @Inject
+    private CollectionDatasource queriesDs;
+
     public void onModal(){
         List<String> items= Arrays.asList("1","2","3","4","5","6","7");
         Map<String,Object> map=new HashMap<>();
@@ -40,11 +46,41 @@ public class Generatetestcontent extends AbstractWindow {
     }
 
     public void onCreateCompany(){
-        testContentService.createEntities();
+        queriesDs.refresh();
+        if(queriesDs.getItems().size()>0)   {
+            showNotification("в базе что-то есть. сначала нужно очистить базу",NotificationType.HUMANIZED);
+        }
+        else {
+            if ((fileName.getRawValue() == null) || fileName.getRawValue().equals(""))
+                showNotification("нужно указать путь к файлу pricetin.xls", NotificationType.HUMANIZED);
+            else testContentService.createEntities(fileName.getRawValue());
+        }
+    }
+    public void onClear(){
+        String capitalHeader= "очиска бд";
+        String capitalContent= "Очистить бд полностью?";
+        showOptionDialog(
+                capitalHeader,
+                capitalContent ,
+                MessageType.CONFIRMATION,
+
+                new Action[] {
+                        new DialogAction(DialogAction.Type.YES) {
+                            @Override
+                            public void actionPerform(Component component) {
+                                testContentService.clearDataBase();
+
+                            }
+                        },
+                        new DialogAction(DialogAction.Type.NO)
+                }
+        );
     }
     public void onBusiness(){
         testContentService.beginBusinessProcess();
     }
+
+
 
 
 }

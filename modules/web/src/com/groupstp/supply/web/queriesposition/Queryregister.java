@@ -1,5 +1,6 @@
 package com.groupstp.supply.web.queriesposition;
 
+import com.groupstp.supply.entity.PositionType;
 import com.groupstp.supply.entity.QueriesPosition;
 import com.groupstp.supply.entity.QueryPositionMovements;
 import com.groupstp.supply.entity.Stages;
@@ -65,6 +66,12 @@ public class Queryregister extends AbstractWindow {
         //передаем стандартный датасорс в кастомный т.к. инджектироваться он не хочет
         cqueriesPositionRegisterDs.setQueriesPositionDs(queriesPositionsDs);
 
+        addPositionHistoryPopupColumn();
+        addPositionInfoColumn();
+        initGrouping();
+    }
+
+    private void addPositionHistoryPopupColumn(){
         Date today=new Date();
         //колонка со всплывающим окном, содержащим историю перемещений
         positionsTable.addGeneratedColumn("История перемещений",queriesPosition -> {
@@ -72,68 +79,95 @@ public class Queryregister extends AbstractWindow {
             List<QueryPositionMovements> queryPositionMovementsList = queryDaoService.getQueryPositionMovement(queriesPosition);
 
             if (queryPositionMovementsList.size()>0) {
-            PopupView popup=(PopupView) factory.createComponent(PopupView.NAME);
-            popup.setMinimizedValue("история");
-            VBoxLayout Vlayout=(VBoxLayout) factory.createComponent(VBoxLayout.NAME);
+                PopupView popup=(PopupView) factory.createComponent(PopupView.NAME);
+                popup.setMinimizedValue("история");
+                VBoxLayout Vlayout=(VBoxLayout) factory.createComponent(VBoxLayout.NAME);
 
-            for(QueryPositionMovements movement:queryPositionMovementsList ){
+                for(QueryPositionMovements movement:queryPositionMovementsList ){
 
-                HBoxLayout Hlayout=(HBoxLayout) factory.createComponent(HBoxLayout.NAME);
+                    HBoxLayout Hlayout=(HBoxLayout) factory.createComponent(HBoxLayout.NAME);
 
-                //извлекаем время завершения из журнала, если его нет, то этап длится до сих пор
-                Label finishDateLabel= (Label) factory.createComponent(Label.NAME);
-                Label durationLabel= (Label) factory.createComponent(Label.NAME);
-                long hourDuration=0;
-                if(movement.getFinishTS()!=null){
-                    finishDateLabel.setValue(messages.getMainMessage("date_finish")+": "+String.format("%td.%tm.%ty",movement.getFinishTS(),movement.getFinishTS(),movement.getFinishTS()));
-                    hourDuration=(movement.getFinishTS().getTime()-movement.getCreateTs().getTime());
+                    //извлекаем время завершения из журнала, если его нет, то этап длится до сих пор
+                    Label finishDateLabel= (Label) factory.createComponent(Label.NAME);
+                    Label durationLabel= (Label) factory.createComponent(Label.NAME);
+                    long hourDuration=0;
+                    if(movement.getFinishTS()!=null){
+                        finishDateLabel.setValue(messages.getMainMessage("date_finish")+": "+String.format("%td.%tm.%ty",movement.getFinishTS(),movement.getFinishTS(),movement.getFinishTS()));
+                        hourDuration=(movement.getFinishTS().getTime()-movement.getCreateTs().getTime());
+                    }
+                    else{
+                        hourDuration=(today.getTime()-movement.getCreateTs().getTime());
+                    }
+
+                    //значение продолжительности выводится часах с разделением на дни
+                    hourDuration=hourDuration/1000/60/60;
+                    String durationStringValue;
+                    if(hourDuration>24){
+                        durationStringValue=String.format("%dд %dч",hourDuration%24,Math.round(hourDuration-hourDuration%24*24));
+                    } else{
+                        durationStringValue=String.format("%dч",hourDuration);
+                    }
+                    durationLabel.setValue(messages.getMainMessage("duration")+": "+durationStringValue);
+
+
+                    Label beginDateLabel= (Label) factory.createComponent(Label.NAME);
+                    beginDateLabel.setValue(messages.getMainMessage("date_begin")+": "+String.format("%td.%tm.%ty",movement.getCreateTs(),movement.getCreateTs(),movement.getCreateTs()));
+
+                    Label userLabel= (Label) factory.createComponent(Label.NAME);
+                    userLabel.setValue(messages.getMainMessage("user")+": "+movement.getUser().getName());
+
+                    Label stageLabel= (Label) factory.createComponent(Label.NAME);
+                    stageLabel.setValue(messages.getMainMessage("stage")+": "+movement.getStage());
+
+                    Hlayout.add(stageLabel);
+                    Hlayout.add(userLabel);
+                    Hlayout.add(beginDateLabel);
+                    if(movement.getFinishTS()!=null){Hlayout.add(finishDateLabel);}
+                    Hlayout.add(durationLabel);
+                    Hlayout.setSpacing(true);
+                    Vlayout.add(Hlayout);
+
                 }
-                else{
-                    hourDuration=(today.getTime()-movement.getCreateTs().getTime());
-                }
-
-                //значение продолжительности выводится часах с разделением на дни
-                hourDuration=hourDuration/1000/60/60;
-                String durationStringValue;
-                if(hourDuration>24){
-                    durationStringValue=String.format("%dд %dч",hourDuration%24,Math.round(hourDuration-hourDuration%24*24));
-                } else{
-                    durationStringValue=String.format("%dч",hourDuration);
-                }
-                durationLabel.setValue(messages.getMainMessage("duration")+": "+durationStringValue);
-
-
-                Label beginDateLabel= (Label) factory.createComponent(Label.NAME);
-                beginDateLabel.setValue(messages.getMainMessage("date_begin")+": "+String.format("%td.%tm.%ty",movement.getCreateTs(),movement.getCreateTs(),movement.getCreateTs()));
-
-                Label userLabel= (Label) factory.createComponent(Label.NAME);
-                userLabel.setValue(messages.getMainMessage("user")+": "+movement.getUser().getName());
-
-                Label stageLabel= (Label) factory.createComponent(Label.NAME);
-                stageLabel.setValue(messages.getMainMessage("stage")+": "+movement.getStage());
-
-                Hlayout.add(stageLabel);
-                Hlayout.add(userLabel);
-                Hlayout.add(beginDateLabel);
-                if(movement.getFinishTS()!=null){Hlayout.add(finishDateLabel);}
-                Hlayout.add(durationLabel);
-                Hlayout.setSpacing(true);
-                Vlayout.add(Hlayout);
-
-            }
                 popup.setPopupContent(Vlayout);
                 return popup;
             }
+
+
             return null;
 
         });
+    }
 
+    private void addPositionInfoColumn(){
+        positionsTable.addGeneratedColumn("positionInfo",queriesPosition -> {
+
+            VBoxLayout vlayout=(VBoxLayout) factory.createComponent(VBoxLayout.NAME);
+
+            Label stageLabel= (Label) factory.createComponent(Label.NAME);
+            stageLabel.setValue(messages.getMainMessage("stage")+": "+queriesPosition.getCurrentStage());
+
+            Label nomLabel= (Label) factory.createComponent(Label.NAME);
+            if(queriesPosition.getPositionType()== PositionType.nomenclature){
+                nomLabel.setValue(messages.getMainMessage("nomenclature")+": "+queriesPosition.getNomenclature().getName());
+            }
+            else{
+                nomLabel.setValue(messages.getMainMessage("specification")+": "+queriesPosition.getSpecification());
+            }
+
+            vlayout.add(nomLabel);
+            vlayout.add(stageLabel);
+
+            return vlayout;
+        });
+    }
+
+    private void initGrouping(){
         List<String> columnIds=Arrays.asList(
-               "currentStage",
+                "currentStage",
                 "query",
                 "query.contact",
                 "store",
-               "query.division",
+                "query.division",
                 "query.company",
                 "query.origin",
                 "updateTs",
@@ -153,7 +187,6 @@ public class Queryregister extends AbstractWindow {
         currentGroupOrderItems.add(availableGroupOrderItems.get(5));
         currentGroupOrderItems.add(availableGroupOrderItems.get(4));
         currentGroupOrderItems.add(availableGroupOrderItems.get(2));
-
     }
 
     @Override
@@ -229,7 +262,7 @@ public class Queryregister extends AbstractWindow {
             List<String> addresses=new ArrayList<>();
             Map<String,Object> params=new HashMap<>();
             selectedQueriesPositions.forEach(item->{
-               User user= item.getQuery().getContact();
+                User user= item.getQuery().getContact();
                 if(user!=null) {
                     addresses.add(user.getEmail());
                 }
@@ -244,19 +277,19 @@ public class Queryregister extends AbstractWindow {
 
     public void onChangeGroupOrder(){
         createGroupOrderDialog(currentGroupOrderItems,availableGroupOrderItems,availableGroupOrderItemsDescription,map->{
-        int i=0;
-        List<Map.Entry<String,Object>> entries= (List<Map.Entry<String, Object>>) map.get("currentOrder");
-        Object[] obj =new Object[entries.size()];
+            int i=0;
+            List<Map.Entry<String,Object>> entries= (List<Map.Entry<String, Object>>) map.get("currentOrder");
+            Object[] obj =new Object[entries.size()];
 
-        currentGroupOrderItems.clear();;
+            currentGroupOrderItems.clear();;
 
-        for(Map.Entry ent:entries){
-            obj[i]=ent.getValue();
-            i++;
-            currentGroupOrderItems.add(ent.getValue());
-        }
-        positionsTable.groupBy(obj);
-    });
+            for(Map.Entry ent:entries){
+                obj[i]=ent.getValue();
+                i++;
+                currentGroupOrderItems.add(ent.getValue());
+            }
+            positionsTable.groupBy(obj);
+        });
     }
 
 

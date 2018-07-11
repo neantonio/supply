@@ -9,7 +9,9 @@ import javax.validation.constraints.NotNull;
 import com.haulmont.chile.core.annotations.NumberFormat;
 import java.util.Date;
 import java.util.List;
+import com.haulmont.chile.core.annotations.NamePattern;
 
+@NamePattern("%s|number")
 @Table(name = "SUPPLY_BILLS")
 @Entity(name = "supply$Bills")
 public class Bills extends StandardEntity {
@@ -18,6 +20,10 @@ public class Bills extends StandardEntity {
     @NotNull
     @Column(name = "NUMBER_", nullable = false, unique = true, length = 20)
     protected String number;
+
+    @NumberFormat(pattern = "########.##")
+    @Column(name = "PRICE")
+    protected Double price;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "COMPANY_ID")
@@ -33,8 +39,8 @@ public class Bills extends StandardEntity {
     protected Date timePayment;
 
     @NumberFormat(pattern = "#########.##")
-    @Column(name = "PRICE")
-    protected Double price;
+    @Column(name = "AMOUNT")
+    protected Double amount;
 
     @Column(name = "SUM_CONTROL")
     protected Boolean sumControl;
@@ -45,6 +51,23 @@ public class Bills extends StandardEntity {
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "IMAGE_BILL_ID")
     protected FileDescriptor imageBill;
+
+    public void setPrice(Double price) {
+        this.price = price;
+    }
+
+    public Double getPrice() {
+        return price;
+    }
+
+
+    public void setAmount(Double amount) {
+        this.amount = amount;
+    }
+
+    public Double getAmount() {
+        return amount;
+    }
 
     public void setImageBill(FileDescriptor imageBill) {
         this.imageBill = imageBill;
@@ -62,7 +85,6 @@ public class Bills extends StandardEntity {
         return company;
     }
 
-
     public void setSupplier(Suppliers supplier) {
         this.supplier = supplier;
     }
@@ -71,7 +93,6 @@ public class Bills extends StandardEntity {
         return supplier;
     }
 
-
     public void setPositions(List<QueriesPosition> positions) {
         this.positions = positions;
     }
@@ -79,7 +100,6 @@ public class Bills extends StandardEntity {
     public List<QueriesPosition> getPositions() {
         return positions;
     }
-
 
     public void setSumControl(Boolean sumControl) {
         this.sumControl = sumControl;
@@ -97,15 +117,6 @@ public class Bills extends StandardEntity {
     public Date getTimePayment() {
         return timePayment;
     }
-
-    public void setPrice(Double price) {
-        this.price = price;
-    }
-
-    public Double getPrice() {
-        return price;
-    }
-
 
     public void setNumber(String number) {
         this.number = number;
