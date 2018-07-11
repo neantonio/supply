@@ -21,6 +21,9 @@ public class Bills extends StandardEntity {
     @Column(name = "NUMBER_", nullable = false, unique = true, length = 20)
     protected String number;
 
+    @Column(name = "PRICE")
+    protected Double price;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "COMPANY_ID")
     protected Company company;
@@ -47,6 +50,15 @@ public class Bills extends StandardEntity {
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "IMAGE_BILL_ID")
     protected FileDescriptor imageBill;
+
+    public void setPrice(Double price) {
+        this.price = price;
+    }
+
+    public Double getPrice() {
+        return price;
+    }
+
 
     public void setAmount(Double amount) {
         this.amount = amount;

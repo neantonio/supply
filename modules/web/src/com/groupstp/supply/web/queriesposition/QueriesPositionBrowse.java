@@ -974,6 +974,8 @@ public class QueriesPositionBrowse extends AbstractLookup {
     @Inject
     private GroupTable<QueriesPosition> positionsComission;
 
+    @Inject
+    private GroupDatasource dsComission;
     /**
      * Открывает голосование
      */
@@ -985,7 +987,9 @@ public class QueriesPositionBrowse extends AbstractLookup {
         }
         HashMap<String, Object> items = new HashMap<>();
         items.put("positions", positionsComission.getSelected());
-        openWindow("supply$VoteDialog", WindowManager.OpenType.DIALOG, items);
+        openWindow("supply$VoteDialog", WindowManager.OpenType.DIALOG, items).addCloseListener(event->{
+            dsComission.refresh();
+        });
     }
 
     /**

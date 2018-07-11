@@ -70,6 +70,7 @@ public class WorkflowServiceBean implements WorkflowService {
     @Override
     public void movePositionTo(QueriesPosition position, Stages stage) {
         //TODO: add finishTS to current position
+
         String strStage = position.getCurrentStage().name();
         strStage = strStage.substring(0, 1).toLowerCase()+strStage.substring(1);
         if(position.getMetaClass().getProperty(strStage+"Flag")!=null) {
@@ -80,6 +81,7 @@ public class WorkflowServiceBean implements WorkflowService {
         position.setCurrentStage(stage);
         dataManager.commit(position);
         createMovementRecord(position, stage);
+
     }
 
     @Inject
