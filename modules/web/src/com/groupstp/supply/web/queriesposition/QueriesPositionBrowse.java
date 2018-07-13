@@ -1272,6 +1272,7 @@ public class QueriesPositionBrowse extends AbstractLookup {
         if (billsTable.getSelected().size() == 1) {
             Bills currentBill = billsTable.getSelected().iterator().next();
             dsBills.getItems().forEach(e -> {
+
                 if (e.getBills().getId().equals(currentBill.getId())) {
                     e.setCurrentStage(Stages.SupSelection);
                     dsBills.setItem(e);
