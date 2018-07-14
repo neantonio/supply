@@ -1,16 +1,12 @@
 package com.groupstp.supply.entity;
 
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import com.haulmont.chile.core.annotations.NamePattern;
+import com.haulmont.cuba.core.entity.StandardEntity;
 import com.haulmont.cuba.core.entity.annotation.Lookup;
 import com.haulmont.cuba.core.entity.annotation.LookupType;
-import javax.persistence.Column;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import com.haulmont.cuba.core.entity.StandardEntity;
-import com.haulmont.chile.core.annotations.NamePattern;
 
 @NamePattern("%s|name")
 @Table(name = "SUPPLY_DIVISION")
@@ -24,9 +20,21 @@ public class Division extends StandardEntity {
     @JoinColumn(name = "COMPANY_ID")
     protected Company company;
 
+    @Column(name = "EXT_ID")
+    protected String extId;
+
     @NotNull
     @Column(name = "NAME", nullable = false, length = 50)
     protected String name;
+
+    public void setExtId(String extId) {
+        this.extId = extId;
+    }
+
+    public String getExtId() {
+        return extId;
+    }
+
 
     public void setCompany(Company company) {
         this.company = company;

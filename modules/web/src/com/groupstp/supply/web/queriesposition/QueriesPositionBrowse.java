@@ -928,7 +928,7 @@ public class QueriesPositionBrowse extends AbstractLookup {
      * @return новую позицию
      */
     private QueriesPosition copyPosition(QueriesPosition position) {
-        QueriesPosition src = dataManager.reload(position, "queriesPosition-full");
+        QueriesPosition src = dataManager.reload(position, "full");
         QueriesPosition copy = metadata.create(QueriesPosition.class);
         Collection<MetaProperty> properties = position.getMetaClass().getProperties();
         for (MetaProperty property : properties) {

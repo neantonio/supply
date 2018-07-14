@@ -1,20 +1,23 @@
 package com.groupstp.supply.entity;
 
+import com.haulmont.chile.core.annotations.NamePattern;
+import com.haulmont.cuba.core.entity.StandardEntity;
+
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
-import javax.persistence.Column;
+import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
-import com.haulmont.cuba.core.entity.StandardEntity;
-import com.haulmont.chile.core.annotations.NamePattern;
 
 @NamePattern("%s|name")
-@Table(name = "SUPPLY_MEASURE_UNITS")
+@Table(name = "SUPPLY_MEASURE_UNITS", uniqueConstraints = {
+    @UniqueConstraint(name = "IDX_SUPPLY_MEASURE_UNITS_UNQ", columnNames = {"EXT_ID"})
+})
 @Entity(name = "supply$MeasureUnits")
 public class MeasureUnits extends StandardEntity {
     private static final long serialVersionUID = -7426351803220588191L;
 
-    @NotNull
-    @Column(name = "CODE", nullable = false, unique = true)
+    @Column(name = "CODE")
     protected String code;
 
     @NotNull
@@ -23,6 +26,18 @@ public class MeasureUnits extends StandardEntity {
 
     @Column(name = "FULL_NAME", length = 25)
     protected String fullName;
+
+    @Column(name = "EXT_ID")
+    protected String extId;
+
+    public void setExtId(String extId) {
+        this.extId = extId;
+    }
+
+    public String getExtId() {
+        return extId;
+    }
+
 
     public void setCode(String code) {
         this.code = code;

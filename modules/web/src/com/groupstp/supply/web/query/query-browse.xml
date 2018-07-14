@@ -35,8 +35,9 @@
                 <action id="excel"/>
             </actions>
             <columns>
+                <column id="number"/>
+                <column id="timeCreation"/>
                 <column id="urgency"/>
-                <column id="query"/>
                 <column id="origin"/>
                 <column id="peridiocity"/>
                 <column id="wholeQueryWorkout"/>

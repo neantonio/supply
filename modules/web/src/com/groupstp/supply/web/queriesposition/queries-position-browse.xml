@@ -14,7 +14,7 @@ where e.currentStage='NomControl']]>
         </groupDatasource>
         <groupDatasource id="dsStoreControl"
                          class="com.groupstp.supply.entity.QueriesPosition"
-                         view="queriesPosition-full">
+                         view="full">
             <query>
                 <![CDATA[select e from supply$QueriesPosition e
 where e.currentStage='StoreControl']]>
@@ -69,7 +69,7 @@ where e.currentStage='Procuration']]>
         </groupDatasource>
         <groupDatasource id="dsLogistic"
                          class="com.groupstp.supply.entity.QueriesPosition"
-                         view="queriesPosition-full">
+                         view="full">
             <query>
                 <![CDATA[select e from supply$QueriesPosition e
 where e.currentStage='Logistic']]>

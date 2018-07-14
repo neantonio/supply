@@ -45,10 +45,10 @@
             </query>
         </collectionDatasource>
         <collectionDatasource id="contactsDs"
-                              class="com.haulmont.cuba.security.entity.User"
+                              class="com.groupstp.supply.entity.Employee"
                               view="_minimal">
             <query>
-                <![CDATA[select e from sec$User e]]>
+                <![CDATA[select e from supply$Employee e]]>
             </query>
         </collectionDatasource>
         <collectionDatasource id="queriesPositionsDs"

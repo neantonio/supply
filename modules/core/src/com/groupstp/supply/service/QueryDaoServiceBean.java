@@ -32,7 +32,7 @@ public class QueryDaoServiceBean implements QueryDaoService {
         LoadContext<QueriesPosition> loadContext = LoadContext.create(QueriesPosition.class)
                 .setQuery(LoadContext.createQuery("select qp from supply$QueriesPosition qp where qp.query.id = :queryItem")
                         .setParameter("queryItem", query))
-                .setView("queriesPosition-full");
+                .setView("full");
         ;
 
         return dataManager.loadList(loadContext);
@@ -74,7 +74,7 @@ public class QueryDaoServiceBean implements QueryDaoService {
     public List<QueriesPosition> getAllQueriesPosition(){
         LoadContext<QueriesPosition> loadContext = LoadContext.create(QueriesPosition.class)
                 .setQuery(LoadContext.createQuery("select  qp from supply$QueriesPosition qp "))
-                .setView("queriesPosition-full");
+                .setView("full");
         return dataManager.loadList(loadContext);
     }
 

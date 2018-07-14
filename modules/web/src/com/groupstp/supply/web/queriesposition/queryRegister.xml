@@ -6,7 +6,7 @@
     <dsContext>
         <collectionDatasource id="queriesPositionsDs"
                               class="com.groupstp.supply.entity.QueriesPosition"
-                              view="queriesPosition-full">
+                              view="full">
             <query>
                 <![CDATA[select e from supply$QueriesPosition e]]>
             </query>
@@ -14,7 +14,7 @@
         <groupDatasource id="cqueriesPositionRegisterDs"
                          class="com.groupstp.supply.entity.QueriesPosition"
                          datasourceClass="com.groupstp.supply.web.queriesposition.QueryPositionRegisterDs"
-                         view="queriesPosition-full">
+                         view="full">
             <query>
                 <![CDATA[select e from supply$QueriesPosition e]]>
             </query>

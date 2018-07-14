@@ -400,7 +400,7 @@ public class DataBaseTestContentServiceBean implements DataBaseTestContentServic
             //query.setInWork(randomDataService.getRandomBoolean(70));
             query.setInWork(false);
             query.setDivision((Division) randomDataService.getRandomFromList(divisionList));
-            query.setContact(((Employee) randomDataService.getRandomFromList(employeeList)).getUser());
+            query.setContact(((Employee) randomDataService.getRandomFromList(employeeList)));
             query.setNumber(String.valueOf(i));
             query.setOrigin((Origin) randomDataService.getRandomFromArr(Origin.values()));
             query.setPeridiocity((Peridiocities) randomDataService.getRandomFromArr(Peridiocities.values()));

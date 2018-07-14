@@ -1,19 +1,19 @@
 package com.groupstp.supply.entity;
 
-import javax.persistence.Entity;
-import javax.persistence.Table;
-import com.haulmont.cuba.core.entity.StandardEntity;
-import javax.persistence.Column;
-import javax.validation.constraints.NotNull;
-import com.haulmont.chile.core.annotations.NamePattern;
 import com.haulmont.chile.core.annotations.Composition;
+import com.haulmont.chile.core.annotations.NamePattern;
+import com.haulmont.cuba.core.entity.StandardEntity;
 import com.haulmont.cuba.core.entity.annotation.OnDelete;
 import com.haulmont.cuba.core.global.DeletePolicy;
+
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.util.List;
-import javax.persistence.OneToMany;
 
 @NamePattern("%s|name")
-@Table(name = "SUPPLY_URGENCY")
+@Table(name = "SUPPLY_URGENCY", uniqueConstraints = {
+    @UniqueConstraint(name = "IDX_SUPPLY_URGENCY_UNQ", columnNames = {"EXT_ID"})
+})
 @Entity(name = "supply$Urgency")
 public class Urgency extends StandardEntity {
     private static final long serialVersionUID = -7847872795858658356L;
@@ -26,6 +26,18 @@ public class Urgency extends StandardEntity {
     @OnDelete(DeletePolicy.CASCADE)
     @OneToMany(mappedBy = "urgency")
     protected List<StageTerm> stageTerm;
+
+    @Column(name = "EXT_ID")
+    protected String extId;
+
+    public void setExtId(String extId) {
+        this.extId = extId;
+    }
+
+    public String getExtId() {
+        return extId;
+    }
+
 
     public void setStageTerm(List<StageTerm> stageTerm) {
         this.stageTerm = stageTerm;

@@ -11,7 +11,6 @@ import com.haulmont.cuba.gui.components.*;
 import com.haulmont.cuba.gui.data.CollectionDatasource;
 import com.haulmont.cuba.gui.xml.layout.ComponentsFactory;
 import com.haulmont.cuba.security.entity.User;
-import com.haulmont.cuba.web.gui.components.WebGroupTable;
 
 import javax.inject.Inject;
 import java.util.*;
@@ -23,7 +22,7 @@ import java.util.*;
 public class Queryregister extends AbstractWindow {
 
     @Inject
-    private WebGroupTable<QueriesPosition> positionsTable;
+    private GroupTable<QueriesPosition> positionsTable;
 
     @Inject
     QueryPositionRegisterDs cqueriesPositionRegisterDs;
@@ -262,7 +261,7 @@ public class Queryregister extends AbstractWindow {
             List<String> addresses=new ArrayList<>();
             Map<String,Object> params=new HashMap<>();
             selectedQueriesPositions.forEach(item->{
-                User user= item.getQuery().getContact();
+                User user= item.getQuery().getContact().getUser();
                 if(user!=null) {
                     addresses.add(user.getEmail());
                 }

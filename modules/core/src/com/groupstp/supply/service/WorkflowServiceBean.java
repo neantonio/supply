@@ -149,10 +149,15 @@ public class WorkflowServiceBean implements WorkflowService {
      */
     private List<QueryWorkflowDetail> getWorkflowDetailsForPositions(QueriesPosition queryPosition)
     {
-        LoadContext<QueryWorkflowDetail> ctx = LoadContext.create(QueryWorkflowDetail.class).setQuery(
-                LoadContext.createQuery("select q from supply$QueryWorkflowDetail q where q.sourceStage=:sourceStage order by q.priority asc")
-                .setParameter("sourceStage", queryPosition.getCurrentStage()));
-        return  dataManager.loadList(ctx);
+        return dataManager.load(QueryWorkflowDetail.class)
+                .query("select q from supply$QueryWorkflowDetail q " +
+                        "where q.sourceStage=:sourceStage " +
+                        "and q.queryWorkflow.id=:queryWorkflow " +
+                        "order by q.priority asc")
+                .parameter("sourceStage", queryPosition.getCurrentStage())
+                .parameter("queryWorkflow", queryPosition.getQuery().getWorkflow())
+                .view("queryWorkflowDetail-view")
+                .list();
     }
 
 
