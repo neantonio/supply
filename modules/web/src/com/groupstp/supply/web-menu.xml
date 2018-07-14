@@ -33,5 +33,6 @@
     </menu>
     <menu id="Test">
         <item screen="GenerateTestContent"/>
+        <item screen="TestImport"/>
     </menu>
 </menu-config>
