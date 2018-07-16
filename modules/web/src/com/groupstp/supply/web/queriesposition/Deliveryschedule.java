@@ -65,18 +65,32 @@ public class Deliveryschedule extends AbstractWindow {
         /**
          * добавление генерируемых колонок
          */
-        monthStringMap.forEach((k, v) -> {
-            LocalDate dayForColumn = LocalDate.now().withMonth(k.getValue());
-            queriesPositionsTable.addGeneratedColumn(v + " 01-10", entity ->
-                    addGenColumn(dayForColumn.withDayOfMonth(1), dayForColumn.withDayOfMonth(10), entity));
-            columnAllSet.add(v + " 01-10");
-            queriesPositionsTable.addGeneratedColumn(v + " 11-20", entity ->
-                    addGenColumn(dayForColumn.withDayOfMonth(11), dayForColumn.withDayOfMonth(20), entity));
-            columnAllSet.add(v + " 11-20");
-            queriesPositionsTable.addGeneratedColumn(v + " 21-" + dayForColumn.with(TemporalAdjusters.lastDayOfMonth()).getDayOfMonth(), entity ->
-                    addGenColumn(dayForColumn.withDayOfMonth(21), dayForColumn.with(TemporalAdjusters.lastDayOfMonth()), entity));
-            columnAllSet.add(v + " 21-" + dayForColumn.with(TemporalAdjusters.lastDayOfMonth()).getDayOfMonth());
+
+        LocalDate today = LocalDate.now();
+        List<Integer> yearList = Arrays.asList(today.getYear(), today.getYear() + 1);
+        yearList.forEach(year -> {
+            monthStringMap.forEach((k, month) -> {
+                LocalDate dayForColumn = today.withMonth(k.getValue()).withYear(year);
+
+                String nameFirstColumn = "01-10 "+month+" "+year;
+                queriesPositionsTable.addGeneratedColumn(nameFirstColumn, entity ->
+                        addGenColumn(dayForColumn.withDayOfMonth(1), dayForColumn.withDayOfMonth(10), entity));
+                columnAllSet.add(nameFirstColumn);
+
+                String nameSecondColumn = "11-20 "+month+" "+year;
+                queriesPositionsTable.addGeneratedColumn(nameSecondColumn, entity ->
+                        addGenColumn(dayForColumn.withDayOfMonth(11), dayForColumn.withDayOfMonth(20), entity));
+                columnAllSet.add(nameSecondColumn);
+
+                String nameThirdColumn = "21-" + dayForColumn.with(TemporalAdjusters.lastDayOfMonth()).getDayOfMonth()+" "+month+" "+year;
+                queriesPositionsTable.addGeneratedColumn(nameThirdColumn, entity ->
+                        addGenColumn(dayForColumn.withDayOfMonth(21), dayForColumn.with(TemporalAdjusters.lastDayOfMonth()), entity));
+                columnAllSet.add(nameThirdColumn);
+
+            });
         });
+
+        onBtnHideNullColumnDelivery();
     }
 
     /**
@@ -96,7 +110,7 @@ public class Deliveryschedule extends AbstractWindow {
         List<DeliveryLine> deliveryLineList = entity.getDelivery().getDeliveryLine();
         Double sum = deliveryLineList.stream().filter(e -> {
             LocalDate date = new java.sql.Date(e.getDeliveryDay().getTime()).toLocalDate();
-            return (date.isAfter(startDate)||date.isEqual(startDate)) && (date.isBefore(endDate)||date.isEqual(endDate));
+            return (date.isAfter(startDate) || date.isEqual(startDate)) && (date.isBefore(endDate) || date.isEqual(endDate));
         }).mapToDouble(DeliveryLine::getQuantity).sum();
         if (sum == 0) {
             return null;
@@ -126,34 +140,7 @@ public class Deliveryschedule extends AbstractWindow {
         columnAllSet.forEach(e -> {
             queriesPositionsTable.setColumnCollapsed(e, true);
         });
-        Collection<QueriesPosition> queriesPositionList = queriesPositionsDs.getItems();
-
-        for (QueriesPosition q : queriesPositionList) {
-            Delivery delivery = q.getDelivery();
-            if (delivery == null) {
-                continue;
-            }
-            List<DeliveryLine> deliveryLines = delivery.getDeliveryLine();
-
-            if (deliveryLines == null) {
-                continue;
-            }
-            for (DeliveryLine d : deliveryLines) {
-                LocalDate date = new java.sql.Date(d.getDeliveryDay().getTime()).toLocalDate();
-                String nameColumn = monthStringMap.get(date.getMonth());
-                if (date.getDayOfMonth() < 11) {
-                    nameColumn += " 01-10";
-                }
-                if (date.getDayOfMonth() >= 11 && date.getDayOfMonth() < 21) {
-                    nameColumn += " 11-20";
-                }
-                if (date.getDayOfMonth() >= 21) {
-                    nameColumn += " 21-" + date.with(TemporalAdjusters.lastDayOfMonth()).getDayOfMonth();
-                }
-                queriesPositionsTable.getColumn(nameColumn).setCollapsed(false);
-
-            }
-        }
+        showNotNullColumn();
         collapsedColumns = true;
     }
 
@@ -168,15 +155,49 @@ public class Deliveryschedule extends AbstractWindow {
     }
 
     /**
+     * Показать столбцы с информацией
+     */
+    public void showNotNullColumn() {
+        Collection<QueriesPosition> queriesPositionList = queriesPositionsDs.getItems();
+
+        for (QueriesPosition q : queriesPositionList) {
+            Delivery delivery = q.getDelivery();
+            if (delivery == null) {
+                continue;
+            }
+            List<DeliveryLine> deliveryLines = delivery.getDeliveryLine();
+
+            if (deliveryLines == null) {
+                continue;
+            }
+            for (DeliveryLine d : deliveryLines) {
+                LocalDate date = new java.sql.Date(d.getDeliveryDay().getTime()).toLocalDate();
+                String nameColumn = monthStringMap.get(date.getMonth())+" "+date.getYear();
+                if (date.getDayOfMonth() < 11) {
+                    nameColumn ="01-10 "+nameColumn;
+                }
+                if (date.getDayOfMonth() >= 11 && date.getDayOfMonth() < 21) {
+                    nameColumn = "11-20 "+nameColumn;
+                }
+                if (date.getDayOfMonth() >= 21) {
+                    nameColumn = "21-" + date.with(TemporalAdjusters.lastDayOfMonth()).getDayOfMonth()+" "+nameColumn;
+                }
+                queriesPositionsTable.getColumn(nameColumn).setCollapsed(false);
+
+            }
+        }
+
+    }
+
+    /**
      * Обновить
      */
     public void onBtnRefresh() {
         queriesPositionsDs.refresh();
         if (collapsedColumns) {
             onBtnHideNullColumnDelivery();
-        } else {
+        } /*else {
             onBtnShowNullColumnDelivery();
-        }
-
+        }*/
     }
 }
