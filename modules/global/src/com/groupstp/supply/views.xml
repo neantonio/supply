@@ -627,4 +627,7 @@
     <view class="com.groupstp.supply.entity.MeasureUnits"
           extends="_local"
           name="full"/>
+    <view class="com.groupstp.supply.entity.QueriesPosition"
+          extends="full"
+          name="queriesPosition-full"/>
 </views>
