@@ -56,7 +56,8 @@ where e.currentStage='Bills']]>
                          class="com.groupstp.supply.entity.Bills"
                          view="bills-view">
             <query>
-                <![CDATA[select e from supply$Bills e]]>
+                <![CDATA[select e from supply$Bills e
+where e.sumControl = false]]>
             </query>
         </groupDatasource>
         <groupDatasource id="dsProcuration"
@@ -607,12 +608,15 @@ where e.position in :custom$positions]]>
                         <upload id="uploadField"/>
                         <button id="downloadImageBtn"
                                 caption="Скачать"
+                                enable="false"
                                 invoke="onDownloadImageBtnClick"/>
                         <button id="clearImageBtn"
                                 caption="Удалить"
+                                enable="false"
                                 invoke="onClearImageBtnClick"/>
                         <button id="OpenInNewTabBtn"
                                 caption="Открыть в новом окне"
+                                enable="false"
                                 invoke="onOpenInNewTabBtnClick"/>
                     </hbox>
                 </vbox>

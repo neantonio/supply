@@ -415,11 +415,11 @@ create table SUPPLY_BILLS (
     --
     NUMBER_ varchar(20) not null,
     PRICE double precision,
-    COMPANY_ID uuid,
+    COMPANY_ID uuid not null,
     SUPPLIER_ID uuid not null,
-    TIME_PAYMENT timestamp,
-    AMOUNT double precision,
-    SUM_CONTROL boolean,
+    TIME_PAYMENT timestamp not null,
+    AMOUNT double precision not null,
+    SUM_CONTROL boolean not null,
     IMAGE_BILL_ID uuid,
     --
     primary key (ID)
