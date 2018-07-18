@@ -375,6 +375,8 @@
                   view="_minimal">
         </property>
         <property name="currentStage"/>
+        <property name="billsFlag"/>
+        <property name="billsFlagTS"/>
     </view>
     <view class="com.groupstp.supply.entity.QueryPositionMovements"
           extends="_local"
