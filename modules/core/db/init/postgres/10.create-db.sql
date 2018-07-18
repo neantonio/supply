@@ -360,6 +360,10 @@ create table SUPPLY_SUPPLIERS (
     --
     NAME varchar(50),
     FULL_NAME varchar(255),
+    INN varchar(50),
+    CONTACTS varchar(255),
+    EMAIL varchar(255),
+    COMMENTS varchar(255),
     --
     primary key (ID)
 )^

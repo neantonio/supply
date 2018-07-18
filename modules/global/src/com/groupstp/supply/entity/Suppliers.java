@@ -18,6 +18,51 @@ public class Suppliers extends StandardEntity {
     @Column(name = "FULL_NAME")
     protected String fullName;
 
+    @Column(name = "INN", length = 50)
+    protected String inn;
+
+    @Column(name = "CONTACTS")
+    protected String contacts;
+
+    @Column(name = "EMAIL")
+    protected String email;
+
+    @Column(name = "COMMENTS")
+    protected String comments;
+
+    public void setInn(String inn) {
+        this.inn = inn;
+    }
+
+    public String getInn() {
+        return inn;
+    }
+
+    public void setContacts(String contacts) {
+        this.contacts = contacts;
+    }
+
+    public String getContacts() {
+        return contacts;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setComments(String comments) {
+        this.comments = comments;
+    }
+
+    public String getComments() {
+        return comments;
+    }
+
+
     public void setName(String name) {
         this.name = name;
     }
