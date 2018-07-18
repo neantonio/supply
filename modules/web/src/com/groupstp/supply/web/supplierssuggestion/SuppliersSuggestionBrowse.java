@@ -108,8 +108,11 @@ public class SuppliersSuggestionBrowse extends AbstractLookup {
     public void onCommit(Component source) {
 
         suppliersSuggestionsDs.commit();
+        suppliersSuggestionsDs.refresh();
 
     }
+
+    
 
     
 }

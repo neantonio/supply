@@ -296,6 +296,7 @@
         <property name="position"
                   view="_minimal">
             <property name="quantity"/>
+            <property name="specification"/>
         </property>
         <property name="supplier"
                   view="_minimal"/>
@@ -308,9 +309,15 @@
           name="suppliersSuggestion-view">
         <property name="posSup"
                   view="_minimal">
+            <property name="position"
+                      view="_minimal">
+                <property name="specification"/>
+            </property>
         </property>
         <property name="queriesPosition"
-                  view="_minimal"/>
+                  view="_minimal">
+            <property name="specification"/>
+        </property>
     </view>
     <view class="com.groupstp.supply.entity.QueriesPosition"
           extends="queriesPosition-SupSelection"
@@ -396,7 +403,6 @@
                   view="_minimal">
             <property name="firstName"/>
             <property name="lastName"/>
-            <property name="email"/>
         </property>
     </view>
     <view class="com.groupstp.supply.entity.QueryPositionMovements"
@@ -575,6 +581,29 @@
             <property name="price"/>
         </property>
         <property name="nomenclature"
+                  view="_minimal"/>
+    </view>
+    <view class="com.groupstp.supply.entity.SuppliersSuggestion"
+          extends="suppliersSuggestion-view"
+          name="suppliersSuggestion-view-full">
+        <property name="posSup"
+                  view="_minimal">
+            <property name="position"
+                      view="_minimal">
+                <property name="voteResult"
+                          view="_minimal"/>
+            </property>
+        </property>
+        <property name="queriesPosition"
+                  view="_minimal">
+            <property name="voteResult"
+                      view="_minimal"/>
+        </property>
+    </view>
+    <view class="com.groupstp.supply.entity.QueryWorkflowDetail"
+          extends="_local"
+          name="queryWorkflowDetail-view">
+        <property name="queryWorkflow"
                   view="_minimal"/>
     </view>
     <view class="com.groupstp.supply.entity.Company"

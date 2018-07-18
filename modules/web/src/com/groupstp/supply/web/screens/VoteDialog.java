@@ -50,7 +50,7 @@ public class VoteDialog extends AbstractWindow {
                     setQuery(LoadContext.createQuery("select ss from supply$SuppliersSuggestion ss where "+
                             "ss.posSup in (select ps from supply$PositionSupplier ps where ps.position in :positions)")
                             .setParameter("positions", qp)
-                    ).setView("suppliersSuggestion-view");
+                    ).setView("suppliersSuggestion-view-full");
             List<SuppliersSuggestion> ssList = dataManager.loadList(ctx);
             for (SuppliersSuggestion ss : ssList) {
                 QueriesPosition p = ss.getPosSup().getPosition();
@@ -102,6 +102,7 @@ public class VoteDialog extends AbstractWindow {
                 .setView("vote-view");
         List<Vote> votes = dataManager.loadList(ctx);
         Vote vote = votes.size()>0 ? votes.get(0) : null;
+        QueriesPosition position=value.getPosSup().getPosition();
         if(vote==null)
         {
             vote = metadata.create(Vote.class);
@@ -110,9 +111,13 @@ public class VoteDialog extends AbstractWindow {
             vote.setEmp(userSession.getUser());
             vote.setPosition(value.getPosSup().getPosition());
         }
+
         else if(value.equals(vote.getSuggestion())) {
             return;
         }
+        position.setVoteResult(value);
+        dataManager.commit(position);
+
         vote.setVoteTS(timeSource.currentTimestamp());
         vote.setSuggestion(value);
         dataManager.commit(vote);

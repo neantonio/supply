@@ -47,6 +47,9 @@ public class QueriesPositionBrowse extends AbstractLookup {
     private GroupDatasource<QueriesPosition, UUID> dsStoreControl;
 
     @Inject
+    private GroupDatasource<QueriesPosition, UUID> dsSupSelection;
+
+    @Inject
     private GroupDatasource<QueriesPosition, UUID> dsLogistic;
 
     @Inject
@@ -81,6 +84,9 @@ public class QueriesPositionBrowse extends AbstractLookup {
 
     @Inject
     private QueryDaoService queryDaoService;
+
+    @Inject
+    private QueryService queryService;
 
     @Inject
     private TabSheet tabs;
@@ -459,6 +465,71 @@ public class QueriesPositionBrowse extends AbstractLookup {
         );
 
     }
+    /**
+     * проверка, что быбрана только одна строчка
+     * @author AntonLomako
+     */
+    private boolean checkSingleSelection(Collection selected){
+        if(selected.size()==1) return true;
+        else {
+            showNotification(messages.getMainMessage("select_only_one"),NotificationType.WARNING);
+            return false;
+        }
+    }
+
+    /**
+     * проверка, что быбрана только хотя бы одна строчка
+     * @author AntonLomako
+     */
+    private boolean checkSelection(Collection selected){
+        if(selected.size()>0) return true;
+        else {
+            showNotification(messages.getMainMessage("select_position_first"),NotificationType.WARNING);
+            return false;
+        }
+    }
+
+    private void addPositionStateStyleProviderForTable(Table<QueriesPosition> table){
+        table.addStyleProvider((entity, property) -> {
+
+            if (property == null) {
+                switch (queryService.getPositionStatus(entity)) {
+                    case DONE:
+                        return "done-query";
+                    case IN_WORK:
+                        return "in-work-query";
+                    case OVERDUE:
+                        return "overdue-query";
+                    default:
+                        return null;
+                }
+
+            } else if (property.equals("grade")) {
+            }
+            return null;
+        });
+    }
+
+
+    /**
+     * @author AntonLomako
+     * инициализация таблицы подбора поставщиков
+     * добавление подсветки зеленым если больше 3х поставщиков
+     */
+    private void initSupSelectionStageTable(){
+        positionsSupSelection.addStyleProvider((entity, property) -> {
+
+            if (property == null) {
+                List list=queryDaoService.getSupplierSuggestions(entity);
+                if (list.size()>2) {
+                        return "three-sup";
+                }
+
+            } else if (property.equals("grade")) {
+            }
+            return null;
+        });
+    }
 
     /**
      * @author AntonLomako
@@ -615,10 +686,7 @@ public class QueriesPositionBrowse extends AbstractLookup {
     public void onStoreGet() throws ValidationException {
 
         Set<QueriesPosition> selectedPositions=positionsLogistic.getSelected();
-        if (selectedPositions.size() == 0) {
-            showNotification(getMessage("Select position first"), NotificationType.WARNING);
-            return;
-        }
+        if (!checkSelection(selectedPositions)) return;
 
         selectedPositions.forEach(item->{
             setStoreGetDataForPosition(item);
@@ -765,11 +833,10 @@ public class QueriesPositionBrowse extends AbstractLookup {
      * Обработчик нажатия на кнопку Целесообразность заявки, устаналивает признак целесообразности для всех позиций заявки
      */
     public void onBtnSetQueryUsefulnessClick() {
+
+
+        if(!checkSingleSelection(positionsNomControl.getSelected())) return;
         QueriesPosition position = positionsNomControl.getSingleSelected();
-        if (position == null) {
-            showNotification(getMessage("Select position first"), NotificationType.WARNING);
-            return;
-        }
         dsNomControl.getChildItems(dsNomControl.getParentGroup(position)).forEach(entity -> {
             entity.setValue("positionUsefulness", true);
         });
@@ -865,6 +932,9 @@ public class QueriesPositionBrowse extends AbstractLookup {
 
     private void movePositions() throws Exception {
         GroupTable<QueriesPosition> grpTab = getOpenedStageTable();
+
+        if(!checkSelection(grpTab.getSelected()))return;
+
         GroupDatasource ds = grpTab.getDatasource();
         Set<QueriesPosition> positions = grpTab.getSelected();
         for (QueriesPosition position : positions) {
@@ -945,10 +1015,9 @@ public class QueriesPositionBrowse extends AbstractLookup {
      */
     public void onBtnSuppliersClick() {
         GroupTable tab = getOpenedStageTable();
-        if (tab.getSelected().size() == 0) {
-            showNotification(getMessage("Select position first"), NotificationType.WARNING);
-            return;
-        }
+
+        if (!checkSelection(tab.getSelected()))return;
+
         HashMap<String, Object> items = new HashMap<>();
         items.put("positions", tab.getSelected());
         openWindow("supply$PositionSupplier.browse", WindowManager.OpenType.DIALOG, items);
@@ -959,30 +1028,33 @@ public class QueriesPositionBrowse extends AbstractLookup {
      */
     public void onBtnSuggestionsClick() {
         GroupTable tab = getOpenedStageTable();
-        if (tab.getSelected().size() == 0) {
-            showNotification(getMessage("Select position first"), NotificationType.WARNING);
-            return;
-        }
+
+        if (!checkSelection(tab.getSelected()))return;
+
         HashMap<String, Object> items = new HashMap<>();
         items.put("positions", tab.getSelected());
-        openWindow("supply$SuppliersSuggestion.browse", WindowManager.OpenType.DIALOG, items);
+        openWindow("supply$SuppliersSuggestion.browse", WindowManager.OpenType.DIALOG, items).addCloseListener((event)->{
+                dsSupSelection.refresh();
+        });
     }
 
     @Inject
     private GroupTable<QueriesPosition> positionsComission;
 
+    @Inject
+    private GroupDatasource dsComission;
     /**
      * Открывает голосование
      */
     public void onBtnVoteClick() {
 
-        if (positionsComission.getSelected().size() == 0) {
-            showNotification(getMessage("Select position first"), NotificationType.WARNING);
-            return;
-        }
+        if (!checkSelection(positionsComission.getSelected())) return;
+
         HashMap<String, Object> items = new HashMap<>();
         items.put("positions", positionsComission.getSelected());
-        openWindow("supply$VoteDialog", WindowManager.OpenType.DIALOG, items);
+        openWindow("supply$VoteDialog", WindowManager.OpenType.DIALOG, items).addCloseListener(event->{
+            dsComission.refresh();
+        });
     }
 
     /**
@@ -1045,6 +1117,14 @@ public class QueriesPositionBrowse extends AbstractLookup {
     public void init(Map<String, Object> params) {
 
         initLogisticStageTable();
+        initSupSelectionStageTable();
+
+        addPositionStateStyleProviderForTable(positionsNomControl);
+        addPositionStateStyleProviderForTable(positionsStoreControl);
+        addPositionStateStyleProviderForTable(positionsComission);
+        addPositionStateStyleProviderForTable(positionsSupSelection);
+        addPositionStateStyleProviderForTable(positionsBills);
+        addPositionStateStyleProviderForTable(positionsLogistic);
 
         //Генерируемая колонка "Сумма"
         positionsBills.addGeneratedColumn("Сумма", new Table.PrintableColumnGenerator<QueriesPosition, String>() {
@@ -1239,10 +1319,8 @@ public class QueriesPositionBrowse extends AbstractLookup {
      * Открепление позиций от счета
      */
     public void onBtnUndockClick() {
-        if (positionsBills.getSelected().size() == 0) {
-            showNotification(getMessage("Select positions first"), NotificationType.WARNING);
-            return;
-        }
+        if (!checkSelection(positionsBills.getSelected())) return;
+
         positionsBills.getSelected().forEach(p -> {
             p.setBills(null);
             dsBills.setItem(p);
@@ -1265,6 +1343,7 @@ public class QueriesPositionBrowse extends AbstractLookup {
         if (billsTable.getSelected().size() == 1) {
             Bills currentBill = billsTable.getSelected().iterator().next();
             dsBills.getItems().forEach(e -> {
+
                 if (e.getBills().getId().equals(currentBill.getId())) {
                     e.setCurrentStage(Stages.SupSelection);
                     dsBills.setItem(e);
@@ -1317,10 +1396,7 @@ public class QueriesPositionBrowse extends AbstractLookup {
      */
     public void onBtnSendEmail() {
 
-        if (positionsBills.getSelected().isEmpty()) {
-            showNotification(getMessage("Select positions first"), NotificationType.WARNING);
-            return;
-        }
+        if (!checkSelection(positionsBills.getSelected()))return;
         Set<QueriesPosition> setPosition = positionsBills.getSelected();
 
         //Шаблоны
@@ -1397,10 +1473,9 @@ public class QueriesPositionBrowse extends AbstractLookup {
      */
     public void onBtnDeliveryClick() {
         GroupTable tab = getOpenedStageTable();
-        if (tab.getSelected().size() == 0) {
-            showNotification(getMessage("Select position first"), NotificationType.WARNING);
-            return;
-        }
+
+        if (!checkSingleSelection(tab.getSelected())) return;
+
         HashMap<String, Object> items = new HashMap<>();
         items.put("position", tab.getSelected());
         openWindow("supply$Delivery.browse", WindowManager.OpenType.DIALOG, items);
