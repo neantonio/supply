@@ -1,11 +1,11 @@
 package com.groupstp.supply.entity;
 
-import javax.persistence.*;
-
+import com.haulmont.cuba.core.entity.StandardEntity;
 import com.haulmont.cuba.core.entity.annotation.OnDelete;
 import com.haulmont.cuba.core.entity.annotation.OnDeleteInverse;
 import com.haulmont.cuba.core.global.DeletePolicy;
-import com.haulmont.cuba.core.entity.StandardEntity;
+
+import javax.persistence.*;
 import java.util.List;
 
 @Table(name = "SUPPLY_QUERY_POSITION_STAGE_DATA")

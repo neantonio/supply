@@ -1,6 +1,7 @@
 package com.groupstp.supply.service;
 
 import com.groupstp.supply.entity.*;
+import com.haulmont.cuba.core.entity.Entity;
 import org.springframework.stereotype.Service;
 
 import javax.inject.Inject;
@@ -229,5 +230,22 @@ public class QueryServiceBean implements QueryService {
 
         Date planedExecutionDate=new Date(lastMovement.getCreateTs().getTime()+currentStageTerm.getTime()*60*60*1000);
         return planedExecutionDate;
+    }
+
+    /**
+     * определяет статус позиции: архив, в работе, просрочена
+
+     * @return
+     */
+    @Override
+    public QueryStatus getPositionStatus(QueriesPosition position) {
+        if ((position.getCurrentStage().equals(Stages.Done))
+                || (position.getCurrentStage().equals(Stages.Abortion))){
+            return QueryStatus.DONE;
+        }
+        if (getPassedTimeFromStageBegin(position) > queryDaoService.getTimeForPositionStage(position) * 1000 * 60 * 60){
+            return QueryStatus.OVERDUE;
+        }
+        return QueryStatus.IN_WORK;
     }
 }

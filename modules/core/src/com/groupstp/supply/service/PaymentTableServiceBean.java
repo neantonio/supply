@@ -1,9 +1,6 @@
 package com.groupstp.supply.service;
 
-import com.groupstp.supply.entity.Bills;
-import com.groupstp.supply.entity.PaymentTableItem;
 import com.groupstp.supply.entity.QueriesPosition;
-import com.groupstp.supply.entity.Query;
 import com.haulmont.cuba.core.global.DataManager;
 import com.haulmont.cuba.core.global.LoadContext;
 import org.springframework.stereotype.Service;

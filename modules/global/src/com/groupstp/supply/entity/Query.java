@@ -6,7 +6,6 @@ import com.haulmont.cuba.core.entity.annotation.Lookup;
 import com.haulmont.cuba.core.entity.annotation.LookupType;
 import com.haulmont.cuba.core.entity.annotation.OnDelete;
 import com.haulmont.cuba.core.global.DeletePolicy;
-import com.haulmont.cuba.security.entity.User;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -14,45 +13,13 @@ import java.util.Date;
 import java.util.List;
 
 @NamePattern("#getQueryName|number,timeCreation")
-@Table(name = "SUPPLY_QUERY")
+@Table(name = "SUPPLY_QUERY", uniqueConstraints = {
+    @UniqueConstraint(name = "IDX_SUPPLY_QUERY_UNQ", columnNames = {"EXT_ID"})
+})
 @Entity(name = "supply$Query")
 public class Query extends StandardEntity {
     private static final long serialVersionUID = -4851885001969302872L;
 
-
-    public void setNameCallback(QueryNameCallback nameCallback) {
-        this.nameCallback = nameCallback;
-    }
-
-    public QueryNameCallback getNameCallback() {
-        return nameCallback;
-    }
-
-    public interface QueryNameCallback{
-        String makeName(Query query);
-    }
-
-    @Transient
-    protected transient QueryNameCallback nameCallback=null;
-
-
-    /**
-     * генерация имени возможна с использованием nameCallback.
-     * это нужно для информативного отображения сущности при группировке по ней
-     * @return
-     */
-    public String getQueryName()    {
-        if(getNameCallback() ==null) {
-            String name = number.toString();
-            try {
-                name = String.format("%s %td.%tm.%ty", number, timeCreation, timeCreation, timeCreation);
-            } catch (Exception e) {
-                System.console().printf(e.getMessage());
-            }
-            return name;
-        }
-        else return getNameCallback().makeName(this);
-    }
 
     @Column(name = "IN_WORK")
     protected Boolean inWork;
@@ -76,21 +43,17 @@ public class Query extends StandardEntity {
     protected Urgency urgency;
 
     @Lookup(type = LookupType.DROPDOWN, actions = {"lookup", "open", "clear"})
-    @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "WORKFLOW_ID")
     protected QueryWorkflow workflow;
 
-    @NotNull
-    @Column(name = "ORIGIN", nullable = false)
+    @Column(name = "ORIGIN")
     protected String origin;
 
-    @NotNull
-    @Column(name = "CAUSE", nullable = false)
+    @Column(name = "CAUSE")
     protected String cause;
 
-    @NotNull
-    @Column(name = "PERIDIOCITY", nullable = false)
+    @Column(name = "PERIDIOCITY")
     protected String peridiocity;
 
     @Column(name = "WHOLE_QUERY_WORKOUT")
@@ -114,14 +77,69 @@ public class Query extends StandardEntity {
     @JoinColumn(name = "STORE_ID")
     protected Store store;
 
-    @Lookup(type = LookupType.DROPDOWN, actions = {"lookup", "clear"})
+    @Lookup(type = LookupType.DROPDOWN, actions = {"lookup", "open", "clear"})
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "CONTACT_ID")
-    protected User contact;
+    protected Employee contact;
 
     @OnDelete(DeletePolicy.CASCADE)
     @OneToMany(mappedBy = "query")
     protected List<QueriesPosition> positions;
+
+    @Column(name = "EXT_ID")
+    protected String extId;
+
+    public void setNameCallback(QueryNameCallback nameCallback) {
+        this.nameCallback = nameCallback;
+    }
+
+    public QueryNameCallback getNameCallback() {
+        return nameCallback;
+    }
+
+    public interface QueryNameCallback{
+        String makeName(Query query);
+    }
+
+    @Transient
+    protected transient QueryNameCallback nameCallback=null;
+
+    public void setExtId(String extId) {
+        this.extId = extId;
+    }
+
+    public String getExtId() {
+        return extId;
+    }
+
+
+    public Employee getContact() {
+        return contact;
+    }
+
+    public void setContact(Employee contact) {
+        this.contact = contact;
+    }
+
+
+
+    /**
+     * генерация имени возможна с использованием nameCallback.
+     * это нужно для информативного отображения сущности при группировке по ней
+     * @return
+     */
+    public String getQueryName()    {
+        if(getNameCallback() ==null) {
+            String name = number.toString();
+            try {
+                name = String.format("%s %td.%tm.%ty", number, timeCreation, timeCreation, timeCreation);
+            } catch (Exception e) {
+                System.console().printf(e.getMessage());
+            }
+            return name;
+        }
+        else return getNameCallback().makeName(this);
+    }
 
     public void setInWork(Boolean inWork) {
         this.inWork = inWork;
@@ -140,14 +158,6 @@ public class Query extends StandardEntity {
         return positions;
     }
 
-
-    public void setContact(User contact) {
-        this.contact = contact;
-    }
-
-    public User getContact() {
-        return contact;
-    }
 
 
     public void setStore(Store store) {

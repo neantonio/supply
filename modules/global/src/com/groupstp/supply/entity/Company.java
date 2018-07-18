@@ -1,14 +1,18 @@
 package com.groupstp.supply.entity;
 
+import com.haulmont.chile.core.annotations.NamePattern;
+import com.haulmont.cuba.core.entity.StandardEntity;
+
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
-import javax.persistence.Column;
+import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
-import com.haulmont.cuba.core.entity.StandardEntity;
-import com.haulmont.chile.core.annotations.NamePattern;
 
 @NamePattern("%s|name")
-@Table(name = "SUPPLY_COMPANY")
+@Table(name = "SUPPLY_COMPANY", uniqueConstraints = {
+    @UniqueConstraint(name = "IDX_SUPPLY_COMPANY_UNQ", columnNames = {"EXT_ID"})
+})
 @Entity(name = "supply$Company")
 public class Company extends StandardEntity {
     private static final long serialVersionUID = 4213829477306091280L;
@@ -26,6 +30,18 @@ public class Company extends StandardEntity {
 
     @Column(name = "KPP", length = 13)
     protected String kpp;
+
+    @Column(name = "EXT_ID")
+    protected String extId;
+
+    public void setExtId(String extId) {
+        this.extId = extId;
+    }
+
+    public String getExtId() {
+        return extId;
+    }
+
 
     public void setName(String name) {
         this.name = name;

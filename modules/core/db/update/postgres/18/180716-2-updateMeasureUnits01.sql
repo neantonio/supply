@@ -1,0 +1,1 @@
+create unique index IDX_SUPPLY_MEASURE_UNITS_UNQ on SUPPLY_MEASURE_UNITS (EXT_ID) where DELETE_TS is null ;

@@ -93,8 +93,6 @@ public class WorkflowServiceBean implements WorkflowService {
      * @param position
      */
     private void createFinishStageRecord(QueriesPosition position){
-        List<QueryPositionMovements> movementsList=queryDaoService.getQueryPositionMovement(position);
-        if((movementsList==null)||(movementsList.size()==0))return;     //// TODO: 06.07.2018 неплохо бы кинуть здесь исключение 
         QueryPositionMovements lastMovement=queryDaoService.getQueryPositionMovement(position).get(0);
         if(lastMovement==null) return;
         lastMovement.setFinishTS(new Date());
@@ -153,10 +151,15 @@ public class WorkflowServiceBean implements WorkflowService {
      */
     private List<QueryWorkflowDetail> getWorkflowDetailsForPositions(QueriesPosition queryPosition)
     {
-        LoadContext<QueryWorkflowDetail> ctx = LoadContext.create(QueryWorkflowDetail.class).setQuery(
-                LoadContext.createQuery("select q from supply$QueryWorkflowDetail q where q.sourceStage=:sourceStage order by q.priority asc")
-                .setParameter("sourceStage", queryPosition.getCurrentStage()));
-        return  dataManager.loadList(ctx);
+        return dataManager.load(QueryWorkflowDetail.class)
+                .query("select q from supply$QueryWorkflowDetail q " +
+                        "where q.sourceStage=:sourceStage " +
+                        "and q.queryWorkflow.id=:queryWorkflow " +
+                        "order by q.priority asc")
+                .parameter("sourceStage", queryPosition.getCurrentStage())
+                .parameter("queryWorkflow", queryPosition.getQuery().getWorkflow())
+                .view("queryWorkflowDetail-view")
+                .list();
     }
 
 

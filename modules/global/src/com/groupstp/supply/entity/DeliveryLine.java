@@ -1,17 +1,11 @@
 package com.groupstp.supply.entity;
 
-import javax.persistence.Entity;
-import javax.persistence.Table;
-import com.haulmont.cuba.core.entity.StandardEntity;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import com.haulmont.chile.core.annotations.NumberFormat;
-import java.util.Date;
-import javax.persistence.Column;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+import com.haulmont.cuba.core.entity.StandardEntity;
+
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.util.Date;
 
 @Table(name = "SUPPLY_DELIVERY_LINE")
 @Entity(name = "supply$DeliveryLine")

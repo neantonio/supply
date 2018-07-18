@@ -14,15 +14,16 @@ create table SUPPLY_QUERY (
     TIME_CREATION timestamp,
     COMMENT_ text,
     URGENCY_ID uuid not null,
-    WORKFLOW_ID uuid not null,
-    ORIGIN varchar(50) not null,
-    CAUSE varchar(50) not null,
-    PERIDIOCITY varchar(50) not null,
+    WORKFLOW_ID uuid,
+    ORIGIN varchar(50),
+    CAUSE varchar(50),
+    PERIDIOCITY varchar(50),
     WHOLE_QUERY_WORKOUT boolean,
     COMPANY_ID uuid not null,
     DIVISION_ID uuid not null,
     STORE_ID uuid not null,
     CONTACT_ID uuid,
+    EXT_ID varchar(255),
     --
     primary key (ID)
 )^
@@ -42,6 +43,7 @@ create table SUPPLY_COMPANY (
     FULL_NAME varchar(255),
     INN varchar(13) not null,
     KPP varchar(13),
+    EXT_ID varchar(255),
     --
     primary key (ID)
 )^
@@ -58,6 +60,7 @@ create table SUPPLY_DIVISION (
     DELETED_BY varchar(50),
     --
     COMPANY_ID uuid not null,
+    EXT_ID varchar(255),
     NAME varchar(50) not null,
     --
     primary key (ID)
@@ -76,6 +79,7 @@ create table SUPPLY_STORE (
     --
     NAME varchar(50) not null,
     DIVISION_ID uuid,
+    EXT_ID varchar(255),
     --
     primary key (ID)
 )^
@@ -91,9 +95,10 @@ create table SUPPLY_MEASURE_UNITS (
     DELETE_TS timestamp,
     DELETED_BY varchar(50),
     --
-    CODE varchar(255) not null,
+    CODE varchar(255),
     NAME varchar(5) not null,
     FULL_NAME varchar(25),
+    EXT_ID varchar(255),
     --
     primary key (ID)
 )^
@@ -110,6 +115,7 @@ create table SUPPLY_URGENCY (
     DELETED_BY varchar(50),
     --
     NAME varchar(25) not null,
+    EXT_ID varchar(255),
     --
     primary key (ID)
 )^
@@ -182,7 +188,11 @@ create table SUPPLY_EMPLOYEE (
     DELETE_TS timestamp,
     DELETED_BY varchar(50),
     --
-    USER_ID uuid not null,
+    USER_ID uuid,
+    EMAIL varchar(255),
+    NAME varchar(50),
+    FULL_NAME varchar(255),
+    EXT_ID varchar(255),
     --
     primary key (ID)
 )^
@@ -206,9 +216,10 @@ create table SUPPLY_QUERIES_POSITION (
     NUMBER_ARTICLE varchar(25),
     NOMENCLATURE_ID uuid,
     SPECIFICATION varchar(255),
-    MEASURE_UNIT_ID uuid not null,
+    MEASURE_UNIT_ID uuid,
     QUANTITY double precision not null,
     ANALOGS_ALLOWED boolean,
+    COMMENT_ varchar(1000),
     STORE_ID uuid,
     POSITION_USEFULNESS boolean,
     POSITION_USEFULNESS_TS timestamp,
@@ -235,6 +246,7 @@ create table SUPPLY_QUERIES_POSITION (
     BILL_QUERY boolean,
     BILLS_ID uuid,
     DELIVERY_ID uuid,
+    EXT_ID varchar(255),
     --
     primary key (ID)
 )^
@@ -258,6 +270,7 @@ create table SUPPLY_NOMENCLATURE (
     PARENT_ID uuid,
     WEIGHT decimal(10, 3),
     DIMENSIONS varchar(30),
+    EXT_ID varchar(255),
     --
     primary key (ID)
 )^
@@ -468,13 +481,6 @@ create table SUPPLY_QUERY_POSITION_STAGE_DATA_ITEM (
     primary key (ID)
 )^
 -- end SUPPLY_QUERY_POSITION_STAGE_DATA_ITEM
--- begin SUPPLY_QUERY_POSITION_STAGE_DATA_ITEM_LINK
-create table SUPPLY_QUERY_POSITION_STAGE_DATA_ITEM_LINK (
-    QUERY_POSITION_STAGE_DATA_ID uuid,
-    QUERY_POSITION_STAGE_DATA_ITEM_ID uuid,
-    primary key (QUERY_POSITION_STAGE_DATA_ID, QUERY_POSITION_STAGE_DATA_ITEM_ID)
-)^
--- end SUPPLY_QUERY_POSITION_STAGE_DATA_ITEM_LINK
 -- begin SUPPLY_DELIVERY
 create table SUPPLY_DELIVERY (
     ID uuid,
@@ -511,3 +517,10 @@ create table SUPPLY_DELIVERY_LINE (
     primary key (ID)
 )^
 -- end SUPPLY_DELIVERY_LINE
+-- begin SUPPLY_QUERY_POSITION_STAGE_DATA_ITEM_LINK
+create table SUPPLY_QUERY_POSITION_STAGE_DATA_ITEM_LINK (
+    QUERY_POSITION_STAGE_DATA_ID uuid,
+    QUERY_POSITION_STAGE_DATA_ITEM_ID uuid,
+    primary key (QUERY_POSITION_STAGE_DATA_ID, QUERY_POSITION_STAGE_DATA_ITEM_ID)
+)^
+-- end SUPPLY_QUERY_POSITION_STAGE_DATA_ITEM_LINK

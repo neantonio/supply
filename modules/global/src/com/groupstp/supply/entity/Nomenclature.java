@@ -15,7 +15,9 @@ import java.math.BigDecimal;
 import java.util.List;
 
 @NamePattern("%s|name")
-@Table(name = "SUPPLY_NOMENCLATURE")
+@Table(name = "SUPPLY_NOMENCLATURE", uniqueConstraints = {
+    @UniqueConstraint(name = "IDX_SUPPLY_NOMENCLATURE_UNQ", columnNames = {"EXT_ID"})
+})
 @Entity(name = "supply$Nomenclature")
 public class Nomenclature extends StandardEntity {
     private static final long serialVersionUID = 2677217669153063186L;
@@ -56,6 +58,18 @@ public class Nomenclature extends StandardEntity {
 
     @OneToOne(fetch = FetchType.LAZY, mappedBy = "analog")
     protected Analogs analogss;
+
+    @Column(name = "EXT_ID")
+    protected String extId;
+
+    public void setExtId(String extId) {
+        this.extId = extId;
+    }
+
+    public String getExtId() {
+        return extId;
+    }
+
 
     public void setAnalogss(Analogs analogss) {
         this.analogss = analogss;

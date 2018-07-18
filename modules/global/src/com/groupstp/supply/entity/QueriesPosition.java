@@ -11,10 +11,11 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
 import java.util.List;
-import com.haulmont.cuba.core.entity.annotation.OnDeleteInverse;
 
 @NamePattern("#getQueriesPositionName|nomenclature")
-@Table(name = "SUPPLY_QUERIES_POSITION")
+@Table(name = "SUPPLY_QUERIES_POSITION", uniqueConstraints = {
+    @UniqueConstraint(name = "IDX_SUPPLY_QUERIES_POSITION_UNQ", columnNames = {"EXT_ID"})
+})
 @Entity(name = "supply$QueriesPosition")
 public class QueriesPosition extends StandardEntity {
     private static final long serialVersionUID = 2816298219119304612L;
@@ -48,8 +49,7 @@ public class QueriesPosition extends StandardEntity {
     @Column(name = "SPECIFICATION")
     protected String specification;
 
-    @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "MEASURE_UNIT_ID")
     protected MeasureUnits measureUnit;
 
@@ -60,6 +60,9 @@ public class QueriesPosition extends StandardEntity {
 
     @Column(name = "ANALOGS_ALLOWED")
     protected Boolean analogsAllowed;
+
+    @Column(name = "COMMENT_", length = 1000)
+    protected String comment;
 
     @Composition
     @OnDelete(DeletePolicy.CASCADE)
@@ -161,6 +164,9 @@ public class QueriesPosition extends StandardEntity {
     @OneToOne(fetch = FetchType.LAZY)
     protected Delivery delivery;
 
+    @Column(name = "EXT_ID")
+    protected String extId;
+
     public void setNameCallback(QueriesPositionNameCallback nameCallback) {
         this.nameCallback = nameCallback;
     }
@@ -183,6 +189,24 @@ public class QueriesPosition extends StandardEntity {
      */
     @Transient
     protected transient QueriesPositionNameCallback nameCallback=null;
+
+    public void setExtId(String extId) {
+        this.extId = extId;
+    }
+
+    public String getExtId() {
+        return extId;
+    }
+
+
+    public void setComment(String comment) {
+        this.comment = comment;
+    }
+
+    public String getComment() {
+        return comment;
+    }
+
 
     public void setDelivery(Delivery delivery) {
         this.delivery = delivery;

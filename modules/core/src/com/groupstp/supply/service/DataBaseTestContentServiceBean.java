@@ -1,8 +1,9 @@
 package com.groupstp.supply.service;
 
 import com.groupstp.supply.entity.*;
-import com.groupstp.supply.entity.Query;
-import com.haulmont.cuba.core.*;
+import com.haulmont.cuba.core.EntityManager;
+import com.haulmont.cuba.core.Persistence;
+import com.haulmont.cuba.core.Transaction;
 import com.haulmont.cuba.core.global.DataManager;
 import com.haulmont.cuba.core.global.Metadata;
 import com.haulmont.cuba.security.entity.Group;
@@ -399,7 +400,7 @@ public class DataBaseTestContentServiceBean implements DataBaseTestContentServic
             //query.setInWork(randomDataService.getRandomBoolean(70));
             query.setInWork(false);
             query.setDivision((Division) randomDataService.getRandomFromList(divisionList));
-            query.setContact(((Employee) randomDataService.getRandomFromList(employeeList)).getUser());
+            query.setContact(((Employee) randomDataService.getRandomFromList(employeeList)));
             query.setNumber(String.valueOf(i));
             query.setOrigin((Origin) randomDataService.getRandomFromArr(Origin.values()));
             query.setPeridiocity((Peridiocities) randomDataService.getRandomFromArr(Peridiocities.values()));
@@ -495,7 +496,6 @@ public class DataBaseTestContentServiceBean implements DataBaseTestContentServic
         Transaction tx = persistence.createTransaction();
         EntityManager em = persistence.getEntityManager();
         Date today=new Date();
-
 
         createCompanies(ownCompanyList,companies,em);
 

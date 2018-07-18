@@ -1,12 +1,10 @@
 package com.groupstp.supply.entity;
 
 import com.haulmont.chile.core.annotations.MetaClass;
-import com.haulmont.cuba.core.entity.BaseUuidEntity;
-import com.haulmont.chile.core.annotations.NamePattern;
 import com.haulmont.chile.core.annotations.MetaProperty;
+import com.haulmont.chile.core.annotations.NamePattern;
+import com.haulmont.cuba.core.entity.BaseUuidEntity;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 

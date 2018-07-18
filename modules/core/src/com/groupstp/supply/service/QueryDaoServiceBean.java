@@ -9,7 +9,6 @@ import com.haulmont.cuba.core.global.LoadContext;
 import org.springframework.stereotype.Service;
 
 import javax.inject.Inject;
-import javax.persistence.Persistence;
 import java.util.List;
 import java.util.UUID;
 
@@ -33,7 +32,7 @@ public class QueryDaoServiceBean implements QueryDaoService {
         LoadContext<QueriesPosition> loadContext = LoadContext.create(QueriesPosition.class)
                 .setQuery(LoadContext.createQuery("select qp from supply$QueriesPosition qp where qp.query.id = :queryItem")
                         .setParameter("queryItem", query))
-                .setView("queriesPosition-full");
+                .setView("full");
         ;
 
         return dataManager.loadList(loadContext);
@@ -72,10 +71,19 @@ public class QueryDaoServiceBean implements QueryDaoService {
     }
 
     @Override
+    public List<QueriesPosition> getQueryPositionsByStage(Stages stage){
+        LoadContext<QueriesPosition> loadContext = LoadContext.create(QueriesPosition.class)
+                .setQuery(LoadContext.createQuery("select  qp from supply$QueriesPosition qp where qp.currentStage=:stageItem")
+                        .setParameter("stageItem",stage))
+                .setView("full");
+        return dataManager.loadList(loadContext);
+    }
+
+    @Override
     public List<QueriesPosition> getAllQueriesPosition(){
         LoadContext<QueriesPosition> loadContext = LoadContext.create(QueriesPosition.class)
                 .setQuery(LoadContext.createQuery("select  qp from supply$QueriesPosition qp "))
-                .setView("queriesPosition-full");
+                .setView("full");
         return dataManager.loadList(loadContext);
     }
 
@@ -151,5 +159,15 @@ public class QueryDaoServiceBean implements QueryDaoService {
         //// TODO: 04.07.2018  сделать более подробно
        if(entityType.equals("User")) return "sec$";
         else return "supply$";
+    }
+
+    @Override
+    public List<SuppliersSuggestion> getSupplierSuggestions(QueriesPosition entity) {
+        LoadContext<SuppliersSuggestion> loadContext = LoadContext.create(SuppliersSuggestion.class)
+                .setQuery(LoadContext.createQuery("select ss from supply$SuppliersSuggestion ss where\n" +
+                        "ss.posSup in (select ps from supply$PositionSupplier ps where ps.position.id=:idItem)")
+                .setParameter("idItem",entity.getId()));
+
+        return dataManager.loadList(loadContext);
     }
 }

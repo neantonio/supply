@@ -1,16 +1,20 @@
 package com.groupstp.supply.web.paymenttable;
 
 import com.groupstp.supply.entity.PaymentTableItem;
-import com.haulmont.cuba.gui.components.*;
+import com.haulmont.cuba.gui.components.AbstractLookup;
+import com.haulmont.cuba.gui.components.Component;
+import com.haulmont.cuba.gui.components.GroupTable;
+import com.haulmont.cuba.gui.components.Label;
 import com.haulmont.cuba.gui.data.CollectionDatasource;
 import com.haulmont.cuba.gui.xml.layout.ComponentsFactory;
 import org.apache.commons.lang.time.DateUtils;
 
-
 import javax.inject.Inject;
 import javax.inject.Named;
-import java.util.*;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.Map;
+import java.util.UUID;
 
 /**
  * @author AlexandrMiroshkin
