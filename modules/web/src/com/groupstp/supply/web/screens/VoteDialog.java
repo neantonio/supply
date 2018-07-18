@@ -50,7 +50,7 @@ public class VoteDialog extends AbstractWindow {
                     setQuery(LoadContext.createQuery("select ss from supply$SuppliersSuggestion ss where "+
                             "ss.posSup in (select ps from supply$PositionSupplier ps where ps.position in :positions)")
                             .setParameter("positions", qp)
-                    ).setView("suppliersSuggestion-view-full");
+                    ).setView("suppliersSuggestion-view");
             List<SuppliersSuggestion> ssList = dataManager.loadList(ctx);
             for (SuppliersSuggestion ss : ssList) {
                 QueriesPosition p = ss.getPosSup().getPosition();
