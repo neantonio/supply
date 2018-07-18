@@ -366,13 +366,13 @@
             <property name="division"
                       view="_minimal"/>
             <property name="contact"
-                      view="_minimal"/>
+                      view="_minimal">
+            </property>
         </property>
         <property name="voteResult"
                   view="_minimal"/>
         <property name="bills"
                   view="_minimal">
-            <property name="number"/>
         </property>
         <property name="currentStage"/>
     </view>
@@ -435,6 +435,11 @@
                       view="_minimal"/>
             <property name="billsFlag"/>
             <property name="billsFlagTS"/>
+            <property name="query"
+                      view="_minimal">
+                <property name="workflow"
+                          view="_minimal"/>
+            </property>
         </property>
         <property name="company"
                   view="_minimal"/>
@@ -656,4 +661,7 @@
     <view class="com.groupstp.supply.entity.MeasureUnits"
           extends="_local"
           name="full"/>
+    <view class="com.groupstp.supply.entity.QueriesPosition"
+          extends="full"
+          name="queriesPosition-full"/>
 </views>

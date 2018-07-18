@@ -71,4 +71,6 @@
             template="com/groupstp/supply/web/queriesposition/queries-position-edit.xml"/>
     <screen id="TestImport"
             template="com/groupstp/supply/web/screens/TestImport.xml"/>
+    <screen id="supply$Bills.browse"
+            template="com/groupstp/supply/web/bills/bills-browse.xml"/>
 </screen-config>

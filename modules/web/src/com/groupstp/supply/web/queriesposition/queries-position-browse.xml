@@ -115,8 +115,8 @@ where e.position in :custom$positions]]>
                                 invoke="onBtnDoneClick"/>
                         <button id="btnCancel"
                                 caption="mainMsg://Cancel"
-                                invoke="onBtnCancelClick"
-                                icon="CANCEL"/>
+                                icon="CANCEL"
+                                invoke="onBtnCancelClick"/>
                         <button id="btnRefresh"
                                 action="positionsNomControl.refresh"
                                 caption="mainMsg://Refresh"
@@ -211,8 +211,8 @@ where e.position in :custom$positions]]>
                                 invoke="onBtnDoneClick"/>
                         <button id="button_5"
                                 caption="mainMsg://Cancel"
-                                invoke="onBtnCancelClick"
-                                icon="CANCEL"/>
+                                icon="CANCEL"
+                                invoke="onBtnCancelClick"/>
                         <button id="button_1"
                                 action="positionsStoreControl.refresh"
                                 caption="mainMsg://Refresh"
@@ -293,8 +293,7 @@ where e.position in :custom$positions]]>
                         <button id="button_9"
                                 caption="mainMsg://Cancel"
                                 icon="CANCEL"
-                                invoke="onBtnCancelClick"
-                        />
+                                invoke="onBtnCancelClick"/>
                         <button id="button_12"
                                 action="positionsSupSelection.refresh"
                                 caption="mainMsg://Refresh"
@@ -374,8 +373,8 @@ where e.position in :custom$positions]]>
                                 invoke="onBtnDoneClick"/>
                         <button id="btnCancelAnalysis"
                                 caption="mainMsg://Cancel"
-                                invoke="onBtnCancelClick"
-                                icon="CANCEL"/>
+                                icon="CANCEL"
+                                invoke="onBtnCancelClick"/>
                         <button id="btnRefreshAnalysis"
                                 action="positionsSupSelection.refresh"
                                 caption="mainMsg://Refresh"
@@ -455,8 +454,8 @@ where e.position in :custom$positions]]>
                                 invoke="onBtnDoneClick"/>
                         <button id="btnCancelComission"
                                 caption="mainMsg://Cancel"
-                                invoke="onBtnCancelClick"
-                                icon="CANCEL"/>
+                                icon="CANCEL"
+                                invoke="onBtnCancelClick"/>
                         <button id="btnRefreshComission"
                                 action="positionsSupSelection.refresh"
                                 caption="mainMsg://Refresh"
@@ -547,8 +546,8 @@ where e.position in :custom$positions]]>
                                 invoke="onBtnDoneClickBillsTab"/>
                         <button id="btnCancelBills"
                                 caption="mainMsg://Cancel"
-                                invoke="onBtnCancelClick"
-                                icon="CANCEL"/>
+                                icon="CANCEL"
+                                invoke="onBtnCancelClick"/>
                         <button id="btnRefreshBills"
                                 action="positionsSupSelection.refresh"
                                 caption="mainMsg://Refresh"
@@ -594,7 +593,6 @@ where e.position in :custom$positions]]>
                                 <action id="blankAction"/>
                             </actions>
                         </popupButton>
-
                     </buttonsPanel>
                     <hbox id="tablesBox"
                           expand="positionsBills"
@@ -650,7 +648,7 @@ where e.position in :custom$positions]]>
                     <browserFrame id="imageForBill"
                                   align="BOTTOM_LEFT"
                                   caption="Изображение счета"
-                                  height="350px"
+                                  height="50px"
                                   width="500px"/>
                     <hbox align="BOTTOM_LEFT"
                           spacing="true">
@@ -775,9 +773,9 @@ where e.position in :custom$positions]]>
                                 icon="STEP_FORWARD"
                                 invoke="onBtnDoneClick"/>
                         <button id="btnCancelProcuration"
-                                invoke="onBtnCancelClick"
                                 caption="mainMsg://Cancel"
-                                icon="CANCEL"/>
+                                icon="CANCEL"
+                                invoke="onBtnCancelClick"/>
                         <button id="btnRefreshProcuration"
                                 action="positionsSupSelection.refresh"
                                 caption="mainMsg://Refresh"
@@ -796,7 +794,6 @@ where e.position in :custom$positions]]>
                                 <action id="blankAction"/>
                             </actions>
                         </popupButton>
-
                     </buttonsPanel>
                     <groupTable id="positionsProcuration"
                                 fixedGrouping="true"

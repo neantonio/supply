@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<window xmlns="http://schemas.haulmont.com/cuba/window.xsd"
+        caption="msg://browseCaption"
+        class="com.groupstp.supply.web.bills.BillsBrowse"
+        focusComponent="billsesTable"
+        lookupComponent="billsesTable"
+        messagesPack="com.groupstp.supply.web.bills">
+    <dsContext>
+        <groupDatasource id="billsesDs"
+                         class="com.groupstp.supply.entity.Bills"
+                         view="bills-view">
+            <query>
+                <![CDATA[select e from supply$Bills e]]>
+            </query>
+        </groupDatasource>
+    </dsContext>
+    <dialogMode height="600"
+                width="800"/>
+    <layout expand="billsesTable"
+            spacing="true">
+        <filter id="filter"
+                applyTo="billsesTable"
+                datasource="billsesDs">
+            <properties include=".*"/>
+        </filter>
+        <groupTable id="billsesTable"
+                    width="100%">
+            <actions>
+                <action id="create"/>
+                <action id="edit"/>
+                <action id="remove"/>
+            </actions>
+            <columns>
+                <column id="number"/>
+                <column id="price"/>
+                <column id="company"/>
+                <column id="supplier"/>
+                <column id="timePayment"/>
+                <column id="amount"/>
+                <column id="sumControl"/>
+                <column id="imageBill"/>
+            </columns>
+            <rows datasource="billsesDs"/>
+            <rowsCount/>
+            <buttonsPanel id="buttonsPanel"
+                          alwaysVisible="true">
+                <button id="createBtn"
+                        action="billsesTable.create"/>
+                <button id="editBtn"
+                        action="billsesTable.edit"/>
+                <button id="removeBtn"
+                        action="billsesTable.remove"/>
+            </buttonsPanel>
+        </groupTable>
+    </layout>
+</window>

@@ -339,6 +339,8 @@ create table SUPPLY_SUPPLIERS_SUGGESTION (
     DELETED_BY varchar(50),
     --
     POS_SUP_ID uuid,
+    MANUFACTURER varchar(255),
+    PAYMENT_DEF integer,
     QUANTITY double precision not null,
     PRICE double precision not null,
     SUP_ADDRESS varchar(255),

@@ -56,6 +56,12 @@ ss.posSup in (select ps from supply$PositionSupplier ps where ps.position in :pa
                 <column id="term"
                         editable="true"
                         width="50"/>
+                <column id="manufacturer"
+                        caption="Производитель"
+                        editable="true"/>
+                <column id="paymentDef"
+                        caption="Отсрочка платежа"
+                        editable="true"/>
             </columns>
             <rows datasource="suppliersSuggestionsDs"/>
             <rowsCount/>
