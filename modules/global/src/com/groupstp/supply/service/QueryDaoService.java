@@ -19,6 +19,8 @@ public interface QueryDaoService {
 
     List<Query> getAllQueries();
 
+    List<QueriesPosition> getQueryPositionsByStage(Stages stage);
+
     List<QueriesPosition> getAllQueriesPosition();
 
 
@@ -39,4 +41,6 @@ public interface QueryDaoService {
     StandardEntity getEntity(String entityType, String entityUUID);
 
     String getMetaclassPrefix(String entityType);
+
+    List<SuppliersSuggestion> getSupplierSuggestions(QueriesPosition entity);
 }

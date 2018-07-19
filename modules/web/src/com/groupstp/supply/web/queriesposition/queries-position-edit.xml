@@ -3,42 +3,84 @@
         caption="msg://editorCaption"
         class="com.groupstp.supply.web.queriesposition.QueriesPositionEdit"
         datasource="queriesPositionDs"
+        focusComponent="fieldGroup"
         messagesPack="com.groupstp.supply.web.queriesposition">
     <dsContext>
         <datasource id="queriesPositionDs"
                     class="com.groupstp.supply.entity.QueriesPosition"
-                    view="queriesPosition-analogs">
+                    view="queriesPosition-full">
             <collectionDatasource id="analogsDs"
                                   property="analogs"/>
         </datasource>
     </dsContext>
-    <dialogMode forceDialog="true"
-                height="600"
-                resizable="true"/>
-    <layout expand="analogsTable"
+    <dialogMode height="600"
+                width="800"/>
+    <layout expand="scrollBox"
             spacing="true">
-        <table id="analogsTable"
-               editable="true"
-               width="100%">
-            <actions>
-                <action id="create"/>
-                <action id="edit"/>
-                <action id="remove"/>
-            </actions>
-            <columns>
-                <column id="analog"
-                        editable="true"/>
-            </columns>
-            <rows datasource="analogsDs"/>
-            <buttonsPanel>
-                <button id="btnCreate"
-                        caption="mainMsg://Create"
-                        invoke="onBtnCreateClick"/>
-                <button action="analogsTable.edit"/>
-                <button action="analogsTable.remove"/>
-            </buttonsPanel>
-        </table>
+        <scrollBox id="scrollBox"
+                   spacing="true">
+            <fieldGroup id="fieldGroup"
+                        datasource="queriesPositionDs">
+                <column width="250px">
+                    <field property="query"/>
+                    <field property="storeControlFlag"/>
+                    <field property="currentStage"/>
+                    <field property="positionType"/>
+                    <field property="numberArticle"/>
+                    <field property="nomenclature"/>
+                    <field property="specification"/>
+                    <field property="measureUnit"/>
+                    <field property="quantity"/>
+                    <field property="analogsAllowed"/>
+                    <field property="store"/>
+                    <field property="positionUsefulness"/>
+                    <field property="positionUsefulnessTS"/>
+                    <field property="specNomenclature"/>
+                    <field property="startMinimalPrice"/>
+                    <field property="nomeclatureChange"/>
+                    <field property="analogsCorrectionFlag"/>
+                    <field property="nomControlFlag"/>
+                    <field property="nomControlFlagTS"/>
+                    <field property="inStore"/>
+                    <field property="storeControlFlagTS"/>
+                    <field property="supplyWorkoutType"/>
+                    <field property="position"/>
+                    <field property="srcStore"/>
+                    <field property="supSelectionFlag"/>
+                    <field property="supSelectionFlagTS"/>
+                    <field property="analysisResult"/>
+                    <field property="analysisFlag"/>
+                    <field property="analysisFlagTS"/>
+                    <field property="priceReduce"/>
+                    <field property="minimalPrice"/>
+                    <field property="billQuery"/>
+                    <field property="bills"/>
+                    <field property="voteResult"/>
+                </column>
+            </fieldGroup>
+            <groupBox id="analogsBox"
+                      caption="msg://com.groupstp.supply.entity/QueriesPosition.analogs">
+                <table id="analogsTable"
+                       height="200px"
+                       width="100%">
+                    <actions>
+                        <action id="create"/>
+                        <action id="edit"/>
+                        <action id="remove"/>
+                    </actions>
+                    <columns>
+                        <column id="analog"/>
+                    </columns>
+                    <rows datasource="analogsDs"/>
+                    <buttonsPanel>
+                        <button action="analogsTable.create"/>
+                        <button action="analogsTable.edit"/>
+                        <button action="analogsTable.remove"/>
+                    </buttonsPanel>
+                </table>
+            </groupBox>
+        </scrollBox>
         <frame id="windowActions"
-               screen="extendedEditWindowActions"/>
+               screen="editWindowActions"/>
     </layout>
 </window>

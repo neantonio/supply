@@ -62,6 +62,9 @@
                     <columns>
                         <column id="name"/>
                         <column id="fullName"/>
+                        <column id="email"/>
+                        <column id="contacts"/>
+                        <column id="inn"/>
                     </columns>
                     <rows datasource="suppliersCollectionDs"/>
                     <rowsCount/>
@@ -85,8 +88,19 @@
                     <fieldGroup id="fieldGroup"
                                 datasource="suppliersDs">
                         <column width="250px">
-                            <field property="name"/>
-                            <field property="fullName"/>
+                            <field caption="Название"
+                                   property="name"/>
+                            <field caption="Полное название"
+                                   property="fullName"/>
+                            <field caption="ИНН"
+                                   property="inn"/>
+                            <field caption="Контакты"
+                                   property="contacts"/>
+                            <field caption="Email"
+                                   property="email"/>
+                            <field caption="Комментарии"
+                                   property="comments"
+                                   rows="5"/>
                         </column>
                     </fieldGroup>
                 </scrollBox>

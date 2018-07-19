@@ -339,6 +339,8 @@ create table SUPPLY_SUPPLIERS_SUGGESTION (
     DELETED_BY varchar(50),
     --
     POS_SUP_ID uuid,
+    MANUFACTURER varchar(255),
+    PAYMENT_DEF integer,
     QUANTITY double precision not null,
     PRICE double precision not null,
     SUP_ADDRESS varchar(255),
@@ -360,6 +362,10 @@ create table SUPPLY_SUPPLIERS (
     --
     NAME varchar(50),
     FULL_NAME varchar(255),
+    INN varchar(50),
+    CONTACTS varchar(255),
+    EMAIL varchar(255),
+    COMMENTS varchar(255),
     --
     primary key (ID)
 )^
@@ -415,11 +421,11 @@ create table SUPPLY_BILLS (
     --
     NUMBER_ varchar(20) not null,
     PRICE double precision,
-    COMPANY_ID uuid,
+    COMPANY_ID uuid not null,
     SUPPLIER_ID uuid not null,
-    TIME_PAYMENT timestamp,
-    AMOUNT double precision,
-    SUM_CONTROL boolean,
+    TIME_PAYMENT timestamp not null,
+    AMOUNT double precision not null,
+    SUM_CONTROL boolean not null,
     IMAGE_BILL_ID uuid,
     --
     primary key (ID)

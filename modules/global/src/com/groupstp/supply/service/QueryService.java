@@ -5,6 +5,7 @@ import com.groupstp.supply.entity.Nomenclature;
 import com.groupstp.supply.entity.QueriesPosition;
 import com.groupstp.supply.entity.Query;
 import com.groupstp.supply.entity.QueryStatus;
+import com.haulmont.cuba.core.entity.Entity;
 
 import java.util.Date;
 import java.util.List;
@@ -30,4 +31,6 @@ public interface QueryService {
     Date getExecutionTimeForQueriesPosition(QueriesPosition queriesPosition, boolean addHours);
 
     Date getStageExecutionTimeForQueriesPosition(QueriesPosition position);
+
+    QueryStatus getPositionStatus(QueriesPosition entity);
 }

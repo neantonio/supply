@@ -1,2 +1,0 @@
-alter table SUPPLY_QUERY add constraint FK_SUPPLY_QUERY_ON_CONTACT foreign key (CONTACT_ID) references SUPPLY_EMPLOYEE(ID);
-create index IDX_SUPPLY_QUERY_ON_CONTACT on SUPPLY_QUERY (CONTACT_ID);

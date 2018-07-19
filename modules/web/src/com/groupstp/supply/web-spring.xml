@@ -32,6 +32,8 @@
                        value="com.groupstp.supply.service.PaymentTableService"/>
                 <entry key="supply_EntityImportService"
                        value="com.groupstp.supply.service.EntityImportService"/>
+                <entry key="supply_TaskService"
+                       value="com.groupstp.supply.service.TaskService"/>
             </map>
         </property>
     </bean>

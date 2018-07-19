@@ -9,7 +9,7 @@
                          view="queriesPosition-delivery">
             <query>
                 <![CDATA[select e from supply$QueriesPosition e
-Where e.currentStage='Logistic']]>
+Where e.currentStage='Logistic' and e.delivery is not null]]>
             </query>
         </groupDatasource>
     </dsContext>

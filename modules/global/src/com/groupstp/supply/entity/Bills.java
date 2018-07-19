@@ -24,7 +24,8 @@ public class Bills extends StandardEntity {
     @Column(name = "PRICE")
     protected Double price;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @NotNull
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "COMPANY_ID")
     protected Company company;
 
@@ -33,16 +34,19 @@ public class Bills extends StandardEntity {
     @JoinColumn(name = "SUPPLIER_ID")
     protected Suppliers supplier;
 
+    @NotNull
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "TIME_PAYMENT")
+    @Column(name = "TIME_PAYMENT", nullable = false)
     protected Date timePayment;
 
+    @NotNull
     @NumberFormat(pattern = "#########.##")
-    @Column(name = "AMOUNT")
+    @Column(name = "AMOUNT", nullable = false)
     protected Double amount;
 
-    @Column(name = "SUM_CONTROL")
-    protected Boolean sumControl;
+    @NotNull
+    @Column(name = "SUM_CONTROL", nullable = false)
+    protected Boolean sumControl = false;
 
     @OneToMany(mappedBy = "bills")
     protected List<QueriesPosition> positions;

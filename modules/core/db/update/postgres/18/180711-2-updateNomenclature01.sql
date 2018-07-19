@@ -1,1 +1,0 @@
-create unique index IDX_SUPPLY_NOMENCLATURE_UNQ on SUPPLY_NOMENCLATURE (EXT_ID) where DELETE_TS is null ;
