@@ -68,7 +68,10 @@
         <property name="store"
                   view="_minimal"/>
         <property name="query"
-                  view="_minimal"/>
+                  view="_minimal">
+            <property name="workflow"
+                      view="_minimal"/>
+        </property>
         <property name="specNomenclature"
                   view="_minimal"/>
         <property name="nomeclatureChange"

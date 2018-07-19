@@ -1,0 +1,153 @@
+[
+  {
+    "_entityName": "supply$QueryWorkflowDetail",
+    "id": "2362be9e-7471-d7d6-b299-0e5d80da7f21",
+    "queryWorkflow": {
+      "_entityName": "supply$QueryWorkflow",
+      "id": "22b79782-de3f-7210-c80c-2c6df301496c",
+      "name": "Общая",
+      "version": 3
+    },
+    "destStage": "Done",
+    "sourceStage": "Logistic",
+    "validationScript": "return true;",
+    "version": 1,
+    "script": "return true;",
+    "createdBy": "test1",
+    "createTs": "2018-07-16 06:16:01.074",
+    "updateTs": "2018-07-16 06:16:01.074"
+  },
+  {
+    "_entityName": "supply$QueryWorkflowDetail",
+    "id": "d05f769f-4c7a-39ed-5c9e-2cf56980fef0",
+    "queryWorkflow": {
+      "_entityName": "supply$QueryWorkflow",
+      "id": "22b79782-de3f-7210-c80c-2c6df301496c"
+    },
+    "destStage": "Bills",
+    "sourceStage": "Comission",
+    "validationScript": "return true;",
+    "version": 1,
+    "script": "return true;",
+    "createdBy": "test1",
+    "createTs": "2018-07-16 06:16:01.075",
+    "updateTs": "2018-07-16 06:16:01.075"
+  },
+  {
+    "_entityName": "supply$QueryWorkflowDetail",
+    "id": "ad561805-d195-5426-8024-9d2fd40db802",
+    "queryWorkflow": {
+      "_entityName": "supply$QueryWorkflow",
+      "id": "22b79782-de3f-7210-c80c-2c6df301496c"
+    },
+    "destStage": "NomControl",
+    "sourceStage": "New",
+    "validationScript": "return true;",
+    "priority": 1,
+    "version": 1,
+    "script": "return true;",
+    "createdBy": "test1",
+    "createTs": "2018-07-16 06:16:01.074",
+    "updateTs": "2018-07-16 06:16:01.074"
+  },
+  {
+    "_entityName": "supply$QueryWorkflowDetail",
+    "id": "f9bbee60-99ac-ce61-e71e-63486c39def1",
+    "queryWorkflow": {
+      "_entityName": "supply$QueryWorkflow",
+      "id": "22b79782-de3f-7210-c80c-2c6df301496c"
+    },
+    "destStage": "Logistic",
+    "sourceStage": "Bills",
+    "validationScript": "return true;",
+    "version": 1,
+    "script": "return true;",
+    "createdBy": "test1",
+    "createTs": "2018-07-16 06:16:01.075",
+    "updateTs": "2018-07-16 06:16:01.075"
+  },
+  {
+    "_entityName": "supply$QueryWorkflowDetail",
+    "id": "91ba6c0f-07a3-37c4-692a-e7a687b6436e",
+    "updatedBy": "admin",
+    "queryWorkflow": {
+      "_entityName": "supply$QueryWorkflow",
+      "id": "22b79782-de3f-7210-c80c-2c6df301496c"
+    },
+    "destStage": "Analysis",
+    "sourceStage": "SupSelection",
+    "validationScript": "import com.haulmont.cuba.core.global.AppBeans\nimport com.haulmont.cuba.core.global.ValueLoadContext\nimport com.haulmont.cuba.core.global.DataManager\n\nDataManager dataManager \u003d AppBeans.get(DataManager.class)\nList errors \u003d []\nString query \u003d \u0027select COUNT(e.position) from supply$PositionSupplier e where e.position.id\u003d:position\u0027\nValueLoadContext ctx \u003d ValueLoadContext.create()\nctx.setQuery(\n        ValueLoadContext.createQuery(query)\n                .setParameter(\"position\",position))\n        .addProperty(\"count\")\nList res \u003d dataManager.loadValues(ctx)\nif(res.get(0).getValue(\"count\")\u003c3)\n    errors \u003c\u003c \"Подобрано меньше 3 поставщиков\"\n\nquery \u003d \u0027select e.posSup, COUNT(e) from supply$SuppliersSuggestion e \u0027 +\n        \u0027where e.posSup.position.id\u003d:position \u0027 +\n        \u0027and e.quantity\u003c\u003e0 \u0027 +\n        \u0027and e.term\u003c\u003e0 \u0027 +\n        \u0027and e.price\u003c\u003e0 \u0027 +\n        \u0027group by e.posSup\u0027\n\nctx \u003d ValueLoadContext.create();\nctx.setQuery(ctx.createQuery(query).setParameter(\"position\", position));\nctx.addProperty(\"positionsSupplier\").addProperty(\"count\");\nres \u003d dataManager.loadValues(ctx);\ndef count\u003d0\nfor(r in res)\n{\n    if(r.getValue(\"count\")\u003c1)\n        errors \"Для поставщика \"+r.getValue(\"positionsSupplier\").getSupplier()+\" не заданы предложения\"\n    count+\u003dr.getValue(\"count\")\n}\nif(count\u003c3)\n    errors \u003c\u003c \"Общее количество предложений меньше 3\"\nif(errors.size()\u003e0)\n    return errors.join(\u0027\\n\u0027)\n        return true",
+    "version": 2,
+    "script": "return true",
+    "createdBy": "test1",
+    "createTs": "2018-07-16 06:16:01.075",
+    "updateTs": "2018-07-18 06:24:00.044"
+  },
+  {
+    "_entityName": "supply$QueryWorkflowDetail",
+    "id": "aef6fd62-6105-a87e-b9b4-cd92ee54205e",
+    "updatedBy": "admin",
+    "queryWorkflow": {
+      "_entityName": "supply$QueryWorkflow",
+      "id": "22b79782-de3f-7210-c80c-2c6df301496c"
+    },
+    "destStage": "Comission",
+    "sourceStage": "Analysis",
+    "validationScript": "return true",
+    "version": 2,
+    "script": "return true",
+    "createdBy": "test1",
+    "createTs": "2018-07-16 06:16:01.074",
+    "updateTs": "2018-07-18 06:24:00.044"
+  },
+  {
+    "_entityName": "supply$QueryWorkflowDetail",
+    "id": "e8d02858-4b97-6480-6c2a-b563f3a838ce",
+    "updatedBy": "admin",
+    "queryWorkflow": {
+      "_entityName": "supply$QueryWorkflow",
+      "id": "22b79782-de3f-7210-c80c-2c6df301496c"
+    },
+    "destStage": "StoreControl",
+    "sourceStage": "NomControl",
+    "validationScript": "errors \u003d []\n\nif(!position.getPositionUsefulness())\n\terrors \u003c\u003c \"Не отмечена целесообразность\"\n\t\nif(position.getPositionType()\u003d\u003dPositionType.specification){\n    if(position.getNomenclature()\u003d\u003dnull)\n\t\terrors \u003c\u003c \"Не выбрана номенклатура\"\n}\n\nif(errors.size()\u003e0)\n\treturn errors.join(\"\\n\")\n\nreturn true",
+    "version": 2,
+    "script": "return true;",
+    "createdBy": "test1",
+    "createTs": "2018-07-16 06:16:01.073",
+    "updateTs": "2018-07-18 06:24:00.044"
+  },
+  {
+    "_entityName": "supply$QueryWorkflowDetail",
+    "id": "2677df14-a685-4aa9-a042-5d0ab2bfcb5d",
+    "updatedBy": "admin",
+    "queryWorkflow": {
+      "_entityName": "supply$QueryWorkflow",
+      "id": "22b79782-de3f-7210-c80c-2c6df301496c"
+    },
+    "destStage": "SupSelection",
+    "sourceStage": "StoreControl",
+    "validationScript": "errors \u003d []\nif(position.getSupplyWorkoutType()\u003d\u003dSupplyWorkoutType.Supply)\n{\n    if(position.getQuantity().doubleValue()\u003c\u003d0.0)\n        errors \u003c\u003c \"Не указано количество\"\n}\nelse if(position.getSupplyWorkoutType()\u003d\u003dnull)\n{\n    errors \u003c\u003c \"Не выбран тип отработки позиции снабжением\"\n}\n\nif(errors.size()\u003e0)\n\treturn errors.join(\"\\n\")\n\nreturn true",
+    "version": 2,
+    "script": "if(position.getSupplyWorkoutType()\u003d\u003dSupplyWorkoutType.Supply)\n    return true\n    \nreturn false",
+    "createdBy": "test1",
+    "createTs": "2018-07-16 06:16:01.075",
+    "updateTs": "2018-07-18 06:24:00.044"
+  },
+  {
+    "_entityName": "supply$QueryWorkflowDetail",
+    "id": "619bb9e1-e9e0-cafc-ccb5-0a698e821be7",
+    "queryWorkflow": {
+      "_entityName": "supply$QueryWorkflow",
+      "id": "22b79782-de3f-7210-c80c-2c6df301496c"
+    },
+    "destStage": "Logistic",
+    "sourceStage": "StoreControl",
+    "validationScript": "errors \u003d []\nif(position.getSupplyWorkoutType()\u003d\u003dSupplyWorkoutType.Relocation)\n{\n    if(position.getQuantity().doubleValue()\u003c\u003d0.0)\n        errors \u003c\u003c \"Не указано количество\"\n    if(position.getSrcStore()\u003d\u003dnull)\n        errors \u003c\u003c \"Не указан склад перемещения\"    \n}\nelse if(position.getSupplyWorkoutType()\u003d\u003dnull)\n{\n    errors \u003c\u003c \"Не выбран тип отработки позиции снабжением\"\n}\n\nif(errors.size()\u003e0)\n\treturn errors.join(\"\\n\")\n\t\nreturn true",
+    "version": 1,
+    "script": "if(position.getSupplyWorkoutType()\u003d\u003dSupplyWorkoutType.Relocation)\n    return true\n    \nreturn false\n",
+    "createdBy": "admin",
+    "createTs": "2018-07-18 06:24:00.010",
+    "updateTs": "2018-07-18 06:24:00.010"
+  }
+]

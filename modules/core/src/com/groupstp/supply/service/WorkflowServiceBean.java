@@ -36,6 +36,8 @@ public class WorkflowServiceBean implements WorkflowService {
     public void movePosition(QueriesPosition position) throws Exception {
         List<QueryWorkflowDetail> details = getWorkflowDetailsForPositions(position);
         String errors = "\n";
+        if(details.size()==0)
+            errors = "Workflow not set";
         Boolean found = false;
         for (QueryWorkflowDetail detail:details)
         {
