@@ -19,8 +19,7 @@
               screen="supply$Suppliers.browse"/>
         <item screen="statistics"/>
         <item screen="supply$PaymentTable"/>
-        <item id="suppliersSuggestion"
-              screen="supply$SuppliersSuggestion.browse"/>
+        <item screen="supply$Bills.browse"/>
     </menu>
     <menu id="queries"
           insertBefore="administration">

@@ -54,6 +54,8 @@
                     <field property="priceReduce"/>
                     <field property="minimalPrice"/>
                     <field property="billQuery"/>
+                    <field property="bills"/>
+                    <field property="voteResult"/>
                 </column>
             </fieldGroup>
             <groupBox id="analogsBox"

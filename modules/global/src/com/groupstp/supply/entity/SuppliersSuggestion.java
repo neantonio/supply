@@ -49,20 +49,21 @@ public class SuppliersSuggestion extends StandardEntity {
     @OneToOne(fetch = FetchType.LAZY, mappedBy = "voteResult")
     protected QueriesPosition queriesPosition;
 
-    public void setManufacturer(String manufacturer) {
-        this.manufacturer = manufacturer;
-    }
-
-    public String getManufacturer() {
-        return manufacturer;
+    public Integer getPaymentDef() {
+        return paymentDef;
     }
 
     public void setPaymentDef(Integer paymentDef) {
         this.paymentDef = paymentDef;
     }
 
-    public Integer getPaymentDef() {
-        return paymentDef;
+
+    public void setManufacturer(String manufacturer) {
+        this.manufacturer = manufacturer;
+    }
+
+    public String getManufacturer() {
+        return manufacturer;
     }
 
 

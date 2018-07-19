@@ -6,7 +6,7 @@
     <dsContext>
         <groupDatasource id="dsNomControl"
                          class="com.groupstp.supply.entity.QueriesPosition"
-                         view="queriesPosition-NomControl">
+                         view="full">
             <query>
                 <![CDATA[select e from supply$QueriesPosition e
 where e.currentStage='NomControl']]>
@@ -22,7 +22,7 @@ where e.currentStage='StoreControl']]>
         </groupDatasource>
         <groupDatasource id="dsSupSelection"
                          class="com.groupstp.supply.entity.QueriesPosition"
-                         view="queriesPosition-SupSelection">
+                         view="full">
             <query>
                 <![CDATA[select e from supply$QueriesPosition e
 where e.currentStage='SupSelection']]>
@@ -30,7 +30,7 @@ where e.currentStage='SupSelection']]>
         </groupDatasource>
         <groupDatasource id="dsAnalysis"
                          class="com.groupstp.supply.entity.QueriesPosition"
-                         view="queriesPosition-Analysis">
+                         view="full">
             <query>
                 <![CDATA[select e from supply$QueriesPosition e
 where e.currentStage='Analysis']]>
@@ -38,7 +38,7 @@ where e.currentStage='Analysis']]>
         </groupDatasource>
         <groupDatasource id="dsComission"
                          class="com.groupstp.supply.entity.QueriesPosition"
-                         view="queriesPosition-Comission">
+                         view="full">
             <query>
                 <![CDATA[select e from supply$QueriesPosition e
 where e.currentStage='Comission']]>
@@ -56,7 +56,8 @@ where e.currentStage='Bills']]>
                          class="com.groupstp.supply.entity.Bills"
                          view="bills-view">
             <query>
-                <![CDATA[select e from supply$Bills e]]>
+                <![CDATA[select e from supply$Bills e
+where e.sumControl = false]]>
             </query>
         </groupDatasource>
         <groupDatasource id="dsProcuration"
@@ -114,8 +115,8 @@ where e.position in :custom$positions]]>
                                 invoke="onBtnDoneClick"/>
                         <button id="btnCancel"
                                 caption="mainMsg://Cancel"
-                                invoke="onBtnCancelClick"
-                                icon="CANCEL"/>
+                                icon="CANCEL"
+                                invoke="onBtnCancelClick"/>
                         <button id="btnRefresh"
                                 action="positionsNomControl.refresh"
                                 caption="mainMsg://Refresh"
@@ -210,8 +211,8 @@ where e.position in :custom$positions]]>
                                 invoke="onBtnDoneClick"/>
                         <button id="button_5"
                                 caption="mainMsg://Cancel"
-                                invoke="onBtnCancelClick"
-                                icon="CANCEL"/>
+                                icon="CANCEL"
+                                invoke="onBtnCancelClick"/>
                         <button id="button_1"
                                 action="positionsStoreControl.refresh"
                                 caption="mainMsg://Refresh"
@@ -239,6 +240,7 @@ where e.position in :custom$positions]]>
                     <groupTable id="positionsStoreControl"
                                 editable="true"
                                 fixedGrouping="true"
+                                multiselect="true"
                                 presentations="true"
                                 width="100%">
                         <actions>
@@ -291,8 +293,7 @@ where e.position in :custom$positions]]>
                         <button id="button_9"
                                 caption="mainMsg://Cancel"
                                 icon="CANCEL"
-                                invoke="onBtnCancelClick"
-                        />
+                                invoke="onBtnCancelClick"/>
                         <button id="button_12"
                                 action="positionsSupSelection.refresh"
                                 caption="mainMsg://Refresh"
@@ -323,6 +324,7 @@ where e.position in :custom$positions]]>
                     </buttonsPanel>
                     <groupTable id="positionsSupSelection"
                                 fixedGrouping="true"
+                                multiselect="true"
                                 presentations="true"
                                 width="100%">
                         <actions>
@@ -371,8 +373,8 @@ where e.position in :custom$positions]]>
                                 invoke="onBtnDoneClick"/>
                         <button id="btnCancelAnalysis"
                                 caption="mainMsg://Cancel"
-                                invoke="onBtnCancelClick"
-                                icon="CANCEL"/>
+                                icon="CANCEL"
+                                invoke="onBtnCancelClick"/>
                         <button id="btnRefreshAnalysis"
                                 action="positionsSupSelection.refresh"
                                 caption="mainMsg://Refresh"
@@ -403,6 +405,7 @@ where e.position in :custom$positions]]>
                     </buttonsPanel>
                     <groupTable id="positionsAnalysis"
                                 fixedGrouping="true"
+                                multiselect="true"
                                 presentations="true"
                                 width="100%">
                         <actions>
@@ -451,8 +454,8 @@ where e.position in :custom$positions]]>
                                 invoke="onBtnDoneClick"/>
                         <button id="btnCancelComission"
                                 caption="mainMsg://Cancel"
-                                invoke="onBtnCancelClick"
-                                icon="CANCEL"/>
+                                icon="CANCEL"
+                                invoke="onBtnCancelClick"/>
                         <button id="btnRefreshComission"
                                 action="positionsSupSelection.refresh"
                                 caption="mainMsg://Refresh"
@@ -487,30 +490,16 @@ where e.position in :custom$positions]]>
                             <action id="remove"/>
                         </actions>
                         <columns>
-                            <column id="storeControlFlag"/>
-                            <column id="currentStage"/>
-                            <column id="positionType"/>
-                            <column id="numberArticle"/>
-                            <column id="specification"/>
+                            <column id="nomenclature"/>
                             <column id="quantity"/>
                             <column id="analogsAllowed"/>
-                            <column id="positionUsefulness"/>
-                            <column id="positionUsefulnessTS"/>
                             <column id="startMinimalPrice"/>
                             <column id="analogsCorrectionFlag"/>
-                            <column id="nomControlFlag"/>
-                            <column id="nomControlFlagTS"/>
-                            <column id="inStore"/>
-                            <column id="storeControlFlagTS"/>
-                            <column id="supplyWorkoutType"/>
-                            <column id="supSelectionFlag"/>
-                            <column id="supSelectionFlagTS"/>
                             <column id="analysisResult"/>
                             <column id="analysisFlag"/>
                             <column id="analysisFlagTS"/>
                             <column id="query.company"/>
                             <column id="query.division"/>
-                            <column id="nomenclature"/>
                             <column id="priceReduce"/>
                             <column id="minimalPrice"/>
                         </columns>
@@ -543,8 +532,8 @@ where e.position in :custom$positions]]>
                                 invoke="onBtnDoneClickBillsTab"/>
                         <button id="btnCancelBills"
                                 caption="mainMsg://Cancel"
-                                invoke="onBtnCancelClick"
-                                icon="CANCEL"/>
+                                icon="CANCEL"
+                                invoke="onBtnCancelClick"/>
                         <button id="btnRefreshBills"
                                 action="positionsSupSelection.refresh"
                                 caption="mainMsg://Refresh"
@@ -590,7 +579,6 @@ where e.position in :custom$positions]]>
                                 <action id="blankAction"/>
                             </actions>
                         </popupButton>
-
                     </buttonsPanel>
                     <hbox id="tablesBox"
                           expand="positionsBills"
@@ -646,19 +634,22 @@ where e.position in :custom$positions]]>
                     <browserFrame id="imageForBill"
                                   align="BOTTOM_LEFT"
                                   caption="Изображение счета"
-                                  height="350px"
+                                  height="50px"
                                   width="500px"/>
                     <hbox align="BOTTOM_LEFT"
                           spacing="true">
                         <upload id="uploadField"/>
                         <button id="downloadImageBtn"
                                 caption="Скачать"
+                                enable="false"
                                 invoke="onDownloadImageBtnClick"/>
                         <button id="clearImageBtn"
                                 caption="Удалить"
+                                enable="false"
                                 invoke="onClearImageBtnClick"/>
                         <button id="OpenInNewTabBtn"
                                 caption="Открыть в новом окне"
+                                enable="false"
                                 invoke="onOpenInNewTabBtnClick"/>
                     </hbox>
                 </vbox>
@@ -716,7 +707,7 @@ where e.position in :custom$positions]]>
                         </vbox>
                         <vbox align="BOTTOM_CENTER"
                               spacing="true"
-                              width="AUTO">
+                              width="400px">
                             <groupBox id="cargoStateGroupBox"
                                       spacing="true">
                                 <vbox id="cargoStateGroupBoxTotalLayout"
@@ -768,9 +759,9 @@ where e.position in :custom$positions]]>
                                 icon="STEP_FORWARD"
                                 invoke="onBtnDoneClick"/>
                         <button id="btnCancelProcuration"
-                                invoke="onBtnCancelClick"
                                 caption="mainMsg://Cancel"
-                                icon="CANCEL"/>
+                                icon="CANCEL"
+                                invoke="onBtnCancelClick"/>
                         <button id="btnRefreshProcuration"
                                 action="positionsSupSelection.refresh"
                                 caption="mainMsg://Refresh"
@@ -789,7 +780,6 @@ where e.position in :custom$positions]]>
                                 <action id="blankAction"/>
                             </actions>
                         </popupButton>
-
                     </buttonsPanel>
                     <groupTable id="positionsProcuration"
                                 fixedGrouping="true"

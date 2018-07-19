@@ -71,6 +71,15 @@ public class QueryDaoServiceBean implements QueryDaoService {
     }
 
     @Override
+    public List<QueriesPosition> getQueryPositionsByStage(Stages stage){
+        LoadContext<QueriesPosition> loadContext = LoadContext.create(QueriesPosition.class)
+                .setQuery(LoadContext.createQuery("select  qp from supply$QueriesPosition qp where qp.currentStage=:stageItem")
+                        .setParameter("stageItem",stage))
+                .setView("full");
+        return dataManager.loadList(loadContext);
+    }
+
+    @Override
     public List<QueriesPosition> getAllQueriesPosition(){
         LoadContext<QueriesPosition> loadContext = LoadContext.create(QueriesPosition.class)
                 .setQuery(LoadContext.createQuery("select  qp from supply$QueriesPosition qp "))
@@ -150,5 +159,15 @@ public class QueryDaoServiceBean implements QueryDaoService {
         //// TODO: 04.07.2018  сделать более подробно
        if(entityType.equals("User")) return "sec$";
         else return "supply$";
+    }
+
+    @Override
+    public List<SuppliersSuggestion> getSupplierSuggestions(QueriesPosition entity) {
+        LoadContext<SuppliersSuggestion> loadContext = LoadContext.create(SuppliersSuggestion.class)
+                .setQuery(LoadContext.createQuery("select ss from supply$SuppliersSuggestion ss where\n" +
+                        "ss.posSup in (select ps from supply$PositionSupplier ps where ps.position.id=:idItem)")
+                .setParameter("idItem",entity.getId()));
+
+        return dataManager.loadList(loadContext);
     }
 }

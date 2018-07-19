@@ -6,5 +6,6 @@ import java.io.Serializable;
 public interface EntityImportService {
     String NAME = "supply_EntityImportService";
 
-    Serializable createOrUpdateEntity(String data);
-}
+        Serializable createOrUpdateEntity(String data);
+    }
+
