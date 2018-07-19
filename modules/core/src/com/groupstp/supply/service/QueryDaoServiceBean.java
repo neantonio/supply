@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import javax.inject.Inject;
 import javax.persistence.Persistence;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -152,4 +153,16 @@ public class QueryDaoServiceBean implements QueryDaoService {
        if(entityType.equals("User")) return "sec$";
         else return "supply$";
     }
+
+    @Override
+    public Holiday getHoliday(Date date) {
+        if((date==null))return null;
+
+        LoadContext<Holiday> loadContext = LoadContext.create(Holiday.class)
+                .setQuery(LoadContext.createQuery("SELECT h FROM supply$Holiday h where h.day=:day")
+                .setParameter("day", date));
+
+        return dataManager.load(loadContext);
+    }
+
 }

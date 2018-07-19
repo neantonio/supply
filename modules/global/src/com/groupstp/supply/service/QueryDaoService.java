@@ -4,6 +4,7 @@ package com.groupstp.supply.service;
 import com.groupstp.supply.entity.*;
 import com.haulmont.cuba.core.entity.StandardEntity;
 
+import java.util.Date;
 import java.util.List;
 /**
  * @author AntonLomako
@@ -39,4 +40,6 @@ public interface QueryDaoService {
     StandardEntity getEntity(String entityType, String entityUUID);
 
     String getMetaclassPrefix(String entityType);
+
+    Holiday getHoliday(Date date);
 }

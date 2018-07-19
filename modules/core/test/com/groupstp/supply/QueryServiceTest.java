@@ -11,7 +11,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import javax.inject.Inject;
+import java.time.LocalTime;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
@@ -283,6 +285,75 @@ public class QueryServiceTest {
         calendarToUse.set(Calendar.DAY_OF_YEAR,calendarToUse.get(Calendar.DAY_OF_YEAR)+4);
 
         assertEquals("неверно рассчитано общее плановое время исполнения заявки",calendarToUse.getTime(),queryService.getExecutionTimeForQueriesPosition(qp,false));
+    }
+
+    //10:00 06.03.2018 - 12:00 10.03.2018
+    @Test
+    public void getWorkTimeTestFirst() {
+        Calendar calendarStart = Calendar.getInstance();
+        calendarStart.set(2018, 2, 6, 10, 0, 0);
+        Calendar calendarEnd = Calendar.getInstance();
+        calendarEnd.set(2018, 2, 10, 12,0, 0);
+        LocalTime startTimeWork = LocalTime.of(8,0);
+        LocalTime endTimeWork = LocalTime.of(17,0);
+        LocalTime lunchTime = LocalTime.of(12, 0);
+        int lunchDuration = 1;//Продолжительность обеда 1 час
+
+        new Expectations() {
+            {
+                queryDaoService.getHoliday(withNotNull());
+                Holiday holiday7 = new Holiday();
+                holiday7.setWorkingHours(-1);
+                Holiday holiday8 = new Holiday();
+                holiday8.setWorkingHours(0);
+                returns(null, holiday7, holiday8, null);
+            }};
+
+        long workTime = queryService.getWorkTime(calendarStart.getTime(), calendarEnd.getTime(), startTimeWork, endTimeWork, lunchTime, lunchDuration);
+        assertEquals(TimeUnit.MILLISECONDS.toHours(workTime), 21);
+    }
+
+    //10:00 08.03.2018 - 12:00 08.03.2018
+    @Test
+    public void getWorkTimeTestSecond() {
+        Calendar calendarStart = Calendar.getInstance();
+        calendarStart.set(2018, 2, 8, 10, 0, 0);
+        Calendar calendarEnd = Calendar.getInstance();
+        calendarEnd.set(2018, 2, 8, 12,0, 0);
+        LocalTime startTimeWork = LocalTime.of(8,0);
+        LocalTime endTimeWork = LocalTime.of(17,0);
+        LocalTime lunchTime = LocalTime.of(12, 0);
+        int lunchDuration = 1;//Продолжительность обеда 1 час
+        new Expectations() {
+            {
+                queryDaoService.getHoliday(withNotNull());
+                Holiday holiday8 = new Holiday();
+                holiday8.setWorkingHours(0);
+                result = holiday8;
+            }};
+
+        long workTime = queryService.getWorkTime(calendarStart.getTime(), calendarEnd.getTime(), startTimeWork, endTimeWork, lunchTime, lunchDuration);
+        assertEquals(TimeUnit.MILLISECONDS.toHours(workTime), 0);
+    }
+
+    //08:00 16.07.2018 - 23:59:00 22.07.2018
+    @Test
+    public void getWorkTimeTestThird() {
+        Calendar calendarStart = Calendar.getInstance();
+        calendarStart.set(2018, 6, 16, 8, 0, 0);
+        Calendar calendarEnd = Calendar.getInstance();
+        calendarEnd.set(2018, 6, 22, 23,59, 0);
+        LocalTime startTimeWork = LocalTime.of(8,0);
+        LocalTime endTimeWork = LocalTime.of(17,0);
+        LocalTime lunchTime = LocalTime.of(12, 0);
+        int lunchDuration = 1;//Продолжительность обеда 1 час
+        new Expectations() {
+            {
+                queryDaoService.getHoliday(withNotNull());
+                result = null;
+            }};
+        long workTime = queryService.getWorkTime(calendarStart.getTime(), calendarEnd.getTime(), startTimeWork, endTimeWork, lunchTime, lunchDuration);
+        assertEquals(TimeUnit.MILLISECONDS.toHours(workTime), 40);
     }
 
 }

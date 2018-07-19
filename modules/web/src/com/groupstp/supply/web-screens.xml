@@ -67,4 +67,6 @@
             template="com/groupstp/supply/web/delivery/delivery-edit.xml"/>
     <screen id="supply$PaymentTable"
             template="/com/groupstp/supply/web/paymenttable/payment-table.xml"/>
+    <screen id="supply$Holiday.browse"
+            template="com/groupstp/supply/web/holiday/holiday-browse.xml"/>
 </screen-config>

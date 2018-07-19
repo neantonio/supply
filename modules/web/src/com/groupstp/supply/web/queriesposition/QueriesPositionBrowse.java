@@ -1404,6 +1404,15 @@ public class QueriesPositionBrowse extends AbstractLookup {
         }
         Double billSum = currentBill.getAmount();
         List<QueriesPosition> list = currentBill.getPositions();
+        if (list==null||list.size()==0) {
+            return;
+        }
+        for (QueriesPosition queriesPosition : list) {
+            if (queriesPosition.getVoteResult()==null) {
+                showNotification(getMessage("У одной из прикрепленных позиции нет результата голосования"), NotificationType.WARNING);
+                return;
+            }
+        }
         Double positionSum = list.stream().mapToDouble(q ->
                 q.getVoteResult().getPrice() * q.getVoteResult().getQuantity()).sum();
 

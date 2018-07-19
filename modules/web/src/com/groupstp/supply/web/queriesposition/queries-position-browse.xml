@@ -295,7 +295,7 @@ where e.position in :custom$positions]]>
                                 caption="mainMsg://Suggestions"
                                 invoke="onBtnSuggestionsClick"/>
                         <button id="btnDeliverySupStage"
-                                caption="Добавить Груз"
+                                caption="Добавить Поставку"
                                 invoke="onBtnDeliveryClick"/>
                     </buttonsPanel>
                     <groupTable id="positionsSupSelection"
@@ -368,7 +368,7 @@ where e.position in :custom$positions]]>
                                 caption="mainMsg://Suggestions"
                                 invoke="onBtnSuggestionsClick"/>
                         <button id="btnDeliveryAnalysisStage"
-                                caption="Добавить Груз"
+                                caption="Добавить Поставку"
                                 invoke="onBtnDeliveryClick"/>
                     </buttonsPanel>
                     <groupTable id="positionsAnalysis"
@@ -526,23 +526,23 @@ where e.position in :custom$positions]]>
                         <button id="btnBills"
                                 action="billsTable.create"
                                 caption="Создание счета"/>
-                        <button id="btnAttach"
-                                caption="Прикрепить"
-                                invoke="onBtnAttachClick"/>
-                        <button id="btnUndock"
-                                caption="Открепить"
-                                invoke="onBtnUndockClick"/>
+                    </buttonsPanel>
+                    <buttonsPanel>
                         <button id="btnToSupSelection"
                                 caption="Вернуть к Поставщикам"
                                 invoke="onBtnToSupSelection"/>
-                    </buttonsPanel>
-                    <buttonsPanel>
                         <button id="btnEmptyPositions"
                                 caption="Позиции без счета"
                                 invoke="onBtnEmptyPositions"/>
                         <button id="btnAllPositions"
                                 caption="Все позиции"
                                 invoke="onBtnAllPositions"/>
+                        <button id="btnAttach"
+                                caption="Прикрепить"
+                                invoke="onBtnAttachClick"/>
+                        <button id="btnUndock"
+                                caption="Открепить"
+                                invoke="onBtnUndockClick"/>
                     </buttonsPanel>
                     <hbox id="tablesBox"
                           expand="positionsBills"
@@ -595,13 +595,14 @@ where e.position in :custom$positions]]>
                             <rows datasource="dsBills"/>
                         </groupTable>
                     </hbox>
-                    <browserFrame id="imageForBill"
-                                  align="BOTTOM_LEFT"
-                                  caption="Изображение счета"
-                                  height="350px"
-                                  width="500px"/>
                     <hbox align="BOTTOM_LEFT"
                           spacing="true">
+                        <browserFrame id="imageForBill"
+                                      align="BOTTOM_LEFT"
+                                      caption="Изображение счета"
+                                      height="100px"
+                                      responsive="true"
+                                      width="100px"/>
                         <upload id="uploadField"/>
                         <button id="downloadImageBtn"
                                 caption="Скачать"

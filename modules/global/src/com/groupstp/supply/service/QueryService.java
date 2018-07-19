@@ -6,6 +6,7 @@ import com.groupstp.supply.entity.QueriesPosition;
 import com.groupstp.supply.entity.Query;
 import com.groupstp.supply.entity.QueryStatus;
 
+import java.time.LocalTime;
 import java.util.Date;
 import java.util.List;
 /**
@@ -30,4 +31,6 @@ public interface QueryService {
     Date getExecutionTimeForQueriesPosition(QueriesPosition queriesPosition, boolean addHours);
 
     Date getStageExecutionTimeForQueriesPosition(QueriesPosition position);
+
+    long getWorkTime(Date startDate, Date endDate, LocalTime startTimeWork, LocalTime endTimeWork, LocalTime lunchTime, int lunchDuration);
 }

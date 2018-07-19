@@ -552,7 +552,6 @@
         <property name="bills"
                   view="_minimal">
             <property name="timePayment"/>
-            <property name="price"/>
         </property>
         <property name="nomenclature"
                   view="_minimal"/>
@@ -574,4 +573,7 @@
                       view="_minimal"/>
         </property>
     </view>
+    <view class="com.groupstp.supply.entity.Holiday"
+          extends="_local"
+          name="holiday-view"/>
 </views>

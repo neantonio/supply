@@ -4,7 +4,12 @@ import com.groupstp.supply.entity.*;
 import org.springframework.stereotype.Service;
 
 import javax.inject.Inject;
+import java.time.*;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 /**
  * логика операций с заявками, позициями и связанными с ними ущностями
@@ -229,5 +234,130 @@ public class QueryServiceBean implements QueryService {
 
         Date planedExecutionDate=new Date(lastMovement.getCreateTs().getTime()+currentStageTerm.getTime()*60*60*1000);
         return planedExecutionDate;
+    }
+
+    /**
+     * Подсчет рабочего времени в заданном интервале
+     * @author Andrey Kolosov
+     * @param startDate Время начала интервала
+     * @param endDate Время окончания интервала
+     * @param startTimeWork Время начала рабочего дня
+     * @param endTimeWork Время окончания рабочего дня
+     * @param lunchTime время обеда
+     * @param lunchDuration продолжительность обеда (в часах)
+     * @return рабочее время в миллисекундах
+     */
+    @Override
+    public long getWorkTime(Date startDate, Date endDate, LocalTime startTimeWork, LocalTime endTimeWork, LocalTime lunchTime, int lunchDuration) {
+        LocalDateTime start = Instant.ofEpochMilli(startDate.getTime())
+                .atZone(ZoneId.systemDefault())
+                .toLocalDateTime();
+        LocalDateTime end = Instant.ofEpochMilli(endDate.getTime())
+                .atZone(ZoneId.systemDefault())
+                .toLocalDateTime();
+        start = start.withSecond(0).withNano(0);
+        end = end.withSecond(0).withNano(0);
+        if (start.isAfter(end)||start.equals(end)) {
+            return 0;
+        }
+        System.out.println("Считаем с "+start+" до "+end);
+        List<LocalDate> localDateList = getDatesBetweenUsingJava8(start.toLocalDate(), end.toLocalDate());
+        LocalTime currentStartTime = start.toLocalTime();
+        LocalTime currentEndTime = end.toLocalTime();
+        LocalTime endTimeWorkCorrect = LocalTime.from(endTimeWork);
+        long time = 0;
+        long timeSum = 0;
+        long workTimeInDay = ChronoUnit.MILLIS.between(endTimeWork,startTimeWork);
+
+        for (LocalDate date : localDateList) {
+            System.out.println(date);
+            //Проверка дня на праздники/выходные/сокращенный
+            int specialDayHours = isSpecialDay(date);
+            if (specialDayHours==0) {
+                System.out.println("Не работаем");
+                continue;
+            }
+            if (specialDayHours<0) {
+                System.out.println("Сокращенный день");
+                endTimeWorkCorrect = endTimeWorkCorrect.plusHours(specialDayHours);
+            }
+
+            //Проверка на время начала работы
+            if (currentStartTime.isBefore(startTimeWork)) {
+                currentStartTime = startTimeWork;
+            }
+            //Проверка на время окончания работы
+            if (end.isAfter(endTimeWork.atDate(date))) {
+                currentEndTime = endTimeWorkCorrect;
+            }
+
+            //Время с которого в этот день работают
+            System.out.print("Работаем с "+currentStartTime);
+            //Время до которого в этот день работают
+            System.out.println(" до "+currentEndTime);
+
+            //вычитание обеда
+            //Если обед попадает в промежуток
+            if (lunchTime.isAfter(currentStartTime)&&lunchTime.isBefore(currentEndTime)) {
+                //Если обед с продолжительностью позже времени конца
+                if (lunchTime.plusHours(lunchDuration).isAfter(currentEndTime)) {
+                    time = ChronoUnit.MILLIS.between(currentStartTime, lunchTime);
+                }
+                //Если время конца позже обеда
+                else {
+                    time = TimeUnit.HOURS.toMillis(ChronoUnit.HOURS.between(currentStartTime, currentEndTime)-lunchDuration);
+                }
+                //Если обед не попадает в промежуток
+            } else {
+                time = ChronoUnit.MILLIS.between(currentStartTime, currentEndTime);
+            }
+
+            timeSum+=time;
+            System.out.println("Рабочих часов в день: "+TimeUnit.MILLISECONDS.toHours(time));
+            currentStartTime = startTimeWork;
+            currentEndTime = end.toLocalTime();
+            endTimeWorkCorrect = LocalTime.from(endTimeWork);
+        }
+
+        System.out.println("Рабочих часов за период: "+TimeUnit.MILLISECONDS.toHours(timeSum));
+
+        return timeSum;
+    }
+
+    /**
+     * Формирует список дней для временного интервала
+     * @author Andrey Kolosov
+     * @param startDate
+     * @param endDate
+     * @return
+     */
+    private List<LocalDate> getDatesBetweenUsingJava8(
+            LocalDate startDate, LocalDate endDate) {
+
+        long numOfDaysBetween = ChronoUnit.DAYS.between(startDate, endDate);
+        return IntStream.iterate(0, i -> i + 1)
+                .limit(numOfDaysBetween+1)
+                .mapToObj(startDate::plusDays)
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * Возвращает количество часов, на случай если день выходной/праздник/сокращенный
+     * @author Andrey Kolosov
+     * @param date Проверяемый день
+     * @return рабочие часы
+     */
+    private int isSpecialDay(LocalDate date) {
+
+        Holiday holiday = queryDaoService.getHoliday(java.sql.Date.valueOf(date));
+
+        if (holiday != null) {
+            return holiday.getWorkingHours();
+        } else {
+            if (date.getDayOfWeek().equals(DayOfWeek.SATURDAY)||date.getDayOfWeek().equals(DayOfWeek.SUNDAY)) {
+                return 0;
+            }
+            return 24;
+        }
     }
 }
