@@ -5,4 +5,6 @@ public interface TaskService {
     String NAME = "supply_TaskService";
 
     void beginEmailNotificationOnAnalysisTimeRunningOut();
+
+    void stopEmailNotificationOnAnalysisTimeRunningOut();
 }

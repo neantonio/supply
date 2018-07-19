@@ -119,7 +119,10 @@ public class QueryBrowse extends AbstractLookup {
                 selectedQueries1.forEach(item->{
                     selectedQueryList.add(item);
                 });
-                queryService.beginQueryProcessing(selectedQueryList);
+                List positionWithError=queryService.beginQueryProcessing(selectedQueryList);
+                if(positionWithError.size()>0){
+                    showNotification(getMessage("not_moved_positions")+": "+String.valueOf(positionWithError.size()));
+                }
                 queriesDs.refresh();
                 queriesTable.repaint();
             });
