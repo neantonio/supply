@@ -4,7 +4,7 @@
     "id": "2362be9e-7471-d7d6-b299-0e5d80da7f21",
     "queryWorkflow": {
       "_entityName": "supply$QueryWorkflow",
-      "id": "22b79782-de3f-7210-c80c-2c6df301496c",
+      "id": "8c12902e-9c16-4fc1-2b13-591ef466a767",
       "name": "Общая",
       "version": 3
     },
@@ -22,7 +22,7 @@
     "id": "d05f769f-4c7a-39ed-5c9e-2cf56980fef0",
     "queryWorkflow": {
       "_entityName": "supply$QueryWorkflow",
-      "id": "22b79782-de3f-7210-c80c-2c6df301496c"
+      "id": "8c12902e-9c16-4fc1-2b13-591ef466a767"
     },
     "destStage": "Bills",
     "sourceStage": "Comission",
@@ -38,7 +38,7 @@
     "id": "ad561805-d195-5426-8024-9d2fd40db802",
     "queryWorkflow": {
       "_entityName": "supply$QueryWorkflow",
-      "id": "22b79782-de3f-7210-c80c-2c6df301496c"
+      "id": "8c12902e-9c16-4fc1-2b13-591ef466a767"
     },
     "destStage": "NomControl",
     "sourceStage": "New",
@@ -55,7 +55,7 @@
     "id": "f9bbee60-99ac-ce61-e71e-63486c39def1",
     "queryWorkflow": {
       "_entityName": "supply$QueryWorkflow",
-      "id": "22b79782-de3f-7210-c80c-2c6df301496c"
+      "id": "8c12902e-9c16-4fc1-2b13-591ef466a767"
     },
     "destStage": "Logistic",
     "sourceStage": "Bills",
@@ -72,7 +72,7 @@
     "updatedBy": "admin",
     "queryWorkflow": {
       "_entityName": "supply$QueryWorkflow",
-      "id": "22b79782-de3f-7210-c80c-2c6df301496c"
+      "id": "8c12902e-9c16-4fc1-2b13-591ef466a767"
     },
     "destStage": "Analysis",
     "sourceStage": "SupSelection",
@@ -89,7 +89,7 @@
     "updatedBy": "admin",
     "queryWorkflow": {
       "_entityName": "supply$QueryWorkflow",
-      "id": "22b79782-de3f-7210-c80c-2c6df301496c"
+      "id": "8c12902e-9c16-4fc1-2b13-591ef466a767"
     },
     "destStage": "Comission",
     "sourceStage": "Analysis",
@@ -106,7 +106,7 @@
     "updatedBy": "admin",
     "queryWorkflow": {
       "_entityName": "supply$QueryWorkflow",
-      "id": "22b79782-de3f-7210-c80c-2c6df301496c"
+      "id": "8c12902e-9c16-4fc1-2b13-591ef466a767"
     },
     "destStage": "StoreControl",
     "sourceStage": "NomControl",
@@ -123,7 +123,7 @@
     "updatedBy": "admin",
     "queryWorkflow": {
       "_entityName": "supply$QueryWorkflow",
-      "id": "22b79782-de3f-7210-c80c-2c6df301496c"
+      "id": "8c12902e-9c16-4fc1-2b13-591ef466a767"
     },
     "destStage": "SupSelection",
     "sourceStage": "StoreControl",
@@ -139,7 +139,7 @@
     "id": "619bb9e1-e9e0-cafc-ccb5-0a698e821be7",
     "queryWorkflow": {
       "_entityName": "supply$QueryWorkflow",
-      "id": "22b79782-de3f-7210-c80c-2c6df301496c"
+      "id": "8c12902e-9c16-4fc1-2b13-591ef466a767"
     },
     "destStage": "Logistic",
     "sourceStage": "StoreControl",

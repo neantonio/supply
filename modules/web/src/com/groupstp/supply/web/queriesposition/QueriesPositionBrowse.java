@@ -520,7 +520,7 @@ public class QueriesPositionBrowse extends AbstractLookup {
 
     }
     /**
-     * проверка, что быбрана только одна строчка
+     * проверка, что выбрана только одна строчка
      * @author AntonLomako
      */
     private boolean checkSingleSelection(Collection selected){
@@ -532,7 +532,7 @@ public class QueriesPositionBrowse extends AbstractLookup {
     }
 
     /**
-     * проверка, что быбрана только хотя бы одна строчка
+     * проверка, что выбрана хотя бы одна строчка
      * @author AntonLomako
      */
     private boolean checkSelection(Collection selected){

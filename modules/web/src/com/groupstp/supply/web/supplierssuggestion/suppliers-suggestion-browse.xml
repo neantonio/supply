@@ -19,8 +19,11 @@ ss.posSup in (select ps from supply$PositionSupplier ps where ps.position in :pa
     <actions>
         <action id="commit"/>
     </actions>
-    <dialogMode height="600"
-                width="800"/>
+    <dialogMode closeable="true"
+                height="90%"
+                modal="false"
+                resizable="true"
+                width="90%"/>
     <layout expand="tab"
             spacing="true">
         <filter id="filter"

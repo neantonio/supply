@@ -189,6 +189,7 @@ create table SUPPLY_EMPLOYEE (
     DELETED_BY varchar(50),
     --
     USER_ID uuid,
+    EMAIL varchar(255),
     NAME varchar(50),
     FULL_NAME varchar(255),
     EXT_ID varchar(255),
