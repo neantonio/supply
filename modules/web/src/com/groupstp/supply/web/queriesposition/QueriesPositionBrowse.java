@@ -35,115 +35,10 @@ import java.util.stream.Collectors;
 public class QueriesPositionBrowse extends AbstractLookup {
 
     @Inject
-    private DataManager dataManager;
-
-    @Inject
-    private GroupDatasource<QueriesPosition, UUID> dsNomControl;
-
-    @Inject
-    private GroupDatasource<QueriesPosition, UUID> dsStoreControl;
-
-    @Inject
-    private GroupDatasource<QueriesPosition, UUID> dsSupSelection;
-
-    @Inject
-    private GroupDatasource<QueriesPosition, UUID> dsLogistic;
-
-    @Inject
-    private CollectionDatasource<QueryPositionStageData, UUID> dsLogisticStageData;
-
-    @Inject
-    private Button nextCargoState;
-
-    @Inject
-    private Button previousCargoState;
-
-    @Inject
-    private GroupBoxLayout cargoStateGroupBox;
-
-    @Inject
-    private VBoxLayout cargoStateGroupBoxTotalLayout;
-
-    @Inject
-    private GroupTable<QueriesPosition> positionsNomControl;
-
-    @Inject
-    private GroupTable<QueriesPosition> positionsStoreControl;
-
-    @Inject
-    private GroupTable<QueriesPosition> positionsSupSelection;
-
-    @Inject
-    private GroupTable<QueriesPosition> positionsLogistic;
-
-    @Inject
-    private GroupTable<QueriesPosition> positionsAnalysis;
-
-    @Inject
-    private GroupTable<QueriesPosition> positionsProcuration;
-
-    @Inject
-    private WorkflowService workflowService;
-
-    @Inject
-    private QueryDaoService queryDaoService;
-
-    @Inject
-    private QueryService queryService;
-
-    @Inject
-    private TabSheet tabs;
-
-    @Inject
-    private ComponentsFactory componentsFactory;
-
-    @Inject
-    private StageDataService stageDataService;
-
-    @Inject
-    private GroupTable<QueriesPosition> positionsBills;
-
-    @Inject
-    private Table<Bills> billsTable;
-
-    @Inject
-    private GroupDatasource<QueriesPosition, UUID> dsBills;
-
-    @Inject
-    private GroupDatasource<Bills, UUID> billsesDs;
-
-    @Inject
-    private DataSupplier dataSupplier;
-
-    @Inject
-    private FileUploadingAPI fileUploadingAPI;
-
-    @Inject
-    private ExportDisplay exportDisplay;
-
-    @Inject
-    private FileUploadField uploadField;
-
-    @Inject
-    private Button downloadImageBtn;
-
-    @Inject
-    private Button clearImageBtn;
-
-    @Inject
-    private Button OpenInNewTabBtn;
-
-    @Inject
-    private BrowserFrame imageForBill;
-
-    @Inject
-    private GroovyTestService groovyTestService;
-
-    List<Object> nomControlGroupOrder=new ArrayList<>();
-    List<Object> nomControlAvailableOrderItems=new ArrayList<>();
-
+    protected EmailService emailService;
+    List<Object> nomControlGroupOrder = new ArrayList<>();
+    List<Object> nomControlAvailableOrderItems = new ArrayList<>();
     Map<Object, String> nomControlAvailableOrderItemsDescription = new HashMap<>();
-
     //содержит пару: название данных/их тип
     Map<String, String> logisticStageDataItemsDescription = new HashMap<>();
     //список редактируемых полей
@@ -160,7 +55,6 @@ public class QueriesPositionBrowse extends AbstractLookup {
             "cargo_monitoring_url",
             "store_receive_flag",
             "cargo_state");
-
     //список обязательных для заполнения полей
     List<String> logisticStageRequiredFields = Arrays.asList(
             "destination_address",
@@ -173,47 +67,154 @@ public class QueriesPositionBrowse extends AbstractLookup {
             "fact_receive_date",
             "cargo_monitoring_id",
             "store_receive_flag");
-
     //карта актуальных stage data. нужно для нескольких транзакций подряд
     Map<QueriesPosition, QueryPositionStageData> stageDataMap = new HashMap<>();
     Map<Class, String> errorStyleMap = new HashMap<>();
     Map<QueriesPosition, List<Component>> componentsMapForValidation = new HashMap<>();
+    @Inject
+    private VoteService voteService;
+    @Inject
+    private GroupTable<QueriesPosition> positionsComission;
+    @Inject
+    private GroupDatasource dsComission;
+    @Inject
+    private Metadata metadata;
+    @Inject
+    private DataManager dataManager;
+    @Inject
+    private GroupDatasource<QueriesPosition, UUID> dsNomControl;
+    @Inject
+    private GroupDatasource<QueriesPosition, UUID> dsStoreControl;
+    @Inject
+    private GroupDatasource<QueriesPosition, UUID> dsSupSelection;
+    @Inject
+    private GroupDatasource<QueriesPosition, UUID> dsLogistic;
+    @Inject
+    private CollectionDatasource<QueryPositionStageData, UUID> dsLogisticStageData;
+    @Inject
+    private Button nextCargoState;
+    @Inject
+    private Button previousCargoState;
+    @Inject
+    private GroupBoxLayout cargoStateGroupBox;
+    @Inject
+    private VBoxLayout cargoStateGroupBoxTotalLayout;
+    @Inject
+    private GroupTable<QueriesPosition> positionsNomControl;
+    @Inject
+    private GroupTable<QueriesPosition> positionsStoreControl;
+    @Inject
+    private GroupTable<QueriesPosition> positionsSupSelection;
+    @Inject
+    private GroupTable<QueriesPosition> positionsLogistic;
+    @Inject
+    private GroupTable<QueriesPosition> positionsAnalysis;
+    @Inject
+    private GroupTable<QueriesPosition> positionsProcuration;
+    @Inject
+    private WorkflowService workflowService;
+    @Inject
+    private QueryDaoService queryDaoService;
+    @Inject
+    private QueryService queryService;
+    @Inject
+    private TabSheet tabs;
+    @Inject
+    private ComponentsFactory componentsFactory;
+    @Inject
+    private StageDataService stageDataService;
+    @Inject
+    private GroupTable<QueriesPosition> positionsBills;
+    @Inject
+    private Table<Bills> billsTable;
+    @Inject
+    private GroupDatasource<QueriesPosition, UUID> dsBills;
+    @Inject
+    private GroupDatasource<Bills, UUID> billsesDs;
+    @Inject
+    private DataSupplier dataSupplier;
+    @Inject
+    private FileUploadingAPI fileUploadingAPI;
+    @Inject
+    private ExportDisplay exportDisplay;
+    @Inject
+    private FileUploadField uploadField;
+    @Inject
+    private Button downloadImageBtn;
+    @Inject
+    private Button clearImageBtn;
 
-    private class QueryLinkGenerator implements Table.ColumnGenerator {
+    @Inject
+    private Button OpenInNewTabBtn;
 
-        /**
-         * Called by {@link Table} when rendering a column for which the generator was created.
-         *
-         * @param entity an entity instance represented by the current row
-         * @return a component to be rendered inside of the cell
-         */
-        @Override
-        public Component generateCell(Entity entity) {
-            Query q = ((QueriesPosition) entity).getQuery();
-            LinkButton lnk = (LinkButton) componentsFactory.createComponent(LinkButton.NAME);
-            lnk.setAction(new BaseAction("query").
-                    withCaption(q.getInstanceName()).
-                    withHandler(e -> openEditor(q, WindowManager.OpenType.DIALOG)));
-            return lnk;
-        }
-    }
+    @Inject
+    private BrowserFrame imageForBill;
 
-    private class OpenLinkGenerator implements Table.ColumnGenerator {
+    @Inject
+    private GroovyTestService groovyTestService;
+    private int selectedState;
 
-        /**
-         * Called by {@link Table} when rendering a column for which the generator was created.
-         *
-         * @param entity an entity instance represented by the current row
-         * @return a component to be rendered inside of the cell
-         */
-        @Override
-        public Component generateCell(Entity entity) {
-            LinkButton lnk = (LinkButton) componentsFactory.createComponent(LinkButton.NAME);
-            lnk.setAction(new BaseAction("Ссылка").
-                    withCaption("Открыть").
-                    withHandler(e-> openEditor(entity, WindowManager.OpenType.DIALOG)));
-            return lnk;
-        }
+    @Override
+    public void init(Map<String, Object> params) {
+
+        initLogisticStageTable();
+        initSupSelectionStageTable();
+
+        addPositionStateStyleProviderForTable(positionsNomControl);
+        addPositionStateStyleProviderForTable(positionsStoreControl);
+        addPositionStateStyleProviderForTable(positionsComission);
+        addPositionStateStyleProviderForTable(positionsSupSelection);
+        addPositionStateStyleProviderForTable(positionsBills);
+        addPositionStateStyleProviderForTable(positionsLogistic);
+
+
+        //Генерируемая колонка "Сумма"
+        positionsBills.addGeneratedColumn("Сумма", new Table.PrintableColumnGenerator<QueriesPosition, String>() {
+            @Override
+            public Component generateCell(QueriesPosition entity) {
+                Label label = (Label) componentsFactory.createComponent(Label.NAME);
+                if (entity.getVoteResult() == null) {
+                    return label;
+                }
+                label.setValue(entity.getVoteResult().getPrice() * entity.getVoteResult().getQuantity());
+                return label;
+            }
+
+            @Override
+            public String getValue(QueriesPosition entity) {
+                if (entity.getVoteResult() == null) {
+                    return null;
+                }
+                return Double.toString(entity.getVoteResult().getPrice() * entity.getVoteResult().getQuantity());
+            }
+        });
+
+        // События при клике на счет
+        billsTable.setClickListener("number", (item, columnId) -> setClickListenerToBills(item, columnId));
+        billsTable.setClickListener("timePayment", (item, columnId) -> setClickListenerToBills(item, columnId));
+        billsTable.setClickListener("amount", (item, columnId) -> setClickListenerToBills(item, columnId));
+        billsTable.setClickListener("sumControl", (item, columnId) -> setClickListenerToBills(item, columnId));
+        billsTable.setClickListener("supplier", (item, columnId) -> setClickListenerToBills(item, columnId));
+        billsTable.setClickListener("company", (item, columnId) -> setClickListenerToBills(item, columnId));
+
+        //Значки прикрепления счета
+        positionsBills.setIconProvider(new Table.IconProvider<QueriesPosition>() {
+            @Nullable
+            @Override
+            public String getItemIcon(QueriesPosition entity) {
+                return entity.getBills() != null ? "icons/ok.png" : "icons/cancel.png";
+            }
+        });
+
+        //Вывод изображения счета
+        uploadField.addFileUploadSucceedListener(event -> uploadFieldListenerRealization());
+
+        //Оповещение об ошибках загрузки файла
+        uploadField.addFileUploadErrorListener(event ->
+                showNotification("File upload error", NotificationType.HUMANIZED));
+
+        initReturnButtons();
+        addLinkOpenButton();
     }
 
     @Override
@@ -519,31 +520,34 @@ public class QueriesPositionBrowse extends AbstractLookup {
         );
 
     }
+
     /**
      * проверка, что выбрана только одна строчка
+     *
      * @author AntonLomako
      */
-    private boolean checkSingleSelection(Collection selected){
-        if(selected.size()==1) return true;
+    private boolean checkSingleSelection(Collection selected) {
+        if (selected.size() == 1) return true;
         else {
-            showNotification(messages.getMainMessage("select_only_one"),NotificationType.WARNING);
+            showNotification(messages.getMainMessage("select_only_one"), NotificationType.WARNING);
             return false;
         }
     }
 
     /**
      * проверка, что выбрана хотя бы одна строчка
+     *
      * @author AntonLomako
      */
-    private boolean checkSelection(Collection selected){
-        if(selected.size()>0) return true;
+    private boolean checkSelection(Collection selected) {
+        if (selected.size() > 0) return true;
         else {
-            showNotification(messages.getMainMessage("select_position_first"),NotificationType.WARNING);
+            showNotification(messages.getMainMessage("select_position_first"), NotificationType.WARNING);
             return false;
         }
     }
 
-    private void addPositionStateStyleProviderForTable(Table<QueriesPosition> table){
+    private void addPositionStateStyleProviderForTable(Table<QueriesPosition> table) {
         table.addStyleProvider((entity, property) -> {
 
             if (property == null) {
@@ -564,19 +568,18 @@ public class QueriesPositionBrowse extends AbstractLookup {
         });
     }
 
-
     /**
      * @author AntonLomako
      * инициализация таблицы подбора поставщиков
      * добавление подсветки зеленым если больше 3х поставщиков
      */
-    private void initSupSelectionStageTable(){
+    private void initSupSelectionStageTable() {
         positionsSupSelection.addStyleProvider((entity, property) -> {
 
             if (property == null) {
-                List list=queryDaoService.getSupplierSuggestions(entity);
-                if (list.size()>2) {
-                        return "three-sup";
+                List list = queryDaoService.getSupplierSuggestions(entity);
+                if (list.size() > 2) {
+                    return "three-sup";
                 }
 
             } else if (property.equals("grade")) {
@@ -619,8 +622,6 @@ public class QueriesPositionBrowse extends AbstractLookup {
         });
         refreshLogistic();
     }
-
-    private int selectedState;
 
     private int getSelectedState() {
         return selectedState;
@@ -844,11 +845,6 @@ public class QueriesPositionBrowse extends AbstractLookup {
 
     }
 
-    interface SomeAction {
-        void execute(Map map);
-    }
-
-
     //создает окно с перетаскиваемыми элементыми. при завершении выполняет SomeAction с параметром Map, в котором будет запись currentOrder - результирующий порядок
     public void createGroupOrderDialog(List<Object> currentOrder, List<Object> availableOrderItems, Map<Object, String> itemDescription, SomeAction okAction) {
 
@@ -892,8 +888,7 @@ public class QueriesPositionBrowse extends AbstractLookup {
     /**
      * Проставляем queryLink в остальных таблицах, где еще нет.
      */
-
-    private void addLinkOpenButton(){
+    private void addLinkOpenButton() {
         final String title = "Ссылка";
         positionsNomControl.addGeneratedColumn(title, new OpenLinkGenerator());
         positionsStoreControl.addGeneratedColumn(title, new OpenLinkGenerator());
@@ -909,7 +904,7 @@ public class QueriesPositionBrowse extends AbstractLookup {
     public void onBtnSetQueryUsefulnessClick() {
 
 
-        if(!checkSingleSelection(positionsNomControl.getSelected())) return;
+        if (!checkSingleSelection(positionsNomControl.getSelected())) return;
         QueriesPosition position = positionsNomControl.getSingleSelected();
         dsNomControl.getChildItems(dsNomControl.getParentGroup(position)).forEach(entity -> {
             entity.setValue("positionUsefulness", true);
@@ -997,12 +992,7 @@ public class QueriesPositionBrowse extends AbstractLookup {
         );
     }
 
-    interface SomeDialogAction {
-        void call();
-    }
-
-
-    public void onBtnCancelClick() throws Exception{
+    public void onBtnCancelClick() throws Exception {
         movePositionsToCancelStage();
     }
 
@@ -1010,7 +1000,7 @@ public class QueriesPositionBrowse extends AbstractLookup {
         GroupTable<QueriesPosition> grpTab = getOpenedStageTable();
         Set<QueriesPosition> positions = grpTab.getSelected();
         for (QueriesPosition position : positions) {
-            movePositionTo(position,Stages.Abortion);
+            movePositionTo(position, Stages.Abortion);
         }
     }
 
@@ -1019,11 +1009,10 @@ public class QueriesPositionBrowse extends AbstractLookup {
         return grpTab.getSelected();
     }
 
-
     private void movePositions() throws Exception {
         GroupTable<QueriesPosition> grpTab = getOpenedStageTable();
 
-        if(!checkSelection(grpTab.getSelected()))return;
+        if (!checkSelection(grpTab.getSelected())) return;
 
         GroupDatasource ds = grpTab.getDatasource();
         Set<QueriesPosition> positions = grpTab.getSelected();
@@ -1035,80 +1024,68 @@ public class QueriesPositionBrowse extends AbstractLookup {
         ds.refresh();
     }
 
-    private void movePositionTo(QueriesPosition position,Stages stage) {
+    private void movePositionTo(QueriesPosition position, Stages stage) {
         GroupTable<QueriesPosition> grpTab = getOpenedStageTable();
         GroupDatasource ds = grpTab.getDatasource();
-        workflowService.movePositionTo(position,stage);
+        workflowService.movePositionTo(position, stage);
         ds.refresh();
     }
 
-    private void initReturnButtons(){
+    private void initReturnButtons() {
         Collection<TabSheet.Tab> tabsColl = tabs.getTabs();
         tabsColl.forEach((t) -> {
             try {
                 PopupButton returnButton = (PopupButton) getComponentNN("btnReturn_" + t.getName());
 
-            returnButton.addPopupVisibilityListener((e) -> {
-                returnButton.removeAllActions();
-                if(returnButton.isPopupVisible()){
-                    try {
-                        Set<QueriesPosition> selected = getSelectedPosition();
-                        if(selected.size() > 1){
-                            showNotification("Выберите только одну позицию");
-                            return;
-                        }
-                        else if(selected.size() == 0){
-                            showNotification("Выберите позицию");
-                            return;
-                        }
-                        else {
-                            QueriesPosition position = selected.iterator().next();
-                            Stages curStage =  position.getCurrentStage();
-                            List<QueryPositionMovements> movements = workflowService.getQueryPositionMovement(position);
-                            movements.forEach((i)->{
-                                //Delete current stage
-                                if(curStage.getId().equals(i.getStage().getId()))
-                                    return;
-                                returnButton.addAction(new BaseAction(i.getStage().getId()) {
-                                    @Override
-                                    public void actionPerform(Component component) {
-                                        movePositionTo(position,i.getStage());
+                returnButton.addPopupVisibilityListener((e) -> {
+                    returnButton.removeAllActions();
+                    if (returnButton.isPopupVisible()) {
+                        try {
+                            Set<QueriesPosition> selected = getSelectedPosition();
+                            if (selected.size() > 1) {
+                                showNotification("Выберите только одну позицию");
+                                return;
+                            } else if (selected.size() == 0) {
+                                showNotification("Выберите позицию");
+                                return;
+                            } else {
+                                QueriesPosition position = selected.iterator().next();
+                                Stages curStage = position.getCurrentStage();
+                                List<QueryPositionMovements> movements = workflowService.getQueryPositionMovement(position);
+                                movements.forEach((i) -> {
+                                    //Delete current stage
+                                    if (curStage.getId().equals(i.getStage().getId()))
+                                        return;
+                                    returnButton.addAction(new BaseAction(i.getStage().getId()) {
+                                        @Override
+                                        public void actionPerform(Component component) {
+                                            movePositionTo(position, i.getStage());
 
-                                    }
+                                        }
+                                    });
                                 });
-                            });
+                            }
+
+                        } catch (Exception ex) {
+
                         }
-
+                    } else {
+                        //Приходится добавлять пустое действие, без него не срабатывает PopupVisibilityListener
+                        returnButton.addAction(new BaseAction("blankAction") {
+                            @Override
+                            public void actionPerform(Component component) {
+                            }
+                        });
                     }
-                    catch (Exception ex){
+                });
 
-                    }
-                }
-                else {
-                    //Приходится добавлять пустое действие, без него не срабатывает PopupVisibilityListener
-                    returnButton.addAction(new BaseAction("blankAction") {
-                        @Override
-                        public void actionPerform(Component component) {
-                        }
-                    });
-                }
-            });
-
-            }
-            catch (IllegalArgumentException e){
+            } catch (IllegalArgumentException e) {
 
             }
         });
 
 
     }
-
-    /**
-     * Обработчик нажатия кнопки Возврат.
-     * Записывает изменния таблицы в БД.
-     */
-  //  public void onBtnReturnClick() {
-   // }
 
     /**
      * Обработчик нажатия кнопки Записать.
@@ -1154,9 +1131,6 @@ public class QueriesPositionBrowse extends AbstractLookup {
         tab.getDatasource().addItem(copy);
     }
 
-    @Inject
-    private Metadata metadata;
-
     /**
      * Копирует текущую позицию
      *
@@ -1182,7 +1156,7 @@ public class QueriesPositionBrowse extends AbstractLookup {
     public void onBtnSuppliersClick() {
         GroupTable tab = getOpenedStageTable();
 
-        if (!checkSelection(tab.getSelected()))return;
+        if (!checkSelection(tab.getSelected())) return;
 
         HashMap<String, Object> items = new HashMap<>();
         items.put("positions", tab.getSelected());
@@ -1195,20 +1169,14 @@ public class QueriesPositionBrowse extends AbstractLookup {
     public void onBtnSuggestionsClick() {
         GroupTable tab = getOpenedStageTable();
 
-        if (!checkSelection(tab.getSelected()))return;
+        if (!checkSelection(tab.getSelected())) return;
 
         HashMap<String, Object> items = new HashMap<>();
         items.put("positions", tab.getSelected());
-        openWindow("supply$SuppliersSuggestion.browse", WindowManager.OpenType.DIALOG, items).addCloseListener((event)->{
-                dsSupSelection.refresh();
+        openWindow("supply$SuppliersSuggestion.browse", WindowManager.OpenType.DIALOG, items).addCloseListener((event) -> {
+            dsSupSelection.refresh();
         });
     }
-
-    @Inject
-    private GroupTable<QueriesPosition> positionsComission;
-
-    @Inject
-    private GroupDatasource dsComission;
 
     /**
      * Открывает голосование
@@ -1225,18 +1193,6 @@ public class QueriesPositionBrowse extends AbstractLookup {
     }
 
     /**
-     * Обработчик нажатия кнопки Готово на вкладке Закупочная комиссия
-     *
-     * @throws Exception
-     */
-    public void onBtnDoneClickComission() throws Exception {
-        setVote();
-    }
-
-    @Inject
-    private VoteService voteService;
-
-    /**
      * Записывает голос, если есть победитель в QP
      *
      * @throws Exception
@@ -1251,72 +1207,6 @@ public class QueriesPositionBrowse extends AbstractLookup {
         }
         ds.refresh();
     }
-
-
-    @Override
-    public void init(Map<String, Object> params) {
-
-        initLogisticStageTable();
-        initSupSelectionStageTable();
-
-        addPositionStateStyleProviderForTable(positionsNomControl);
-        addPositionStateStyleProviderForTable(positionsStoreControl);
-        addPositionStateStyleProviderForTable(positionsComission);
-        addPositionStateStyleProviderForTable(positionsSupSelection);
-        addPositionStateStyleProviderForTable(positionsBills);
-        addPositionStateStyleProviderForTable(positionsLogistic);
-
-
-        //Генерируемая колонка "Сумма"
-        positionsBills.addGeneratedColumn("Сумма", new Table.PrintableColumnGenerator<QueriesPosition, String>() {
-            @Override
-            public Component generateCell(QueriesPosition entity) {
-                Label label = (Label) componentsFactory.createComponent(Label.NAME);
-                if (entity.getVoteResult() == null) {
-                    return label;
-                }
-                label.setValue(entity.getVoteResult().getPrice() * entity.getVoteResult().getQuantity());
-                return label;
-            }
-
-            @Override
-            public String getValue(QueriesPosition entity) {
-                if (entity.getVoteResult() == null) {
-                    return null;
-                }
-                return Double.toString(entity.getVoteResult().getPrice() * entity.getVoteResult().getQuantity());
-            }
-        });
-
-        // События при клике на счет
-        billsTable.setClickListener("number", (item, columnId) -> setClickListenerToBills(item, columnId));
-        billsTable.setClickListener("timePayment", (item, columnId) -> setClickListenerToBills(item, columnId));
-        billsTable.setClickListener("amount", (item, columnId) -> setClickListenerToBills(item, columnId));
-        billsTable.setClickListener("sumControl", (item, columnId) -> setClickListenerToBills(item, columnId));
-        billsTable.setClickListener("supplier", (item, columnId) -> setClickListenerToBills(item, columnId));
-        billsTable.setClickListener("company", (item, columnId) -> setClickListenerToBills(item, columnId));
-
-        //Значки прикрепления счета
-        positionsBills.setIconProvider(new Table.IconProvider<QueriesPosition>() {
-            @Nullable
-            @Override
-            public String getItemIcon(QueriesPosition entity) {
-                return entity.getBills() != null ? "icons/ok.png" : "icons/cancel.png";
-            }
-        });
-
-        //Вывод изображения счета
-        uploadField.addFileUploadSucceedListener(event -> uploadFieldListenerRealization());
-
-        //Оповещение об ошибках загрузки файла
-        uploadField.addFileUploadErrorListener(event ->
-                showNotification("File upload error", NotificationType.HUMANIZED));
-
-        initReturnButtons();
-        addLinkOpenButton();
-    }
-
-
 
     /**
      * @param item     - счет
@@ -1550,16 +1440,13 @@ public class QueriesPositionBrowse extends AbstractLookup {
         dsBills.refresh();
     }
 
-    @Inject
-    protected EmailService emailService;
-
     /**
      * @author Andrey Kolosov
      * Отправка писем поставщикам
      */
     public void onBtnSendEmail() {
 
-        if (!checkSelection(positionsBills.getSelected()))return;
+        if (!checkSelection(positionsBills.getSelected())) return;
         Set<QueriesPosition> setPosition = positionsBills.getSelected();
 
         //Шаблоны
@@ -1646,5 +1533,50 @@ public class QueriesPositionBrowse extends AbstractLookup {
         openWindow("supply$Delivery.browse", WindowManager.OpenType.DIALOG, items).addCloseListener(event -> {
             tab.getDatasource().refresh();
         });
+    }
+
+    interface SomeAction {
+        void execute(Map map);
+    }
+
+    interface SomeDialogAction {
+        void call();
+    }
+
+    private class QueryLinkGenerator implements Table.ColumnGenerator {
+
+        /**
+         * Called by {@link Table} when rendering a column for which the generator was created.
+         *
+         * @param entity an entity instance represented by the current row
+         * @return a component to be rendered inside of the cell
+         */
+        @Override
+        public Component generateCell(Entity entity) {
+            Query q = ((QueriesPosition) entity).getQuery();
+            LinkButton lnk = (LinkButton) componentsFactory.createComponent(LinkButton.NAME);
+            lnk.setAction(new BaseAction("query").
+                    withCaption(q.getInstanceName()).
+                    withHandler(e -> openEditor(q, WindowManager.OpenType.DIALOG)));
+            return lnk;
+        }
+    }
+
+    private class OpenLinkGenerator implements Table.ColumnGenerator {
+
+        /**
+         * Called by {@link Table} when rendering a column for which the generator was created.
+         *
+         * @param entity an entity instance represented by the current row
+         * @return a component to be rendered inside of the cell
+         */
+        @Override
+        public Component generateCell(Entity entity) {
+            LinkButton lnk = (LinkButton) componentsFactory.createComponent(LinkButton.NAME);
+            lnk.setAction(new BaseAction("Ссылка").
+                    withCaption("Открыть").
+                    withHandler(e -> openEditor(entity, WindowManager.OpenType.DIALOG)));
+            return lnk;
+        }
     }
 }
