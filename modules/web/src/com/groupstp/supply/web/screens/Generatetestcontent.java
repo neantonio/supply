@@ -88,11 +88,4 @@ public class Generatetestcontent extends AbstractWindow {
 
 
 
-    public void onBeginNotifyClick() {
-        taskService.beginEmailNotificationOnAnalysisTimeRunningOut();
-    }
-
-    public void onStopNotifyClick() {
-        taskService.stopEmailNotificationOnAnalysisTimeRunningOut();
-    }
 }

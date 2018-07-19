@@ -24,14 +24,7 @@ import java.util.concurrent.ScheduledFuture;
 @Service(TaskService.NAME)
 public class TaskServiceBean implements TaskService {
 
-@Autowired
-private ApplicationContext applicationContext;
 
-
-    @Autowired
-    private TaskScheduler taskScheduler;
-
-    private long positionCheckTimeoutMs=10*60*1000;   //10 min
     private long notifyTimeOffset=2*60*60*1000;  //2h
     private String emailConsumer;
 
@@ -51,63 +44,53 @@ private ApplicationContext applicationContext;
     @Inject
     private EmailService emailService;
 
+    /**
+     * проверяет позиции на этапе аналити, если время нах-я позиции на этапе скоро заканчивается,
+     * то отправляется уведомление по почте, если уже закончилось, то позиция переводится дадьше
+     */
     @Override
-    public void beginEmailNotificationOnAnalysisTimeRunningOut(){
+    public void checkAnalysisTime(){
 
-        if(notificationOnAnalysisRunningOutTask==null){
-           notificationOnAnalysisRunningOutTask= taskScheduler.scheduleWithFixedDelay(()->{
-
-               //накапливаем  позиции во время проверки. потом одним письмом все отправляем
-               List <QueriesPosition> positionsToNotify=new ArrayList<QueriesPosition>();
+        //накапливаем  позиции во время проверки. потом одним письмом все отправляем
+        List <QueriesPosition> positionsToNotify=new ArrayList<QueriesPosition>();
 
 
-               List<QueriesPosition> positionsWithExpiringTime=new ArrayList<>();
-               List<QueriesPosition> positions=queryDaoService.getQueryPositionsByStage(Stages.Analysis);
-               positions.forEach(item->{
-                   if(queryService.getPassedTimeFromStageBegin(item)<queryDaoService.getTimeForPositionStage(item)*60*60*1000) {
-                       if (queryService.getPassedTimeFromStageBegin(item) - queryDaoService.getTimeForPositionStage(item) * 60 * 60 * 1000 < notifyTimeOffset) {
+        List<QueriesPosition> positionsWithExpiredTime=new ArrayList<>();
+        List<QueriesPosition> positions=queryDaoService.getQueryPositionsByStage(Stages.Analysis);
+        positions.forEach(item->{
+            if(queryService.getPassedTimeFromStageBegin(item)<queryDaoService.getTimeForPositionStage(item)*60*60*1000) {
+                if (queryService.getPassedTimeFromStageBegin(item) - queryDaoService.getTimeForPositionStage(item) * 60 * 60 * 1000 < notifyTimeOffset) {
 
-                           //если во аремя предыдущей проверки по позиции было уведомление, она будет в этом списке
-                           if (!latestPositionCalledNotification.contains(item)) {
-                               positionsToNotify.add(item);
-                               latestPositionCalledNotification.add(item);
-                           }
-                       }
-                   }
-                   else{
-                       //если позиция просрочилась,переводим ее на следующий этап и убираем ее из списка latestPositionCalledNotification
-                       latestPositionCalledNotification.remove(item);
-                       try {
-                           workflowService.movePosition(item);
-                       } catch (Exception e) {
-                           //// TODO: 19.07.2018 надо как-то уведомить, что позиция не ушла
-                           e.printStackTrace();
-                       }
-                   }
-               });
+                    //если во аремя предыдущей проверки по позиции было уведомление, она будет в этом списке
+                    if (!latestPositionCalledNotification.contains(item)) {
+                        positionsToNotify.add(item);
+                        latestPositionCalledNotification.add(item);
+                    }
+                }
+            }
+            else{
+                //если позиция просрочилась,переводим ее на следующий этап и убираем ее из списка latestPositionCalledNotification
+                latestPositionCalledNotification.remove(item);
+                positionsWithExpiredTime.add(item);
+                try {
+                    workflowService.movePosition(item);
+                } catch (Exception e) {
+                    //// TODO: 19.07.2018 надо как-то уведомить, что позиция не ушла
 
-               String positionsNames="";
-               for(QueriesPosition position:positionsToNotify){
-                   positionsNames=position.getQueriesPositionName()+"\n";
-               }
-               if(positionsToNotify.size()>0){
-                   //// TODO: 19.07.2018 жуткий хардкод
-                   sendEmail(emailConsumer,"Таймаут аналиники","Внимание! Переод аналитики заканчивается у позиций: "+"\n"+positionsNames);
-               }
+                }
+            }
+        });
 
-            },positionCheckTimeoutMs);
+        String positionsNames="";
+        for(QueriesPosition position:positionsToNotify){
+            positionsNames=positionsNames+position.getQueriesPositionName()+"\n";
+        }
+        if(positionsToNotify.size()>0){
+            //// TODO: 19.07.2018 жуткий хардкод
+            sendEmail(emailConsumer,"Таймаут аналиники","Внимание! Переод аналитики заканчивается у позиций: "+"\n"+positionsNames);
         }
 
     }
-
-    @Override
-    public void stopEmailNotificationOnAnalysisTimeRunningOut(){
-        if(notificationOnAnalysisRunningOutTask!=null) {
-            notificationOnAnalysisRunningOutTask.cancel(false);
-            notificationOnAnalysisRunningOutTask=null;
-        }
-    }
-
 
 
     private void sendEmail(String target,String theme,String content){

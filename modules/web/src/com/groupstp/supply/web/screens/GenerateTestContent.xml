@@ -27,13 +27,5 @@
                     caption="очистить базу"
                     invoke="onClear"/>
         </buttonsPanel>
-        <buttonsPanel>
-            <button id="beginNotify"
-                    caption="начать уведомление"
-                    invoke="onBeginNotifyClick"/>
-            <button id="stopNotify"
-                    caption="остановить уведомление"
-                    invoke="onStopNotifyClick"/>
-        </buttonsPanel>
     </layout>
 </window>
