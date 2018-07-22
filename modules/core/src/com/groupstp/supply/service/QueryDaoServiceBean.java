@@ -154,6 +154,11 @@ public class QueryDaoServiceBean implements QueryDaoService {
         else return "supply$";
     }
 
+    /**
+     * @Author Andrey Kolosov
+     * @param date Проверяемый день
+     * @return возвращает день праздника, если он есть
+     */
     @Override
     public Holiday getHoliday(Date date) {
         if((date==null))return null;

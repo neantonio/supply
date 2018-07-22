@@ -1079,7 +1079,7 @@ public class QueriesPositionBrowse extends AbstractLookup {
         billsTable.setClickListener("number", (item, columnId) -> setClickListenerToBills(item, columnId));
         billsTable.setClickListener("timePayment", (item, columnId) -> setClickListenerToBills(item, columnId));
         billsTable.setClickListener("amount", (item, columnId) -> setClickListenerToBills(item, columnId));
-        billsTable.setClickListener("sumControl", (item, columnId) -> setClickListenerToBills(item, columnId));
+//        billsTable.setClickListener("sumControl", (item, columnId) -> setClickListenerToBills(item, columnId));
         billsTable.setClickListener("supplier", (item, columnId) -> setClickListenerToBills(item, columnId));
         billsTable.setClickListener("company", (item, columnId) -> setClickListenerToBills(item, columnId));
 
@@ -1416,15 +1416,14 @@ public class QueriesPositionBrowse extends AbstractLookup {
         Double positionSum = list.stream().mapToDouble(q ->
                 q.getVoteResult().getPrice() * q.getVoteResult().getQuantity()).sum();
 
-
         if (Math.abs(positionSum / billSum - 1) > 0.01) {
             showNotification(getMessage("Контроль суммы не пройден"), NotificationType.WARNING);
         } else {
-            currentBill.setSumControl(true);
-            billsesDs.commit();
             for (QueriesPosition p : list) {
                 workflowService.movePosition(p);
             }
+            currentBill.setSumControl(true);
+            billsesDs.commit();
         }
         billsesDs.refresh();
         dsBills.refresh();
@@ -1432,7 +1431,7 @@ public class QueriesPositionBrowse extends AbstractLookup {
 
     /**
      * @author Andrey Kolosov
-     * Открывает список грузов
+     * Открывает список поставок
      */
     public void onBtnDeliveryClick() {
         GroupTable tab = getOpenedStageTable();

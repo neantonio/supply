@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<window xmlns="http://schemas.haulmont.com/cuba/window.xsd"
+        caption="msg://editorCaption"
+        class="com.groupstp.supply.web.settings.SettingsEdit"
+        datasource="settingsDs"
+        focusComponent="fieldGroup"
+        messagesPack="com.groupstp.supply.web.settings">
+    <dsContext>
+        <datasource id="settingsDs"
+                    class="com.groupstp.supply.entity.Settings"
+                    view="settings-view"/>
+    </dsContext>
+    <dialogMode height="600"
+                width="800"/>
+    <layout expand="fieldGroup"
+            spacing="true">
+        <fieldGroup id="fieldGroup"
+                    datasource="settingsDs">
+            <column>
+                <field property="key"/>
+                <field property="suppliers"/>
+                <field property="text"/>
+                <field property="division"/>
+                <field property="booleanValue" />
+                <field property="bigDecimalValue"/>
+                <field property="dateTimeValue"/>
+                <field property="dateValue"/>
+                <field property="doubleValue"/>
+                <field property="integerValue"/>
+                <field property="longValue"/>
+                <field property="timeValue"/>
+                <field property="analogs"/>
+                <field property="company"/>
+                <field property="queriesPosition"/>
+            </column>
+            <column>
+                <field property="query"/>
+                <field property="queryPositionMovements"/>
+                <field property="queryPositionStageData"/>
+                <field property="queryPositionStageDataItem"/>
+                <field property="queryWorkflow"/>
+                <field property="queryWorkflowDetail"/>
+                <field property="stageTerm"/>
+                <field property="store"/>
+                <field property="suppliersSuggestion"/>
+                <field property="urgency"/>
+                <field property="vote"/>
+                <field property="analysisResult"/>
+                <field property="cargoState"/>
+                <field property="causes"/>
+                <field property="origin"/>
+            </column>
+            <column>
+                <field property="peridiocities"/>
+                <field property="positionType"/>
+                <field property="queryStatus"/>
+                <field property="stages"/>
+                <field property="supplyWorkoutType"/>
+                <field property="bills"/>
+                <field property="delivery"/>
+                <field property="deliveryLine"/>
+                <field property="employee"/>
+                <field property="holiday"/>
+                <field property="measureUnits"/>
+                <field property="nomenclature"/>
+                <field property="positionSupplier"/>
+                <field property="positionsAnalogs"/>
+                <field property="procuration"/>
+            </column>
+        </fieldGroup>
+        <buttonsPanel align="BOTTOM_LEFT">
+            <button id="buttonOk"
+                    caption="Ok"
+                    description="OK"
+                    invoke="onOkBtnClick"/>
+            <button id="buttonCancel"
+                    action="windowClose"
+                    caption="Cancel"
+                    description="Cancel"/>
+            <button id="buttonClearBoolean"
+                    invoke="onClearBooleanBtnClick"
+                    caption="Убрать boolean"/>
+        </buttonsPanel>
+    </layout>
+</window>

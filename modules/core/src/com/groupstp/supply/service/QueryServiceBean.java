@@ -244,7 +244,7 @@ public class QueryServiceBean implements QueryService {
      * @param startTimeWork Время начала рабочего дня
      * @param endTimeWork Время окончания рабочего дня
      * @param lunchTime время обеда
-     * @param lunchDuration продолжительность обеда (в часах)
+     * @param lunchDuration продолжительность обеда (в минутах)
      * @return рабочее время в миллисекундах
      */
     @Override
@@ -255,19 +255,24 @@ public class QueryServiceBean implements QueryService {
         LocalDateTime end = Instant.ofEpochMilli(endDate.getTime())
                 .atZone(ZoneId.systemDefault())
                 .toLocalDateTime();
+        //Обнуляем секунды
         start = start.withSecond(0).withNano(0);
         end = end.withSecond(0).withNano(0);
+        //Если конец позже начала
         if (start.isAfter(end)||start.equals(end)) {
             return 0;
         }
         System.out.println("Считаем с "+start+" до "+end);
+        //Получаем список дней
         List<LocalDate> localDateList = getDatesBetweenUsingJava8(start.toLocalDate(), end.toLocalDate());
+
+        LocalTime endTimeWorkCorrect = LocalTime.from(endTimeWork);
         LocalTime currentStartTime = start.toLocalTime();
         LocalTime currentEndTime = end.toLocalTime();
-        LocalTime endTimeWorkCorrect = LocalTime.from(endTimeWork);
+
         long time = 0;
         long timeSum = 0;
-        long workTimeInDay = ChronoUnit.MILLIS.between(endTimeWork,startTimeWork);
+        long workTimeInDay = ChronoUnit.MILLIS.between(endTimeWorkCorrect,startTimeWork);
 
         for (LocalDate date : localDateList) {
             System.out.println(date);
@@ -275,6 +280,9 @@ public class QueryServiceBean implements QueryService {
             int specialDayHours = isSpecialDay(date);
             if (specialDayHours==0) {
                 System.out.println("Не работаем");
+                currentStartTime = startTimeWork;
+                currentEndTime = end.toLocalTime();
+                endTimeWorkCorrect = endTimeWork;
                 continue;
             }
             if (specialDayHours<0) {
@@ -291,36 +299,32 @@ public class QueryServiceBean implements QueryService {
                 currentEndTime = endTimeWorkCorrect;
             }
 
+            if (currentStartTime.isAfter(endTimeWorkCorrect)) {
+                currentStartTime = startTimeWork;
+                currentEndTime = end.toLocalTime();
+                endTimeWorkCorrect = endTimeWork;
+                continue;
+            }
+            if (currentStartTime.isAfter(currentEndTime)) {
+                System.out.println("Рабочих минут за период: "+TimeUnit.MILLISECONDS.toMinutes(timeSum));
+                return timeSum;
+            }
             //Время с которого в этот день работают
             System.out.print("Работаем с "+currentStartTime);
             //Время до которого в этот день работают
             System.out.println(" до "+currentEndTime);
 
             //вычитание обеда
-            //Если обед попадает в промежуток
-            if (lunchTime.isAfter(currentStartTime)&&lunchTime.isBefore(currentEndTime)) {
-                //Если обед с продолжительностью позже времени конца
-                if (lunchTime.plusHours(lunchDuration).isAfter(currentEndTime)) {
-                    time = ChronoUnit.MILLIS.between(currentStartTime, lunchTime);
-                }
-                //Если время конца позже обеда
-                else {
-                    time = TimeUnit.HOURS.toMillis(ChronoUnit.HOURS.between(currentStartTime, currentEndTime)-lunchDuration);
-                }
-                //Если обед не попадает в промежуток
-            } else {
-                time = ChronoUnit.MILLIS.between(currentStartTime, currentEndTime);
-            }
+            time = lunchTimeCount(lunchTime, currentStartTime, currentEndTime, lunchDuration);
 
             timeSum+=time;
-            System.out.println("Рабочих часов в день: "+TimeUnit.MILLISECONDS.toHours(time));
+            System.out.println("Рабочих минут в день: "+TimeUnit.MILLISECONDS.toMinutes(time));
             currentStartTime = startTimeWork;
             currentEndTime = end.toLocalTime();
-            endTimeWorkCorrect = LocalTime.from(endTimeWork);
+            endTimeWorkCorrect = endTimeWork;
         }
 
-        System.out.println("Рабочих часов за период: "+TimeUnit.MILLISECONDS.toHours(timeSum));
-
+        System.out.println("Рабочих минут за период: "+TimeUnit.MILLISECONDS.toMinutes(timeSum));
         return timeSum;
     }
 
@@ -359,5 +363,24 @@ public class QueryServiceBean implements QueryService {
             }
             return 24;
         }
+    }
+
+    private long lunchTimeCount(LocalTime lunchTime, LocalTime currentStartTime, LocalTime currentEndTime, int lunchDuration) {
+        long time;
+        //Если обед попадает в промежуток
+        if (lunchTime.isAfter(currentStartTime)&&lunchTime.isBefore(currentEndTime)) {
+            //Если обед с продолжительностью позже времени конца
+            if (lunchTime.plusMinutes(lunchDuration).isAfter(currentEndTime)) {
+                time = ChronoUnit.MILLIS.between(currentStartTime, lunchTime);
+            }
+            //Если время конца позже обеда
+            else {
+                time = TimeUnit.MINUTES.toMillis(ChronoUnit.MINUTES.between(currentStartTime, currentEndTime)-lunchDuration);
+            }
+            //Если обед не попадает в промежуток
+        } else {
+            time = ChronoUnit.MILLIS.between(currentStartTime, currentEndTime);
+        }
+        return time;
     }
 }

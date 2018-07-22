@@ -48,7 +48,7 @@
             </buttonsPanel>
         </groupTable>
         <button id="buttonAddDelivery"
-                caption="Прикрепить груз"
+                caption="Прикрепить поставку"
                 visible="false"
                 invoke="onBtnAddClick"/>
     </layout>

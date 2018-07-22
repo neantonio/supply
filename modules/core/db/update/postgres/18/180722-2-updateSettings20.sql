@@ -1,0 +1,2 @@
+alter table SUPPLY_SETTINGS add constraint FK_SUPPLY_SETTINGS_ON_STORE foreign key (STORE_ID) references SUPPLY_STORE(ID);
+create index IDX_SUPPLY_SETTINGS_ON_STORE on SUPPLY_SETTINGS (STORE_ID);

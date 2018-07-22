@@ -21,6 +21,7 @@
         <item screen="supply$PaymentTable"/>
         <item screen="supply$Holiday.browse"/>
         <item screen="deliverySchedule"/>
+        <item screen="supply$Settings.browse"/>
     </menu>
     <menu id="queries"
           insertBefore="administration">

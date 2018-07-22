@@ -12,6 +12,7 @@ import org.junit.runner.RunWith;
 
 import javax.inject.Inject;
 import java.time.LocalTime;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
@@ -297,7 +298,7 @@ public class QueryServiceTest {
         LocalTime startTimeWork = LocalTime.of(8,0);
         LocalTime endTimeWork = LocalTime.of(17,0);
         LocalTime lunchTime = LocalTime.of(12, 0);
-        int lunchDuration = 1;//Продолжительность обеда 1 час
+        int lunchDuration = 60;//Продолжительность обеда 1 час
 
         new Expectations() {
             {
@@ -323,7 +324,7 @@ public class QueryServiceTest {
         LocalTime startTimeWork = LocalTime.of(8,0);
         LocalTime endTimeWork = LocalTime.of(17,0);
         LocalTime lunchTime = LocalTime.of(12, 0);
-        int lunchDuration = 1;//Продолжительность обеда 1 час
+        int lunchDuration = 60;//Продолжительность обеда 1 час
         new Expectations() {
             {
                 queryDaoService.getHoliday(withNotNull());
@@ -346,7 +347,7 @@ public class QueryServiceTest {
         LocalTime startTimeWork = LocalTime.of(8,0);
         LocalTime endTimeWork = LocalTime.of(17,0);
         LocalTime lunchTime = LocalTime.of(12, 0);
-        int lunchDuration = 1;//Продолжительность обеда 1 час
+        int lunchDuration = 60;//Продолжительность обеда 1 час
         new Expectations() {
             {
                 queryDaoService.getHoliday(withNotNull());
@@ -356,5 +357,27 @@ public class QueryServiceTest {
         assertEquals(TimeUnit.MILLISECONDS.toHours(workTime), 40);
     }
 
+
+    //
+    @Test
+    public void getWorkTimeTestFour() {
+        Calendar calendarStart = Calendar.getInstance();
+        calendarStart.set(2018, 6, 16, 22, 0, 0);
+        Calendar calendarEnd = Calendar.getInstance();
+        calendarEnd.set(2018, 6, 18, 8,59, 0);
+        LocalTime startTimeWork = LocalTime.of(8,0);
+        LocalTime endTimeWork = LocalTime.of(17,0);
+        LocalTime lunchTime = LocalTime.of(12, 0);
+        int lunchDuration = 60;//Продолжительность обеда 1 час
+        new Expectations() {
+            {
+                queryDaoService.getHoliday(withNotNull());
+                result = null;
+            }};
+        long workTime = queryService.getWorkTime(calendarStart.getTime(), calendarEnd.getTime(), startTimeWork, endTimeWork, lunchTime, lunchDuration);
+        long w = TimeUnit.MILLISECONDS.toMinutes(workTime);
+        assertEquals(TimeUnit.MILLISECONDS.toMinutes(workTime), 59+480);
+
+    }
 }
 

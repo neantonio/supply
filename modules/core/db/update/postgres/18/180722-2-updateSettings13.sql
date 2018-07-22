@@ -1,0 +1,2 @@
+alter table SUPPLY_SETTINGS add constraint FK_SUPPLY_SETTINGS_ON_QUERY foreign key (QUERY_ID) references SUPPLY_QUERY(ID);
+create index IDX_SUPPLY_SETTINGS_ON_QUERY on SUPPLY_SETTINGS (QUERY_ID);
