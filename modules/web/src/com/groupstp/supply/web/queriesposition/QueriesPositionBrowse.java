@@ -175,9 +175,9 @@ public class QueriesPositionBrowse extends AbstractLookup {
             "store_receive_flag");
 
     //карта актуальных stage data. нужно для нескольких транзакций подряд
-    Map<QueriesPosition, QueryPositionStageData> stageDataMap = new HashMap<>();
-    Map<Class, String> errorStyleMap = new HashMap<>();
-    Map<QueriesPosition, List<Component>> componentsMapForValidation = new HashMap<>();
+    Map<QueriesPosition,QueryPositionStageData> stageDataMap=new HashMap<>();
+    Map<Class,String> errorStyleMap=new HashMap<>();
+    Map<QueriesPosition,Map<String,List<Component>>> componentsMapForValidation=new HashMap<>();
 
     private class QueryLinkGenerator implements Table.ColumnGenerator {
 
@@ -286,18 +286,26 @@ public class QueriesPositionBrowse extends AbstractLookup {
         errorStyleMap.put(WebPickerField.class, "c-pickerfield-error");
     }
 
+
     /**
      * @param position
      * @param component
      * @author AntonLomako
      * добавляет компоненты в мап, из которого они извлекаются при валидации
      */
-    private void addComponentToValidationMap(QueriesPosition position, Component component) {
-        if (componentsMapForValidation.get(position) == null) {
-            componentsMapForValidation.put(position, new ArrayList<>());
-
+    private void addComponentToValidationMap(QueriesPosition position,Component component,String componentId){
+        if(componentsMapForValidation.get(position)==null){
+            HashMap<String,List<Component>> newMap=new HashMap<>();
+            newMap.put(componentId,new ArrayList<>());componentsMapForValidation.put(position,newMap);
         }
-        componentsMapForValidation.get(position).add(component);
+        else{
+            if(componentsMapForValidation.get(position).get(componentId)==null){
+                componentsMapForValidation.get(position).put(componentId,new ArrayList<>());
+
+            }
+        }
+        componentsMapForValidation.get(position).get(componentId).add(component);
+
 
     }
 
@@ -449,7 +457,7 @@ public class QueriesPositionBrowse extends AbstractLookup {
                                 }
                         }
                         if (logisticStageRequiredFields.contains(entry.getKey()))
-                            addComponentToValidationMap(entity, component);
+                            addComponentToValidationMap(entity, component,entry.getKey());
                     }
                 } else {
 
@@ -591,17 +599,30 @@ public class QueriesPositionBrowse extends AbstractLookup {
      */
     private Collection<QueriesPosition> checkFillingOfRequiredFieldForPositions(Collection<QueriesPosition> positions) {
 
-        List<QueriesPosition> correctPositions = new ArrayList<>();
-        positions.forEach(item -> {
-            Boolean positionIsCorrect = true;
-            List<Component> components = componentsMapForValidation.get(item);
-            if (components != null) {
-                for (Component component : components) {
-                    if (((HasValue) component).getValue() == null) {
-                        component.addStyleName(errorStyleMap.get(component.getClass()));
-                        positionIsCorrect = false;
-                    }
+        List<QueriesPosition> correctPositions=new ArrayList<>();
+        positions.forEach(item->{
+            Boolean positionIsCorrect=true;
+            for(Map.Entry<String,List<Component> > entry:componentsMapForValidation.get(item).entrySet()){
+            List<Component>components=entry.getValue();
+
+                QueryPositionStageData stageData=stageDataService.
+                        getOrCreateStageDataForPositionFromCollectionAndDescription(dsLogisticStageData.getItems(),
+                item,
+                                logisticStageDataItemsDescription);
+                    if(stageDataService.getStringData(stageData,entry.getKey())==null) {
+                        positionIsCorrect=false;
+                    components.forEach(component->component.addStyleName(errorStyleMap.get(component.getClass())));
+
                 }
+//                if(components!=null){
+//                    for(Component component:components){
+//                        if(((HasValue)component).getValue()==null) {
+//                            component.addStyleName(errorStyleMap.get(component.getClass()));
+//
+//                        }
+//                    }
+//                }
+
             }
             if (positionIsCorrect) correctPositions.add(item);
         });
@@ -1471,6 +1492,7 @@ public class QueriesPositionBrowse extends AbstractLookup {
         dsBills.commit();
         billsesDs.refresh();
     }
+
 
     /**
      * @author Andrey Kolosov

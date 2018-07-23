@@ -529,6 +529,7 @@ public class DataBaseTestContentServiceBean implements DataBaseTestContentServic
     public void clearDataBase() {
         Transaction tx = persistence.createTransaction();
         com.haulmont.cuba.core.Query query = persistence.getEntityManager().createNativeQuery(
+                "delete from supply_position_supplier;\n" +
                  "delete from supply_query_position_movements;\n" +
                         "delete from supply_stage_term;\n" +
                         "delete from supply_queries_position;\n" +
