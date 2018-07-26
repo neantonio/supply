@@ -716,6 +716,7 @@ where e.position in :custom$positions]]>
                                         invoke="onLogisticBtnDoneClick"/>
                                 <button id="button_55"
                                         caption="mainMsg://Cancel"
+                                        invoke="onBtnCancelClick"
                                         icon="CANCEL"/>
                                 <button id="button_111"
                                         action="positionsStoreControl.refresh"

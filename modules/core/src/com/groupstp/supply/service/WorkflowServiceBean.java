@@ -103,7 +103,9 @@ public class WorkflowServiceBean implements WorkflowService {
      * @param position
      */
     private void createFinishStageRecord(QueriesPosition position){
-        QueryPositionMovements lastMovement=queryDaoService.getQueryPositionMovement(position).get(0);
+        List<QueryPositionMovements> movements=queryDaoService.getQueryPositionMovement(position);
+        if(movements.size()==0)return;  //допустим для разделенной позиции
+        QueryPositionMovements lastMovement=movements.get(0);
         if(lastMovement==null) return;
         lastMovement.setFinishTS(new Date());
         dataManager.commit(lastMovement);

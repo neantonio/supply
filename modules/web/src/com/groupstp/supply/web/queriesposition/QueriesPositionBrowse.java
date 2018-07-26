@@ -1627,7 +1627,9 @@ public class QueriesPositionBrowse extends AbstractLookup {
             LinkButton lnk = (LinkButton) componentsFactory.createComponent(LinkButton.NAME);
             lnk.setAction(new BaseAction("Ссылка").
                     withCaption("Открыть").
-                    withHandler(e -> openEditor(entity, WindowManager.OpenType.DIALOG)));
+                    withHandler(e -> openEditor(entity, WindowManager.OpenType.DIALOG).addCloseListener((event) -> {
+                        getOpenedStageTable().getDatasource().refresh();
+                    })));
             return lnk;
         }
     }
