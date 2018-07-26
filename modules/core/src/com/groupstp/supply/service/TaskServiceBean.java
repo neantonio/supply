@@ -26,7 +26,7 @@ public class TaskServiceBean implements TaskService {
 
 
     private long notifyTimeOffset=2*60*60*1000;  //2h
-    private String emailConsumer;
+    private String emailConsumer="cubatestlomako@gmail.com";
 
     private ScheduledFuture notificationOnAnalysisRunningOutTask;
 
