@@ -152,6 +152,10 @@ public class PositionSupplierBrowse extends AbstractLookup {
         tab.setColumnCaption(supplier.getId().toString(), supplier.getName());
     }
 
+    public void onBtnCloseClick(){
+         close("closeWindow");
+    }
+
     private void showSuppliers(Set<QueriesPosition> positions) {
         List<PositionSupplier> suppliers = dataManager.load(PositionSupplier.class)
                 .query("select e from supply$PositionSupplier e\n" +

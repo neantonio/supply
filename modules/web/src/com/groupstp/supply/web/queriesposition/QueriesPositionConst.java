@@ -5,6 +5,7 @@ import java.util.List;
 
 public class QueriesPositionConst {
 
+    //Подбор поставщика
     public static final String[] supSelectionGroupOrder = new String[] {
             "query.urgency","query.company","query.division","query"
     };
@@ -13,6 +14,7 @@ public class QueriesPositionConst {
             "query.urgency","query.company","query.division","query"
     };
 
+    //Складской контроль
     public static final String[] storeControlGroupOrder = new String[] {
             "query.urgency","query.company","query.division"
     };
@@ -21,6 +23,7 @@ public class QueriesPositionConst {
             "query.urgency","query.company","query.division"
     };
 
+    //Номенклатурный контроль
     public static final String[] nomControlGroupOrder = new String[] {
             "query.urgency","query.company","query.division","query"
     };
@@ -29,6 +32,7 @@ public class QueriesPositionConst {
             "query.urgency","query.company","query.division","query"
     };
 
+    //Ценовой анализ
     public static final String[] analysisGroupOrder = new String[] {
             "query.urgency","query.company","query.division","query"
     };
@@ -37,6 +41,7 @@ public class QueriesPositionConst {
             "query.urgency","query.company","query.division","query"
     };
 
+    //Счета
     public static final String[] billsGroupOrder = new String[] {
             "query.urgency","query.company","query.division","query"
     };

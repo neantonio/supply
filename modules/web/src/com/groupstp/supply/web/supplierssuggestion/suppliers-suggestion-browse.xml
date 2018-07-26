@@ -75,10 +75,9 @@ ss.posSup in (select ps from supply$PositionSupplier ps where ps.position in :pa
                         invoke="onCreateBtnClick"/>
                 <button id="removeBtn"
                         action="tab.remove"/>
-                <button id="btnCommit"
-                        action="tab.commit"
-                        caption="msg://commit"
-                        invoke="onCommit"/>
+                <button id="btnCommitAndClose"
+                        caption="msg://CommitAndClose"
+                        invoke="onCommitAndClose"/>
             </buttonsPanel>
         </groupTable>
     </layout>

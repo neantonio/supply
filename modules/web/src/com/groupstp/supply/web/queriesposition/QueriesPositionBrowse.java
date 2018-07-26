@@ -1157,7 +1157,10 @@ public class QueriesPositionBrowse extends AbstractLookup {
                                     returnButton.addAction(new BaseAction(i.getStage().getId()) {
                                         @Override
                                         public void actionPerform(Component component) {
+                                            GroupTable<QueriesPosition> grpTab = getOpenedStageTable();
+                                            GroupDatasource ds = grpTab.getDatasource();
                                             workflowService.movePositionTo(position, i.getStage());
+                                            ds.refresh();
 
                                         }
                                     });
@@ -1220,6 +1223,12 @@ public class QueriesPositionBrowse extends AbstractLookup {
         QueriesPosition position = tab.getSingleSelected();
         QueriesPosition copy = queriesPositionService.splitPosition(position);
         tab.getDatasource().addItem(copy);
+    }
+
+    public void onBtnSelectAllClick(){
+        GroupTable<QueriesPosition> tab = getOpenedStageTable();
+        tab.expandAll();
+        tab.selectAll();
     }
 
     /**
