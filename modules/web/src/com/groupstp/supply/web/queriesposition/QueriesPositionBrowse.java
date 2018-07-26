@@ -5,6 +5,7 @@ import com.groupstp.supply.service.*;
 import com.haulmont.bali.util.ParamsMap;
 import com.haulmont.chile.core.model.MetaClass;
 import com.haulmont.chile.core.model.MetaProperty;
+import com.haulmont.chile.core.model.MetaPropertyPath;
 import com.haulmont.chile.core.model.Session;
 import com.haulmont.cuba.core.app.EmailService;
 import com.haulmont.cuba.core.entity.Entity;
@@ -35,44 +36,28 @@ import java.util.stream.Collectors;
 public class QueriesPositionBrowse extends AbstractLookup {
 
 
-    List<Object> nomControlGroupOrder = new ArrayList<>();
-    List<Object> nomControlAvailableOrderItems = new ArrayList<>();
-    Map<Object, String> nomControlAvailableOrderItemsDescription = new HashMap<>();
+    List<Table.Column> nomControlGroupOrder = new ArrayList<>();
+    List<Table.Column> nomControlAvailableOrderItems = new ArrayList<>();
+
+    List<Table.Column> supSelectionGroupOrder = new ArrayList<>();
+    List<Table.Column> supSelectionAvailableOrderItems = new ArrayList<>();
+
+    List<Table.Column> storeControlGroupOrder = new ArrayList<>();
+    List<Table.Column> storeControlAvailableOrderItems = new ArrayList<>();
+
+    List<Table.Column> analysisGroupOrder = new ArrayList<>();
+    List<Table.Column> analysisAvailableOrderItems = new ArrayList<>();
+
+    List<Table.Column> billsGroupOrder = new ArrayList<>();
+    List<Table.Column> billsAvailableOrderItems = new ArrayList<>();
+
     //содержит пару: название данных/их тип
     Map<String, String> logisticStageDataItemsDescription = new HashMap<>();
-    //список редактируемых полей
-    List<String> logisticStageDataEditableFields = Arrays.asList(
-            "destination_address",
-            "acceptance_address",
-            "carrier",
-            "cargo_number",
-            "planed_send_date",
-            "planed_receive_date",
-            "fact_send_date",
-            "fact_receive_date",
-            "cargo_monitoring_id",
-            "cargo_monitoring_url",
-            "store_receive_flag",
-            "cargo_state");
-    //список обязательных для заполнения полей
-    List<String> logisticStageRequiredFields = Arrays.asList(
-            "destination_address",
-            "acceptance_address",
-            "carrier",
-            "cargo_number",
-            "planed_send_date",
-            "planed_receive_date",
-            "fact_send_date",
-            "fact_receive_date",
-            "cargo_monitoring_id",
-            "store_receive_flag");
-    //карта актуальных stage data. нужно для нескольких транзакций подряд
-    Map<QueriesPosition, QueryPositionStageData> stageDataMap = new HashMap<>();
-    Map<Class, String> errorStyleMap = new HashMap<>();
-    Map<QueriesPosition, List<Component>> componentsMapForValidation = new HashMap<>();
 
-    @Inject
-    private VoteService voteService;
+    //карта актуальных stage data. нужно для нескольких транзакций подряд
+    Map<QueriesPosition,QueryPositionStageData> stageDataMap=new HashMap<>();
+    Map<Class,String> errorStyleMap=new HashMap<>();
+    Map<QueriesPosition,Map<String,List<Component>>> componentsMapForValidation=new HashMap<>();
 
     @Inject
     private GroupTable<QueriesPosition> positionsComission;
@@ -82,9 +67,6 @@ public class QueriesPositionBrowse extends AbstractLookup {
 
     @Inject
     private Metadata metadata;
-
-    @Inject
-    private DataManager dataManager;
 
     @Inject
     private GroupDatasource<QueriesPosition, UUID> dsNomControl;
@@ -191,6 +173,8 @@ public class QueriesPositionBrowse extends AbstractLookup {
     private GroovyTestService groovyTestService;
     private int selectedState;
 
+
+
     @Override
     public void init(Map<String, Object> params) {
 
@@ -216,29 +200,9 @@ public class QueriesPositionBrowse extends AbstractLookup {
                 label.setValue(entity.getVoteResult().getPrice() * entity.getVoteResult().getQuantity());
                 return label;
             }
-    //карта актуальных stage data. нужно для нескольких транзакций подряд
-    Map<QueriesPosition,QueryPositionStageData> stageDataMap=new HashMap<>();
-    Map<Class,String> errorStyleMap=new HashMap<>();
-    Map<QueriesPosition,Map<String,List<Component>>> componentsMapForValidation=new HashMap<>();
 
-    private class QueryLinkGenerator implements Table.ColumnGenerator {
 
-        /**
-         * Called by {@link Table} when rendering a column for which the generator was created.
-         *
-         * @param entity an entity instance represented by the current row
-         * @return a component to be rendered inside of the cell
-         */
-        @Override
-        public Component generateCell(Entity entity) {
-            Query q = ((QueriesPosition) entity).getQuery();
-            LinkButton lnk = (LinkButton) componentsFactory.createComponent(LinkButton.NAME);
-            lnk.setAction(new BaseAction("query").
-                    withCaption(q.getInstanceName()).
-                    withHandler(e -> openEditor(q, WindowManager.OpenType.DIALOG)));
-            return lnk;
-        }
-    }
+
 
             @Override
             public String getValue(QueriesPosition entity) {
@@ -281,29 +245,13 @@ public class QueriesPositionBrowse extends AbstractLookup {
     public void ready() {
         super.ready();
 
-
-        nomControlGroupOrder.add(positionsStoreControl.getColumn("query.urgency").getId());
-        nomControlGroupOrder.add(positionsStoreControl.getColumn("query.company").getId());
-        nomControlGroupOrder.add(positionsStoreControl.getColumn("query.division").getId());
-        nomControlGroupOrder.add(positionsStoreControl.getColumn("query").getId());
-
-        nomControlAvailableOrderItems.add(positionsStoreControl.getColumn("query.urgency").getId());
-        nomControlAvailableOrderItems.add(positionsStoreControl.getColumn("query.company").getId());
-        nomControlAvailableOrderItems.add(positionsStoreControl.getColumn("query.division").getId());
-        nomControlAvailableOrderItems.add(positionsStoreControl.getColumn("query").getId());
-        // nomControlAvailableOrderItems.add(positionsStoreControl.getColumn("positionType").getId());
-        //nomControlAvailableOrderItems.add(positionsStoreControl.getColumn("positionUsefulness").getId());
-
-
-        nomControlAvailableOrderItemsDescription.put(positionsStoreControl.getColumn("query.urgency").getId(), messages.getMainMessage("query.urgency"));
-        nomControlAvailableOrderItemsDescription.put(positionsStoreControl.getColumn("query.company").getId(), messages.getMainMessage("query.company"));
-        nomControlAvailableOrderItemsDescription.put(positionsStoreControl.getColumn("query.division").getId(), messages.getMainMessage("query.division"));
-        nomControlAvailableOrderItemsDescription.put(positionsStoreControl.getColumn("query").getId(), messages.getMainMessage("query"));
-        // nomControlAvailableOrderItemsDescription.put(positionsStoreControl.getColumn("positionType").getId(),messages.getMainMessage("positionType"));
-        //nomControlAvailableOrderItemsDescription.put(positionsStoreControl.getColumn("positionUsefulness").getId(),messages.getMainMessage("positionUsefulness"));
-
+        //Иницилизация вкладок
         setupNomControl();
         setupStoreControl();
+        setupSupSelection();
+        setupAnalysis();
+        setupBills();
+
         restorePanel();
         tabs.addSelectedTabChangeListener(event -> {
             savePanel();
@@ -405,7 +353,7 @@ public class QueriesPositionBrowse extends AbstractLookup {
                 //для коипонентов, которые есть в списке редактируемых создаем редактируемые поля
                 Component component = null;
 
-                if (logisticStageDataEditableFields.contains(entry.getKey())) {
+                if (QueriesPositionConst.logisticStageDataEditableFields.contains(entry.getKey())) {
 
                     //при установке чекбокса получения на складе должны вызываться методы установки/очищения времени получения и ответственного
                     if (entry.getKey().equals("store_receive_flag")) {
@@ -517,7 +465,7 @@ public class QueriesPositionBrowse extends AbstractLookup {
                                     e.printStackTrace();
                                 }
                         }
-                        if (logisticStageRequiredFields.contains(entry.getKey()))
+                        if (QueriesPositionConst.logisticStageRequiredFields.contains(entry.getKey()))
                             addComponentToValidationMap(entity, component,entry.getKey());
                     }
                 } else {
@@ -890,13 +838,50 @@ public class QueriesPositionBrowse extends AbstractLookup {
         tabs.setSelectedTab(getSettings().get(tabs.getId()).attribute("tabOpened").getValue());
     }
 
+
+    public void onGroupOrderChange() {
+        TabSheet.Tab tab = tabs.getSelectedTab();
+        String tabName = tab.getName();
+        switch (tabName){
+
+            case "tabNomControl":
+                createGroupOrderDialog(nomControlGroupOrder, nomControlAvailableOrderItems, positionsNomControl);
+                break;
+            case "tabStoreControl":
+                createGroupOrderDialog(storeControlGroupOrder, storeControlAvailableOrderItems, positionsStoreControl);
+                break;
+            case "tabSupSelection":
+                createGroupOrderDialog(supSelectionGroupOrder, supSelectionAvailableOrderItems, positionsSupSelection);
+                break;
+            case "tabAnalysis":
+                createGroupOrderDialog(analysisGroupOrder, analysisAvailableOrderItems, positionsAnalysis);
+                break;
+
+            case "tabBills":
+                createGroupOrderDialog(billsGroupOrder, billsAvailableOrderItems, positionsBills);
+                break;
+
+
+        }
+
+
+
+    }
+
     /**
      * Настройка вкладки номенклатурный контроль
      */
     private void setupNomControl() {
+        //Порядок группировки
+        for(String s : QueriesPositionConst.nomControlGroupOrder)
+            nomControlGroupOrder.add(positionsStoreControl.getColumn(s));
+        //Доступные поля для группировки
+        for(String s : QueriesPositionConst.nomControlAvailableFields)
+            nomControlAvailableOrderItems.add(positionsStoreControl.getColumn(s));
+
         GroupTable<QueriesPosition> p = positionsNomControl;
         p.addGeneratedColumn("queryLink", new QueryLinkGenerator());
-        p.groupBy(nomControlGroupOrder.toArray());
+        p.groupBy(columnToPathsConverter(nomControlGroupOrder));
         dsNomControl.addItemPropertyChangeListener(e -> {
             if ("positionUsefulness".equals(e.getProperty()) && e.getValue().equals(true)) {
                 e.getItem().setPositionUsefulnessTS(new Date());
@@ -904,38 +889,84 @@ public class QueriesPositionBrowse extends AbstractLookup {
         });
     }
 
-    public void onNomControlGroupOrderChange() {
-        createGroupOrderDialog(nomControlGroupOrder, nomControlAvailableOrderItems, nomControlAvailableOrderItemsDescription, map -> {
-            int i = 0;
-            List<Map.Entry<String, Object>> entries = (List<Map.Entry<String, Object>>) map.get("currentOrder");
-            Object[] obj = new Object[entries.size()];
 
-            nomControlGroupOrder.clear();
-            ;
+    /**
+     * настройка складскго контроля
+     */
+    private void setupStoreControl() {
+        //Доступные поля для группировки
+        for(String s : QueriesPositionConst.storeControlGroupOrder)
+            storeControlGroupOrder.add(positionsStoreControl.getColumn(s));
+        //Доступные поля для группировки
+        for(String s : QueriesPositionConst.storeControlAvailableFields)
+            storeControlAvailableOrderItems.add(positionsStoreControl.getColumn(s));
 
-            for (Map.Entry ent : entries) {
-                obj[i] = ent.getValue();
-                i++;
-                nomControlGroupOrder.add(ent.getValue());
-            }
-            positionsNomControl.groupBy(obj);
-        });
-
-
+        GroupTable<QueriesPosition> p = positionsStoreControl;
+        p.addGeneratedColumn("queryLink", new QueryLinkGenerator());
+        p.groupBy(columnToPathsConverter(storeControlGroupOrder));
     }
 
+
+    /**
+     * Настройка вкладки подбор поставщиков
+     */
+    private void setupSupSelection() {
+        //Доступные поля для группировки
+        for(String s : QueriesPositionConst.supSelectionGroupOrder)
+            supSelectionGroupOrder.add(positionsSupSelection.getColumn(s));
+        //Доступные поля для группировки
+        for(String s : QueriesPositionConst.supSelectionAvailableFields)
+            supSelectionAvailableOrderItems.add(positionsSupSelection.getColumn(s));
+
+        GroupTable<QueriesPosition> p = positionsSupSelection;
+        p.groupBy(columnToPathsConverter(supSelectionGroupOrder));
+    }
+
+
+    /**
+     * Настройка вкладки ценового анализа
+     */
+    private void setupAnalysis() {
+        //Доступные поля для группировки
+        for(String s : QueriesPositionConst.analysisGroupOrder)
+            analysisGroupOrder.add(positionsAnalysis.getColumn(s));
+        //Доступные поля для группировки
+        for(String s : QueriesPositionConst.analysisAvailableFields)
+            analysisAvailableOrderItems.add(positionsAnalysis.getColumn(s));
+
+        GroupTable<QueriesPosition> p = positionsAnalysis;
+        p.groupBy(columnToPathsConverter(analysisGroupOrder));
+    }
+
+    /**
+     * Настройка вкладки счетов
+     */
+    private void setupBills() {
+        //Доступные поля для группировки
+        for(String s : QueriesPositionConst.billsGroupOrder)
+            billsGroupOrder.add(positionsBills.getColumn(s));
+        //Доступные поля для группировки
+        for(String s : QueriesPositionConst.billsAvailableFields)
+            billsAvailableOrderItems.add(positionsBills.getColumn(s));
+
+        GroupTable<QueriesPosition> p = positionsBills;
+        p.groupBy(columnToPathsConverter(billsGroupOrder));
+    }
+
+
+
     //создает окно с перетаскиваемыми элементыми. при завершении выполняет SomeAction с параметром Map, в котором будет запись currentOrder - результирующий порядок
-    public void createGroupOrderDialog(List<Object> currentOrder, List<Object> availableOrderItems, Map<Object, String> itemDescription, SomeAction okAction) {
+    public void createGroupOrderDialog(List<Table.Column> currentOrder, List<Table.Column> availableOrderItems, GroupTable<QueriesPosition> table) {
 
         List<Map.Entry> availableItems = new ArrayList<>();
         List<Map.Entry> currentOrderEntry = new ArrayList<>();
 
-        for (Object orderItem : availableOrderItems) {
-            availableItems.add(new AbstractMap.SimpleEntry<>(itemDescription.get(orderItem), orderItem));
+        for (Table.Column orderItem : availableOrderItems) {
+            availableItems.add(new AbstractMap.SimpleEntry<>(orderItem.getCaption(), orderItem.getId()));
         }
 
-        for (Object orderItem : currentOrder) {
-            currentOrderEntry.add(new AbstractMap.SimpleEntry<>(itemDescription.get(orderItem), orderItem));
+        for (Table.Column orderItem : currentOrder) {
+            currentOrderEntry.add(new AbstractMap.SimpleEntry<>(orderItem.getCaption(), orderItem.getId()));
         }
 
         Map<String, Object> map = new HashMap<>();
@@ -946,22 +977,22 @@ public class QueriesPositionBrowse extends AbstractLookup {
 
         openWindow("chooseGroupOrder", WindowManager.OpenType.DIALOG, param)
                 .addCloseListener(data -> {
-                    if (data.equals("ok")) okAction.execute(map);
+                    if (data.equals("ok")) {
+                        int i = 0;
+                        List<Map.Entry<String, MetaPropertyPath>> entries = (List<Map.Entry<String, MetaPropertyPath>>) map.get("currentOrder");
+                        Object[] obj = new Object[entries.size()];
+
+                        currentOrder.clear();
+
+                        for (Map.Entry<String, MetaPropertyPath> ent : entries) {
+                            obj[i] = ent.getValue();
+                            i++;
+                            currentOrder.add(table.getColumn(String.join(".", ent.getValue().getPath())));
+                        }
+                        table.groupBy(obj);
+                    };
                 });
 
-    }
-
-    /**
-     * настройка складскго контроля
-     */
-    private void setupStoreControl() {
-        GroupTable<QueriesPosition> p = positionsStoreControl;
-        p.addGeneratedColumn("queryLink", new QueryLinkGenerator());
-        p.groupBy(new Object[]{
-                p.getColumn("query.urgency").getId(),
-                p.getColumn("query.company").getId(),
-                p.getColumn("query.division").getId()});
-        //dsStoreControl.addItemPropertyChangeListener(e -> {});
     }
 
     /**
@@ -1546,6 +1577,14 @@ public class QueriesPositionBrowse extends AbstractLookup {
         void call();
     }
 
+    private Object[] columnToPathsConverter(List<Table.Column> columns){
+        List<Object> retList = new ArrayList<>();
+        for(Table.Column col : columns)
+            retList.add(col.getId());
+
+        return retList.toArray();
+    }
+
     private class QueryLinkGenerator implements Table.ColumnGenerator {
 
         /**
@@ -1564,6 +1603,7 @@ public class QueriesPositionBrowse extends AbstractLookup {
             return lnk;
         }
     }
+
 
     private class OpenLinkGenerator implements Table.ColumnGenerator {
 

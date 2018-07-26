@@ -140,7 +140,7 @@ where e.position in :custom$positions]]>
                     <buttonsPanel>
                         <button id="group_order"
                                 caption="msg://group_order"
-                                invoke="onNomControlGroupOrderChange"/>
+                                invoke="onGroupOrderChange"/>
                         <popupButton id="btnReturn_tabNomControl"
                                      caption="msg://Return">
                             <actions>
@@ -230,6 +230,9 @@ where e.position in :custom$positions]]>
                                 description="mainMsg://Split position"
                                 icon="ARROWS_V"
                                 invoke="onBtnSplitClick"/>
+                        <button id="group_order_storeControl"
+                                caption="msg://group_order"
+                                invoke="onGroupOrderChange"/>
                         <popupButton id="btnReturn_tabStoreControl"
                                      caption="msg://Return">
                             <actions>
@@ -312,6 +315,12 @@ where e.position in :custom$positions]]>
                         <button id="btnSuggestions"
                                 caption="mainMsg://Suggestions"
                                 invoke="onBtnSuggestionsClick"/>
+
+                    </buttonsPanel>
+                    <buttonsPanel>
+                        <button id="group_order_supSelection"
+                                caption="msg://group_order"
+                                invoke="onGroupOrderChange"/>
                         <popupButton id="btnReturn_tabSupSelection"
                                      caption="msg://Return">
                             <actions>
@@ -393,6 +402,12 @@ where e.position in :custom$positions]]>
                         <button id="btnSuggestionsAnalysis"
                                 caption="mainMsg://Suggestions"
                                 invoke="onBtnSuggestionsClick"/>
+
+                    </buttonsPanel>
+                    <buttonsPanel>
+                        <button id="group_order_analysis"
+                                caption="msg://group_order"
+                                invoke="onGroupOrderChange"/>
                         <popupButton id="btnReturn_tabAnalysis"
                                      caption="msg://Return">
                             <actions>
@@ -573,6 +588,9 @@ where e.position in :custom$positions]]>
                         <button id="btnSendEmail"
                                 caption="Отправить @Email"
                                 invoke="onBtnSendEmail"/>
+                        <button id="group_order_bills"
+                                caption="msg://group_order"
+                                invoke="onGroupOrderChange"/>
                         <popupButton id="btnReturn_tabBills"
                                      caption="msg://Return">
                             <actions>

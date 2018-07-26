@@ -66,22 +66,11 @@ public class Queryregister extends AbstractWindow {
 
         addPositionHistoryPopupColumn();
         addPositionInfoColumn();
-        //addPositionClickListener();
         addLinkOpenButton();
         initGrouping();
     }
 
-//    private void addPositionClickListener(){
-//        positionsTable.setItemClickAction(new BaseAction("clickItem") {
-//            @Override
-//            public void actionPerform(Component component) {
-//                openEditor(positionsTable.getSingleSelected(),WindowManager.OpenType.DIALOG);
-//            }
-//        });
-//
-//
-//
-//    }
+
     private class OpenLinkGenerator implements Table.ColumnGenerator {
 
         /**
@@ -196,7 +185,7 @@ public class Queryregister extends AbstractWindow {
     }
 
     private void initGrouping(){
-        List<String> columnIds=Arrays.asList(
+        List<String> columnIds = Arrays.asList(
                 "currentStage",
                 "query",
                 "query.contact",
@@ -207,7 +196,6 @@ public class Queryregister extends AbstractWindow {
                 "updateTs",
                 "analogsAllowed"
         );
-        List <Table.Column> c=positionsTable.getColumns();
 
         // доступные элементы для группировки с их описанием
         for(String id:columnIds){
