@@ -172,8 +172,4 @@ public class WorkflowServiceBean implements WorkflowService {
                 .list();
     }
 
-
-//    private QueriesPosition getQueryPosition(Query query){
-//
-//    }
 }

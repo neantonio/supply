@@ -34,6 +34,8 @@
                        value="com.groupstp.supply.service.EntityImportService"/>
                 <entry key="supply_TaskService"
                        value="com.groupstp.supply.service.TaskService"/>
+                <entry key="supply_QueriesPositionService"
+                       value="com.groupstp.supply.service.QueriesPositionService"/>
             </map>
         </property>
     </bean>

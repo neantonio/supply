@@ -34,8 +34,7 @@ import java.util.stream.Collectors;
 
 public class QueriesPositionBrowse extends AbstractLookup {
 
-    @Inject
-    protected EmailService emailService;
+
     List<Object> nomControlGroupOrder = new ArrayList<>();
     List<Object> nomControlAvailableOrderItems = new ArrayList<>();
     Map<Object, String> nomControlAvailableOrderItemsDescription = new HashMap<>();
@@ -71,76 +70,114 @@ public class QueriesPositionBrowse extends AbstractLookup {
     Map<QueriesPosition, QueryPositionStageData> stageDataMap = new HashMap<>();
     Map<Class, String> errorStyleMap = new HashMap<>();
     Map<QueriesPosition, List<Component>> componentsMapForValidation = new HashMap<>();
+
     @Inject
     private VoteService voteService;
+
     @Inject
     private GroupTable<QueriesPosition> positionsComission;
+
     @Inject
     private GroupDatasource dsComission;
+
     @Inject
     private Metadata metadata;
+
     @Inject
     private DataManager dataManager;
+
     @Inject
     private GroupDatasource<QueriesPosition, UUID> dsNomControl;
+
     @Inject
     private GroupDatasource<QueriesPosition, UUID> dsStoreControl;
+
     @Inject
     private GroupDatasource<QueriesPosition, UUID> dsSupSelection;
+
     @Inject
     private GroupDatasource<QueriesPosition, UUID> dsLogistic;
+
     @Inject
     private CollectionDatasource<QueryPositionStageData, UUID> dsLogisticStageData;
+
     @Inject
     private Button nextCargoState;
+
     @Inject
     private Button previousCargoState;
+
     @Inject
     private GroupBoxLayout cargoStateGroupBox;
+
     @Inject
     private VBoxLayout cargoStateGroupBoxTotalLayout;
+
     @Inject
     private GroupTable<QueriesPosition> positionsNomControl;
+
     @Inject
     private GroupTable<QueriesPosition> positionsStoreControl;
+
     @Inject
     private GroupTable<QueriesPosition> positionsSupSelection;
+
     @Inject
     private GroupTable<QueriesPosition> positionsLogistic;
+
     @Inject
     private GroupTable<QueriesPosition> positionsAnalysis;
+
     @Inject
     private GroupTable<QueriesPosition> positionsProcuration;
+
     @Inject
     private WorkflowService workflowService;
+
     @Inject
     private QueryDaoService queryDaoService;
+
     @Inject
     private QueryService queryService;
+
+    @Inject
+    private QueriesPositionService queriesPositionService;
+
     @Inject
     private TabSheet tabs;
+
     @Inject
     private ComponentsFactory componentsFactory;
+
     @Inject
     private StageDataService stageDataService;
+
     @Inject
     private GroupTable<QueriesPosition> positionsBills;
+
     @Inject
     private Table<Bills> billsTable;
     @Inject
     private GroupDatasource<QueriesPosition, UUID> dsBills;
+
     @Inject
     private GroupDatasource<Bills, UUID> billsesDs;
+
     @Inject
     private DataSupplier dataSupplier;
+
     @Inject
     private FileUploadingAPI fileUploadingAPI;
+
     @Inject
     private ExportDisplay exportDisplay;
+
     @Inject
     private FileUploadField uploadField;
+
     @Inject
     private Button downloadImageBtn;
+
     @Inject
     private Button clearImageBtn;
 
@@ -500,7 +537,6 @@ public class QueriesPositionBrowse extends AbstractLookup {
 
         });
 
-
         com.vaadin.ui.Table vTable = positionsLogistic.unwrap(com.vaadin.ui.Table.class);
         vTable.addItemClickListener((ItemClickEvent.ItemClickListener) event -> {
 
@@ -703,7 +739,6 @@ public class QueriesPositionBrowse extends AbstractLookup {
             cargoStateGroupBoxTotalLayout.add(label);
         }
 
-
     }
 
     private void initCargoStateButtons() {
@@ -738,7 +773,7 @@ public class QueriesPositionBrowse extends AbstractLookup {
      * обработка получения на складе
      * выставляются время, флаг получения, ответственный
      */
-    public void onStoreGet() throws ValidationException {
+    public void onStoreGet() {
 
         Set<QueriesPosition> selectedPositions = positionsLogistic.getSelected();
         if (selectedPositions.size() == 0) {
@@ -852,11 +887,11 @@ public class QueriesPositionBrowse extends AbstractLookup {
         List<Map.Entry> currentOrderEntry = new ArrayList<>();
 
         for (Object orderItem : availableOrderItems) {
-            availableItems.add(new AbstractMap.SimpleEntry<String, Object>(itemDescription.get(orderItem), orderItem));
+            availableItems.add(new AbstractMap.SimpleEntry<>(itemDescription.get(orderItem), orderItem));
         }
 
         for (Object orderItem : currentOrder) {
-            currentOrderEntry.add(new AbstractMap.SimpleEntry<String, Object>(itemDescription.get(orderItem), orderItem));
+            currentOrderEntry.add(new AbstractMap.SimpleEntry<>(itemDescription.get(orderItem), orderItem));
         }
 
         Map<String, Object> map = new HashMap<>();
@@ -937,7 +972,7 @@ public class QueriesPositionBrowse extends AbstractLookup {
      * получается список позиций с незаполненными полями
      * пользователю выводится запрос, что делать с теми, которые заполнены: перевести их или подождать
      */
-    public void onLogisticBtnDoneClick() throws Exception {
+    public void onLogisticBtnDoneClick() {
 
         Set<QueriesPosition> selectedPositions = positionsLogistic.getSelected();
         if (selectedPositions.size() == 0) {
@@ -992,42 +1027,30 @@ public class QueriesPositionBrowse extends AbstractLookup {
         );
     }
 
-    public void onBtnCancelClick() throws Exception {
+    public void onBtnCancelClick() {
         movePositionsToCancelStage();
     }
 
     private void movePositionsToCancelStage() {
         GroupTable<QueriesPosition> grpTab = getOpenedStageTable();
         Set<QueriesPosition> positions = grpTab.getSelected();
-        for (QueriesPosition position : positions) {
-            movePositionTo(position, Stages.Abortion);
-        }
+        GroupDatasource ds = grpTab.getDatasource();
+        queriesPositionService.movePositionsToCancelStage(positions);
+        ds.refresh();
     }
 
-    private Set<QueriesPosition> getSelectedPosition() throws Exception {
+    private Set<QueriesPosition> getSelectedPosition() {
         GroupTable<QueriesPosition> grpTab = getOpenedStageTable();
         return grpTab.getSelected();
     }
 
     private void movePositions() throws Exception {
         GroupTable<QueriesPosition> grpTab = getOpenedStageTable();
-
         if (!checkSelection(grpTab.getSelected())) return;
 
         GroupDatasource ds = grpTab.getDatasource();
         Set<QueriesPosition> positions = grpTab.getSelected();
-        for (QueriesPosition position : positions) {
-            workflowService.movePosition(position);
-//TEST groovy scripts
-//            groovyTestService.testScript( position);
-        }
-        ds.refresh();
-    }
-
-    private void movePositionTo(QueriesPosition position, Stages stage) {
-        GroupTable<QueriesPosition> grpTab = getOpenedStageTable();
-        GroupDatasource ds = grpTab.getDatasource();
-        workflowService.movePositionTo(position, stage);
+        queriesPositionService.movePositions(positions);
         ds.refresh();
     }
 
@@ -1059,7 +1082,7 @@ public class QueriesPositionBrowse extends AbstractLookup {
                                     returnButton.addAction(new BaseAction(i.getStage().getId()) {
                                         @Override
                                         public void actionPerform(Component component) {
-                                            movePositionTo(position, i.getStage());
+                                            workflowService.movePositionTo(position, i.getStage());
 
                                         }
                                     });
@@ -1083,7 +1106,6 @@ public class QueriesPositionBrowse extends AbstractLookup {
 
             }
         });
-
 
     }
 
@@ -1121,33 +1143,8 @@ public class QueriesPositionBrowse extends AbstractLookup {
     public void onBtnSplitClick() {
         GroupTable<QueriesPosition> tab = getOpenedStageTable();
         QueriesPosition position = tab.getSingleSelected();
-        if (position.getPosition() != null) {
-            position = position.getPosition();
-        }
-        QueriesPosition copy = copyPosition(position);
-        copy.setPosition(position);
-        if (Stages.StoreControl.equals(position.getCurrentStage()))
-            position.setCurrentStage(Stages.Divided);
+        QueriesPosition copy = queriesPositionService.splitPosition(position);
         tab.getDatasource().addItem(copy);
-    }
-
-    /**
-     * Копирует текущую позицию
-     *
-     * @param position позиция для копирования
-     * @return новую позицию
-     */
-    private QueriesPosition copyPosition(QueriesPosition position) {
-        QueriesPosition src = dataManager.reload(position, "full");
-        QueriesPosition copy = metadata.create(QueriesPosition.class);
-        Collection<MetaProperty> properties = position.getMetaClass().getProperties();
-        for (MetaProperty property : properties) {
-            if (property.getDeclaringClass() != position.getMetaClass().getJavaClass())
-                continue;
-            String name = property.getName();
-            copy.setValue(name, src.getValue(name));
-        }
-        return copy;
     }
 
     /**
@@ -1182,7 +1179,6 @@ public class QueriesPositionBrowse extends AbstractLookup {
      * Открывает голосование
      */
     public void onBtnVoteClick() {
-
         if (!checkSelection(positionsComission.getSelected())) return;
 
         HashMap<String, Object> items = new HashMap<>();
@@ -1201,10 +1197,7 @@ public class QueriesPositionBrowse extends AbstractLookup {
         GroupTable<QueriesPosition> grpTab = getOpenedStageTable();
         GroupDatasource ds = grpTab.getDatasource();
         Set<QueriesPosition> positions = grpTab.getSelected();
-        for (QueriesPosition position : positions) {
-            workflowService.movePosition(position);
-            voteService.setVoteForPosition(position);
-        }
+        queriesPositionService.setVote(positions);
         ds.refresh();
     }
 
@@ -1445,44 +1438,9 @@ public class QueriesPositionBrowse extends AbstractLookup {
      * Отправка писем поставщикам
      */
     public void onBtnSendEmail() {
-
         if (!checkSelection(positionsBills.getSelected())) return;
         Set<QueriesPosition> setPosition = positionsBills.getSelected();
-
-        //Шаблоны
-        String emailHeader = "To Supplier: %s \n" +
-                "From Company: %s \n\n";
-
-        String emailBody = "Nomenclature: %s \n" +
-                "Quantity: %10.2f \n" +
-                "Price: %10.2f \n\n";
-
-        //Группировка по заказчику, компании
-        Map<Suppliers, Map<Company, List<QueriesPosition>>> groupedBySupAndCompMap = setPosition.stream()
-                .collect(Collectors.groupingBy(t -> t.getVoteResult().getPosSup().getSupplier(),
-                        Collectors.groupingBy(b -> b.getQuery().getCompany())));
-
-        groupedBySupAndCompMap.forEach((s, m) -> {
-
-            m.forEach((c, l) -> {
-
-                String emailHeaderToSend = String.format(emailHeader, s.getName(), c.getName());
-                StringBuilder emailBodyToSend = new StringBuilder();
-                l.forEach(q -> {
-                    String emailBodyPosition = String.format(emailBody, q.getNomenclature().getName(), q.getVoteResult().getQuantity(), q.getVoteResult().getPrice());
-                    emailBodyToSend.append(emailBodyPosition);
-                });
-
-                EmailInfo emailInfo = new EmailInfo(
-                        "piratovi@gmail.com", // recipients
-                        "TestTema", // subject
-                        emailHeaderToSend.concat(emailBodyToSend.toString())
-                );
-
-                emailService.sendEmailAsync(emailInfo);
-
-            });
-        });
+        queriesPositionService.sendEmail(setPosition);
         positionsBills.setSelected(new ArrayList<QueriesPosition>());
     }
 
