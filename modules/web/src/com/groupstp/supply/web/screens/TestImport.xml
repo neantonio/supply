@@ -5,8 +5,14 @@
     <dialogMode height="600"
                 width="800"/>
     <layout>
-        <button id="test"
-                caption="test"
-                invoke="onTestClick"/>
+        <hbox spacing="true">
+            <textField id="txtToken"/>
+            <button id="test"
+                    caption="test"
+                    invoke="onTestClick"/>
+            <textField id="txtPass"/>
+            <button caption="testSync"
+                    invoke="onTestSyncClick"/>
+        </hbox>
     </layout>
 </window>

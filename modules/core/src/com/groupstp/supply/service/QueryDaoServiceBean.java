@@ -6,9 +6,11 @@ import com.haulmont.cuba.core.Transaction;
 import com.haulmont.cuba.core.entity.StandardEntity;
 import com.haulmont.cuba.core.global.DataManager;
 import com.haulmont.cuba.core.global.LoadContext;
+import com.haulmont.cuba.core.global.Metadata;
 import org.springframework.stereotype.Service;
 
 import javax.inject.Inject;
+import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 
@@ -23,6 +25,9 @@ public class QueryDaoServiceBean implements QueryDaoService {
 
     @Inject
     private DataManager dataManager;
+
+    @Inject
+    private Metadata metadata;
 
     @Inject
     private com.haulmont.cuba.core.Persistence persistence;
@@ -167,6 +172,37 @@ public class QueryDaoServiceBean implements QueryDaoService {
                 .setQuery(LoadContext.createQuery("select ss from supply$SuppliersSuggestion ss where\n" +
                         "ss.posSup in (select ps from supply$PositionSupplier ps where ps.position.id=:idItem)")
                 .setParameter("idItem",entity.getId()));
+
+        return dataManager.loadList(loadContext);
+    }
+
+    @Override
+    public void saveToken(String token, List<QueriesPosition> positionList) {
+        QueriesPositionTokenLink tokenLink=metadata.create(QueriesPositionTokenLink.class);
+        tokenLink.setPositions(positionList);
+        tokenLink.setToken(token);
+        dataManager.commit(tokenLink);
+    }
+
+    @Override
+    public Collection<QueriesPosition> loadPositionsForToken(String token) {
+        LoadContext<QueriesPositionTokenLink> loadContext = LoadContext.create(QueriesPositionTokenLink.class)
+                .setQuery(LoadContext.createQuery("select qptl from supply$QueriesPositionTokenLink qptl where\n" +
+                        "qptl.token =:tokenItem")
+                        .setParameter("tokenItem",token))
+                .setView("queriesPositionTokenLink-full");
+        QueriesPositionTokenLink result=dataManager.load(loadContext);
+        if(result==null) return null;
+        return result.getPositions();
+    }
+
+    @Override
+    public List<PositionSupplier> getSupplierPositions(Collection<QueriesPosition> positionCollection) {
+        LoadContext<PositionSupplier> loadContext = LoadContext.create(PositionSupplier.class)
+                .setQuery(LoadContext.createQuery("select ps from supply$PositionSupplier ps where\n" +
+                        "ps.position in :positionItems")
+                        .setParameter("positionItems",positionCollection))
+                .setView("positionSupplier-full");
 
         return dataManager.loadList(loadContext);
     }

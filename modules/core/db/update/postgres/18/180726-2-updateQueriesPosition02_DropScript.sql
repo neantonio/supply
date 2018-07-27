@@ -1,0 +1,1 @@
+alter table SUPPLY_QUERIES_POSITION drop column QUERIES_POSITION_TOKEN_LINK_ID__U53707 cascade ;

@@ -29,6 +29,7 @@ import org.dom4j.Element;
 
 import javax.annotation.Nullable;
 import javax.inject.Inject;
+import java.io.Serializable;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -87,6 +88,12 @@ public class QueriesPositionBrowse extends AbstractLookup {
 
     @Inject
     private QueryService queryService;
+
+    @Inject
+    private SuggestionService suggestionService;
+
+    @Inject
+    private EmployeeService employeeService;
 
     @Inject
     private TabSheet tabs;
@@ -1020,7 +1027,7 @@ public class QueriesPositionBrowse extends AbstractLookup {
      * @return новую позицию
      */
     private QueriesPosition copyPosition(QueriesPosition position) {
-        QueriesPosition src = dataManager.reload(position, "full");
+        QueriesPosition src = dataManager.reload(position, "queriesPosition-full");
         QueriesPosition copy = metadata.create(QueriesPosition.class);
         Collection<MetaProperty> properties = position.getMetaClass().getProperties();
         for (MetaProperty property : properties) {
@@ -1510,5 +1517,15 @@ public class QueriesPositionBrowse extends AbstractLookup {
         HashMap<String, Object> items = new HashMap<>();
         items.put("position", tab.getSelected());
         openWindow("supply$Delivery.browse", WindowManager.OpenType.DIALOG, items);
+    }
+
+    public void onBtnSuggestionRequestClick() {
+        if(!checkSelection(positionsSupSelection.getSelected())) return;
+
+        Employee employee=employeeService.getCurrentUserEmployee();
+        Map<Suppliers,Map<Company,List<QueriesPosition>>> mapToSend=suggestionService.makeSuggestionRequestMap(positionsSupSelection.getSelected());
+
+        suggestionService.processRequestSending(mapToSend,employee);
+
     }
 }

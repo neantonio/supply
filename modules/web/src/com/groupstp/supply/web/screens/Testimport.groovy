@@ -1,6 +1,9 @@
 package com.groupstp.supply.web.screens
 
+import com.groupstp.supply.service.ImportControllerService
 import com.haulmont.cuba.gui.components.AbstractWindow
+import com.haulmont.cuba.gui.components.TextField
+import com.haulmont.cuba.gui.settings.Settings
 import org.apache.http.HttpEntity
 import org.apache.http.HttpResponse
 import org.apache.http.client.ClientProtocolException
@@ -22,11 +25,25 @@ import javax.inject.Inject
 class Testimport extends AbstractWindow {
     @Inject
     private Logger log;
-    String accessToken
+    String accessToken;
+
+    @Inject
+    private TextField txtPass;
+
+    @Inject
+    private TextField txtToken;
+
+    @Inject
+    private ImportControllerService importControllerService;
 
     public void onTestClick() {
         login()
         testRest()
+    }
+
+    public void onTestSyncClick() throws Exception {
+        importControllerService.importNomenclature1C("http://stpserver.groupstp.ru:1805/accnt2016/", txtPass.getRawValue());
+       // importControllerService.importNomenclature1C("http://stpserver.groupstp.ru:1805/accnt2016/", txtPass.getRawValue());
     }
 
     private void login() throws IOException {
@@ -60,14 +77,14 @@ class Testimport extends AbstractWindow {
 
     private void testRest()
     {
-        def data =
-                [type:"Nomenclature", extId:"1234567891", name:"child",parent:
-                    [type:"Nomenclature", name:"parent", extId:"1234567890"],
-                ]
-        String json = new JSONObject([data:data]).toString();
+//        def data =
+//                [type:"Nomenclature", extId:"1234567891", name:"child",parent:
+//                    [type:"Nomenclature", name:"parent", extId:"1234567890"],
+//                ]
+        String json = new JSONObject([token:txtToken.getRawValue()]).toString();
         CloseableHttpClient httpclient = HttpClients.createDefault()
         try  {
-            HttpPost post = new HttpPost('http://localhost:8000/app/rest/v2/services/supply_EntityImportService/createOrUpdateEntity');
+            HttpPost post = new HttpPost('http://localhost:8000/app/rest/v2/services/supply_SuggestionService/getPositionsForToken');
             post.setHeader("Authorization", "Bearer " + accessToken);
 
             StringEntity stringEntity = new StringEntity(json, ContentType.APPLICATION_JSON);
@@ -95,6 +112,34 @@ class Testimport extends AbstractWindow {
                 throw new ClientProtocolException("Unexpected response status: " + status);
             }
         }
+    }
+    @Override
+    public void saveSettings() {
+        org.dom4j.Element x = getSettings().get(this.getId());
+        x.addAttribute("value", txtPass.getRawValue());
+        getSettings().setModified(true);
+        super.saveSettings();
+    }
+
+    /**
+     * This method is called when the screen is opened to restore settings saved in the database for the current user.
+     * <p>You can override it to restore custom settings.
+     * <p>For example:
+     * <pre>
+     * public void applySettings(Settings settings) {
+     *     super.applySettings(settings);
+     *     String visible = settings.get(hintBox.getId()).attributeValue("visible");
+     *     if (visible != null)
+     *         hintBox.setVisible(Boolean.valueOf(visible));
+     * }
+     * </pre>
+     *
+     * @param settings settings object loaded from the database for the current user
+     */
+    @Override
+    public void applySettings(Settings settings) {
+        super.applySettings(settings);
+        txtPass.setValue(settings.get(this.getId()).attributeValue("value"));
     }
 
 }

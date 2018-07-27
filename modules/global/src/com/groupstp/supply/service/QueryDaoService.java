@@ -4,6 +4,7 @@ package com.groupstp.supply.service;
 import com.groupstp.supply.entity.*;
 import com.haulmont.cuba.core.entity.StandardEntity;
 
+import java.util.Collection;
 import java.util.List;
 /**
  * @author AntonLomako
@@ -43,4 +44,10 @@ public interface QueryDaoService {
     String getMetaclassPrefix(String entityType);
 
     List<SuppliersSuggestion> getSupplierSuggestions(QueriesPosition entity);
+
+    void saveToken(String token, List<QueriesPosition> positionList);
+
+    Collection<QueriesPosition> loadPositionsForToken(String token);
+
+    List<PositionSupplier> getSupplierPositions(Collection<QueriesPosition> positionCollection);
 }

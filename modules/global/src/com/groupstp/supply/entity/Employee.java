@@ -18,6 +18,9 @@ public class Employee extends StandardEntity {
     @JoinColumn(name = "USER_ID", unique = true)
     protected User user;
 
+    @Column(name = "POSITION_")
+    protected String position;
+
     @Column(name = "EMAIL")
     protected String email;
 
@@ -29,6 +32,15 @@ public class Employee extends StandardEntity {
 
     @Column(name = "EXT_ID")
     protected String extId;
+
+    public void setPosition(String position) {
+        this.position = position;
+    }
+
+    public String getPosition() {
+        return position;
+    }
+
 
     public void setEmail(String email) {
         this.email = email;

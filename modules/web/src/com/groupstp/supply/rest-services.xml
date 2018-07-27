@@ -5,4 +5,10 @@
             <param name="data"/>
         </method>
     </service>
+
+    <service name="supply_SuggestionService">
+        <method name="getPositionsForToken">
+            <param name="token"/>
+        </method>
+    </service>
 </services>

@@ -189,6 +189,7 @@ create table SUPPLY_EMPLOYEE (
     DELETED_BY varchar(50),
     --
     USER_ID uuid,
+    POSITION_ varchar(255),
     EMAIL varchar(255),
     NAME varchar(50),
     FULL_NAME varchar(255),
@@ -360,6 +361,7 @@ create table SUPPLY_SUPPLIERS (
     DELETED_BY varchar(50),
     --
     NAME varchar(50),
+    EMAIL varchar(255),
     FULL_NAME varchar(255),
     --
     primary key (ID)
@@ -377,6 +379,7 @@ create table SUPPLY_POSITION_SUPPLIER (
     DELETED_BY varchar(50),
     --
     POSITION_ID uuid not null,
+    SUGGESTION_REQUEST_SEND boolean,
     SELECTED boolean,
     SUPPLIER_ID uuid,
     --
@@ -524,3 +527,26 @@ create table SUPPLY_QUERY_POSITION_STAGE_DATA_ITEM_LINK (
     primary key (QUERY_POSITION_STAGE_DATA_ID, QUERY_POSITION_STAGE_DATA_ITEM_ID)
 )^
 -- end SUPPLY_QUERY_POSITION_STAGE_DATA_ITEM_LINK
+-- begin SUPPLY_QUERIES_POSITION_TOKEN_LINK
+create table SUPPLY_QUERIES_POSITION_TOKEN_LINK (
+    ID uuid,
+    VERSION integer not null,
+    CREATE_TS timestamp,
+    CREATED_BY varchar(50),
+    UPDATE_TS timestamp,
+    UPDATED_BY varchar(50),
+    DELETE_TS timestamp,
+    DELETED_BY varchar(50),
+    --
+    TOKEN varchar(255),
+    --
+    primary key (ID)
+)^
+-- end SUPPLY_QUERIES_POSITION_TOKEN_LINK
+-- begin SUPPLY_QUERIES_POSITION_TOKEN_LINK_QUERIES_POSITION_LINK
+create table SUPPLY_QUERIES_POSITION_TOKEN_LINK_QUERIES_POSITION_LINK (
+    QUERIES_POSITION_TOKEN_LINK_ID uuid,
+    QUERIES_POSITION_ID uuid,
+    primary key (QUERIES_POSITION_TOKEN_LINK_ID, QUERIES_POSITION_ID)
+)^
+-- end SUPPLY_QUERIES_POSITION_TOKEN_LINK_QUERIES_POSITION_LINK

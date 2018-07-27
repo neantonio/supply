@@ -1,0 +1,3 @@
+alter table SUPPLY_QUERIES_POSITION rename column queries_position_token_link_id to queries_position_token_link_id__u53707 ;
+drop index IDX_SUPPLY_QUERIES_POSITION_ON_QUERIES_POSITION_TOKEN_LINK ;
+alter table SUPPLY_QUERIES_POSITION drop constraint FK_SUPPLY_QUERIES_POSITION_ON_QUERIES_POSITION_TOKEN_LINK ;

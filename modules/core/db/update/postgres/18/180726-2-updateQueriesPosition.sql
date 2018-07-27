@@ -1,0 +1,1 @@
+alter table SUPPLY_QUERIES_POSITION add column QUERIES_POSITION_TOKEN_LINK_ID uuid ;

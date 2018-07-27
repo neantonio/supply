@@ -6,7 +6,7 @@
     <dsContext>
         <groupDatasource id="dsNomControl"
                          class="com.groupstp.supply.entity.QueriesPosition"
-                         view="full">
+                         view="queriesPosition-full">
             <query>
                 <![CDATA[select e from supply$QueriesPosition e
 where e.currentStage='NomControl']]>
@@ -14,7 +14,7 @@ where e.currentStage='NomControl']]>
         </groupDatasource>
         <groupDatasource id="dsStoreControl"
                          class="com.groupstp.supply.entity.QueriesPosition"
-                         view="full">
+                         view="queriesPosition-full">
             <query>
                 <![CDATA[select e from supply$QueriesPosition e
 where e.currentStage='StoreControl']]>
@@ -22,7 +22,7 @@ where e.currentStage='StoreControl']]>
         </groupDatasource>
         <groupDatasource id="dsSupSelection"
                          class="com.groupstp.supply.entity.QueriesPosition"
-                         view="full">
+                         view="queriesPosition-full">
             <query>
                 <![CDATA[select e from supply$QueriesPosition e
 where e.currentStage='SupSelection']]>
@@ -30,7 +30,7 @@ where e.currentStage='SupSelection']]>
         </groupDatasource>
         <groupDatasource id="dsAnalysis"
                          class="com.groupstp.supply.entity.QueriesPosition"
-                         view="full">
+                         view="queriesPosition-full">
             <query>
                 <![CDATA[select e from supply$QueriesPosition e
 where e.currentStage='Analysis']]>
@@ -38,7 +38,7 @@ where e.currentStage='Analysis']]>
         </groupDatasource>
         <groupDatasource id="dsComission"
                          class="com.groupstp.supply.entity.QueriesPosition"
-                         view="full">
+                         view="queriesPosition-full">
             <query>
                 <![CDATA[select e from supply$QueriesPosition e
 where e.currentStage='Comission']]>
@@ -69,7 +69,7 @@ where e.currentStage='Procuration']]>
         </groupDatasource>
         <groupDatasource id="dsLogistic"
                          class="com.groupstp.supply.entity.QueriesPosition"
-                         view="full">
+                         view="queriesPosition-full">
             <query>
                 <![CDATA[select e from supply$QueriesPosition e
 where e.currentStage='Logistic']]>
@@ -294,6 +294,9 @@ where e.position in :custom$positions]]>
                         <button id="btnSuggestions"
                                 caption="mainMsg://Suggestions"
                                 invoke="onBtnSuggestionsClick"/>
+                        <button id="btnSuggestionRequest"
+                                caption="msg://suggestion_request"
+                                invoke="onBtnSuggestionRequestClick"/>
                         <button id="btnDeliverySupStage"
                                 caption="Добавить Груз"
                                 invoke="onBtnDeliveryClick"/>
