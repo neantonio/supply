@@ -70,6 +70,7 @@ public class WorkflowServiceBean implements WorkflowService {
     @Override
     public void movePositionTo(QueriesPosition position, Stages stage) {
         //TODO: add finishTS to current position
+
         String strStage = position.getCurrentStage().name();
         strStage = strStage.substring(0, 1).toLowerCase()+strStage.substring(1);
         if(position.getMetaClass().getProperty(strStage+"Flag")!=null) {
@@ -80,6 +81,7 @@ public class WorkflowServiceBean implements WorkflowService {
         position.setCurrentStage(stage);
         dataManager.commit(position);
         createMovementRecord(position, stage);
+
     }
 
     @Inject
@@ -90,7 +92,7 @@ public class WorkflowServiceBean implements WorkflowService {
      * запись в журнал информации о завершении этапа. извлекается последняя запись с участием позиции и устанавливается finishTS
      * @param position
      */
-    private void createFinishStageRecord(QueriesPosition position){
+   private void createFinishStageRecord(QueriesPosition position){
         List<QueryPositionMovements> movements=queryDaoService.getQueryPositionMovement(position);
         if(movements.size()==0)return;  //допустим для разделенной позиции
         QueryPositionMovements lastMovement=movements.get(0);
