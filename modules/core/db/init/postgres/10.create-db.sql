@@ -540,6 +540,7 @@ create table SUPPLY_SETTINGS (
     DELETED_BY varchar(50),
     --
     KEY_ varchar(50) not null,
+    SAVED_OBJECT text,
     MEASURE_UNITS_ID uuid,
     PROCURATION_ID uuid,
     QUERIES_POSITION_ID uuid,

@@ -19,6 +19,7 @@ import java.util.Date;
 import java.util.stream.Collectors;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Lob;
 
 @NamePattern("%s|key")
 @Table(name = "SUPPLY_SETTINGS")
@@ -29,6 +30,10 @@ public class Settings extends StandardEntity {
     @NotNull
     @Column(name = "KEY_", nullable = false, unique = true, length = 50)
     protected String key;
+
+    @Lob
+    @Column(name = "SAVED_OBJECT")
+    protected String savedObject;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "MEASURE_UNITS_ID")
@@ -190,6 +195,15 @@ public class Settings extends StandardEntity {
 
     @Column(name = "SUPPLY_WORKOUT_TYPE")
     protected String supplyWorkoutType;
+
+    public void setSavedObject(String savedObject) {
+        this.savedObject = savedObject;
+    }
+
+    public String getSavedObject() {
+        return savedObject;
+    }
+
 
     public void setMeasureUnits(MeasureUnits measureUnits) {
         this.measureUnits = measureUnits;

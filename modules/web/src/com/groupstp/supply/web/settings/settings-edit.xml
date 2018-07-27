@@ -21,7 +21,7 @@
                 <field property="suppliers"/>
                 <field property="text"/>
                 <field property="division"/>
-                <field property="booleanValue" />
+                <field property="booleanValue"/>
                 <field property="bigDecimalValue"/>
                 <field property="dateTimeValue"/>
                 <field property="dateValue"/>
@@ -32,6 +32,8 @@
                 <field property="analogs"/>
                 <field property="company"/>
                 <field property="queriesPosition"/>
+                <field property="savedObject"
+                       rows="5"/>
             </column>
             <column>
                 <field property="query"/>
@@ -68,6 +70,8 @@
                 <field property="procuration"/>
             </column>
         </fieldGroup>
+        <lookupField id="lookupField"
+                     caption="Сущность"/>
         <buttonsPanel align="BOTTOM_LEFT">
             <button id="buttonOk"
                     caption="Ok"
@@ -78,8 +82,17 @@
                     caption="Cancel"
                     description="Cancel"/>
             <button id="buttonClearBoolean"
-                    invoke="onClearBooleanBtnClick"
-                    caption="Убрать boolean"/>
+                    caption="Убрать boolean"
+                    invoke="onClearBooleanBtnClick"/>
+            <button id="buttonToJSON"
+                    caption="To JSON"
+                    invoke="onToJsonBtnClick"/>
+            <button id="buttonFromJSON"
+                    caption="From JSON"
+                    invoke="onFromJsonBtnClick"/>
+            <button id="AllClass"
+                    caption="AllClass"
+                    invoke="onAllClassBtnClick"/>
         </buttonsPanel>
     </layout>
 </window>
