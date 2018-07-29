@@ -41,5 +41,11 @@ public interface QueryDaoService {
 
     String getMetaclassPrefix(String entityType);
 
+    List<StandardEntity> getEntityList(String entityType);
+
     Holiday getHoliday(Date date);
+
+    Settings getSettings(String key);
+
+
 }

@@ -1,14 +1,18 @@
 package com.groupstp.supply.web.settings;
 
+import com.groupstp.supply.entity.*;
+import com.groupstp.supply.service.SettingsService;
 import com.haulmont.chile.core.model.MetaClass;
 import com.haulmont.cuba.core.app.importexport.EntityImportExportService;
 import com.haulmont.cuba.core.app.importexport.EntityImportView;
-import com.haulmont.cuba.core.global.Metadata;
+import com.haulmont.cuba.core.entity.Entity;
 import com.haulmont.cuba.core.global.MetadataTools;
+import com.haulmont.cuba.core.global.View;
 import com.haulmont.cuba.gui.components.AbstractEditor;
-import com.groupstp.supply.entity.Settings;
 import com.haulmont.cuba.gui.components.Component;
 import com.haulmont.cuba.gui.components.LookupField;
+import com.haulmont.cuba.gui.data.CollectionDatasource;
+import com.haulmont.cuba.gui.data.DsBuilder;
 
 import javax.inject.Inject;
 import java.lang.reflect.Array;
@@ -16,6 +20,9 @@ import java.lang.reflect.Field;
 import java.util.*;
 import java.util.stream.Collectors;
 
+/**
+ * @author Andrey Kolosov
+ */
 public class SettingsEdit extends AbstractEditor<Settings> {
 
     private String entitiesToJSON;
@@ -24,54 +31,54 @@ public class SettingsEdit extends AbstractEditor<Settings> {
     private EntityImportExportService entityImportExportService;
 
     @Inject
-    private LookupField lookupField;
+    private LookupField lookupFieldClass;
 
     @Inject
-    private MetadataTools metadataTools ;
+    private LookupField lookupFieldEntity;
+
+    @Inject
+    private LookupField lookupFieldEnum;
+
+    @Inject
+    private LookupField lookupFieldEnumValue;
+
+    @Inject
+    private MetadataTools metadataTools;
+
+    @Inject
+    private SettingsService settingsService;
 
     @Override
     public void init(Map<String, Object> params) {
         super.init(params);
-        Collection<MetaClass> allPersistentMetaClasses = metadataTools.getAllPersistentMetaClasses();
-        Collection<MetaClass> allEmbeddableMetaClasses = metadataTools.getAllEmbeddableMetaClasses();
 
-//        Map<String, Object> map = new LinkedHashMap<>();
-//        for (MetaClass metaClass : allPersistentMetaClasses) {
-//            map.put(metaClass.toString(),metaClass.getJavaClass());
-//            showNotification(getMessage(metaClass.toString()+" "+metaClass.getJavaClass()), NotificationType.TRAY);
-//        }
+        //Задаются значения для поля Сущность
+        lookupFieldClass.setOptionsMap(settingsService.getAllSortedClass());
 
-        Map<String, Class> embeddeableClass =
-                allEmbeddableMetaClasses.stream().collect(Collectors.toMap(k -> k.toString(), t -> t.getJavaClass()));
-        Map<String, Class> persistentClass =
-                allPersistentMetaClasses.stream().collect(Collectors.toMap(k -> k.toString(), t->t.getJavaClass()));
-        lookupField.setOptionsMap(embeddeableClass);
+        lookupFieldClass.addValueChangeListener(e -> {
+            //Задаются значения для поля Объект в зависимости от того какая сущность выбрана
+            lookupFieldEntity.setOptionsMap(settingsService.getAllEntitiesForClass((Class) e.getValue()));
+        });
+
+        //Задаются значения для поля Enum
+        lookupFieldEnum.setOptionsMap(settingsService.getAllSortedEnums());
+
+        lookupFieldEnum.addValueChangeListener(e -> {
+            //Задаются значения для поля Enum Значения в зависимости от того какой Enum выбран
+            lookupFieldEnumValue.setOptionsMap(settingsService.getAllEnumValues((Class) e.getValue()));
+        });
     }
 
-    public void onOkBtnClick() throws Exception {
+    /**
+     * Обработчик нажатия на кнопку "Ок". Проверяет на только одно заполненое значение.
+     */
+    public void onOkBtnClick() {
 
-        Settings settings = getItem();
-        List<Field> fieldList = Arrays.asList(settings.getClass().getDeclaredFields());
-
-        List<Field> fieldFilterList = fieldList.stream()
-                .filter(field -> {
-                            String name = field.getName();
-                            Object value = null;
-                            try {
-                                field.setAccessible(true);
-                                value = field.get(settings);
-                            } catch (IllegalAccessException e) {
-                                e.printStackTrace();
-                            }
-                            return (value != null && !name.contains("_persistence_") && !name.equals("serialVersionUID"));
-                        }
-                )
-                .collect(Collectors.toList());
-        int sizeFieldFilterList = fieldFilterList.size();
+        int sizeFieldFilterList = settingsService.getCountFilledFields(getItem());
         if (sizeFieldFilterList == 2) {
             commitAndClose();
         } else {
-            showNotification(getMessage("Выбрано значений: "+(sizeFieldFilterList-1)+"\nВыберите 1 значение"), NotificationType.TRAY);
+            showNotification(getMessage("Выбрано значений: " + (sizeFieldFilterList - 1) + "\nВыберите 1 значение"), NotificationType.TRAY);
         }
     }
 
@@ -82,34 +89,5 @@ public class SettingsEdit extends AbstractEditor<Settings> {
     public void onClearBooleanBtnClick(Component source) {
         getItem().setBooleanValue(null);
     }
-
-    public void onToJsonBtnClick(Component source) {
-        Settings settingsToJson = getItem();
-        List<Settings> settingsList = new ArrayList<>();
-        settingsList.add(settingsToJson);
-        entitiesToJSON = entityImportExportService.exportEntitiesToJSON(settingsList);
-        showNotification(getMessage(entitiesToJSON), NotificationType.TRAY);
-    }
-
-    public void onFromJsonBtnClick() {
-        EntityImportView view = new EntityImportView(Settings.class);
-        view.addLocalProperties();
-        view.addProperties("division");
-        List<Settings> settingsList = (List) entityImportExportService.importEntitiesFromJSON(entitiesToJSON,view);
-        Settings settingsFromJson = settingsList.get(0);
-        showNotification(getMessage(settingsFromJson.getDivision()+""), NotificationType.TRAY);
-    }
-
-    public void onAllClassBtnClick() {
-        Settings item = getItem();
-        MetaClass metaClass = item.getMetaClass();
-        Class<? extends Settings> aClass = item.getClass();
-        Class<?> superclass = aClass.getSuperclass();
-        Class<?>[] classes = superclass.getClasses();
-        Collection<MetaClass> allPersistentMetaClasses = metadataTools.getAllPersistentMetaClasses();
-        showNotification(getMessage(allPersistentMetaClasses.toString()), NotificationType.TRAY);
-    }
-
-
 
 }

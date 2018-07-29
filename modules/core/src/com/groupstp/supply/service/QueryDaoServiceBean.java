@@ -154,6 +154,21 @@ public class QueryDaoServiceBean implements QueryDaoService {
         else return "supply$";
     }
 
+    @Override
+    public List<StandardEntity> getEntityList(String entityType) {
+        if(entityType==null)return null;
+
+        Transaction tx = persistence.createTransaction();
+        EntityManager em = persistence.getEntityManager();
+        List<StandardEntity> en=em.createQuery(
+                "SELECT e FROM "+getMetaclassPrefix(entityType)+entityType+" e")
+                .getResultList();
+
+        tx.commit();
+
+        return en;
+    }
+
     /**
      * @Author Andrey Kolosov
      * @param date Проверяемый день
@@ -166,6 +181,17 @@ public class QueryDaoServiceBean implements QueryDaoService {
         LoadContext<Holiday> loadContext = LoadContext.create(Holiday.class)
                 .setQuery(LoadContext.createQuery("SELECT h FROM supply$Holiday h where h.day=:day")
                 .setParameter("day", date));
+
+        return dataManager.load(loadContext);
+    }
+
+    @Override
+    public Settings getSettings(String key) {
+        if((key==null))return null;
+
+        LoadContext<Settings> loadContext = LoadContext.create(Settings.class)
+                .setQuery(LoadContext.createQuery("SELECT h FROM supply$Settings h where h.key=:key")
+                        .setParameter("key", key));
 
         return dataManager.load(loadContext);
     }

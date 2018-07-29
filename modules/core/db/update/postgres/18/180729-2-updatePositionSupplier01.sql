@@ -1,0 +1,1 @@
+alter table SUPPLY_POSITION_SUPPLIER rename column suggestion_request_send to suggestion_request_send__u66817 ;

@@ -32,7 +32,6 @@
             </actions>
             <columns>
                 <column id="key"/>
-                <column id="savedObject"/>
             </columns>
             <rows datasource="settingsesDs"/>
             <rowsCount/>

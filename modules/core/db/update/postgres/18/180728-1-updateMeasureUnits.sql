@@ -1,0 +1,1 @@
+drop index IDX_SUPPLY_MEASURE_UNITS_UNQ ;

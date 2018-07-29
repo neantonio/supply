@@ -30,6 +30,8 @@
                        value="com.groupstp.supply.service.StageDataService"/>
                 <entry key="supply_PaymentTableService"
                        value="com.groupstp.supply.service.PaymentTableService"/>
+                <entry key="supply_SettingsService"
+                       value="com.groupstp.supply.service.SettingsService"/>
             </map>
         </property>
     </bean>

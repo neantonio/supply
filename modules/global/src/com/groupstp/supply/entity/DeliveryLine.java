@@ -12,7 +12,9 @@ import javax.persistence.Column;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
+import com.haulmont.chile.core.annotations.NamePattern;
 
+@NamePattern("%s %s|deliveryDay,quantity")
 @Table(name = "SUPPLY_DELIVERY_LINE")
 @Entity(name = "supply$DeliveryLine")
 public class DeliveryLine extends StandardEntity {
