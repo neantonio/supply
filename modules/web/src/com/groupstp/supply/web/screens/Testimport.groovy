@@ -1,9 +1,16 @@
 package com.groupstp.supply.web.screens
 
+import com.groupstp.supply.entity.QueriesPosition
 import com.groupstp.supply.service.ImportControllerService
+import com.groupstp.supply.service.SuggestionService
 import com.haulmont.cuba.gui.components.AbstractWindow
+import com.haulmont.cuba.gui.components.Label
+import com.haulmont.cuba.gui.components.Link
+import com.haulmont.cuba.gui.components.Table
 import com.haulmont.cuba.gui.components.TextField
+import com.haulmont.cuba.gui.data.CollectionDatasource
 import com.haulmont.cuba.gui.settings.Settings
+import com.vaadin.event.ItemClickEvent
 import org.apache.http.HttpEntity
 import org.apache.http.HttpResponse
 import org.apache.http.client.ClientProtocolException
@@ -34,7 +41,54 @@ class Testimport extends AbstractWindow {
     private TextField txtToken;
 
     @Inject
+    private TextField txtLink;
+
+    @Inject
+    private Table<QueriesPosition> positionTable;
+
+    @Inject
+    private Label tokenLabel;
+
+    @Inject
+    private Link webFormLink;
+
+    @Inject
+    private SuggestionService suggestionService;
+
+    @Inject
+    CollectionDatasource<QueriesPosition,UUID> queriesPositionsDs;
+
+    @Inject
     private ImportControllerService importControllerService;
+
+    @Override
+    public void init(Map<String, Object> params) {
+
+        com.vaadin.ui.Table vTable = positionTable.unwrap(com.vaadin.ui.Table.class);
+        vTable.addItemClickListener(new ItemClickEvent.ItemClickListener() {
+            @Override
+            void itemClick(ItemClickEvent event) {
+
+                //напрямую выбранный элемент не получить. достаем его по id
+                QueriesPosition qp=queriesPositionsDs.getItem(UUID.fromString(event.getItemId().toString()));
+
+                //сюда попадает прошлое выделение, поэтому его надо обрабатывать
+                Collection<QueriesPosition> qpCollection=new ArrayList<QueriesPosition>();
+                if(event.isCtrlKey()){
+                    qpCollection.addAll(positionTable.getSelected());
+                    if(qpCollection.contains(qp))qpCollection.remove(qp);
+                    else qpCollection.add(qp);
+                }
+                else qpCollection.add(qp);
+
+
+                tokenLabel.setValue(suggestionService.makeTokenForPositions(qpCollection))
+                webFormLink.setUrl(txtLink.getRawValue()+tokenLabel.getRawValue());
+                webFormLink.setCaption(txtLink.getRawValue()+tokenLabel.getRawValue())
+            }
+        })
+        ;
+    }
 
     public void onTestClick() {
         login()

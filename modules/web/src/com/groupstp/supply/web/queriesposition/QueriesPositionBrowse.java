@@ -1519,6 +1519,10 @@ public class QueriesPositionBrowse extends AbstractLookup {
         openWindow("supply$Delivery.browse", WindowManager.OpenType.DIALOG, items);
     }
 
+    /**
+     * @author AntonLomako
+     * отправляются запросы поставщикам и если есть позиции без поставщиков или позиции по которым запрос уже отправлен
+     */
     public void onBtnSuggestionRequestClick() {
         if(!checkSelection(positionsSupSelection.getSelected())) return;
 
@@ -1526,6 +1530,15 @@ public class QueriesPositionBrowse extends AbstractLookup {
         Map<Suppliers,Map<Company,List<QueriesPosition>>> mapToSend=suggestionService.makeSuggestionRequestMap(positionsSupSelection.getSelected());
 
         suggestionService.processRequestSending(mapToSend,employee);
+
+        Collection<QueriesPosition> positionsWithoutSupplier=suggestionService.getPositionListWithoutSupplier();
+        Collection<PositionSupplier> alreadySendRequest=suggestionService.getWithRequestAlreadySend();
+
+        if((positionsWithoutSupplier.size()>0)||(alreadySendRequest.size()>0)) {
+            openWindow("SuggestionRequestProcessing",
+                    WindowManager.OpenType.DIALOG,
+                    ParamsMap.of("positionsWithoutSupplier",positionsWithoutSupplier,"alreadySendRequest",alreadySendRequest));
+        }
 
     }
 }

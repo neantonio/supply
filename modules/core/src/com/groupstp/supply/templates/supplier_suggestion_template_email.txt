@@ -1,6 +1,6 @@
 <div style="height: 120px; text-align:center">
 <div style="font-size:18pt;">
-<b>АСМ</b>
+<b>${company.name}</b>
 </div>${company.fullName}
 <hr>ИНН: ${company.inn}; КПП: ${company.kpp}
 </div>

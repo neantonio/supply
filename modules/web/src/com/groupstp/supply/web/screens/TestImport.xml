@@ -2,17 +2,72 @@
 <window xmlns="http://schemas.haulmont.com/cuba/window.xsd"
         class="com.groupstp.supply.web.screens.Testimport"
         messagesPack="com.groupstp.supply.web.screens">
+    <dsContext>
+        <collectionDatasource id="queriesPositionsDs"
+                              class="com.groupstp.supply.entity.QueriesPosition"
+                              view="full">
+            <query>
+                <![CDATA[select e from supply$QueriesPosition e
+where e.currentStage='SupSelection']]>
+            </query>
+        </collectionDatasource>
+    </dsContext>
     <dialogMode height="600"
                 width="800"/>
     <layout>
-        <hbox spacing="true">
-            <textField id="txtToken"/>
-            <button id="test"
-                    caption="test"
-                    invoke="onTestClick"/>
-            <textField id="txtPass"/>
-            <button caption="testSync"
-                    invoke="onTestSyncClick"/>
-        </hbox>
+        <vbox spacing="true">
+            <hbox spacing="true">
+                <textField id="txtToken"/>
+                <button id="test"
+                        caption="test"
+                        invoke="onTestClick"/>
+                <textField id="txtPass"/>
+                <button caption="testSync"
+                        invoke="onTestSyncClick"/>
+            </hbox>
+            <vbox spacing="true">
+                <label id="tokenLabel"
+                       align="BOTTOM_LEFT"/>
+                <textField id="txtLink"
+                           caption="кусок ссылки до токена"/>
+                <link id="webFormLink"
+                      align="BOTTOM_LEFT"/>
+            </vbox>
+            <table id="positionTable"
+                   multiselect="true"
+                   width="100%">
+                <columns>
+                    <column id="billsFlag"/>
+                    <column id="storeControlFlag"/>
+                    <column id="currentStage"/>
+                    <column id="positionType"/>
+                    <column id="numberArticle"/>
+                    <column id="specification"/>
+                    <column id="quantity"/>
+                    <column id="analogsAllowed"/>
+                    <column id="comment"/>
+                    <column id="positionUsefulness"/>
+                    <column id="positionUsefulnessTS"/>
+                    <column id="startMinimalPrice"/>
+                    <column id="analogsCorrectionFlag"/>
+                    <column id="nomControlFlag"/>
+                    <column id="nomControlFlagTS"/>
+                    <column id="billsFlagTS"/>
+                    <column id="inStore"/>
+                    <column id="storeControlFlagTS"/>
+                    <column id="supplyWorkoutType"/>
+                    <column id="supSelectionFlag"/>
+                    <column id="supSelectionFlagTS"/>
+                    <column id="analysisResult"/>
+                    <column id="analysisFlag"/>
+                    <column id="analysisFlagTS"/>
+                    <column id="priceReduce"/>
+                    <column id="minimalPrice"/>
+                    <column id="billQuery"/>
+                    <column id="extId"/>
+                </columns>
+                <rows datasource="queriesPositionsDs"/>
+            </table>
+        </vbox>
     </layout>
 </window>

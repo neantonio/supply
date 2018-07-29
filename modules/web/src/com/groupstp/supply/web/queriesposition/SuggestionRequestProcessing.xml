@@ -5,11 +5,24 @@
         messagesPack="com.groupstp.supply.web.queriesposition">
     <dsContext>
         <groupDatasource id="positionsWithoutSupplierDs"
-                         class="com.groupstp.supply.entity.QueriesPosition"/>
-        <groupDatasource id="alreadySendRequest"
-                         class="com.groupstp.supply.entity.PositionSupplier"/>
+                         allowCommit="false"
+                         class="com.groupstp.supply.entity.QueriesPosition"
+                         view="queriesPosition-full">
+            <query>
+                <![CDATA[select e from supply$QueriesPosition e where e.id='00000000-0000-0000-0000-000000000000']]>
+            </query>
+        </groupDatasource>
+        <groupDatasource id="alreadySendRequestDs"
+                         allowCommit="false"
+                         class="com.groupstp.supply.entity.PositionSupplier"
+                         view="positionSupplier-full">
+            <query>
+                <![CDATA[select e from supply$PositionSupplier e where e.id='00000000-0000-0000-0000-000000000000']]>
+            </query>
+        </groupDatasource>
     </dsContext>
-    <dialogMode height="600"
+    <dialogMode closeable="true"
+                height="600"
                 width="800"/>
     <layout>
         <vbox spacing="true">
@@ -18,7 +31,8 @@
                 <label description="msg://positions_without_suppliers"
                        value="msg://positions_without_suppliers"
                        width="100%"/>
-                <groupTable height="100px"
+                <groupTable id="withoutSupplierTable"
+                            multiselect="true"
                             width="100%">
                     <columns>
                         <column id="nomenclature.name"/>
@@ -42,20 +56,21 @@
                 <label value="msg://repeated_request"
                        width="100%"/>
                 <buttonsPanel>
-                    <button id="sendToSelected"
-                            caption="msg://send_to_all"
-                            invoke="onSendToSelectedClick"/>
                     <button id="sendToAllAgain"
-                            caption="msg://send_to_selected"
+                            caption="msg://send_to_all"
                             invoke="onSendToAllAgainClick"/>
+                    <button id="sendToSelected"
+                            caption="msg://send_to_selected"
+                            invoke="onSendToSelectedClick"/>
                 </buttonsPanel>
-                <groupTable height="100px"
+                <groupTable id="repeatedSendTable"
+                            multiselect="true"
                             width="100%">
                     <columns>
                         <column id="position"/>
                         <column id="supplier"/>
                     </columns>
-                    <rows datasource="alreadySendRequest"/>
+                    <rows datasource="alreadySendRequestDs"/>
                 </groupTable>
             </vbox>
         </vbox>

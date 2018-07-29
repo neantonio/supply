@@ -675,7 +675,14 @@
         <property name="position"
                   view="_minimal">
             <property name="query"
-                      view="_minimal"/>
+                      view="_minimal">
+                <property name="company"
+                          view="_minimal">
+                    <property name="fullName"/>
+                    <property name="inn"/>
+                    <property name="kpp"/>
+                </property>
+            </property>
             <property name="billsFlag"/>
             <property name="storeControlFlag"/>
             <property name="currentStage"/>
@@ -724,27 +731,25 @@
             <property name="delivery"
                       view="_minimal"/>
             <property name="extId"/>
-            <property name="id"/>
-            <property name="version"/>
             <property name="createTs"/>
             <property name="createdBy"/>
             <property name="updateTs"/>
             <property name="updatedBy"/>
-            <property name="deleteTs"/>
-            <property name="deletedBy"/>
+            <property name="nomenclature"
+                      view="_minimal">
+                <property name="unit"
+                          view="_minimal"/>
+                <property name="article"/>
+            </property>
         </property>
         <property name="supplier"
                   view="_minimal">
             <property name="email"/>
             <property name="fullName"/>
-            <property name="id"/>
-            <property name="version"/>
             <property name="createTs"/>
             <property name="createdBy"/>
             <property name="updateTs"/>
             <property name="updatedBy"/>
-            <property name="deleteTs"/>
-            <property name="deletedBy"/>
         </property>
         <property name="createTs"/>
         <property name="createdBy"/>

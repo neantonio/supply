@@ -18,12 +18,14 @@ import com.haulmont.cuba.web.gui.components.WebPickerField;
 import com.haulmont.cuba.web.gui.components.WebTextField;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Created by 79167 on 05.07.2018.
  */
 public class SupplyWindowUtil {
 
+    //обязательные компоненты
     private AbstractWindow window;
     private Messages messages;
     private ComponentsFactory componentsFactory;
@@ -260,6 +262,42 @@ public class SupplyWindowUtil {
 
     public Collection<QueriesPosition> validatePositionsAndGetCorrectItems(Collection<QueriesPosition> positions){
         return null;
+    }
+
+    public void makeTrayNotificationWithStringList(String header, List<String> stringList) {
+        makeNotification(header,stringList, Frame.NotificationType.TRAY_HTML);
+    }
+
+    private void makeNotification(String header, List<String> stringList, Frame.NotificationType type){
+        window.showNotification("<b>"+header+"</b>",
+                stringList.stream().map(item->"<div>"+item+"</div>").collect(Collectors.joining()),
+                type);
+    }
+
+
+
+    /**
+     * проверка, что быбрана только одна строчка
+     * @author AntonLomako
+     */
+    public boolean checkSingleSelection(Collection selected){
+        if(selected.size()==1) return true;
+        else {
+            window.showNotification(messages.getMainMessage("select_only_one"), Frame.NotificationType.WARNING);
+            return false;
+        }
+    }
+
+    /**
+     * проверка, что быбрана только хотя бы одна строчка
+     * @author AntonLomako
+     */
+    public boolean checkSelection(Collection selected){
+        if(selected.size()>0) return true;
+        else {
+            window.showNotification(messages.getMainMessage("select_position_first"), Frame.NotificationType.WARNING);
+            return false;
+        }
     }
 
     //создает окно с перетаскиваемыми элементыми. при завершении выполняет SomeAction с параметром Map, в котором будет запись currentOrder - результирующий порядок

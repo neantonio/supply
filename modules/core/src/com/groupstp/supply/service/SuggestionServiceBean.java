@@ -64,7 +64,8 @@ public class SuggestionServiceBean implements SuggestionService {
     }
 
     private List<QueriesPosition> positionListWithoutSupplier;
-    private List<QueriesPosition> withRequestAlreadySend=new ArrayList<>();
+    private List<PositionSupplier> withRequestAlreadySend=new ArrayList<>();
+    private List<QueriesPosition> justSendPositions=new ArrayList<>();
 
     @Override
     public Map<Suppliers,Map<Company,List<QueriesPosition>>> makeSuggestionRequestMap(Collection<QueriesPosition> positionCollection,boolean ignoreAlreadySend){
@@ -73,20 +74,22 @@ public class SuggestionServiceBean implements SuggestionService {
 
         positionListWithoutSupplier=new ArrayList<>(positionCollection);
         withRequestAlreadySend.clear();
+        justSendPositions.clear();
 
         Map<Suppliers,List<QueriesPosition>> supplierMap=new HashMap<>();
 
         //сначала делаем мап по поставщикам
         positionCollection.forEach(position->{
             positionSuppliers.forEach(positionSupplier -> {
-                if(positionSupplier.getPosition().getId().equals(position.getId()))
-                    if((!ignoreAlreadySend)&&(positionSupplier.getSuggestionRequestSend()==null?false:positionSupplier.getSuggestionRequestSend())){
-                        withRequestAlreadySend.add(position);
+                if(positionSupplier.getPosition().getId().equals(position.getId())) {
+                    if ((!ignoreAlreadySend) && (positionSupplier.getSuggestionRequestSend() == null ? false : positionSupplier.getSuggestionRequestSend())) {
+                        withRequestAlreadySend.add(positionSupplier);
+                    } else {
+                        addPositionToSupplierMap(supplierMap, position, positionSupplier.getSupplier());
+
                     }
-                    else{
-                        addPositionToSupplierMap(supplierMap,position,positionSupplier.getSupplier());
-                        positionListWithoutSupplier.remove(position);
-                    }
+                    positionListWithoutSupplier.remove(position);
+                }
             });
         });
 
@@ -113,6 +116,7 @@ public class SuggestionServiceBean implements SuggestionService {
             supplierEntry.getValue().entrySet().forEach(companyEntry->{
 
                 markPositionsSupplierAsSend(companyEntry.getValue());
+                justSendPositions.addAll(companyEntry.getValue());
 
                 Map<String,Serializable> paramMap=new HashMap<>();
                 paramMap.put("company",companyEntry.getKey());
@@ -159,13 +163,20 @@ public class SuggestionServiceBean implements SuggestionService {
         return result;
     }
 
+
+
     @Override
     public List<QueriesPosition> getPositionListWithoutSupplier() {
         return positionListWithoutSupplier;
     }
 
     @Override
-    public List<QueriesPosition> getWithRequestAlreadySend() {
+    public List<PositionSupplier> getWithRequestAlreadySend() {
         return withRequestAlreadySend;
+    }
+
+    @Override
+    public List<QueriesPosition> getJustSendPositions() {
+        return justSendPositions;
     }
 }

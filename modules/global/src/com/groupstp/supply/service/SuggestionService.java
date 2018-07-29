@@ -1,10 +1,7 @@
 package com.groupstp.supply.service;
 
 
-import com.groupstp.supply.entity.Company;
-import com.groupstp.supply.entity.Employee;
-import com.groupstp.supply.entity.QueriesPosition;
-import com.groupstp.supply.entity.Suppliers;
+import com.groupstp.supply.entity.*;
 
 import java.util.Collection;
 import java.util.List;
@@ -25,5 +22,7 @@ public interface SuggestionService {
 
     List<QueriesPosition> getPositionListWithoutSupplier();
 
-    List<QueriesPosition> getWithRequestAlreadySend();
+    List<PositionSupplier> getWithRequestAlreadySend();
+
+    List<QueriesPosition> getJustSendPositions();
 }
