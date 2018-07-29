@@ -13,6 +13,8 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import com.haulmont.chile.core.annotations.NamePattern;
 
+import java.util.Date;
+
 @NamePattern("%s %s|deliveryDay,quantity")
 @Table(name = "SUPPLY_DELIVERY_LINE")
 @Entity(name = "supply$DeliveryLine")

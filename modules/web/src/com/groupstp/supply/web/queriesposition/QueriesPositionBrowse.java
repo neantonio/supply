@@ -227,7 +227,6 @@ public class QueriesPositionBrowse extends AbstractLookup {
         billsTable.setClickListener("number", (item, columnId) -> setClickListenerToBills(item, columnId));
         billsTable.setClickListener("timePayment", (item, columnId) -> setClickListenerToBills(item, columnId));
         billsTable.setClickListener("amount", (item, columnId) -> setClickListenerToBills(item, columnId));
-        billsTable.setClickListener("sumControl", (item, columnId) -> setClickListenerToBills(item, columnId));
         billsTable.setClickListener("supplier", (item, columnId) -> setClickListenerToBills(item, columnId));
         billsTable.setClickListener("company", (item, columnId) -> setClickListenerToBills(item, columnId));
 
