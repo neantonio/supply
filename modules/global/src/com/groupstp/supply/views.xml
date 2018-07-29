@@ -231,7 +231,7 @@
     </view>
     <view class="com.groupstp.supply.entity.QueriesPosition"
           extends="_local"
-          name="queriesPosition-full">
+          name="full">
         <property name="query"
                   view="_minimal">
             <property name="urgency"
@@ -692,10 +692,6 @@
         <property name="updateTs"/>
         <property name="updatedBy"/>
     </view>
-    <view class="com.groupstp.supply.entity.QueriesPosition"
-          extends="queriesPosition-full"
-          name="full"
-          overwrite="true"/>
     <view class="com.groupstp.supply.entity.PositionSupplier"
           extends="_local"
           name="positionSupplier-full">
