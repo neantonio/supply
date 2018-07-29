@@ -32,7 +32,7 @@ public class Nomenclature extends StandardEntity {
     @Column(name = "FULL_NAME")
     protected String fullName;
 
-    @Column(name = "ARTICLE", unique = true, length = 25)
+    @Column(name = "ARTICLE", length = 25)
     protected String article;
 
     @ManyToOne(fetch = FetchType.LAZY)

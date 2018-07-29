@@ -36,6 +36,14 @@
                        value="com.groupstp.supply.service.TaskService"/>
                 <entry key="supply_QueriesPositionService"
                        value="com.groupstp.supply.service.QueriesPositionService"/>
+                <entry key="supply_Sync1CService"
+                       value="com.groupstp.supply.service.Sync1CService"/>
+                <entry key="supply_ImportControllerService"
+                       value="com.groupstp.supply.service.ImportControllerService"/>
+                <entry key="supply_SuggestionService"
+                       value="com.groupstp.supply.service.SuggestionService"/>
+                <entry key="supply_EmployeeService"
+                       value="com.groupstp.supply.service.EmployeeService"/>
             </map>
         </property>
     </bean>

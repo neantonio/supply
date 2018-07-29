@@ -167,6 +167,7 @@ public class QueriesPosition extends StandardEntity {
     @Column(name = "EXT_ID")
     protected String extId;
 
+
     public void setNameCallback(QueriesPositionNameCallback nameCallback) {
         this.nameCallback = nameCallback;
     }
@@ -189,6 +190,7 @@ public class QueriesPosition extends StandardEntity {
      */
     @Transient
     protected transient QueriesPositionNameCallback nameCallback=null;
+
 
     public void setExtId(String extId) {
         this.extId = extId;

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<window xmlns="http://schemas.haulmont.com/cuba/window.xsd"
+        caption="msg://caption"
+        class="com.groupstp.supply.web.queriesposition.Suggestionrequestprocessing"
+        messagesPack="com.groupstp.supply.web.queriesposition">
+    <dsContext>
+        <groupDatasource id="positionsWithoutSupplierDs"
+                         class="com.groupstp.supply.entity.QueriesPosition"/>
+        <groupDatasource id="alreadySendRequest"
+                         class="com.groupstp.supply.entity.PositionSupplier"/>
+    </dsContext>
+    <dialogMode height="600"
+                width="800"/>
+    <layout>
+        <vbox spacing="true">
+            <vbox id="withoutSupplierVbox"
+                  spacing="true">
+                <label description="msg://positions_without_suppliers"
+                       value="msg://positions_without_suppliers"
+                       width="100%"/>
+                <groupTable height="100px"
+                            width="100%">
+                    <columns>
+                        <column id="nomenclature.name"/>
+                        <column id="quantity"/>
+                        <column id="comment"/>
+                    </columns>
+                    <rows datasource="positionsWithoutSupplierDs"/>
+                </groupTable>
+                <buttonsPanel>
+                    <button id="suppliers"
+                            caption="msg://suppliers"
+                            invoke="onSuppliersClick"/>
+                    <button id="checkAndSend"
+                            caption="msg://check-suupplier_and_send"
+                            invoke="onCheckAndSendClick"
+                            width="230px"/>
+                </buttonsPanel>
+            </vbox>
+            <vbox id="repeatedSendVbox"
+                  spacing="true">
+                <label value="msg://repeated_request"
+                       width="100%"/>
+                <buttonsPanel>
+                    <button id="sendToSelected"
+                            caption="msg://send_to_all"
+                            invoke="onSendToSelectedClick"/>
+                    <button id="sendToAllAgain"
+                            caption="msg://send_to_selected"
+                            invoke="onSendToAllAgainClick"/>
+                </buttonsPanel>
+                <groupTable height="100px"
+                            width="100%">
+                    <columns>
+                        <column id="position"/>
+                        <column id="supplier"/>
+                    </columns>
+                    <rows datasource="alreadySendRequest"/>
+                </groupTable>
+            </vbox>
+        </vbox>
+    </layout>
+</window>

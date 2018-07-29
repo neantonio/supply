@@ -108,16 +108,19 @@ public class QueryServiceBean implements QueryService {
 
         queries.forEach(queryItem->{
             if(queryItem.getInWork()==null? false:queryItem.getInWork()) return;
-            queryDaoService.getQueriesPositionByQuery(queryItem).forEach(positionItem->{
+            boolean positionMoveFail=false;
+           for(QueriesPosition positionItem: queryDaoService.getQueriesPositionByQuery(queryItem)){
                 try {
-                    workflowService.movePosition(positionItem);
+                    if(positionItem.getCurrentStage().equals(Stages.New))workflowService.movePosition(positionItem);
+
                 } catch (Exception e) {
                     e.printStackTrace();
                     positionsWithError.add(positionItem);
+                    positionMoveFail=true;
                 }
 
-            });
-            queryItem.setInWork(true);
+            }
+            if(!positionMoveFail)queryItem.setInWork(true);
             queryDaoService.commitQuery(queryItem);
         });
 

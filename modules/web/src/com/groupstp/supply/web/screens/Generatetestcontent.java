@@ -4,6 +4,7 @@ import com.groupstp.supply.entity.QueriesPosition;
 import com.groupstp.supply.entity.Query;
 import com.groupstp.supply.service.DataBaseTestContentService;
 import com.groupstp.supply.service.QueryService;
+import com.groupstp.supply.service.TaskService;
 import com.haulmont.cuba.gui.WindowManager;
 import com.haulmont.cuba.gui.components.*;
 import com.haulmont.cuba.gui.data.CollectionDatasource;
@@ -25,6 +26,9 @@ public class Generatetestcontent extends AbstractWindow {
 
     @Inject
     QueryService queryService;
+
+    @Inject
+    TaskService taskService;
 
     @Inject
     private GroupTable<Query> query;
@@ -79,6 +83,7 @@ public class Generatetestcontent extends AbstractWindow {
     public void onBusiness(){
         testContentService.beginBusinessProcess();
     }
+
 
 
 

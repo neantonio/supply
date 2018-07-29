@@ -29,12 +29,24 @@ public class PositionSupplier extends StandardEntity {
     @JoinColumn(name = "POSITION_ID")
     protected QueriesPosition position;
 
+    @Column(name = "SUGGESTION_REQUEST_SEND")
+    protected Boolean suggestionRequestSend=false;
+
     @Column(name = "SELECTED")
     protected Boolean selected;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "SUPPLIER_ID")
     protected Suppliers supplier;
+
+
+    public void setSuggestionRequestSend(Boolean suggestionRequestSend) {
+        this.suggestionRequestSend = suggestionRequestSend;
+    }
+
+    public Boolean getSuggestionRequestSend() {
+        return suggestionRequestSend;
+    }
 
 
     public void setSelected(Boolean selected) {

@@ -5,6 +5,9 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.haulmont.chile.core.datatypes.impl.EnumClass;
 import com.haulmont.chile.core.model.MetaProperty;
+import com.haulmont.cuba.core.EntityManager;
+import com.haulmont.cuba.core.Persistence;
+import com.haulmont.cuba.core.Transaction;
 import com.haulmont.cuba.core.entity.Entity;
 import com.haulmont.cuba.core.global.DataManager;
 import com.haulmont.cuba.core.global.Metadata;
@@ -31,6 +34,11 @@ public class EntityImportServiceBean implements EntityImportService {
     @Inject
     private Logger log;
 
+    @Inject
+    private Persistence persistence;
+
+
+
     @Override
     public Serializable createOrUpdateEntity(String data) {
         ArrayList<Serializable> res = new ArrayList<>();
@@ -52,7 +60,8 @@ public class EntityImportServiceBean implements EntityImportService {
         }
     }
 
-    private Serializable importData(JsonObject e) throws Exception {
+    @Override
+    public Serializable importData(JsonObject e) throws Exception {
         Entity entity = createObject(e);
         for (MetaProperty metaProperty : entity.getMetaClass().getProperties()) {
             setValue(entity, metaProperty, e);
@@ -81,7 +90,33 @@ public class EntityImportServiceBean implements EntityImportService {
         }
         else if (metaProperty.getType().equals(MetaProperty.Type.ASSOCIATION) || metaProperty.getType().equals(MetaProperty.Type.COMPOSITION))
         {
-            Entity impVal = (Entity) importData(e.getAsJsonObject(metaProperty.getName()));
+            Entity impVal;
+
+
+            //значит в json идэшник
+            if(e.get(metaProperty.getName()).isJsonPrimitive()){
+                if(e.get(metaProperty.getName()).getAsString().equalsIgnoreCase("00000000-0000-0000-0000-000000000000")) impVal=null;
+                else{
+
+                        impVal = getEntity(metaProperty.getDeclaringClass().getName().substring(metaProperty.getDeclaringClass().getName().lastIndexOf(".") + 1),
+                                e.get(metaProperty.getName()).getAsString());
+
+
+                        impVal.setValue("extId", e.get(metaProperty.getName()).getAsString());
+                        if(checkMandatoryFields(impVal)) {
+                            Transaction tx = persistence.createTransaction();
+                            EntityManager em = persistence.getEntityManager();
+                            em.persist(impVal);
+                            tx.commit();
+                        }
+
+                }
+
+
+            } else{
+               impVal = (Entity) importData(e.getAsJsonObject(metaProperty.getName()));
+            }
+
             res.setValue(metaProperty.getName(), impVal);
         }
         else if(metaProperty.getJavaType().equals(Integer.class))
@@ -101,6 +136,52 @@ public class EntityImportServiceBean implements EntityImportService {
         }
     }
 
+    private boolean checkMandatoryFields(Entity entity){
+
+        boolean changesMade=false;
+
+        for (MetaProperty metaProperty : entity.getMetaClass().getProperties()) {
+            if(metaProperty.isMandatory()){
+
+                if(metaProperty.getName().equalsIgnoreCase("id")) break;
+                if(entity.getValue(metaProperty.getName())!=null) break;
+
+                if(metaProperty.getJavaType().equals(Integer.class)){
+                    entity.setValue(metaProperty.getName(), 0);
+
+                }
+                else if(metaProperty.getJavaType().equals(String.class)){
+                    // вдруг поле уникальное
+                    entity.setValue(metaProperty.getName(),"temp "+String.valueOf(Math.random())+String.valueOf(Math.random()));
+                }
+
+                else if(metaProperty.getJavaType().equals(Float.class)){
+                    entity.setValue(metaProperty.getName(), 0.);
+                }
+
+                else if(metaProperty.getJavaType().equals(Double.class)){
+                    entity.setValue(metaProperty.getName(), 0.);
+                }
+
+                else if(metaProperty.getJavaType().equals(Boolean.class)){
+                    entity.setValue(metaProperty.getName(),false);
+                }
+
+                else if(metaProperty.getJavaType().equals(Date.class)){
+                    entity.setValue(metaProperty.getName(),new Date());
+                }
+
+                else if(metaProperty.getType().equals(MetaProperty.Type.ENUM)) {
+                    entity.setValue(metaProperty.getName(), getEnumValue((EnumClass[]) metaProperty.getJavaType().getEnumConstants(),
+                            ((EnumClass[]) metaProperty.getJavaType().getEnumConstants())[0].toString()));
+                }
+                changesMade=true;
+            }
+
+        }
+        return changesMade;
+    }
+
     Object getEnumValue(EnumClass[] ev, String id)
     {
         for(int i=0;i<ev.length;i++)
@@ -109,29 +190,15 @@ public class EntityImportServiceBean implements EntityImportService {
         return null;
     }
 
-
-    Entity createObject(JsonObject e) throws Exception {
+    @Override
+    public Entity createObject(JsonObject e) throws Exception {
         if(e.get("type")==null)
             throw new Exception("Type is NULL for "+e.getAsString());
-        String type = "supply$"+e.get("type").getAsString();
-        Entity entity = null;
-        try {
-            if (e.has("extId")) {
-                entity = (Entity) dataManager.load(metadata.getClass(type).getJavaClass())
-                        .query("select e from "+type+"  e where e.extId=:extId")
-                        .parameter("extId", e.get("extId").getAsString())
-                        .view("full")
-                        .one();
-            }
-        }
-        catch (Exception ex)
-        {
-            if(!ex.getMessage().equals("No results"))
-                throw ex;
-        }
-        if(entity==null)
-            entity = metadata.create(type);
-        return entity;
+        return getEntity(e.get("type").getAsString(),e.get("extId").getAsString());
+
+
+
+        //return getEntity(e.get("type").getAsString(),e.get("extId").getAsString());
     }
 
     Date parse(String d) {
@@ -144,10 +211,41 @@ public class EntityImportServiceBean implements EntityImportService {
         return new Date();
     }
 
+    private Entity getEntity(String pureType,String id){
+        String type = "supply$"+pureType;
+        Entity entity=null;
+
+        try {
+            if (id!=null) {
+               entity= (Entity) dataManager.load(metadata.getClass(type).getJavaClass())
+                        .query("select e from "+type+"  e where e.extId=:extId")
+                        .parameter("extId",id)
+                        .view(pureType.toLowerCase()+"-full")
+                        .one();
+            }
+        }
+        catch (Exception ex)
+        {
+            if(!ex.getMessage().equals("No results"))
+                throw ex;
+        }
+        if(entity==null) {
+            entity = metadata.create(type);
+
+                entity.setValue("extId", id);    //т.к ид уже известен, надо будет его сетить и заполнять обязательные поля
+
+            }
+
+        return entity;
+
+    }
+
     Serializable returnMessage(String message)
     {
         HashMap<String, String> res = new HashMap<>();
         res.put("ErrorMessage", message);
         return res;
     }
+
+
 }

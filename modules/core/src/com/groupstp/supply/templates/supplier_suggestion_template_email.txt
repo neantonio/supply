@@ -1,0 +1,32 @@
+<div style="height: 120px; text-align:center">
+<div style="font-size:18pt;">
+<b>АСМ</b>
+</div>${company.fullName}
+<hr>ИНН: ${company.inn}; КПП: ${company.kpp}
+</div>
+<div>Добрый день!<br><br><br>Пожалуйста, заполните следующую электронную форму:<br>
+<a href='${link}${token}'>
+Электронная форма </a><br>
+<table border='2'>
+<tr><td><b>Наименование</b></td>
+<td><b>Количество</b></td>
+<td><b>Артикул</b></td>
+<td><b>Комментарий</b></td>
+</tr>
+    <#list positions as position>
+    <tr>
+        <td>${position.nomenclature.name}</td>
+        <td>${position.quantity} ${position.nomenclature.unit.name}</td>
+        <td>${position.nomenclature.article}</td>
+        <td><#if position.comment??>${position.comment}</#if></td>
+    </tr>
+    </#list>
+</table>
+<div style="height:50px">
+</div>
+<#if employee??>
+<div><br>С уважением,
+<br><#if employee.position??>${employee.position}</#if><br>${employee.name}<br>
+E-mail: ${employee.email}<br>
+<#if employee.phone??>Контактный телефон: ${employee.phone} <br> </#if>
+</#if>

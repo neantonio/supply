@@ -231,20 +231,24 @@
     </view>
     <view class="com.groupstp.supply.entity.QueriesPosition"
           extends="_local"
-          name="full">
+          name="queriesPosition-full">
         <property name="query"
                   view="_minimal">
             <property name="urgency"
                       view="_minimal"/>
             <property name="company"
-                      view="_minimal"/>
+                      view="_minimal">
+                <property name="fullName"/>
+                <property name="inn"/>
+                <property name="kpp"/>
+            </property>
             <property name="division"
                       view="_minimal"/>
             <property name="store"
                       view="_minimal"/>
             <property name="contact"
                       view="_minimal">
-                <property name="name"/>
+                <property name="email"/>
             </property>
             <property name="origin"/>
             <property name="workflow"
@@ -263,7 +267,9 @@
         <property name="nomeclatureChange"
                   view="_minimal"/>
         <property name="position"
-                  view="_minimal"/>
+                  view="_minimal">
+            <property name="currentStage"/>
+        </property>
         <property name="srcStore"
                   view="_minimal"/>
         <property name="nomenclature"
@@ -275,6 +281,7 @@
             </property>
             <property name="unit"
                       view="_minimal"/>
+            <property name="article"/>
         </property>
         <property name="measureUnit"
                   view="_minimal"/>
@@ -405,6 +412,7 @@
                   view="_minimal"/>
         <property name="bills"
                   view="_minimal">
+            <property name="number"/>
         </property>
         <property name="currentStage"/>
         <property name="billsFlag"/>
@@ -437,6 +445,7 @@
                   view="_minimal">
             <property name="firstName"/>
             <property name="lastName"/>
+            <property name="email"/>
         </property>
     </view>
     <view class="com.groupstp.supply.entity.QueryPositionMovements"
@@ -647,6 +656,139 @@
           name="queryWorkflowDetail-view">
         <property name="queryWorkflow"
                   view="_minimal"/>
+    </view>
+    <view class="com.groupstp.supply.entity.Nomenclature"
+          extends="_local"
+          name="nomenclature-full">
+        <property name="unit"
+                  view="_minimal"/>
+        <property name="parent"
+                  view="_minimal">
+            <property name="isgroup"/>
+            <property name="fullName"/>
+            <property name="article"/>
+            <property name="unit"
+                      view="_minimal"/>
+            <property name="parent"
+                      view="_minimal"/>
+            <property name="weight"/>
+            <property name="dimensions"/>
+            <property name="analogs"
+                      view="_minimal"/>
+            <property name="analogss"
+                      view="_minimal"/>
+            <property name="extId"/>
+            <property name="createTs"/>
+            <property name="createdBy"/>
+            <property name="updateTs"/>
+            <property name="updatedBy"/>
+        </property>
+        <property name="analogs"
+                  view="_minimal"/>
+        <property name="analogss"
+                  view="_minimal"/>
+        <property name="createTs"/>
+        <property name="createdBy"/>
+        <property name="updateTs"/>
+        <property name="updatedBy"/>
+    </view>
+    <view class="com.groupstp.supply.entity.QueriesPosition"
+          extends="queriesPosition-full"
+          name="full"
+          overwrite="true"/>
+    <view class="com.groupstp.supply.entity.PositionSupplier"
+          extends="_local"
+          name="positionSupplier-full">
+        <property name="position"
+                  view="_minimal">
+            <property name="query"
+                      view="_minimal"/>
+            <property name="billsFlag"/>
+            <property name="storeControlFlag"/>
+            <property name="currentStage"/>
+            <property name="positionType"/>
+            <property name="numberArticle"/>
+            <property name="specification"/>
+            <property name="measureUnit"
+                      view="_minimal"/>
+            <property name="quantity"/>
+            <property name="analogsAllowed"/>
+            <property name="comment"/>
+            <property name="analogs"
+                      view="_minimal"/>
+            <property name="store"
+                      view="_minimal"/>
+            <property name="positionUsefulness"/>
+            <property name="positionUsefulnessTS"/>
+            <property name="specNomenclature"
+                      view="_minimal"/>
+            <property name="startMinimalPrice"/>
+            <property name="nomeclatureChange"
+                      view="_minimal"/>
+            <property name="analogsCorrectionFlag"/>
+            <property name="nomControlFlag"/>
+            <property name="nomControlFlagTS"/>
+            <property name="billsFlagTS"/>
+            <property name="inStore"/>
+            <property name="storeControlFlagTS"/>
+            <property name="supplyWorkoutType"/>
+            <property name="position"
+                      view="_minimal"/>
+            <property name="srcStore"
+                      view="_minimal"/>
+            <property name="supSelectionFlag"/>
+            <property name="supSelectionFlagTS"/>
+            <property name="analysisResult"/>
+            <property name="analysisFlag"/>
+            <property name="analysisFlagTS"/>
+            <property name="priceReduce"/>
+            <property name="minimalPrice"/>
+            <property name="voteResult"
+                      view="_minimal"/>
+            <property name="billQuery"/>
+            <property name="bills"
+                      view="_minimal"/>
+            <property name="delivery"
+                      view="_minimal"/>
+            <property name="extId"/>
+            <property name="id"/>
+            <property name="version"/>
+            <property name="createTs"/>
+            <property name="createdBy"/>
+            <property name="updateTs"/>
+            <property name="updatedBy"/>
+            <property name="deleteTs"/>
+            <property name="deletedBy"/>
+        </property>
+        <property name="supplier"
+                  view="_minimal">
+            <property name="email"/>
+            <property name="fullName"/>
+            <property name="id"/>
+            <property name="version"/>
+            <property name="createTs"/>
+            <property name="createdBy"/>
+            <property name="updateTs"/>
+            <property name="updatedBy"/>
+            <property name="deleteTs"/>
+            <property name="deletedBy"/>
+        </property>
+        <property name="createTs"/>
+        <property name="createdBy"/>
+        <property name="updateTs"/>
+        <property name="updatedBy"/>
+    </view>
+    <view class="com.groupstp.supply.entity.QueriesPositionTokenLink"
+          extends="_local"
+          name="queriesPositionTokenLink-full">
+        <property name="positions"
+                  view="_minimal">
+            <property name="query"
+                      view="_minimal"/>
+            <property name="measureUnit"
+                      view="_minimal"/>
+            <property name="quantity"/>
+        </property>
     </view>
     <view class="com.groupstp.supply.entity.Company"
           extends="_local"

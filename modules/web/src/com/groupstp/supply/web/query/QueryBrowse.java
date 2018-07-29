@@ -2,6 +2,7 @@ package com.groupstp.supply.web.query;
 
 import com.groupstp.supply.entity.Analogs;
 import com.groupstp.supply.entity.Nomenclature;
+import com.groupstp.supply.entity.QueriesPosition;
 import com.groupstp.supply.entity.Query;
 import com.groupstp.supply.service.QueryService;
 import com.groupstp.supply.service.WorkflowService;
@@ -117,7 +118,16 @@ public class QueryBrowse extends AbstractLookup {
                 selectedQueries1.forEach(item->{
                     selectedQueryList.add(item);
                 });
-                queryService.beginQueryProcessing(selectedQueryList);
+                List<QueriesPosition> positionWithError=queryService.beginQueryProcessing(selectedQueryList);
+                if(positionWithError.size()>0){
+                    String positionsHTML="";
+                   for(QueriesPosition qp: positionWithError){
+                       positionsHTML=positionsHTML+"<div>"+qp.getQueriesPositionName()+"</div>";
+                   }
+
+                    showNotification("<div><b>"+getMessage("not_moved_positions")+": "+String.valueOf(positionWithError.size())+"</b></div>"+
+                            positionsHTML, NotificationType.WARNING_HTML);
+                }
                 queriesDs.refresh();
                 queriesTable.repaint();
             });

@@ -30,6 +30,7 @@ import org.dom4j.Element;
 
 import javax.annotation.Nullable;
 import javax.inject.Inject;
+import java.io.Serializable;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -67,6 +68,9 @@ public class QueriesPositionBrowse extends AbstractLookup {
 
     @Inject
     private Metadata metadata;
+
+    @Inject
+    private DataManager dataManager;
 
     @Inject
     private GroupDatasource<QueriesPosition, UUID> dsNomControl;
@@ -124,6 +128,12 @@ public class QueriesPositionBrowse extends AbstractLookup {
 
     @Inject
     private QueriesPositionService queriesPositionService;
+
+    @Inject
+    private SuggestionService suggestionService;
+
+    @Inject
+    private EmployeeService employeeService;
 
     @Inject
     private TabSheet tabs;
@@ -1225,6 +1235,25 @@ public class QueriesPositionBrowse extends AbstractLookup {
         tab.getDatasource().addItem(copy);
     }
 
+
+    /**
+     * Копирует текущую позицию
+     * @param position позиция для копирования
+     * @return новую позицию
+     */
+    private QueriesPosition copyPosition(QueriesPosition position) {
+        QueriesPosition src = dataManager.reload(position, "queriesPosition-full");
+        QueriesPosition copy = metadata.create(QueriesPosition.class);
+        Collection<MetaProperty> properties = position.getMetaClass().getProperties();
+        for (MetaProperty property : properties) {
+            if (property.getDeclaringClass() != position.getMetaClass().getJavaClass())
+                continue;
+            String name = property.getName();
+            copy.setValue(name, src.getValue(name));
+        }
+        return copy;
+    }
+
     public void onBtnSelectAllClick(){
         GroupTable<QueriesPosition> tab = getOpenedStageTable();
         tab.expandAll();
@@ -1632,5 +1661,15 @@ public class QueriesPositionBrowse extends AbstractLookup {
                     })));
             return lnk;
         }
+    }
+
+    public void onBtnSuggestionRequestClick() {
+        if(!checkSelection(positionsSupSelection.getSelected())) return;
+
+        Employee employee=employeeService.getCurrentUserEmployee();
+        Map<Suppliers,Map<Company,List<QueriesPosition>>> mapToSend=suggestionService.makeSuggestionRequestMap(positionsSupSelection.getSelected());
+
+        suggestionService.processRequestSending(mapToSend,employee);
+
     }
 }
