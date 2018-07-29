@@ -7,6 +7,7 @@ import com.groupstp.supply.entity.Query;
 import com.groupstp.supply.entity.QueryStatus;
 import com.haulmont.cuba.core.entity.Entity;
 
+import java.time.LocalTime;
 import java.util.Date;
 import java.util.List;
 /**
@@ -33,4 +34,6 @@ public interface QueryService {
     Date getStageExecutionTimeForQueriesPosition(QueriesPosition position);
 
     QueryStatus getPositionStatus(QueriesPosition entity);
+
+    long getWorkTime(Date startDate, Date endDate, LocalTime startTimeWork, LocalTime endTimeWork, LocalTime lunchTime, int lunchDuration);
 }

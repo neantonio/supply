@@ -14,16 +14,15 @@ create table SUPPLY_QUERY (
     TIME_CREATION timestamp,
     COMMENT_ text,
     URGENCY_ID uuid not null,
-    WORKFLOW_ID uuid,
-    ORIGIN varchar(50),
-    CAUSE varchar(50),
-    PERIDIOCITY varchar(50),
+    WORKFLOW_ID uuid not null,
+    ORIGIN varchar(50) not null,
+    CAUSE varchar(50) not null,
+    PERIDIOCITY varchar(50) not null,
     WHOLE_QUERY_WORKOUT boolean,
     COMPANY_ID uuid not null,
     DIVISION_ID uuid not null,
     STORE_ID uuid not null,
     CONTACT_ID uuid,
-    EXT_ID varchar(255),
     --
     primary key (ID)
 )^
@@ -43,7 +42,6 @@ create table SUPPLY_COMPANY (
     FULL_NAME varchar(255),
     INN varchar(13) not null,
     KPP varchar(13),
-    EXT_ID varchar(255),
     --
     primary key (ID)
 )^
@@ -60,7 +58,6 @@ create table SUPPLY_DIVISION (
     DELETED_BY varchar(50),
     --
     COMPANY_ID uuid not null,
-    EXT_ID varchar(255),
     NAME varchar(50) not null,
     --
     primary key (ID)
@@ -79,7 +76,6 @@ create table SUPPLY_STORE (
     --
     NAME varchar(50) not null,
     DIVISION_ID uuid,
-    EXT_ID varchar(255),
     --
     primary key (ID)
 )^
@@ -95,10 +91,9 @@ create table SUPPLY_MEASURE_UNITS (
     DELETE_TS timestamp,
     DELETED_BY varchar(50),
     --
-    CODE varchar(255),
+    CODE varchar(255) not null,
     NAME varchar(5) not null,
     FULL_NAME varchar(25),
-    EXT_ID varchar(255),
     --
     primary key (ID)
 )^
@@ -115,7 +110,6 @@ create table SUPPLY_URGENCY (
     DELETED_BY varchar(50),
     --
     NAME varchar(25) not null,
-    EXT_ID varchar(255),
     --
     primary key (ID)
 )^
@@ -188,11 +182,7 @@ create table SUPPLY_EMPLOYEE (
     DELETE_TS timestamp,
     DELETED_BY varchar(50),
     --
-    USER_ID uuid,
-    EMAIL varchar(255),
-    NAME varchar(50),
-    FULL_NAME varchar(255),
-    EXT_ID varchar(255),
+    USER_ID uuid not null,
     --
     primary key (ID)
 )^
@@ -216,10 +206,9 @@ create table SUPPLY_QUERIES_POSITION (
     NUMBER_ARTICLE varchar(25),
     NOMENCLATURE_ID uuid,
     SPECIFICATION varchar(255),
-    MEASURE_UNIT_ID uuid,
+    MEASURE_UNIT_ID uuid not null,
     QUANTITY double precision not null,
     ANALOGS_ALLOWED boolean,
-    COMMENT_ varchar(1000),
     STORE_ID uuid,
     POSITION_USEFULNESS boolean,
     POSITION_USEFULNESS_TS timestamp,
@@ -246,7 +235,6 @@ create table SUPPLY_QUERIES_POSITION (
     BILL_QUERY boolean,
     BILLS_ID uuid,
     DELIVERY_ID uuid,
-    EXT_ID varchar(255),
     --
     primary key (ID)
 )^
@@ -270,7 +258,6 @@ create table SUPPLY_NOMENCLATURE (
     PARENT_ID uuid,
     WEIGHT decimal(10, 3),
     DIMENSIONS varchar(30),
-    EXT_ID varchar(255),
     --
     primary key (ID)
 )^
@@ -340,8 +327,6 @@ create table SUPPLY_SUPPLIERS_SUGGESTION (
     DELETED_BY varchar(50),
     --
     POS_SUP_ID uuid,
-    MANUFACTURER varchar(255),
-    PAYMENT_DEF integer,
     QUANTITY double precision not null,
     PRICE double precision not null,
     SUP_ADDRESS varchar(255),
@@ -363,10 +348,6 @@ create table SUPPLY_SUPPLIERS (
     --
     NAME varchar(50),
     FULL_NAME varchar(255),
-    INN varchar(50),
-    CONTACTS varchar(255),
-    EMAIL varchar(255),
-    COMMENTS varchar(255),
     --
     primary key (ID)
 )^
@@ -530,8 +511,8 @@ create table SUPPLY_DELIVERY_LINE (
     primary key (ID)
 )^
 -- end SUPPLY_DELIVERY_LINE
--- begin SUPPLY_QUERIES_POSITION_TOKEN_LINK
-create table SUPPLY_QUERIES_POSITION_TOKEN_LINK (
+-- begin SUPPLY_HOLIDAY
+create table SUPPLY_HOLIDAY (
     ID uuid,
     VERSION integer not null,
     CREATE_TS timestamp,
@@ -541,8 +522,36 @@ create table SUPPLY_QUERIES_POSITION_TOKEN_LINK (
     DELETE_TS timestamp,
     DELETED_BY varchar(50),
     --
-    TOKEN varchar(255),
+    DAY_ date not null,
+    WORKING_HOURS integer not null,
     --
     primary key (ID)
 )^
--- end SUPPLY_QUERIES_POSITION_TOKEN_LINK
+-- end SUPPLY_HOLIDAY
+-- begin SUPPLY_SETTINGS
+create table SUPPLY_SETTINGS (
+    ID uuid,
+    VERSION integer not null,
+    CREATE_TS timestamp,
+    CREATED_BY varchar(50),
+    UPDATE_TS timestamp,
+    UPDATED_BY varchar(50),
+    DELETE_TS timestamp,
+    DELETED_BY varchar(50),
+    --
+    KEY_ varchar(50) not null,
+    SAVED_OBJECT text,
+    SAVED_ENUM text,
+    TEXT varchar(50),
+    BOOLEAN_VALUE boolean,
+    BIG_DECIMAL_VALUE decimal(19, 2),
+    DATE_TIME_VALUE timestamp,
+    DATE_VALUE date,
+    DOUBLE_VALUE double precision,
+    INTEGER_VALUE integer,
+    LONG_VALUE bigint,
+    TIME_VALUE time,
+    --
+    primary key (ID)
+)^
+-- end SUPPLY_SETTINGS

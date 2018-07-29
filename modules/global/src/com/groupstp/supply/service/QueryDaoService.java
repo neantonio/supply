@@ -5,6 +5,7 @@ import com.groupstp.supply.entity.*;
 import com.haulmont.cuba.core.entity.StandardEntity;
 
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 /**
  * @author AntonLomako
@@ -50,4 +51,12 @@ public interface QueryDaoService {
     Collection<QueriesPosition> loadPositionsForToken(String token);
 
     List<PositionSupplier> getSupplierPositions(Collection<QueriesPosition> positionCollection);
+
+    List<StandardEntity> getEntityList(String entityType);
+
+    Holiday getHoliday(Date date);
+
+    Settings getSettings(String key);
+
+
 }

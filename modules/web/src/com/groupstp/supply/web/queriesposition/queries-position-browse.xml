@@ -339,7 +339,7 @@ where e.position in :custom$positions]]>
                                 caption="msg://suggestion_request"
                                 invoke="onBtnSuggestionRequestClick"/>
                         <button id="btnDeliverySupStage"
-                                caption="Добавить Груз"
+                                caption="Добавить Поставку"
                                 invoke="onBtnDeliveryClick"/>
                         <button id="select_all_tabSupSelection"
                                 caption="msg://select_all"
@@ -428,7 +428,7 @@ where e.position in :custom$positions]]>
                             </actions>
                         </popupButton>
                         <button id="btnDeliveryAnalysisStage"
-                                caption="Добавить Груз"
+                                caption="Добавить Поставку"
                                 invoke="onBtnDeliveryClick"/>
                         <button id="select_all_tabAnalysis"
                                 caption="msg://select_all"
@@ -558,8 +558,10 @@ where e.position in :custom$positions]]>
                         <button id="btnWriteBills"
                                 caption="mainMsg://Write"
                                 description="mainMsg://Write table changes"
+                                enable="false"
                                 icon="SAVE"
-                                invoke="onBtnWriteClick"/>
+                                invoke="onBtnWriteClick"
+                                visible="false"/>
                         <button id="btnDoneBills"
                                 caption="mainMsg://Done"
                                 icon="STEP_FORWARD"
@@ -580,33 +582,44 @@ where e.position in :custom$positions]]>
                                 caption="mainMsg://Collapse all"
                                 icon="COMPRESS"
                                 invoke="onBtnCollapseAllClick"/>
+                        <button id="btnToSupSelection"
+                                caption="Вернуть к Поставщикам"
+                                invoke="onBtnToSupSelection"/>
+                        <button id="btnAllPositions"
+                                caption="Все позиции"
+                                invoke="onBtnAllPositions"/>
+                        <button id="btnEmptyPositions"
+                                caption="Позиции без счета"
+                                invoke="onBtnEmptyPositions"/>
+                    </buttonsPanel>
+                    <label value="Действия со счетом"/>
+                    <buttonsPanel>
+                        <button id="btnBills"
+                                action="billsTable.create"
+                                caption="Создание счета"/>
                         <button id="btnQueryBill"
                                 caption="msg://Query bill"
                                 icon="ENVELOPE"
                                 invoke="onBtnSendEmail"/>
-                        <button id="btnBills"
-                                action="billsTable.create"
-                                caption="Создание счета"/>
                         <button id="btnAttach"
                                 caption="Прикрепить"
                                 invoke="onBtnAttachClick"/>
                         <button id="btnUndock"
                                 caption="Открепить"
                                 invoke="onBtnUndockClick"/>
-                        <button id="btnToSupSelection"
-                                caption="Вернуть к Поставщикам"
-                                invoke="onBtnToSupSelection"/>
-                    </buttonsPanel>
-                    <buttonsPanel>
-                        <button id="btnEmptyPositions"
-                                caption="Позиции без счета"
-                                invoke="onBtnEmptyPositions"/>
-                        <button id="btnAllPositions"
-                                caption="Все позиции"
-                                invoke="onBtnAllPositions"/>
-                        <button id="btnSendEmail"
-                                caption="Отправить @Email"
-                                invoke="onBtnSendEmail"/>
+                        <upload id="uploadField"/>
+                        <button id="downloadImageBtn"
+                                caption="Скачать"
+                                enable="false"
+                                invoke="onDownloadImageBtnClick"/>
+                        <button id="clearImageBtn"
+                                caption="Удалить"
+                                enable="false"
+                                invoke="onClearImageBtnClick"/>
+                        <button id="OpenInNewTabBtn"
+                                caption="Открыть в новом окне"
+                                enable="false"
+                                invoke="onOpenInNewTabBtnClick"/>
                         <button id="group_order_bills"
                                 caption="msg://group_order"
                                 invoke="onGroupOrderChange"/>
@@ -625,7 +638,6 @@ where e.position in :custom$positions]]>
                           spacing="true"
                           width="100%">
                         <table id="billsTable"
-                               height="100%"
                                presentations="true">
                             <actions>
                                 <action id="create"/>
@@ -637,7 +649,6 @@ where e.position in :custom$positions]]>
                                 <column id="number"/>
                                 <column id="timePayment"/>
                                 <column id="amount"/>
-                                <column id="sumControl"/>
                                 <column id="supplier"/>
                                 <column id="company"/>
                             </columns>
@@ -645,7 +656,6 @@ where e.position in :custom$positions]]>
                         </table>
                         <groupTable id="positionsBills"
                                     fixedGrouping="true"
-                                    height="100%"
                                     multiselect="true"
                                     presentations="true">
                             <actions>
@@ -671,26 +681,18 @@ where e.position in :custom$positions]]>
                             <rows datasource="dsBills"/>
                         </groupTable>
                     </hbox>
-                    <browserFrame id="imageForBill"
-                                  align="BOTTOM_LEFT"
-                                  caption="Изображение счета"
-                                  height="50px"
-                                  width="500px"/>
                     <hbox align="BOTTOM_LEFT"
-                          spacing="true">
-                        <upload id="uploadField"/>
-                        <button id="downloadImageBtn"
-                                caption="Скачать"
-                                enable="false"
-                                invoke="onDownloadImageBtnClick"/>
-                        <button id="clearImageBtn"
-                                caption="Удалить"
-                                enable="false"
-                                invoke="onClearImageBtnClick"/>
-                        <button id="OpenInNewTabBtn"
-                                caption="Открыть в новом окне"
-                                enable="false"
-                                invoke="onOpenInNewTabBtnClick"/>
+                          enable="false"
+                          spacing="true"
+                          visible="false">
+                        <browserFrame id="imageForBill"
+                                      align="BOTTOM_LEFT"
+                                      caption="Изображение счета"
+                                      enable="false"
+                                      height="100px"
+                                      responsive="true"
+                                      visible="false"
+                                      width="100px"/>
                     </hbox>
                 </vbox>
             </tab>

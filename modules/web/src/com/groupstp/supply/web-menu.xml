@@ -19,6 +19,9 @@
               screen="supply$Suppliers.browse"/>
         <item screen="statistics"/>
         <item screen="supply$PaymentTable"/>
+        <item screen="supply$Holiday.browse"/>
+        <item screen="deliverySchedule"/>
+        <item screen="supply$Settings.browse"/>
         <item screen="supply$Bills.browse"/>
     </menu>
     <menu id="queries"
@@ -30,7 +33,6 @@
             <item screen="supply$QueryWorkflow.browse"/>
         </menu>
         <item screen="queryRegister"/>
-        <item screen="deliverySchedule"/>
     </menu>
     <menu id="Test">
         <item screen="GenerateTestContent"/>

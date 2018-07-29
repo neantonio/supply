@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<window xmlns="http://schemas.haulmont.com/cuba/window.xsd"
+        caption="msg://browseCaption"
+        class="com.groupstp.supply.web.settings.SettingsBrowse"
+        focusComponent="settingsesTable"
+        lookupComponent="settingsesTable"
+        messagesPack="com.groupstp.supply.web.settings">
+    <dsContext>
+        <groupDatasource id="settingsesDs"
+                         class="com.groupstp.supply.entity.Settings"
+                         view="settings-view">
+            <query>
+                <![CDATA[select e from supply$Settings e]]>
+            </query>
+        </groupDatasource>
+    </dsContext>
+    <dialogMode height="600"
+                width="800"/>
+    <layout expand="settingsesTable"
+            spacing="true">
+        <filter id="filter"
+                applyTo="settingsesTable"
+                datasource="settingsesDs">
+            <properties include=".*"/>
+        </filter>
+        <groupTable id="settingsesTable"
+                    width="100%">
+            <actions>
+                <action id="create"/>
+                <action id="edit"/>
+                <action id="remove"/>
+            </actions>
+            <columns>
+                <column id="key"/>
+            </columns>
+            <rows datasource="settingsesDs"/>
+            <rowsCount/>
+            <buttonsPanel id="buttonsPanel"
+                          alwaysVisible="true">
+                <button id="createBtn"
+                        action="settingsesTable.create"/>
+                <button id="editBtn"
+                        action="settingsesTable.edit"/>
+                <button id="removeBtn"
+                        action="settingsesTable.remove"/>
+            </buttonsPanel>
+        </groupTable>
+    </layout>
+</window>

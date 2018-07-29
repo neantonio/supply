@@ -1,0 +1,15 @@
+alter table SUPPLY_SETTINGS rename column value_ to value___u49667 ;
+alter table SUPPLY_SETTINGS add column ANALOGS_ID uuid ;
+alter table SUPPLY_SETTINGS add column BILLS_ID uuid ;
+alter table SUPPLY_SETTINGS add column DELIVERY_ID uuid ;
+alter table SUPPLY_SETTINGS add column DELIVERY_LINE_ID uuid ;
+alter table SUPPLY_SETTINGS add column EMPLOYEE_ID uuid ;
+alter table SUPPLY_SETTINGS add column HOLIDAY_ID uuid ;
+alter table SUPPLY_SETTINGS add column BOOLEAN_VALUE boolean ;
+alter table SUPPLY_SETTINGS add column BIG_DECIMAL_VALUE decimal(19, 2) ;
+alter table SUPPLY_SETTINGS add column DATE_TIME_VALUE timestamp ;
+alter table SUPPLY_SETTINGS add column DATE_VALUE date ;
+alter table SUPPLY_SETTINGS add column DOUBLE_VALUE double precision ;
+alter table SUPPLY_SETTINGS add column INTEGER_VALUE integer ;
+alter table SUPPLY_SETTINGS add column LONG_VALUE bigint ;
+alter table SUPPLY_SETTINGS add column TIME_VALUE time ;

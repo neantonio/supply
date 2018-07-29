@@ -44,6 +44,8 @@
                        value="com.groupstp.supply.service.SuggestionService"/>
                 <entry key="supply_EmployeeService"
                        value="com.groupstp.supply.service.EmployeeService"/>
+                <entry key="supply_SettingsService"
+                       value="com.groupstp.supply.service.SettingsService"/>
             </map>
         </property>
     </bean>

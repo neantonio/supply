@@ -1,0 +1,2 @@
+alter table SUPPLY_SETTINGS add constraint FK_SUPPLY_SETTINGS_ON_VOTE foreign key (VOTE_ID) references SUPPLY_VOTE(ID);
+create index IDX_SUPPLY_SETTINGS_ON_VOTE on SUPPLY_SETTINGS (VOTE_ID);

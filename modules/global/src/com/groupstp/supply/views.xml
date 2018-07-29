@@ -651,6 +651,13 @@
                       view="_minimal"/>
         </property>
     </view>
+    <view class="com.groupstp.supply.entity.Holiday"
+          extends="_local"
+          name="holiday-view"/>
+    <view class="com.groupstp.supply.entity.Settings"
+          extends="_local"
+          name="settings-view">
+    </view>
     <view class="com.groupstp.supply.entity.QueryWorkflowDetail"
           extends="_local"
           name="queryWorkflowDetail-view">

@@ -10,6 +10,8 @@ import com.haulmont.cuba.core.global.Metadata;
 import org.springframework.stereotype.Service;
 
 import javax.inject.Inject;
+import javax.persistence.Persistence;
+import java.util.Date;
 import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
@@ -206,4 +208,47 @@ public class QueryDaoServiceBean implements QueryDaoService {
 
         return dataManager.loadList(loadContext);
     }
+
+    @Override
+    public List<StandardEntity> getEntityList(String entityType) {
+        if(entityType==null)return null;
+
+        Transaction tx = persistence.createTransaction();
+        EntityManager em = persistence.getEntityManager();
+        List<StandardEntity> en=em.createQuery(
+                "SELECT e FROM "+getMetaclassPrefix(entityType)+entityType+" e")
+                .getResultList();
+
+        tx.commit();
+
+        return en;
+    }
+
+    /**
+     * @Author Andrey Kolosov
+     * @param date Проверяемый день
+     * @return возвращает день праздника, если он есть
+     */
+    @Override
+    public Holiday getHoliday(Date date) {
+        if((date==null))return null;
+
+        LoadContext<Holiday> loadContext = LoadContext.create(Holiday.class)
+                .setQuery(LoadContext.createQuery("SELECT h FROM supply$Holiday h where h.day=:day")
+                .setParameter("day", date));
+
+        return dataManager.load(loadContext);
+    }
+
+    @Override
+    public Settings getSettings(String key) {
+        if((key==null))return null;
+
+        LoadContext<Settings> loadContext = LoadContext.create(Settings.class)
+                .setQuery(LoadContext.createQuery("SELECT h FROM supply$Settings h where h.key=:key")
+                        .setParameter("key", key));
+
+        return dataManager.load(loadContext);
+    }
+
 }
