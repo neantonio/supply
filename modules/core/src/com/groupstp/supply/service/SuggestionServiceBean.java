@@ -1,10 +1,13 @@
 package com.groupstp.supply.service;
 
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.groupstp.supply.entity.*;
 import com.haulmont.cuba.core.app.EmailService;
 import com.haulmont.cuba.core.global.DataManager;
+import com.haulmont.cuba.core.global.DevelopmentException;
 import com.haulmont.cuba.core.global.EmailInfo;
-import org.eclipse.persistence.internal.jaxb.many.MapEntry;
+import com.haulmont.cuba.core.global.Metadata;
 import org.springframework.stereotype.Service;
 
 import javax.inject.Inject;
@@ -24,11 +27,16 @@ public class SuggestionServiceBean implements SuggestionService {
     @Inject
     private DataManager dataManager;
 
+    @Inject
+    private Metadata metadata;
+
     @Override
-    public String makeTokenForPositions(Collection<QueriesPosition> positionCollection){
+    public String makeTokenForPositionsAndSupplier(Collection<QueriesPosition> positionCollection, Suppliers supplier){
+
+        if(positionCollection.size()==0) throw new DevelopmentException("token can only be made for not empty position collection");
 
         List<QueriesPosition> positionList=new ArrayList<>(positionCollection);
-        String result="";
+        String result=String.valueOf(supplier.getId().hashCode());
 
         //сортируем по uuid
         positionList.sort((item1,item2)->
@@ -44,7 +52,7 @@ public class SuggestionServiceBean implements SuggestionService {
             //значит по этому набору позиций был запрос
         }
         catch (Exception e){
-            queryDaoService.saveToken(result,positionList);
+            queryDaoService.saveToken(result,positionList,supplier );
         }
 
         return result;
@@ -53,7 +61,7 @@ public class SuggestionServiceBean implements SuggestionService {
     @Override
     public Collection<QueriesPosition> getPositionsForToken(String token) {
 
-        Collection<QueriesPosition> result=queryDaoService.loadPositionsForToken(token);
+        Collection<QueriesPosition> result=queryDaoService.getTokenLinkForToken(token).getPositions();
         if((result==null)||(result.isEmpty())) throw new DataIncompleteException();
         return result;
     }
@@ -122,7 +130,7 @@ public class SuggestionServiceBean implements SuggestionService {
                 paramMap.put("company",companyEntry.getKey());
                 paramMap.put("positions",(ArrayList)companyEntry.getValue());
                 paramMap.put("link","https://gag.groupstp.ru/supplier.html?key=");
-                paramMap.put("token",makeTokenForPositions(companyEntry.getValue()));
+                paramMap.put("token", makeTokenForPositionsAndSupplier(companyEntry.getValue(),supplierEntry.getKey() ));
                 paramMap.put("employee",employee);
 
                 EmailInfo emailInfo = new EmailInfo(
@@ -138,6 +146,38 @@ public class SuggestionServiceBean implements SuggestionService {
         });
     }
 
+    /**
+     * обработка ввода предложения через веб форму
+     * @param token
+     * @param jsonObjects массив элементов. каждый должен содержать positionId, supAddress, quantity(double),price(double)
+     */
+    @Override
+    public void processSuggestion(String token, JsonObject[] jsonObjects){
+
+        List<PositionSupplier> positionSupplierList =queryDaoService.getPositionSuppliersForToken(token);
+
+        positionSupplierList.forEach(positionSupplier -> {
+            writeSupplierSuggestion(positionSupplier,getJsonObjectForPositionSupplier(positionSupplier,jsonObjects));
+        });
+
+    }
+
+    private JsonObject getJsonObjectForPositionSupplier(PositionSupplier positionSupplier,JsonObject[] jsonObjects){
+
+        try {
+            for (int i = 0; i < jsonObjects.length; i++) {
+                if (jsonObjects[i].get("positionId").getAsString().equalsIgnoreCase(positionSupplier.getPosition().getId().toString()))
+                    return jsonObjects[i];
+            }
+        }
+        catch (NullPointerException e){
+            throw new DevelopmentException("every json object must contain positionId",e);
+        }
+
+        throw new DevelopmentException("there must be jsonObject for every position in suggestion request");
+
+    }
+
     private void markPositionsSupplierAsSend(Collection<QueriesPosition> positionCollection){
         List<PositionSupplier>  positionSuppliers=queryDaoService.getSupplierPositions(positionCollection);
 
@@ -146,6 +186,8 @@ public class SuggestionServiceBean implements SuggestionService {
             dataManager.commit(item);
         });
     }
+
+
 
     private void addPositionToSupplierMap( Map<Suppliers,List<QueriesPosition>> supplierMap,QueriesPosition position,Suppliers supplier){
         if(supplierMap.get(supplier)==null) supplierMap.put(supplier,new ArrayList<>());
@@ -162,6 +204,30 @@ public class SuggestionServiceBean implements SuggestionService {
         }
         return result;
     }
+
+    private void writeSupplierSuggestion(PositionSupplier positionSupplier,JsonObject jsonObject){
+        String supAddress;
+        Double quantity;
+        Double price;
+
+        try{
+            supAddress=jsonObject.get("supAddress").getAsString();
+            quantity= jsonObject.get("quantity").getAsDouble();
+            price=jsonObject.get("price").getAsDouble();
+        }
+        catch (NullPointerException e){
+            throw new DevelopmentException("every json object must contain positionId, supAddress, quantity(double),price(double)",e);
+        }
+        SuppliersSuggestion suggestion =metadata.create(SuppliersSuggestion.class);
+        suggestion.setPrice(price);
+        suggestion.setSupAddress(supAddress);
+        suggestion.setQuantity(quantity);
+        suggestion.setPosSup(positionSupplier);
+        dataManager.commit(suggestion);
+
+    }
+
+
 
 
 

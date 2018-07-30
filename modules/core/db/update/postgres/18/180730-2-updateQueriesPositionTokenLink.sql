@@ -1,0 +1,1 @@
+alter table SUPPLY_QUERIES_POSITION_TOKEN_LINK add column SUPPLIER_ID uuid ;

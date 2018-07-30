@@ -539,6 +539,7 @@ create table SUPPLY_QUERIES_POSITION_TOKEN_LINK (
     DELETED_BY varchar(50),
     --
     TOKEN varchar(255),
+    SUPPLIER_ID uuid,
     --
     primary key (ID)
 )^

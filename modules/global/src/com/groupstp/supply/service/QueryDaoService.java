@@ -45,9 +45,13 @@ public interface QueryDaoService {
 
     List<SuppliersSuggestion> getSupplierSuggestions(QueriesPosition entity);
 
-    void saveToken(String token, List<QueriesPosition> positionList);
+    void saveToken(String token, List<QueriesPosition> positionList, Suppliers supplier);
 
-    Collection<QueriesPosition> loadPositionsForToken(String token);
+    QueriesPositionTokenLink getTokenLinkForToken(String token);
 
     List<PositionSupplier> getSupplierPositions(Collection<QueriesPosition> positionCollection);
+
+    PositionSupplier getPositionSupplier(QueriesPosition position, Suppliers supplier);
+
+    List<PositionSupplier> getPositionSuppliersForToken(String token);
 }

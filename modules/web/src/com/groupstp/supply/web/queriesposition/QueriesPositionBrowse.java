@@ -38,6 +38,8 @@ public class QueriesPositionBrowse extends AbstractLookup {
 //    @Inject
 //    private DataBaseTestContentService dataBaseTestContentService;
 
+    private SupplyWindowUtil windowUtil;
+
     @Inject
     private DataManager dataManager;
 
@@ -1145,6 +1147,8 @@ public class QueriesPositionBrowse extends AbstractLookup {
     @Override
     public void init(Map<String, Object> params) {
 
+        windowUtil=new SupplyWindowUtil(this,messages,componentsFactory,metadata);
+
         initLogisticStageTable();
         initSupSelectionStageTable();
 
@@ -1533,6 +1537,11 @@ public class QueriesPositionBrowse extends AbstractLookup {
 
         Collection<QueriesPosition> positionsWithoutSupplier=suggestionService.getPositionListWithoutSupplier();
         Collection<PositionSupplier> alreadySendRequest=suggestionService.getWithRequestAlreadySend();
+
+        if(suggestionService.getJustSendPositions().size()>0){
+            windowUtil.makeTrayNotificationWithStringList(messages.getMainMessage("just_send_position"),
+                    suggestionService.getJustSendPositions().stream().map(QueriesPosition::getQueriesPositionName).collect(Collectors.toList()));
+        }
 
         if((positionsWithoutSupplier.size()>0)||(alreadySendRequest.size()>0)) {
             openWindow("SuggestionRequestProcessing",

@@ -177,23 +177,22 @@ public class QueryDaoServiceBean implements QueryDaoService {
     }
 
     @Override
-    public void saveToken(String token, List<QueriesPosition> positionList) {
+    public void saveToken(String token, List<QueriesPosition> positionList, Suppliers supplier) {
         QueriesPositionTokenLink tokenLink=metadata.create(QueriesPositionTokenLink.class);
         tokenLink.setPositions(positionList);
         tokenLink.setToken(token);
+
         dataManager.commit(tokenLink);
     }
 
     @Override
-    public Collection<QueriesPosition> loadPositionsForToken(String token) {
+    public QueriesPositionTokenLink getTokenLinkForToken(String token) {
         LoadContext<QueriesPositionTokenLink> loadContext = LoadContext.create(QueriesPositionTokenLink.class)
                 .setQuery(LoadContext.createQuery("select qptl from supply$QueriesPositionTokenLink qptl where\n" +
                         "qptl.token =:tokenItem")
                         .setParameter("tokenItem",token))
                 .setView("queriesPositionTokenLink-full");
-        QueriesPositionTokenLink result=dataManager.load(loadContext);
-        if(result==null) return null;
-        return result.getPositions();
+        return dataManager.load(loadContext);
     }
 
     @Override
@@ -202,6 +201,31 @@ public class QueryDaoServiceBean implements QueryDaoService {
                 .setQuery(LoadContext.createQuery("select ps from supply$PositionSupplier ps where\n" +
                         "ps.position in :positionItems")
                         .setParameter("positionItems",positionCollection))
+                .setView("positionSupplier-full");
+
+        return dataManager.loadList(loadContext);
+    }
+
+    @Override
+    public PositionSupplier getPositionSupplier(QueriesPosition position, Suppliers supplier){
+        LoadContext<PositionSupplier> loadContext = LoadContext.create(PositionSupplier.class)
+                .setQuery(LoadContext.createQuery("select ps from supply$PositionSupplier ps where\n" +
+                        "ps.position =:positionItem and ps.supplier=:supplierItem")
+                        .setParameter("positionItem",position)
+                        .setParameter("supplierItem",supplier))
+                .setView("positionSupplier-full");
+
+        return dataManager.load(loadContext);
+    }
+
+    @Override
+    public List<PositionSupplier> getPositionSuppliersForToken(String token) {
+        QueriesPositionTokenLink tokenLink=getTokenLinkForToken(token);
+        LoadContext<PositionSupplier> loadContext = LoadContext.create(PositionSupplier.class)
+                .setQuery(LoadContext.createQuery("select ps from supply$PositionSupplier ps where\n" +
+                        "ps.position in :positionItems and ps.supplier=:supplierItem")
+                        .setParameter("positionItems",tokenLink.getPositions())
+                        .setParameter("supplierItem",tokenLink.getSupplier()))
                 .setView("positionSupplier-full");
 
         return dataManager.loadList(loadContext);

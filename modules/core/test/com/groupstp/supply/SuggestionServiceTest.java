@@ -1,13 +1,14 @@
 package com.groupstp.supply;
 
+import com.google.gson.JsonObject;
 import com.groupstp.supply.entity.*;
 import com.groupstp.supply.service.QueryDaoService;
-import com.groupstp.supply.service.QueryServiceBean;
-import com.groupstp.supply.service.SuggestionService;
 import com.groupstp.supply.service.SuggestionServiceBean;
+import com.haulmont.chile.core.model.MetaClass;
 import com.haulmont.cuba.core.app.EmailService;
 import com.haulmont.cuba.core.entity.Entity;
 import com.haulmont.cuba.core.global.DataManager;
+import com.haulmont.cuba.core.global.Metadata;
 import mockit.Expectations;
 import mockit.Injectable;
 import mockit.Mocked;
@@ -44,10 +45,14 @@ public class SuggestionServiceTest {
     @Injectable
     DataManager dataManager;
 
+    @Mocked
+    @Injectable
+    Metadata metadata;
+
     @Test
     public void serviceMakeSameTokenForCoincidentalSetOfPositionsAndDifferentForDifferentOnes(){
         new Expectations() {{
-            queryDaoService.saveToken(withNotNull(),withNotNull());
+            queryDaoService.saveToken(withNotNull(),withNotNull(), withNotNull());
 
         }};
 
@@ -64,9 +69,12 @@ public class SuggestionServiceTest {
         List<QueriesPosition> queriesPositions2= Arrays.asList(qp2,qp1,qp3);
         List<QueriesPosition> queriesPositions3= Arrays.asList(qp3,qp2,qp1);
 
-        String result1=suggestionService.makeTokenForPositions(queriesPositions1);
-        String result2=suggestionService.makeTokenForPositions(queriesPositions2);
-        String result3=suggestionService.makeTokenForPositions(queriesPositions3);
+        Suppliers suppliers=new Suppliers();
+        suppliers.setId(UUID.randomUUID());
+
+        String result1=suggestionService.makeTokenForPositionsAndSupplier(queriesPositions1,suppliers );
+        String result2=suggestionService.makeTokenForPositionsAndSupplier(queriesPositions2,suppliers );
+        String result3=suggestionService.makeTokenForPositionsAndSupplier(queriesPositions3,suppliers );
 
         assertEquals(result1,result2);
         assertEquals(result3,result2);
@@ -75,13 +83,24 @@ public class SuggestionServiceTest {
         List<QueriesPosition> queriesPositions5= Arrays.asList(qp4,qp1,qp3);
         List<QueriesPosition> queriesPositions6= Arrays.asList(qp4,qp2,qp1);
 
-        String result4=suggestionService.makeTokenForPositions(queriesPositions4);
-        String result5=suggestionService.makeTokenForPositions(queriesPositions5);
-        String result6=suggestionService.makeTokenForPositions(queriesPositions6);
+        String result4=suggestionService.makeTokenForPositionsAndSupplier(queriesPositions4,suppliers );
+        String result5=suggestionService.makeTokenForPositionsAndSupplier(queriesPositions5,suppliers );
+        String result6=suggestionService.makeTokenForPositionsAndSupplier(queriesPositions6,suppliers );
 
         Assert.assertThat(result4,not(equalTo(result5)));
         Assert.assertThat(result5,not(equalTo(result6)));
         Assert.assertThat(result4,not(equalTo(result6)));
+
+        Suppliers suppliers2=new Suppliers();
+        suppliers2.setId(UUID.randomUUID());
+
+        String result7=suggestionService.makeTokenForPositionsAndSupplier(queriesPositions4,suppliers2 );
+        String result8=suggestionService.makeTokenForPositionsAndSupplier(queriesPositions5,suppliers2 );
+        String result9=suggestionService.makeTokenForPositionsAndSupplier(queriesPositions6,suppliers2 );
+
+        Assert.assertThat(result7,not(equalTo(result5)));
+        Assert.assertThat(result8,not(equalTo(result6)));
+        Assert.assertThat(result9,not(equalTo(result6)));
 
     }
 
@@ -142,19 +161,15 @@ public class SuggestionServiceTest {
         new Expectations(){{
             queryDaoService.getSupplierPositions(withNotNull());
             result=Arrays.asList(ps1,ps2,ps3,ps4,ps5,ps6,ps7,ps8,ps9,ps10);
-        }{
-            emailService.sendEmailAsync(withNotNull());
-        }{
-            dataManager.commit((Entity)withNotNull());
         }};
 
 
-        Map result=suggestionService.makeSuggestionRequestMap(Arrays.asList(qp1,qp2,qp3,qp4,qp5,qp6,qp7,qp8,qp9,qp10));
+        Map<Suppliers,Map<Company,List<QueriesPosition>>> result=suggestionService.makeSuggestionRequestMap(Arrays.asList(qp1,qp2,qp3,qp4,qp5,qp6,qp7,qp8,qp9,qp10));
 
         //проверряем когда есть поставщик и позиции еще не отправлены
         assertEquals(2,result.entrySet().size());
 
-        List<Map.Entry<Suppliers,Map>> bySupplier=new ArrayList<>(result.entrySet());
+        List<Map.Entry<Suppliers,Map>> bySupplier=new ArrayList<>((Collection) result.entrySet());
         List<Map> byCompany=bySupplier.stream().map(item->item.getValue()).collect(Collectors.toList());
         assertEquals(2,byCompany.get(0).entrySet().size());
         assertEquals(2,byCompany.get(1).entrySet().size());
@@ -167,15 +182,77 @@ public class SuggestionServiceTest {
         //проверяем обработку уже отправленных запросов и позиций без поставщика
         result=suggestionService.makeSuggestionRequestMap(Arrays.asList(qp1,qp2,qp3,qp4,qp5,qp6,qp7,qp8,qp9,qp10));
 
-        bySupplier=new ArrayList<>(result.entrySet());
-        byCompany=bySupplier.stream().map(item->item.getValue()).collect(Collectors.toList());
-        assertEquals(2,byCompany.get(0).entrySet().size());
-        assertEquals(2,byCompany.get(1).entrySet().size());
-        assertEquals(8,getAllPositionsFromMap(result).size());
+
+
+        assertEquals(2,result.get(s1).entrySet().size());
+        assertEquals(3,result.get(s2).entrySet().size());
+        assertEquals(9,getAllPositionsFromMap(result).size());
         assertEquals(1,suggestionService.getPositionListWithoutSupplier().size());
         assertEquals(1,suggestionService.getWithRequestAlreadySend().size());
         assertEquals(qp10,suggestionService.getPositionListWithoutSupplier().get(0));
-        assertEquals(ps3.getPosition(),suggestionService.getWithRequestAlreadySend().get(0));
+        assertEquals(ps3,suggestionService.getWithRequestAlreadySend().get(0));
+    }
+
+    @Test
+    public void serviceProcessJsonFromWebFormAndThrowExceptionWhenNeeded(){
+        new Expectations() {{
+            queryDaoService.saveToken(withNotNull(),withNotNull(), withNotNull());
+
+        }};
+
+        QueriesPosition qp1=new QueriesPosition();
+        QueriesPosition qp2=new QueriesPosition();
+        QueriesPosition qp3=new QueriesPosition();
+        QueriesPosition qp4=new QueriesPosition();
+        qp1.setId(UUID.randomUUID());
+        qp2.setId(UUID.randomUUID());
+        qp3.setId(UUID.randomUUID());
+        qp4.setId(UUID.randomUUID());
+
+        List<QueriesPosition> queriesPositions= Arrays.asList(qp1,qp2,qp3);
+
+
+        Suppliers suppliers=new Suppliers();
+        suppliers.setId(UUID.randomUUID());
+
+        PositionSupplier ps1=new PositionSupplier();  ps1.setPosition(qp1);    ps1.setSupplier(suppliers);
+        PositionSupplier ps2=new PositionSupplier();  ps2.setPosition(qp2);    ps2.setSupplier(suppliers);
+        PositionSupplier ps3=new PositionSupplier();  ps3.setPosition(qp3);    ps3.setSupplier(suppliers);
+
+        String token=suggestionService.makeTokenForPositionsAndSupplier(queriesPositions,suppliers);
+
+        JsonObject[] jsonObjects=new JsonObject[3];
+        jsonObjects[0]=makeJsonObject(qp1.getId().toString(),"a1",122.,4.);
+        jsonObjects[1]=makeJsonObject(qp2.getId().toString(),"a2",222.,24.);
+        jsonObjects[2]=makeJsonObject(qp3.getId().toString(),"a3",322.,34.);
+
+
+        new Expectations(){{
+            queryDaoService.getPositionSuppliersForToken(withNotNull());
+            result=Arrays.asList(ps1,ps2,ps3);
+        }{
+            metadata.create( SuppliersSuggestion.class);
+            result=new SuppliersSuggestion();
+        }{
+            dataManager.commit((Entity) withNotNull());
+        }};
+
+
+        try {
+           suggestionService.processSuggestion(token,jsonObjects);
+        } catch (Exception e) {
+           fail("брошено исключение при обработке предложения");
+        }
+
+        jsonObjects[2]=makeJsonObject("15","a3",322.,34.);
+
+        try {
+            suggestionService.processSuggestion(token,jsonObjects);
+            fail("при обработке предложения исключение не брошено, хотя данные не корректны");
+        } catch (Exception e) {
+
+        }
+
     }
 
     private  List<QueriesPosition> getAllPositionsFromMap(Map<Suppliers,Map<Company,List<QueriesPosition>>> sourceMap){
@@ -187,5 +264,14 @@ public class SuggestionServiceTest {
         });
 
         return allPositions;
+    }
+
+    private JsonObject makeJsonObject(String positionId,String supAddress,Double quantity,Double price){
+        JsonObject result=new JsonObject();
+        result.addProperty("positionId",positionId);
+        result.addProperty("supAddress",supAddress);
+        result.addProperty("quantity",quantity);
+        result.addProperty("price",price);
+        return result;
     }
 }

@@ -82,7 +82,7 @@ class Testimport extends AbstractWindow {
                 else qpCollection.add(qp);
 
 
-                tokenLabel.setValue(suggestionService.makeTokenForPositions(qpCollection))
+                tokenLabel.setValue(suggestionService.makeTokenForPositionsAndSupplier(qpCollection,))
                 webFormLink.setUrl(txtLink.getRawValue()+tokenLabel.getRawValue());
                 webFormLink.setCaption(txtLink.getRawValue()+tokenLabel.getRawValue())
             }
