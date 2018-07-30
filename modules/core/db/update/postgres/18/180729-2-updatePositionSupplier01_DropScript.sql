@@ -1,1 +1,0 @@
-alter table SUPPLY_POSITION_SUPPLIER drop column SUGGESTION_REQUEST_SEND__U66817 cascade ;

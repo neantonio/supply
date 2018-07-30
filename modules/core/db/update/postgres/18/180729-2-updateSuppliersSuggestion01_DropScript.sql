@@ -1,2 +1,0 @@
-alter table SUPPLY_SUPPLIERS_SUGGESTION drop column MANUFACTURER__U93390 cascade ;
-alter table SUPPLY_SUPPLIERS_SUGGESTION drop column PAYMENT_DEF__U97710 cascade ;

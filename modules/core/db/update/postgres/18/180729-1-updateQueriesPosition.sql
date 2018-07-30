@@ -1,1 +1,0 @@
-drop index IDX_SUPPLY_QUERIES_POSITION_UNQ ;

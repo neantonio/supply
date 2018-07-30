@@ -26,12 +26,12 @@ where e.currentStage='SupSelection']]>
                         invoke="onTestSyncClick"/>
             </hbox>
             <vbox spacing="true">
-                <label id="tokenLabel"
-                       align="BOTTOM_LEFT"/>
+                <vbox id="tokenVbox"
+                      spacing="true"/>
                 <textField id="txtLink"
                            caption="кусок ссылки до токена"/>
-                <link id="webFormLink"
-                      align="BOTTOM_LEFT"/>
+                <vbox id="linkVbox"
+                      spacing="true"/>
             </vbox>
             <table id="positionTable"
                    multiselect="true"

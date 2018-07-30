@@ -1,2 +1,0 @@
-alter table SUPPLY_SETTINGS add constraint FK_SUPPLY_SETTINGS_ON_BILLS foreign key (BILLS_ID) references SUPPLY_BILLS(ID);
-create index IDX_SUPPLY_SETTINGS_ON_BILLS on SUPPLY_SETTINGS (BILLS_ID);

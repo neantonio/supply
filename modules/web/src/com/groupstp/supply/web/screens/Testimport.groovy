@@ -1,6 +1,8 @@
 package com.groupstp.supply.web.screens
 
+import com.groupstp.supply.entity.Company
 import com.groupstp.supply.entity.QueriesPosition
+import com.groupstp.supply.entity.Suppliers
 import com.groupstp.supply.service.ImportControllerService
 import com.groupstp.supply.service.SuggestionService
 import com.haulmont.cuba.gui.components.AbstractWindow
@@ -8,9 +10,12 @@ import com.haulmont.cuba.gui.components.Label
 import com.haulmont.cuba.gui.components.Link
 import com.haulmont.cuba.gui.components.Table
 import com.haulmont.cuba.gui.components.TextField
+import com.haulmont.cuba.gui.components.VBoxLayout
 import com.haulmont.cuba.gui.data.CollectionDatasource
 import com.haulmont.cuba.gui.settings.Settings
+import com.haulmont.cuba.gui.xml.layout.ComponentsFactory
 import com.vaadin.event.ItemClickEvent
+import com.vaadin.ui.declarative.Design
 import org.apache.http.HttpEntity
 import org.apache.http.HttpResponse
 import org.apache.http.client.ClientProtocolException
@@ -28,6 +33,7 @@ import org.omg.CORBA.NameValuePair
 import org.slf4j.Logger
 
 import javax.inject.Inject
+import java.util.function.Consumer
 
 class Testimport extends AbstractWindow {
     @Inject
@@ -37,20 +43,17 @@ class Testimport extends AbstractWindow {
     @Inject
     private TextField txtPass;
 
-    @Inject
-    private TextField txtToken;
+   @Inject
+   private VBoxLayout tokenVbox;
 
     @Inject
-    private TextField txtLink;
+    private VBoxLayout linkVbox;
 
     @Inject
     private Table<QueriesPosition> positionTable;
 
     @Inject
-    private Label tokenLabel;
-
-    @Inject
-    private Link webFormLink;
+    private TextField txtLink;
 
     @Inject
     private SuggestionService suggestionService;
@@ -60,6 +63,9 @@ class Testimport extends AbstractWindow {
 
     @Inject
     private ImportControllerService importControllerService;
+
+    @Inject
+    private ComponentsFactory componentFactory;
 
     @Override
     public void init(Map<String, Object> params) {
@@ -82,9 +88,34 @@ class Testimport extends AbstractWindow {
                 else qpCollection.add(qp);
 
 
-                tokenLabel.setValue(suggestionService.makeTokenForPositionsAndSupplier(qpCollection,))
-                webFormLink.setUrl(txtLink.getRawValue()+tokenLabel.getRawValue());
-                webFormLink.setCaption(txtLink.getRawValue()+tokenLabel.getRawValue())
+                Map<Suppliers,Map<Company,List<QueriesPosition>>> sendMap=suggestionService.makeSuggestionRequestMap(qpCollection,true);
+
+                tokenVbox.removeAll();
+                linkVbox.removeAll();
+
+                sendMap.entrySet().forEach(new Consumer<Map.Entry<Suppliers, Map<Company, List<QueriesPosition>>>>() {
+                    @Override
+                    void accept(Map.Entry<Suppliers, Map<Company, List<QueriesPosition>>> suppliersMapEntry) {
+                        suppliersMapEntry.value.entrySet().forEach(new Consumer<Map.Entry<Company, List<QueriesPosition>>>() {
+                            @Override
+                            void accept(Map.Entry<Company, List<QueriesPosition>> companyListEntry) {
+                                String token=suggestionService.makeTokenForPositionsAndSupplier(companyListEntry.value,suppliersMapEntry.key);
+
+                                Label label=componentFactory.createComponent(Label.NAME);
+                                label.setValue(token +" для "+suppliersMapEntry.key.name +" от "+companyListEntry.key.name);
+
+                                tokenVbox.add(label);
+
+                                Link link=componentFactory.createComponent(Link.NAME);
+                                link.setUrl(txtLink.getRawValue()+token);
+                                link.setCaption(txtLink.getRawValue()+token);
+
+                                linkVbox.add(link);
+                            }
+                        })
+                    }
+                })
+
             }
         })
         ;

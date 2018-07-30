@@ -1,3 +1,0 @@
-alter table supply_query_position_stage_data rename to SUPPLY_QUERY_POSITION_STAGE_DATA__U11708 ;
-alter table supply_query_position_stage_data_item drop constraint FK_SUPPLY_QUERYPOSITSTAGEDATAITEM_ON_QUERY_POSITION_STAGE_DATA ;
-alter table supply_query_position_stage_data_item_link drop constraint FK_QUEPOSSTADATITE_ON_QUERY_POSITION_STAGE_DATA ;
