@@ -13,13 +13,13 @@
     <dsContext>
         <datasource id="urgencyDs"
                     class="com.groupstp.supply.entity.Urgency"
-                    view="urgency-view">
+                    view="full">
             <collectionDatasource id="stageTermDs"
                                   property="stageTerm"/>
         </datasource>
         <groupDatasource id="urgenciesDs"
                          class="com.groupstp.supply.entity.Urgency"
-                         view="urgency-view">
+                         view="full">
             <query>
                 <![CDATA[select e from supply$Urgency e]]>
             </query>

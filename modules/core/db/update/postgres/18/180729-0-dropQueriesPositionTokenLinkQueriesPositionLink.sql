@@ -1,0 +1,1 @@
+alter table supply_queries_position_token_link_queries_position_link rename to SUPPLY_QUERIES_POSITION_TOKEN_LINK_QUERIES_POSITION_LINK__U55183 ;

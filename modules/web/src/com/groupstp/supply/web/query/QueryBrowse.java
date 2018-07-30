@@ -112,8 +112,6 @@ public class QueryBrowse extends AbstractLookup {
     public void onPassToWork(){
         Set<Query> selectedQueries = queriesTable.getSelected();
         if(selectedQueries.size()>0){
-
-
             makeConfirmDialog(messages.getMessage(MessageEnum.QUERY),messages.getMessage(MessageEnum.PASS_TO_WORK)+"?",()->{
                 Set<Query> selectedQueries1 = queriesTable.getSelected();
                 List<Query> selectedQueryList=new ArrayList<>();

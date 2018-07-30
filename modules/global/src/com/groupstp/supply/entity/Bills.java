@@ -7,10 +7,8 @@ import com.haulmont.cuba.core.entity.StandardEntity;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import com.haulmont.chile.core.annotations.NumberFormat;
 import java.util.Date;
 import java.util.List;
-import com.haulmont.chile.core.annotations.NamePattern;
 
 @NamePattern("%s|number")
 @Table(name = "SUPPLY_BILLS")
@@ -22,10 +20,12 @@ public class Bills extends StandardEntity {
     @Column(name = "NUMBER_", nullable = false, unique = true, length = 20)
     protected String number;
 
+    @NumberFormat(pattern = "########.##")
     @Column(name = "PRICE")
     protected Double price;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @NotNull
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "COMPANY_ID")
     protected Company company;
 
@@ -34,16 +34,19 @@ public class Bills extends StandardEntity {
     @JoinColumn(name = "SUPPLIER_ID")
     protected Suppliers supplier;
 
+    @NotNull
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "TIME_PAYMENT")
+    @Column(name = "TIME_PAYMENT", nullable = false)
     protected Date timePayment;
 
+    @NotNull
     @NumberFormat(pattern = "#########.##")
-    @Column(name = "AMOUNT")
+    @Column(name = "AMOUNT", nullable = false)
     protected Double amount;
 
-    @Column(name = "SUM_CONTROL")
-    protected Boolean sumControl;
+    @NotNull
+    @Column(name = "SUM_CONTROL", nullable = false)
+    protected Boolean sumControl = false;
 
     @OneToMany(mappedBy = "bills")
     protected List<QueriesPosition> positions;

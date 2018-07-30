@@ -19,7 +19,6 @@
             <column width="250px">
                 <field property="number"/>
                 <field property="timePayment"/>
-                <field property="sumControl"/>
                 <field property="amount"/>
                 <field property="supplier"/>
                 <field property="company"/>

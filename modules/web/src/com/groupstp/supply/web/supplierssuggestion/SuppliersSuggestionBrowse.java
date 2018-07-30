@@ -7,10 +7,7 @@ import com.haulmont.cuba.core.global.DataManager;
 import com.haulmont.cuba.core.global.LoadContext;
 import com.haulmont.cuba.core.global.Metadata;
 import com.haulmont.cuba.gui.WindowManager;
-import com.haulmont.cuba.gui.components.AbstractLookup;
-import com.haulmont.cuba.gui.components.Button;
-import com.haulmont.cuba.gui.components.Component;
-import com.haulmont.cuba.gui.components.GroupTable;
+import com.haulmont.cuba.gui.components.*;
 import com.haulmont.cuba.gui.data.GroupDatasource;
 
 import javax.inject.Inject;
@@ -101,11 +98,15 @@ public class SuppliersSuggestionBrowse extends AbstractLookup {
         suppliersSuggestionsDs.addItem(ss);
     }
 
+    public void onCommitAndClose(){
+        onCommit();
+        close(Window.COMMIT_ACTION_ID);
+    }
+
     /**
      * Заносит изменения в таблице в БД
-     * @param source компонент, вызвавший действие
      */
-    public void onCommit(Component source) {
+    public void onCommit() {
 
         suppliersSuggestionsDs.commit();
         suppliersSuggestionsDs.refresh();

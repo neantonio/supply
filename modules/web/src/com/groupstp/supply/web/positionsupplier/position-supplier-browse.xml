@@ -30,7 +30,13 @@
                     caption="msg://Message"
                     icon="ENVELOPE"
                     invoke="onBtnMessageClick"/>
+            <button id="btnClose"
+                    caption="msg://Close"
+                    align="TOP_RIGHT"
+                    invoke="onBtnCloseClick"/>
+
         </hbox>
+
         <table id="tab"
                width="100%">
             <columns>

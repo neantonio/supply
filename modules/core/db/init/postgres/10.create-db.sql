@@ -341,6 +341,8 @@ create table SUPPLY_SUPPLIERS_SUGGESTION (
     DELETED_BY varchar(50),
     --
     POS_SUP_ID uuid,
+    MANUFACTURER varchar(255),
+    PAYMENT_DEF integer,
     QUANTITY double precision not null,
     PRICE double precision not null,
     SUP_ADDRESS varchar(255),
@@ -361,8 +363,11 @@ create table SUPPLY_SUPPLIERS (
     DELETED_BY varchar(50),
     --
     NAME varchar(50),
-    EMAIL varchar(255),
     FULL_NAME varchar(255),
+    INN varchar(50),
+    CONTACTS varchar(255),
+    EMAIL varchar(255),
+    COMMENTS varchar(255),
     --
     primary key (ID)
 )^
@@ -419,11 +424,11 @@ create table SUPPLY_BILLS (
     --
     NUMBER_ varchar(20) not null,
     PRICE double precision,
-    COMPANY_ID uuid,
+    COMPANY_ID uuid not null,
     SUPPLIER_ID uuid not null,
-    TIME_PAYMENT timestamp,
-    AMOUNT double precision,
-    SUM_CONTROL boolean,
+    TIME_PAYMENT timestamp not null,
+    AMOUNT double precision not null,
+    SUM_CONTROL boolean not null,
     IMAGE_BILL_ID uuid,
     --
     primary key (ID)
@@ -484,6 +489,13 @@ create table SUPPLY_QUERY_POSITION_STAGE_DATA_ITEM (
     primary key (ID)
 )^
 -- end SUPPLY_QUERY_POSITION_STAGE_DATA_ITEM
+-- begin SUPPLY_QUERY_POSITION_STAGE_DATA_ITEM_LINK
+create table SUPPLY_QUERY_POSITION_STAGE_DATA_ITEM_LINK (
+    QUERY_POSITION_STAGE_DATA_ID uuid,
+    QUERY_POSITION_STAGE_DATA_ITEM_ID uuid,
+    primary key (QUERY_POSITION_STAGE_DATA_ID, QUERY_POSITION_STAGE_DATA_ITEM_ID)
+)^
+-- end SUPPLY_QUERY_POSITION_STAGE_DATA_ITEM_LINK
 -- begin SUPPLY_DELIVERY
 create table SUPPLY_DELIVERY (
     ID uuid,
@@ -520,13 +532,50 @@ create table SUPPLY_DELIVERY_LINE (
     primary key (ID)
 )^
 -- end SUPPLY_DELIVERY_LINE
--- begin SUPPLY_QUERY_POSITION_STAGE_DATA_ITEM_LINK
-create table SUPPLY_QUERY_POSITION_STAGE_DATA_ITEM_LINK (
-    QUERY_POSITION_STAGE_DATA_ID uuid,
-    QUERY_POSITION_STAGE_DATA_ITEM_ID uuid,
-    primary key (QUERY_POSITION_STAGE_DATA_ID, QUERY_POSITION_STAGE_DATA_ITEM_ID)
+-- begin SUPPLY_HOLIDAY
+create table SUPPLY_HOLIDAY (
+    ID uuid,
+    VERSION integer not null,
+    CREATE_TS timestamp,
+    CREATED_BY varchar(50),
+    UPDATE_TS timestamp,
+    UPDATED_BY varchar(50),
+    DELETE_TS timestamp,
+    DELETED_BY varchar(50),
+    --
+    DAY_ date not null,
+    WORKING_HOURS integer not null,
+    --
+    primary key (ID)
 )^
--- end SUPPLY_QUERY_POSITION_STAGE_DATA_ITEM_LINK
+-- end SUPPLY_HOLIDAY
+-- begin SUPPLY_SETTINGS
+create table SUPPLY_SETTINGS (
+    ID uuid,
+    VERSION integer not null,
+    CREATE_TS timestamp,
+    CREATED_BY varchar(50),
+    UPDATE_TS timestamp,
+    UPDATED_BY varchar(50),
+    DELETE_TS timestamp,
+    DELETED_BY varchar(50),
+    --
+    KEY_ varchar(50) not null,
+    SAVED_OBJECT text,
+    SAVED_ENUM text,
+    TEXT varchar(50),
+    BOOLEAN_VALUE boolean,
+    BIG_DECIMAL_VALUE decimal(19, 2),
+    DATE_TIME_VALUE timestamp,
+    DATE_VALUE date,
+    DOUBLE_VALUE double precision,
+    INTEGER_VALUE integer,
+    LONG_VALUE bigint,
+    TIME_VALUE time,
+    --
+    primary key (ID)
+)^
+-- end SUPPLY_SETTINGS
 -- begin SUPPLY_QUERIES_POSITION_TOKEN_LINK
 create table SUPPLY_QUERIES_POSITION_TOKEN_LINK (
     ID uuid,

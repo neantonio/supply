@@ -19,8 +19,11 @@ ss.posSup in (select ps from supply$PositionSupplier ps where ps.position in :pa
     <actions>
         <action id="commit"/>
     </actions>
-    <dialogMode height="600"
-                width="800"/>
+    <dialogMode closeable="true"
+                height="90%"
+                modal="false"
+                resizable="true"
+                width="90%"/>
     <layout expand="tab"
             spacing="true">
         <filter id="filter"
@@ -56,6 +59,12 @@ ss.posSup in (select ps from supply$PositionSupplier ps where ps.position in :pa
                 <column id="term"
                         editable="true"
                         width="50"/>
+                <column id="manufacturer"
+                        caption="Производитель"
+                        editable="true"/>
+                <column id="paymentDef"
+                        caption="Отсрочка платежа"
+                        editable="true"/>
             </columns>
             <rows datasource="suppliersSuggestionsDs"/>
             <rowsCount/>
@@ -66,10 +75,9 @@ ss.posSup in (select ps from supply$PositionSupplier ps where ps.position in :pa
                         invoke="onCreateBtnClick"/>
                 <button id="removeBtn"
                         action="tab.remove"/>
-                <button id="btnCommit"
-                        action="tab.commit"
-                        caption="msg://commit"
-                        invoke="onCommit"/>
+                <button id="btnCommitAndClose"
+                        caption="msg://CommitAndClose"
+                        invoke="onCommitAndClose"/>
             </buttonsPanel>
         </groupTable>
     </layout>

@@ -26,7 +26,9 @@
     <screen id="supply$PositionsAnalogs.browse"
             template="com/groupstp/supply/web/positionsanalogs/positions-analogs-browse.xml"/>
     <screen id="supply$QueriesPosition.editAnalogs"
-            template="com/groupstp/supply/web/queriesposition/queries-position-edit.xml"/>
+            template="com/groupstp/supply/web/queriesposition/queries-position-edit_analogs.xml"/>
+    <screen id="supply$QueriesPosition.workflow"
+            template="com/groupstp/supply/web/queriesposition/queries-position-browse.xml"/>
     <screen id="supply$QueryWorkflowDetail.edit"
             template="com/groupstp/supply/web/queryworkflowdetail/query-workflow-detail-edit.xml"/>
     <screen id="supply$QueryWorkflow.browse"
@@ -65,11 +67,21 @@
             template="com/groupstp/supply/web/delivery/delivery-edit.xml"/>
     <screen id="supply$PaymentTable"
             template="/com/groupstp/supply/web/paymenttable/payment-table.xml"/>
+    <screen id="supply$QueriesPosition.edit"
+            template="com/groupstp/supply/web/queriesposition/queries-position-edit.xml"/>
     <screen id="TestImport"
             template="com/groupstp/supply/web/screens/TestImport.xml"/>
     <screen id="supply$QueriesPosition.workflow"
             template="com/groupstp/supply/web/queriesposition/queries-position-browse.xml"/>
+    <screen id="supply$Bills.browse"
+            template="com/groupstp/supply/web/bills/bills-browse.xml"/>
     <screen id="SuggestionRequestProcessing"
             agent="DESKTOP"
             template="com/groupstp/supply/web/queriesposition/SuggestionRequestProcessing.xml"/>
+    <screen id="supply$Holiday.browse"
+            template="com/groupstp/supply/web/holiday/holiday-browse.xml"/>
+    <screen id="supply$Settings.browse"
+            template="com/groupstp/supply/web/settings/settings-browse.xml"/>
+    <screen id="supply$Settings.edit"
+            template="com/groupstp/supply/web/settings/settings-edit.xml"/>
 </screen-config>

@@ -29,5 +29,7 @@
         <class>com.groupstp.supply.entity.Delivery</class>
         <class>com.groupstp.supply.entity.DeliveryLine</class>
         <class>com.groupstp.supply.entity.QueriesPositionTokenLink</class>
+        <class>com.groupstp.supply.entity.Holiday</class>
+        <class>com.groupstp.supply.entity.Settings</class>
     </persistence-unit>
 </persistence>

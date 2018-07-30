@@ -21,6 +21,12 @@ public class SuppliersSuggestion extends StandardEntity {
     @JoinColumn(name = "POS_SUP_ID")
     protected PositionSupplier posSup;
 
+    @Column(name = "MANUFACTURER")
+    protected String manufacturer;
+
+    @Column(name = "PAYMENT_DEF")
+    protected Integer paymentDef;
+
     @NotNull
     @NumberFormat(pattern = "#####.###")
     @Column(name = "QUANTITY", nullable = false)
@@ -42,6 +48,24 @@ public class SuppliersSuggestion extends StandardEntity {
     @OnDeleteInverse(DeletePolicy.DENY)
     @OneToOne(fetch = FetchType.LAZY, mappedBy = "voteResult")
     protected QueriesPosition queriesPosition;
+
+    public Integer getPaymentDef() {
+        return paymentDef;
+    }
+
+    public void setPaymentDef(Integer paymentDef) {
+        this.paymentDef = paymentDef;
+    }
+
+
+    public void setManufacturer(String manufacturer) {
+        this.manufacturer = manufacturer;
+    }
+
+    public String getManufacturer() {
+        return manufacturer;
+    }
+
 
     public void setQueriesPosition(QueriesPosition queriesPosition) {
         this.queriesPosition = queriesPosition;

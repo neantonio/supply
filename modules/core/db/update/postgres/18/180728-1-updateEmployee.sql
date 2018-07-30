@@ -1,0 +1,1 @@
+drop index IDX_SUPPLY_EMPLOYEE_UNQ ;

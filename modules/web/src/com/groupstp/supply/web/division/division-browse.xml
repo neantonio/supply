@@ -13,10 +13,10 @@
     <dsContext>
         <datasource id="divisionDs"
                     class="com.groupstp.supply.entity.Division"
-                    view="division-view"/>
+                    view="full"/>
         <groupDatasource id="divisionsDs"
                          class="com.groupstp.supply.entity.Division"
-                         view="division-view">
+                         view="full">
             <query>
                 <![CDATA[select e from supply$Division e]]>
             </query>

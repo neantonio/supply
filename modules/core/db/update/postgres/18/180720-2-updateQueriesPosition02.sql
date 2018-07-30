@@ -1,1 +1,0 @@
-alter table SUPPLY_QUERIES_POSITION add constraint FK_SUPPLY_QUERIES_POSITION_ON_BILLS foreign key (BILLS_ID) references SUPPLY_BILLS(ID);

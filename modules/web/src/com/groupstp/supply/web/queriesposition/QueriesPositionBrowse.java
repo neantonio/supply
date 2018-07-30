@@ -5,6 +5,7 @@ import com.groupstp.supply.service.*;
 import com.haulmont.bali.util.ParamsMap;
 import com.haulmont.chile.core.model.MetaClass;
 import com.haulmont.chile.core.model.MetaProperty;
+import com.haulmont.chile.core.model.MetaPropertyPath;
 import com.haulmont.chile.core.model.Session;
 import com.haulmont.cuba.core.app.EmailService;
 import com.haulmont.cuba.core.entity.Entity;
@@ -35,8 +36,38 @@ import java.util.stream.Collectors;
 
 public class QueriesPositionBrowse extends AbstractLookup {
 
-//    @Inject
-//    private DataBaseTestContentService dataBaseTestContentService;
+
+    List<Table.Column> nomControlGroupOrder = new ArrayList<>();
+    List<Table.Column> nomControlAvailableOrderItems = new ArrayList<>();
+
+    List<Table.Column> supSelectionGroupOrder = new ArrayList<>();
+    List<Table.Column> supSelectionAvailableOrderItems = new ArrayList<>();
+
+    List<Table.Column> storeControlGroupOrder = new ArrayList<>();
+    List<Table.Column> storeControlAvailableOrderItems = new ArrayList<>();
+
+    List<Table.Column> analysisGroupOrder = new ArrayList<>();
+    List<Table.Column> analysisAvailableOrderItems = new ArrayList<>();
+
+    List<Table.Column> billsGroupOrder = new ArrayList<>();
+    List<Table.Column> billsAvailableOrderItems = new ArrayList<>();
+
+    //содержит пару: название данных/их тип
+    Map<String, String> logisticStageDataItemsDescription = new HashMap<>();
+
+    //карта актуальных stage data. нужно для нескольких транзакций подряд
+    Map<QueriesPosition,QueryPositionStageData> stageDataMap=new HashMap<>();
+    Map<Class,String> errorStyleMap=new HashMap<>();
+    Map<QueriesPosition,Map<String,List<Component>>> componentsMapForValidation=new HashMap<>();
+
+    @Inject
+    private GroupTable<QueriesPosition> positionsComission;
+
+    @Inject
+    private GroupDatasource dsComission;
+
+    @Inject
+    private Metadata metadata;
 
     private SupplyWindowUtil windowUtil;
 
@@ -83,6 +114,12 @@ public class QueriesPositionBrowse extends AbstractLookup {
     private GroupTable<QueriesPosition> positionsLogistic;
 
     @Inject
+    private GroupTable<QueriesPosition> positionsAnalysis;
+
+    @Inject
+    private GroupTable<QueriesPosition> positionsProcuration;
+
+    @Inject
     private WorkflowService workflowService;
 
     @Inject
@@ -90,6 +127,9 @@ public class QueriesPositionBrowse extends AbstractLookup {
 
     @Inject
     private QueryService queryService;
+
+    @Inject
+    private QueriesPositionService queriesPositionService;
 
     @Inject
     private SuggestionService suggestionService;
@@ -106,92 +146,123 @@ public class QueriesPositionBrowse extends AbstractLookup {
     @Inject
     private StageDataService stageDataService;
 
-    List<Object> nomControlGroupOrder=new ArrayList<>();
-    List<Object> nomControlAvailableOrderItems=new ArrayList<>();
+    @Inject
+    private GroupTable<QueriesPosition> positionsBills;
 
-    Map<Object,String> nomControlAvailableOrderItemsDescription=new HashMap<>();
+    @Inject
+    private Table<Bills> billsTable;
+    @Inject
+    private GroupDatasource<QueriesPosition, UUID> dsBills;
 
-    //содержит пару: название данных/их тип
-    Map<String,String> logisticStageDataItemsDescription=new HashMap<>();
-    //список редактируемых полей
-    List<String> logisticStageDataEditableFields=Arrays.asList(
-            "destination_address",
-            "acceptance_address",
-            "carrier",
-            "cargo_number",
-            "planed_send_date",
-            "planed_receive_date",
-            "fact_send_date",
-            "fact_receive_date",
-            "cargo_monitoring_id",
-            "cargo_monitoring_url",
-            "store_receive_flag",
-            "cargo_state");
+    @Inject
+    private GroupDatasource<Bills, UUID> billsesDs;
 
-    //список обязательных для заполнения полей
-    List<String> logisticStageRequiredFields=Arrays.asList(
-            "destination_address",
-            "acceptance_address",
-            "carrier",
-            "cargo_number",
-            "planed_send_date",
-            "planed_receive_date",
-            "fact_send_date",
-            "fact_receive_date",
-            "cargo_monitoring_id",
-            "store_receive_flag");
+    @Inject
+    private DataSupplier dataSupplier;
 
-    //карта актуальных stage data. нужно для нескольких транзакций подряд
-    Map<QueriesPosition,QueryPositionStageData> stageDataMap=new HashMap<>();
-    Map<Class,String> errorStyleMap=new HashMap<>();
-    Map<QueriesPosition,Map<String,List<Component>>> componentsMapForValidation=new HashMap<>();
+    @Inject
+    private FileUploadingAPI fileUploadingAPI;
 
-    private class QueryLinkGenerator implements Table.ColumnGenerator {
+    @Inject
+    private ExportDisplay exportDisplay;
 
-        /**
-         * Called by {@link Table} when rendering a column for which the generator was created.
-         *
-         * @param entity an entity instance represented by the current row
-         * @return a component to be rendered inside of the cell
-         */
-        @Override
-        public Component generateCell(Entity entity) {
-            Query q = ((QueriesPosition) entity).getQuery();
-            LinkButton lnk = (LinkButton) componentsFactory.createComponent(LinkButton.NAME);
-            lnk.setAction(new BaseAction("query").
-                    withCaption(q.getInstanceName()).
-                    withHandler(e-> openEditor(q, WindowManager.OpenType.DIALOG)));
-            return lnk;
-        }
+    @Inject
+    private FileUploadField uploadField;
+
+    @Inject
+    private Button downloadImageBtn;
+
+    @Inject
+    private Button clearImageBtn;
+
+    @Inject
+    private Button OpenInNewTabBtn;
+
+    @Inject
+    private BrowserFrame imageForBill;
+
+    @Inject
+    private GroovyTestService groovyTestService;
+    private int selectedState;
+
+
+
+    @Override
+    public void init(Map<String, Object> params) {
+
+        initLogisticStageTable();
+        initSupSelectionStageTable();
+
+        addPositionStateStyleProviderForTable(positionsNomControl);
+        addPositionStateStyleProviderForTable(positionsStoreControl);
+        addPositionStateStyleProviderForTable(positionsComission);
+        addPositionStateStyleProviderForTable(positionsSupSelection);
+        addPositionStateStyleProviderForTable(positionsBills);
+        addPositionStateStyleProviderForTable(positionsLogistic);
+
+
+        //Генерируемая колонка "Сумма"
+        positionsBills.addGeneratedColumn("Сумма", new Table.PrintableColumnGenerator<QueriesPosition, String>() {
+            @Override
+            public Component generateCell(QueriesPosition entity) {
+                Label label = (Label) componentsFactory.createComponent(Label.NAME);
+                if (entity.getVoteResult() == null) {
+                    return label;
+                }
+                label.setValue(entity.getVoteResult().getPrice() * entity.getVoteResult().getQuantity());
+                return label;
+            }
+
+
+
+
+            @Override
+            public String getValue(QueriesPosition entity) {
+                if (entity.getVoteResult() == null) {
+                    return null;
+                }
+                return Double.toString(entity.getVoteResult().getPrice() * entity.getVoteResult().getQuantity());
+            }
+        });
+
+        // События при клике на счет
+        billsTable.setClickListener("number", (item, columnId) -> setClickListenerToBills(item, columnId));
+        billsTable.setClickListener("timePayment", (item, columnId) -> setClickListenerToBills(item, columnId));
+        billsTable.setClickListener("amount", (item, columnId) -> setClickListenerToBills(item, columnId));
+        billsTable.setClickListener("supplier", (item, columnId) -> setClickListenerToBills(item, columnId));
+        billsTable.setClickListener("company", (item, columnId) -> setClickListenerToBills(item, columnId));
+
+        //Значки прикрепления счета
+        positionsBills.setIconProvider(new Table.IconProvider<QueriesPosition>() {
+            @Nullable
+            @Override
+            public String getItemIcon(QueriesPosition entity) {
+                return entity.getBills() != null ? "icons/ok.png" : "icons/cancel.png";
+            }
+        });
+
+        //Вывод изображения счета
+        uploadField.addFileUploadSucceedListener(event -> uploadFieldListenerRealization());
+
+        //Оповещение об ошибках загрузки файла
+        uploadField.addFileUploadErrorListener(event ->
+                showNotification("File upload error", NotificationType.HUMANIZED));
+
+        initReturnButtons();
+        addLinkOpenButton();
     }
 
     @Override
     public void ready() {
         super.ready();
 
-
-        nomControlGroupOrder.add(positionsStoreControl.getColumn("query.urgency").getId());
-        nomControlGroupOrder.add(positionsStoreControl.getColumn("query.company").getId());
-        nomControlGroupOrder.add(positionsStoreControl.getColumn("query.division").getId());
-        nomControlGroupOrder.add(positionsStoreControl.getColumn("query").getId());
-
-        nomControlAvailableOrderItems.add(positionsStoreControl.getColumn("query.urgency").getId());
-        nomControlAvailableOrderItems.add(positionsStoreControl.getColumn("query.company").getId());
-        nomControlAvailableOrderItems.add(positionsStoreControl.getColumn("query.division").getId());
-        nomControlAvailableOrderItems.add(positionsStoreControl.getColumn("query").getId());
-       // nomControlAvailableOrderItems.add(positionsStoreControl.getColumn("positionType").getId());
-        //nomControlAvailableOrderItems.add(positionsStoreControl.getColumn("positionUsefulness").getId());
-
-
-        nomControlAvailableOrderItemsDescription.put(positionsStoreControl.getColumn("query.urgency").getId(),messages.getMainMessage("query.urgency"));
-        nomControlAvailableOrderItemsDescription.put(positionsStoreControl.getColumn("query.company").getId(),messages.getMainMessage("query.company"));
-        nomControlAvailableOrderItemsDescription.put(positionsStoreControl.getColumn("query.division").getId(),messages.getMainMessage("query.division"));
-        nomControlAvailableOrderItemsDescription.put(positionsStoreControl.getColumn("query").getId(),messages.getMainMessage("query"));
-       // nomControlAvailableOrderItemsDescription.put(positionsStoreControl.getColumn("positionType").getId(),messages.getMainMessage("positionType"));
-        //nomControlAvailableOrderItemsDescription.put(positionsStoreControl.getColumn("positionUsefulness").getId(),messages.getMainMessage("positionUsefulness"));
-
+        //Иницилизация вкладок
         setupNomControl();
         setupStoreControl();
+        setupSupSelection();
+        setupAnalysis();
+        setupBills();
+
         restorePanel();
         tabs.addSelectedTabChangeListener(event -> {
             savePanel();
@@ -203,25 +274,25 @@ public class QueriesPositionBrowse extends AbstractLookup {
      * @author AntonLomako
      * инициализация карт описания данных на этапах
      */
-    private void initStageDataDescription(){
-        logisticStageDataItemsDescription.put("destination_address","String");
-        logisticStageDataItemsDescription.put("acceptance_address","String");
+    private void initStageDataDescription() {
+        logisticStageDataItemsDescription.put("destination_address", "String");
+        logisticStageDataItemsDescription.put("acceptance_address", "String");
 
-        logisticStageDataItemsDescription.put("carrier","Company");
-        logisticStageDataItemsDescription.put("cargo_number","String");
-        logisticStageDataItemsDescription.put("cargo_state","CargoState");
+        logisticStageDataItemsDescription.put("carrier", "Company");
+        logisticStageDataItemsDescription.put("cargo_number", "String");
+        logisticStageDataItemsDescription.put("cargo_state", "CargoState");
 
-        logisticStageDataItemsDescription.put("planed_send_date","Date");
-        logisticStageDataItemsDescription.put("planed_receive_date","Date");
-        logisticStageDataItemsDescription.put("fact_send_date","Date");
-        logisticStageDataItemsDescription.put("fact_receive_date","Date");
+        logisticStageDataItemsDescription.put("planed_send_date", "Date");
+        logisticStageDataItemsDescription.put("planed_receive_date", "Date");
+        logisticStageDataItemsDescription.put("fact_send_date", "Date");
+        logisticStageDataItemsDescription.put("fact_receive_date", "Date");
 
-        logisticStageDataItemsDescription.put("cargo_monitoring_id","String");
-        logisticStageDataItemsDescription.put("cargo_monitoring_url","String");
+        logisticStageDataItemsDescription.put("cargo_monitoring_id", "String");
+        logisticStageDataItemsDescription.put("cargo_monitoring_url", "String");
 
-        logisticStageDataItemsDescription.put("store_receive_flag","Boolean");
-        logisticStageDataItemsDescription.put("store_receive_ts","Date");
-        logisticStageDataItemsDescription.put("store_receive_responsible","User");
+        logisticStageDataItemsDescription.put("store_receive_flag", "Boolean");
+        logisticStageDataItemsDescription.put("store_receive_ts", "Date");
+        logisticStageDataItemsDescription.put("store_receive_responsible", "User");
 
     }
 
@@ -229,24 +300,23 @@ public class QueriesPositionBrowse extends AbstractLookup {
      * @author AntonLomako
      * иницииализирует мап, содержащий стили ошибок для компонентов, нужен для выведения ошибок при валидации
      */
-    private void initErrorStyleMap(){
-        errorStyleMap.put(WebDateField.class,"v-datefield-error");
-        errorStyleMap.put(WebTextField.class,"v-textfield-error");
-        errorStyleMap.put(WebPickerField.class,"c-pickerfield-error");
+    private void initErrorStyleMap() {
+        errorStyleMap.put(WebDateField.class, "v-datefield-error");
+        errorStyleMap.put(WebTextField.class, "v-textfield-error");
+        errorStyleMap.put(WebPickerField.class, "c-pickerfield-error");
     }
 
 
     /**
-     * @author AntonLomako
-     * добавляет компоненты в мап, из которого они извлекаются при валидации
      * @param position
      * @param component
+     * @author AntonLomako
+     * добавляет компоненты в мап, из которого они извлекаются при валидации
      */
     private void addComponentToValidationMap(QueriesPosition position,Component component,String componentId){
         if(componentsMapForValidation.get(position)==null){
             HashMap<String,List<Component>> newMap=new HashMap<>();
-            newMap.put(componentId,new ArrayList<>());
-            componentsMapForValidation.put(position,newMap);
+            newMap.put(componentId,new ArrayList<>());componentsMapForValidation.put(position,newMap);
         }
         else{
             if(componentsMapForValidation.get(position).get(componentId)==null){
@@ -263,7 +333,7 @@ public class QueriesPositionBrowse extends AbstractLookup {
      * @author AntonLomako
      * добавление сгенерированных колонок в таблицу логистики
      */
-    private void initLogisticStageTable(){
+    private void initLogisticStageTable() {
 
         initErrorStyleMap();
         initStageDataDescription();
@@ -272,82 +342,81 @@ public class QueriesPositionBrowse extends AbstractLookup {
 
         componentsMapForValidation.clear();
         stageDataMap.clear();
-        dsLogisticStageData.getItems().forEach(item->{
-            stageDataMap.put(item.getPosition(),item);
+        dsLogisticStageData.getItems().forEach(item -> {
+            stageDataMap.put(item.getPosition(), item);
         });
 
-        logisticStageDataItemsDescription.entrySet().forEach(entry->{
+        logisticStageDataItemsDescription.entrySet().forEach(entry -> {
 
-            positionsLogistic.addGeneratedColumn(getMessage(entry.getKey()),entity -> {
-                QueryPositionStageData stageData=stageDataService.
+            positionsLogistic.addGeneratedColumn(getMessage(entry.getKey()), entity -> {
+                QueryPositionStageData stageData = stageDataService.
                         getOrCreateStageDataForPositionFromCollectionAndDescription(dsLogisticStageData.getItems(),
                                 entity,
                                 logisticStageDataItemsDescription);
 
                 //если stageData была создана, то ее надо добавить в датасорс и в map
-                if(!dsLogisticStageData.getItems().contains(stageData)) {
+                if (!dsLogisticStageData.getItems().contains(stageData)) {
                     dsLogisticStageData.addItem(stageData);
-                    stageDataMap.put(stageData.getPosition(),stageData);
+                    stageDataMap.put(stageData.getPosition(), stageData);
                 }
 
                 //создаем визуальный компонент в зависимости от типа данных
                 //для коипонентов, которые есть в списке редактируемых создаем редактируемые поля
-                Component component=null;
+                Component component = null;
 
-                if(logisticStageDataEditableFields.contains(entry.getKey())){
+                if (QueriesPositionConst.logisticStageDataEditableFields.contains(entry.getKey())) {
 
-                   //при установке чекбокса получения на складе должны вызываться методы установки/очищения времени получения и ответственного
-                    if(entry.getKey().equals("store_receive_flag")){
-                        component=componentsFactory.createComponent(CheckBox.NAME);
-                        CheckBox checkBox=(CheckBox)component;
-                        checkBox.setValue(stageDataService.getBooleanData(stageDataMap.get(entity),entry.getKey()));
-                        checkBox.addValueChangeListener(value->{
-                            if((Boolean)value.getValue()) setStoreGetDataForPosition(entity);
+                    //при установке чекбокса получения на складе должны вызываться методы установки/очищения времени получения и ответственного
+                    if (entry.getKey().equals("store_receive_flag")) {
+                        component = componentsFactory.createComponent(CheckBox.NAME);
+                        CheckBox checkBox = (CheckBox) component;
+                        checkBox.setValue(stageDataService.getBooleanData(stageDataMap.get(entity), entry.getKey()));
+                        checkBox.addValueChangeListener(value -> {
+                            if ((Boolean) value.getValue()) setStoreGetDataForPosition(entity);
                             else clearStoreGetDataForPosition(entity);
                             refreshLogistic();
                         });
 
-                    }
-                    else{
-                        switch (entry.getValue()){
+                    } else {
+                        switch (entry.getValue()) {
                             case "Date": {
-                                component=componentsFactory.createComponent(DateField.NAME);
-                                DateField dateField=(DateField)component;
-                                dateField.setValue(stageDataService.getDateData(stageDataMap.get(entity),entry.getKey()));
+                                component = componentsFactory.createComponent(DateField.NAME);
+                                DateField dateField = (DateField) component;
+                                dateField.setValue(stageDataService.getDateData(stageDataMap.get(entity), entry.getKey()));
                                 dateField.setResolution(DateField.Resolution.DAY);
-                                dateField.addValueChangeListener(value->{
+                                dateField.addValueChangeListener(value -> {
                                     dsLogisticStageData.excludeItem(stageDataMap.get(entity));
-                                    QueryPositionStageData data=stageDataService.setData(stageDataMap.get(entity),entry.getKey(),(Date)value.getValue());
+                                    QueryPositionStageData data = stageDataService.setData(stageDataMap.get(entity), entry.getKey(), (Date) value.getValue());
                                     dsLogisticStageData.addItem(data);
-                                    stageDataMap.put(entity,data);
+                                    stageDataMap.put(entity, data);
                                     dateField.removeStyleName(errorStyleMap.get(dateField.getClass()));
 
                                 });
                                 break;
                             }
                             case "String": {
-                                component=componentsFactory.createComponent(TextField.NAME);
-                                TextField textField=(TextField) component;
-                                textField.setValue(stageDataService.getStringData(stageDataMap.get(entity),entry.getKey()));
-                                textField.addValueChangeListener(value->{
+                                component = componentsFactory.createComponent(TextField.NAME);
+                                TextField textField = (TextField) component;
+                                textField.setValue(stageDataService.getStringData(stageDataMap.get(entity), entry.getKey()));
+                                textField.addValueChangeListener(value -> {
                                     dsLogisticStageData.excludeItem(stageDataMap.get(entity));
-                                    QueryPositionStageData data=stageDataService.setData(stageDataMap.get(entity),entry.getKey(),(String)value.getValue());
+                                    QueryPositionStageData data = stageDataService.setData(stageDataMap.get(entity), entry.getKey(), (String) value.getValue());
                                     dsLogisticStageData.addItem(data);
-                                    stageDataMap.put(entity,data);
-                                   textField.removeStyleName(errorStyleMap.get(textField.getClass()));
+                                    stageDataMap.put(entity, data);
+                                    textField.removeStyleName(errorStyleMap.get(textField.getClass()));
                                 });
 
                                 break;
                             }
                             case "Boolean": {
-                                component=componentsFactory.createComponent(CheckBox.NAME);
-                                CheckBox checkBox=(CheckBox)component;
-                                checkBox.setValue(stageDataService.getBooleanData(stageDataMap.get(entity),entry.getKey()));
-                                checkBox.addValueChangeListener(value->{
+                                component = componentsFactory.createComponent(CheckBox.NAME);
+                                CheckBox checkBox = (CheckBox) component;
+                                checkBox.setValue(stageDataService.getBooleanData(stageDataMap.get(entity), entry.getKey()));
+                                checkBox.addValueChangeListener(value -> {
                                     dsLogisticStageData.excludeItem(stageDataMap.get(entity));
-                                    QueryPositionStageData data=stageDataService.setData(stageDataMap.get(entity),entry.getKey(),(Boolean) value.getValue());
+                                    QueryPositionStageData data = stageDataService.setData(stageDataMap.get(entity), entry.getKey(), (Boolean) value.getValue());
                                     dsLogisticStageData.addItem(data);
-                                    stageDataMap.put(entity,data);
+                                    stageDataMap.put(entity, data);
 
                                 });
 
@@ -356,26 +425,26 @@ public class QueriesPositionBrowse extends AbstractLookup {
                             default:
                                 try {
                                     //для энумов - выпадающий список, для объектнных полей pickerField
-                                    if(Class.forName("com.groupstp.supply.entity."+entry.getValue()).isEnum()){
-                                        component=componentsFactory.createComponent(PopupButton.NAME);
-                                        PopupButton popupButton=(PopupButton) component;
-                                        String caption=stageDataService.getStringData(stageDataMap.get(entity),entry.getKey());
-                                        if(caption!=null)popupButton.setCaption(getMessage(caption));
+                                    if (Class.forName("com.groupstp.supply.entity." + entry.getValue()).isEnum()) {
+                                        component = componentsFactory.createComponent(PopupButton.NAME);
+                                        PopupButton popupButton = (PopupButton) component;
+                                        String caption = stageDataService.getStringData(stageDataMap.get(entity), entry.getKey());
+                                        if (caption != null) popupButton.setCaption(getMessage(caption));
                                         popupButton.setWidth("100%");
 
-                                        VBoxLayout layout=(VBoxLayout)componentsFactory.createComponent(VBoxLayout.NAME);
+                                        VBoxLayout layout = (VBoxLayout) componentsFactory.createComponent(VBoxLayout.NAME);
 
-                                        Arrays.asList(Class.forName("com.groupstp.supply.entity."+entry.getValue()).getEnumConstants()).forEach(item->{
-                                            Button button=(Button)componentsFactory.createComponent(Button.NAME);
+                                        Arrays.asList(Class.forName("com.groupstp.supply.entity." + entry.getValue()).getEnumConstants()).forEach(item -> {
+                                            Button button = (Button) componentsFactory.createComponent(Button.NAME);
                                             button.setCaption(getMessage(item.toString()));
                                             button.setWidth("100%");
                                             button.setAction(new BaseAction("") {
                                                 @Override
                                                 public void actionPerform(Component component) {
                                                     dsLogisticStageData.excludeItem(stageDataMap.get(entity));
-                                                    QueryPositionStageData data=stageDataService.setData(stageDataMap.get(entity),entry.getKey(),item.toString());
+                                                    QueryPositionStageData data = stageDataService.setData(stageDataMap.get(entity), entry.getKey(), item.toString());
                                                     dsLogisticStageData.addItem(data);
-                                                    stageDataMap.put(entity,data);
+                                                    stageDataMap.put(entity, data);
                                                     refreshLogistic();
                                                     processLogisticStageTableSelection(positionsLogistic.getSelected());
                                                 }
@@ -383,23 +452,22 @@ public class QueriesPositionBrowse extends AbstractLookup {
                                             layout.add(button);
                                         });
                                         popupButton.setPopupContent(layout);
-                                    }
-                                    else{
-                                        component=componentsFactory.createComponent(PickerField.NAME);
-                                        PickerField pickerField=(PickerField)component;
+                                    } else {
+                                        component = componentsFactory.createComponent(PickerField.NAME);
+                                        PickerField pickerField = (PickerField) component;
                                         pickerField.addLookupAction();
 
                                         Session session = metadata.getSession();
-                                        MetaClass metaClass1 = session.getClassNN(queryDaoService.getMetaclassPrefix(entry.getValue())+ entry.getValue());
+                                        MetaClass metaClass1 = session.getClassNN(queryDaoService.getMetaclassPrefix(entry.getValue()) + entry.getValue());
                                         pickerField.setMetaClass(metaClass1);
 
 
-                                        pickerField.setValue(stageDataService.getEntityData(stageDataMap.get(entity),entry.getKey()));
-                                        pickerField.addValueChangeListener(value->{
+                                        pickerField.setValue(stageDataService.getEntityData(stageDataMap.get(entity), entry.getKey()));
+                                        pickerField.addValueChangeListener(value -> {
                                             dsLogisticStageData.excludeItem(stageDataMap.get(entity));
-                                            QueryPositionStageData data=stageDataService.setData(stageDataMap.get(entity),entry.getKey(),(StandardEntity) value.getValue());
+                                            QueryPositionStageData data = stageDataService.setData(stageDataMap.get(entity), entry.getKey(), (StandardEntity) value.getValue());
                                             dsLogisticStageData.addItem(data);
-                                            stageDataMap.put(entity,data);
+                                            stageDataMap.put(entity, data);
                                             pickerField.removeStyleName(errorStyleMap.get(pickerField.getClass()));
                                         });
 
@@ -408,47 +476,45 @@ public class QueriesPositionBrowse extends AbstractLookup {
                                     e.printStackTrace();
                                 }
                         }
-                        if(logisticStageRequiredFields.contains(entry.getKey()))
-                            addComponentToValidationMap(entity,component,entry.getKey());
+                        if (QueriesPositionConst.logisticStageRequiredFields.contains(entry.getKey()))
+                            addComponentToValidationMap(entity, component,entry.getKey());
                     }
-                }
-                else{
+                } else {
 
-                    switch (entry.getValue()){
+                    switch (entry.getValue()) {
                         case "Date": {
-                            component=componentsFactory.createComponent(Label.NAME);
-                            Label label=(Label)component;
-                            label.setValue(stageDataService.getDateData(stageDataMap.get(entity),entry.getKey()));
+                            component = componentsFactory.createComponent(Label.NAME);
+                            Label label = (Label) component;
+                            label.setValue(stageDataService.getDateData(stageDataMap.get(entity), entry.getKey()));
                             break;
                         }
                         case "String": {
-                            component=componentsFactory.createComponent(Label.NAME);
-                            Label label=(Label)component;
-                            label.setValue(stageDataService.getStringData(stageDataMap.get(entity),entry.getKey()));
+                            component = componentsFactory.createComponent(Label.NAME);
+                            Label label = (Label) component;
+                            label.setValue(stageDataService.getStringData(stageDataMap.get(entity), entry.getKey()));
                             break;
                         }
                         case "Boolean": {
-                            component=componentsFactory.createComponent(CheckBox.NAME);
-                            CheckBox checkBox=(CheckBox)component;
+                            component = componentsFactory.createComponent(CheckBox.NAME);
+                            CheckBox checkBox = (CheckBox) component;
                             checkBox.setEditable(false);
-                            checkBox.setValue(stageDataService.getBooleanData(stageDataMap.get(entity),entry.getKey()));
+                            checkBox.setValue(stageDataService.getBooleanData(stageDataMap.get(entity), entry.getKey()));
                             break;
                         }
                         default:
-                            component=componentsFactory.createComponent(Label.NAME);
-                            Label label=(Label)component;
+                            component = componentsFactory.createComponent(Label.NAME);
+                            Label label = (Label) component;
                             try {
-                                if(Class.forName("com.groupstp.supply.entity."+entry.getValue()).isEnum()){
-                                   label.setValue(stageDataService.getStringData(stageDataMap.get(entity),entry.getKey()));
-                                }
-                                else{
-                                    StandardEntity entity1=stageDataService.getEntityData(stageDataMap.get(entity),entry.getKey());
+                                if (Class.forName("com.groupstp.supply.entity." + entry.getValue()).isEnum()) {
+                                    label.setValue(stageDataService.getStringData(stageDataMap.get(entity), entry.getKey()));
+                                } else {
+                                    StandardEntity entity1 = stageDataService.getEntityData(stageDataMap.get(entity), entry.getKey());
                                     label.setValue(entity1);
                                 }
 
-                            //если класс не грузится то отображаем как сущность
+                                //если класс не грузится то отображаем как сущность
                             } catch (ClassNotFoundException e) {
-                                StandardEntity entity1=stageDataService.getEntityData(stageDataMap.get(entity),entry.getKey());
+                                StandardEntity entity1 = stageDataService.getEntityData(stageDataMap.get(entity), entry.getKey());
                                 label.setValue(entity1);
                             }
                     }
@@ -461,53 +527,53 @@ public class QueriesPositionBrowse extends AbstractLookup {
 
         });
 
-
-
         com.vaadin.ui.Table vTable = positionsLogistic.unwrap(com.vaadin.ui.Table.class);
-        vTable.addItemClickListener((ItemClickEvent.ItemClickListener) event ->{
+        vTable.addItemClickListener((ItemClickEvent.ItemClickListener) event -> {
 
-            //напрямую выбранный элемент не получить. достаем его по id
-            QueriesPosition qp=dsLogistic.getItem(UUID.fromString(event.getItemId().toString()));
+                    //напрямую выбранный элемент не получить. достаем его по id
+                    QueriesPosition qp = dsLogistic.getItem(UUID.fromString(event.getItemId().toString()));
 
-            //сюда попадает прошлое выделение, поэтому его надо обрабатывать
-            Collection<QueriesPosition> qpCollection=new ArrayList<QueriesPosition>();
-            if(event.isCtrlKey()){
-                qpCollection.addAll(positionsLogistic.getSelected());
-                if(qpCollection.contains(qp))qpCollection.remove(qp);
-                else qpCollection.add(qp);
-            }
-            else qpCollection.add(qp);
+                    //сюда попадает прошлое выделение, поэтому его надо обрабатывать
+                    Collection<QueriesPosition> qpCollection = new ArrayList<QueriesPosition>();
+                    if (event.isCtrlKey()) {
+                        qpCollection.addAll(positionsLogistic.getSelected());
+                        if (qpCollection.contains(qp)) qpCollection.remove(qp);
+                        else qpCollection.add(qp);
+                    } else qpCollection.add(qp);
 
-            processLogisticStageTableSelection(qpCollection);
-        }
+                    processLogisticStageTableSelection(qpCollection);
+                }
         );
 
     }
+
     /**
-     * проверка, что быбрана только одна строчка
+     * проверка, что выбрана только одна строчка
+     *
      * @author AntonLomako
      */
-    private boolean checkSingleSelection(Collection selected){
-        if(selected.size()==1) return true;
+    private boolean checkSingleSelection(Collection selected) {
+        if (selected.size() == 1) return true;
         else {
-            showNotification(messages.getMainMessage("select_only_one"),NotificationType.WARNING);
+            showNotification(messages.getMainMessage("select_only_one"), NotificationType.WARNING);
             return false;
         }
     }
 
     /**
-     * проверка, что быбрана только хотя бы одна строчка
+     * проверка, что выбрана хотя бы одна строчка
+     *
      * @author AntonLomako
      */
-    private boolean checkSelection(Collection selected){
-        if(selected.size()>0) return true;
+    private boolean checkSelection(Collection selected) {
+        if (selected.size() > 0) return true;
         else {
-            showNotification(messages.getMainMessage("select_position_first"),NotificationType.WARNING);
+            showNotification(messages.getMainMessage("select_position_first"), NotificationType.WARNING);
             return false;
         }
     }
 
-    private void addPositionStateStyleProviderForTable(Table<QueriesPosition> table){
+    private void addPositionStateStyleProviderForTable(Table<QueriesPosition> table) {
         table.addStyleProvider((entity, property) -> {
 
             if (property == null) {
@@ -528,19 +594,18 @@ public class QueriesPositionBrowse extends AbstractLookup {
         });
     }
 
-
     /**
      * @author AntonLomako
      * инициализация таблицы подбора поставщиков
      * добавление подсветки зеленым если больше 3х поставщиков
      */
-    private void initSupSelectionStageTable(){
+    private void initSupSelectionStageTable() {
         positionsSupSelection.addStyleProvider((entity, property) -> {
 
             if (property == null) {
-                List list=queryDaoService.getSupplierSuggestions(entity);
-                if (list.size()>2) {
-                        return "three-sup";
+                List list = queryDaoService.getSupplierSuggestions(entity);
+                if (list.size() > 2) {
+                    return "three-sup";
                 }
 
             } else if (property.equals("grade")) {
@@ -553,21 +618,22 @@ public class QueriesPositionBrowse extends AbstractLookup {
      * @author AntonLomako
      * при переводе на этап проверяет заполнение необходимых полей
      */
-    private Collection<QueriesPosition> checkFillingOfRequiredFieldForPositions(Collection<QueriesPosition> positions){
+    private Collection<QueriesPosition> checkFillingOfRequiredFieldForPositions(Collection<QueriesPosition> positions) {
 
         List<QueriesPosition> correctPositions=new ArrayList<>();
         positions.forEach(item->{
             Boolean positionIsCorrect=true;
-            for(Map.Entry<String,List<Component>> entry:componentsMapForValidation.get(item).entrySet()){
-                List<Component> components=entry.getValue();
+            for(Map.Entry<String,List<Component> > entry:componentsMapForValidation.get(item).entrySet()){
+            List<Component>components=entry.getValue();
 
                 QueryPositionStageData stageData=stageDataService.
                         getOrCreateStageDataForPositionFromCollectionAndDescription(dsLogisticStageData.getItems(),
-                                item,
+                item,
                                 logisticStageDataItemsDescription);
-                if(stageDataService.getStringData(stageData,entry.getKey())==null){
-                    positionIsCorrect=false;
+                    if(stageDataService.getStringData(stageData,entry.getKey())==null) {
+                        positionIsCorrect=false;
                     components.forEach(component->component.addStyleName(errorStyleMap.get(component.getClass())));
+
                 }
 //                if(components!=null){
 //                    for(Component component:components){
@@ -579,123 +645,119 @@ public class QueriesPositionBrowse extends AbstractLookup {
 //                }
 
             }
-            if(positionIsCorrect) correctPositions.add(item);
-
+            if (positionIsCorrect) correctPositions.add(item);
         });
         return correctPositions;
     }
 
-    private void moveCargoOfSelectedItemsToStage(CargoState state){
-        positionsLogistic.getSelected().forEach(item->{
+    private void moveCargoOfSelectedItemsToStage(CargoState state) {
+        positionsLogistic.getSelected().forEach(item -> {
             dsLogisticStageData.excludeItem(stageDataMap.get(item));
-            QueryPositionStageData data=stageDataService.setData(stageDataMap.get(item),"cargo_state",state.toString());
+            QueryPositionStageData data = stageDataService.setData(stageDataMap.get(item), "cargo_state", state.toString());
             dsLogisticStageData.addItem(data);
-            stageDataMap.put(item,data);
+            stageDataMap.put(item, data);
             processLogisticStageTableSelection(positionsLogistic.getSelected());
 
         });
         refreshLogistic();
     }
 
-    private int selectedState;
-    private int getSelectedState(){return selectedState;}
+    private int getSelectedState() {
+        return selectedState;
+    }
 
     /**
      * @author AntonLomako
      * обработка выбранных ячеек для определения текста кнопок переещения по этапам логистики и их активности
      */
-    private void processLogisticStageTableSelection(Collection<QueriesPosition> queriesPositions){
-        Boolean changeCargoStateButtonsAreEnable=true;
-        Boolean selectedFirstState=false;
-        Boolean selectedLastState=false;
+    private void processLogisticStageTableSelection(Collection<QueriesPosition> queriesPositions) {
+        Boolean changeCargoStateButtonsAreEnable = true;
+        Boolean selectedFirstState = false;
+        Boolean selectedLastState = false;
 
-        Map <String,Integer> cargoStateTotal=new HashMap<>();
-        int totalCargoStateSelected=0;// без пустых статусов
-       selectedState=-1;
+        Map<String, Integer> cargoStateTotal = new HashMap<>();
+        int totalCargoStateSelected = 0;// без пустых статусов
+        selectedState = -1;
 
-        List<CargoState> cargoStates=Arrays.asList(CargoState.values());
+        List<CargoState> cargoStates = Arrays.asList(CargoState.values());
 
-        if(queriesPositions.size()==0){
-            changeCargoStateButtonsAreEnable=false;
+        if (queriesPositions.size() == 0) {
+            changeCargoStateButtonsAreEnable = false;
         }
 
         //ведется подсчет этапов груза для выбранных позиций
-        else{
-            for(QueriesPosition item:queriesPositions){
-                String state=stageDataService.getStringData(stageDataMap.get(item),"cargo_state");
-                if(state!=null){
-                    selectedState=cargoStates.indexOf(CargoState.valueOf(state));
-                    if(selectedState==0) selectedFirstState=true;
-                    if(selectedState==cargoStates.size()-1) selectedLastState=true;
+        else {
+            for (QueriesPosition item : queriesPositions) {
+                String state = stageDataService.getStringData(stageDataMap.get(item), "cargo_state");
+                if (state != null) {
+                    selectedState = cargoStates.indexOf(CargoState.valueOf(state));
+                    if (selectedState == 0) selectedFirstState = true;
+                    if (selectedState == cargoStates.size() - 1) selectedLastState = true;
                     totalCargoStateSelected++;
-                    if(cargoStateTotal.get(state)!=null)cargoStateTotal.put(state,cargoStateTotal.get(state)+1);
-                    else cargoStateTotal.put(state,1);
+                    if (cargoStateTotal.get(state) != null) cargoStateTotal.put(state, cargoStateTotal.get(state) + 1);
+                    else cargoStateTotal.put(state, 1);
                 }
             }
 
             //выбрано несколько разных этапов, одновременное перемещение невозможно
-            if(cargoStateTotal.entrySet().size()>1) changeCargoStateButtonsAreEnable=false;
+            if (cargoStateTotal.entrySet().size() > 1) changeCargoStateButtonsAreEnable = false;
         }
 
-        cargoStateGroupBox.setCaption(getMessage("selected_total")+": "+String.valueOf(totalCargoStateSelected));
+        cargoStateGroupBox.setCaption(getMessage("selected_total") + ": " + String.valueOf(totalCargoStateSelected));
         cargoStateGroupBoxTotalLayout.removeAll();
 
-        cargoStateTotal.entrySet().forEach(entry->{
-            Label label=(Label)componentsFactory.createComponent(Label.NAME);
-            label.setValue(getMessage(entry.getKey())+" :"+String.valueOf(entry.getValue()));
-            cargoStateGroupBoxTotalLayout.add(label,0);
+        cargoStateTotal.entrySet().forEach(entry -> {
+            Label label = (Label) componentsFactory.createComponent(Label.NAME);
+            label.setValue(getMessage(entry.getKey()) + " :" + String.valueOf(entry.getValue()));
+            cargoStateGroupBoxTotalLayout.add(label, 0);
         });
 
         initCargoStateButtons();
 
-        if(changeCargoStateButtonsAreEnable&&!selectedLastState){
+        if (changeCargoStateButtonsAreEnable && !selectedLastState) {
             nextCargoState.setVisible(true);
-            nextCargoState.setCaption(getMessage("cargo_to")+" '" +getMessage(cargoStates.get(selectedState+1).toString())+"'");
+            nextCargoState.setCaption(getMessage("cargo_to") + " '" + getMessage(cargoStates.get(selectedState + 1).toString()) + "'");
 
-        }
-        else{
+        } else {
             nextCargoState.setVisible(false);
             //nextCargoState.setCaption(getMessage("next_move_impossible"));
         }
 
-        if(changeCargoStateButtonsAreEnable&&!selectedFirstState){
-            if(selectedState==-1){
+        if (changeCargoStateButtonsAreEnable && !selectedFirstState) {
+            if (selectedState == -1) {
                 previousCargoState.setVisible(false);
-            }
-            else {
+            } else {
                 previousCargoState.setVisible(true);
                 //previousCargoState.setEnabled(true);
-                previousCargoState.setCaption(getMessage("cargo_to")+" '" + getMessage(cargoStates.get(selectedState - 1).toString())+"'");
+                previousCargoState.setCaption(getMessage("cargo_to") + " '" + getMessage(cargoStates.get(selectedState - 1).toString()) + "'");
             }
-        }
-        else{
+        } else {
             previousCargoState.setVisible(false);
             //previousCargoState.setCaption(getMessage("back_move_impossible"));
         }
 
-        if(!changeCargoStateButtonsAreEnable){
-            Label label=(Label)componentsFactory.createComponent(Label.NAME);
+        if (!changeCargoStateButtonsAreEnable) {
+            Label label = (Label) componentsFactory.createComponent(Label.NAME);
             label.setValue(getMessage("impossible_move"));
             cargoStateGroupBoxTotalLayout.add(label);
         }
 
-
     }
 
-    private void initCargoStateButtons(){
-        if(nextCargoState.getAction()==null) {
+    private void initCargoStateButtons() {
+        if (nextCargoState.getAction() == null) {
             nextCargoState.setAction(new BaseAction("") {
                 @Override
                 public void actionPerform(Component component) {
-                    moveCargoOfSelectedItemsToStage(CargoState.values()[getSelectedState()+1]);
+                    moveCargoOfSelectedItemsToStage(CargoState.values()[getSelectedState() + 1]);
                 }
             });
         }
-        if(previousCargoState.getAction()==null) {
+        if (previousCargoState.getAction() == null) {
             previousCargoState.setAction(new BaseAction("") {
                 @Override
                 public void actionPerform(Component component) {
-                    moveCargoOfSelectedItemsToStage(CargoState.values()[getSelectedState()-1]);
+                    moveCargoOfSelectedItemsToStage(CargoState.values()[getSelectedState() - 1]);
                 }
             });
         }
@@ -705,21 +767,24 @@ public class QueriesPositionBrowse extends AbstractLookup {
      * @author AntonLomako
      * обновление датасорсов и, соответственно, обновление таблицы логистики
      */
-    private void refreshLogistic(){
+    private void refreshLogistic() {
         dsLogistic.refresh();
-        dsLogisticStageData.refresh(ParamsMap.of("positions",dsLogistic.getItems()));
+        dsLogisticStageData.refresh(ParamsMap.of("positions", dsLogistic.getItems()));
     }
 
     /**
      * обработка получения на складе
      * выставляются время, флаг получения, ответственный
      */
-    public void onStoreGet() throws ValidationException {
+    public void onStoreGet() {
 
-        Set<QueriesPosition> selectedPositions=positionsLogistic.getSelected();
-        if (!checkSelection(selectedPositions)) return;
+        Set<QueriesPosition> selectedPositions = positionsLogistic.getSelected();
+        if (selectedPositions.size() == 0) {
+            showNotification(getMessage("Select position first"), NotificationType.WARNING);
+            return;
+        }
 
-        selectedPositions.forEach(item->{
+        selectedPositions.forEach(item -> {
             setStoreGetDataForPosition(item);
 
         });
@@ -728,46 +793,48 @@ public class QueriesPositionBrowse extends AbstractLookup {
 
     /**
      * данные получения на складе устанавливаются для позиции
+     *
      * @param position
      */
-    private void setStoreGetDataForPosition(QueriesPosition position){
+    private void setStoreGetDataForPosition(QueriesPosition position) {
         dsLogisticStageData.excludeItem(stageDataMap.get(position));
-        QueryPositionStageData data=stageDataService.setData(stageDataMap.get(position),
+        QueryPositionStageData data = stageDataService.setData(stageDataMap.get(position),
                 "store_receive_flag",
                 true);
 
-        data=stageDataService.setData(data,
+        data = stageDataService.setData(data,
                 "store_receive_ts",
                 java.util.Calendar.getInstance().getTime());
 
-        data=stageDataService.setData(data,
+        data = stageDataService.setData(data,
                 "store_receive_responsible",
                 AppBeans.get(UserSessionSource.class).getUserSession().getUser().getId().toString());
 
         dsLogisticStageData.addItem(data);
-        stageDataMap.put(position,data);
+        stageDataMap.put(position, data);
     }
 
     /**
      * данные получения на складе очищаются для позиции
+     *
      * @param position
      */
-    private void clearStoreGetDataForPosition(QueriesPosition position){
+    private void clearStoreGetDataForPosition(QueriesPosition position) {
         dsLogisticStageData.excludeItem(stageDataMap.get(position));
-        QueryPositionStageData data=stageDataService.setData(stageDataMap.get(position),
+        QueryPositionStageData data = stageDataService.setData(stageDataMap.get(position),
                 "store_receive_flag",
                 false);
 
-        data=stageDataService.setData(data,
+        data = stageDataService.setData(data,
                 "store_receive_ts",
-                (Date)null);
+                (Date) null);
 
-        data=stageDataService.setData(data,
+        data = stageDataService.setData(data,
                 "store_receive_responsible",
-                (StandardEntity)null);
+                (StandardEntity) null);
 
         dsLogisticStageData.addItem(data);
-        stageDataMap.put(position,data);
+        stageDataMap.put(position, data);
     }
 
     private void savePanel() {
@@ -777,87 +844,179 @@ public class QueriesPositionBrowse extends AbstractLookup {
     }
 
     private void restorePanel() {
-        if(getSettings().get(tabs.getId()).attribute("tabOpened")==null)
+        if (getSettings().get(tabs.getId()).attribute("tabOpened") == null)
             return;
         tabs.setSelectedTab(getSettings().get(tabs.getId()).attribute("tabOpened").getValue());
+    }
+
+
+    public void onGroupOrderChange() {
+        TabSheet.Tab tab = tabs.getSelectedTab();
+        String tabName = tab.getName();
+        switch (tabName){
+
+            case "tabNomControl":
+                createGroupOrderDialog(nomControlGroupOrder, nomControlAvailableOrderItems, positionsNomControl);
+                break;
+            case "tabStoreControl":
+                createGroupOrderDialog(storeControlGroupOrder, storeControlAvailableOrderItems, positionsStoreControl);
+                break;
+            case "tabSupSelection":
+                createGroupOrderDialog(supSelectionGroupOrder, supSelectionAvailableOrderItems, positionsSupSelection);
+                break;
+            case "tabAnalysis":
+                createGroupOrderDialog(analysisGroupOrder, analysisAvailableOrderItems, positionsAnalysis);
+                break;
+
+            case "tabBills":
+                createGroupOrderDialog(billsGroupOrder, billsAvailableOrderItems, positionsBills);
+                break;
+
+
+        }
+
+
+
     }
 
     /**
      * Настройка вкладки номенклатурный контроль
      */
     private void setupNomControl() {
+        //Порядок группировки
+        for(String s : QueriesPositionConst.nomControlGroupOrder)
+            nomControlGroupOrder.add(positionsStoreControl.getColumn(s));
+        //Доступные поля для группировки
+        for(String s : QueriesPositionConst.nomControlAvailableFields)
+            nomControlAvailableOrderItems.add(positionsStoreControl.getColumn(s));
+
         GroupTable<QueriesPosition> p = positionsNomControl;
         p.addGeneratedColumn("queryLink", new QueryLinkGenerator());
-        p.groupBy(nomControlGroupOrder.toArray());
+        p.groupBy(columnToPathsConverter(nomControlGroupOrder));
         dsNomControl.addItemPropertyChangeListener(e -> {
-            if("positionUsefulness".equals(e.getProperty()) && e.getValue().equals(true)) {
+            if ("positionUsefulness".equals(e.getProperty()) && e.getValue().equals(true)) {
                 e.getItem().setPositionUsefulnessTS(new Date());
             }
         });
     }
 
-    public void onNomControlGroupOrderChange(){
-        createGroupOrderDialog(nomControlGroupOrder,nomControlAvailableOrderItems,nomControlAvailableOrderItemsDescription,map->{
-            int i=0;
-            List<Map.Entry<String,Object>> entries= (List<Map.Entry<String, Object>>) map.get("currentOrder");
-            Object[] obj =new Object[entries.size()];
-
-            nomControlGroupOrder.clear();;
-
-            for(Map.Entry ent:entries){
-                obj[i]=ent.getValue();
-                i++;
-                nomControlGroupOrder.add(ent.getValue());
-            }
-            positionsNomControl.groupBy(obj);
-        });
-
-
-    }
-
-    interface SomeAction{
-        void execute(Map map);
-    }
-
-
-    //создает окно с перетаскиваемыми элементыми. при завершении выполняет SomeAction с параметром Map, в котором будет запись currentOrder - результирующий порядок
-    public void createGroupOrderDialog(List<Object> currentOrder,List<Object> availableOrderItems,Map<Object,String> itemDescription,SomeAction okAction){
-
-        List<Map.Entry> availableItems=new ArrayList<>();
-        List<Map.Entry> currentOrderEntry=new ArrayList<>();
-
-        for(Object orderItem:availableOrderItems){
-            availableItems.add(new AbstractMap.SimpleEntry<String,Object>(itemDescription.get(orderItem),orderItem));
-        }
-
-        for(Object orderItem:currentOrder){
-            currentOrderEntry.add(new AbstractMap.SimpleEntry<String,Object>(itemDescription.get(orderItem),orderItem));
-        }
-
-        Map<String,Object> map=new HashMap<>();
-        Map<String,Object> param=new HashMap<>();
-        map.put("availableItems",availableItems);
-        map.put("currentOrder",currentOrderEntry);
-        param.put("params",map);
-
-        openWindow("chooseGroupOrder", WindowManager.OpenType.DIALOG,param)
-                .addCloseListener(data->{
-                    if(data.equals("ok"))okAction.execute(map);
-                        });
-
-    }
 
     /**
      * настройка складскго контроля
      */
     private void setupStoreControl() {
+        //Доступные поля для группировки
+        for(String s : QueriesPositionConst.storeControlGroupOrder)
+            storeControlGroupOrder.add(positionsStoreControl.getColumn(s));
+        //Доступные поля для группировки
+        for(String s : QueriesPositionConst.storeControlAvailableFields)
+            storeControlAvailableOrderItems.add(positionsStoreControl.getColumn(s));
+
         GroupTable<QueriesPosition> p = positionsStoreControl;
         p.addGeneratedColumn("queryLink", new QueryLinkGenerator());
-        p.groupBy(new Object[]{
-                p.getColumn("query.urgency").getId(),
-                p.getColumn("query.company").getId(),
-                p.getColumn("query.division").getId()});
-        //dsStoreControl.addItemPropertyChangeListener(e -> {});
+        p.groupBy(columnToPathsConverter(storeControlGroupOrder));
+    }
+
+
+    /**
+     * Настройка вкладки подбор поставщиков
+     */
+    private void setupSupSelection() {
+        //Доступные поля для группировки
+        for(String s : QueriesPositionConst.supSelectionGroupOrder)
+            supSelectionGroupOrder.add(positionsSupSelection.getColumn(s));
+        //Доступные поля для группировки
+        for(String s : QueriesPositionConst.supSelectionAvailableFields)
+            supSelectionAvailableOrderItems.add(positionsSupSelection.getColumn(s));
+
+        GroupTable<QueriesPosition> p = positionsSupSelection;
+        p.groupBy(columnToPathsConverter(supSelectionGroupOrder));
+    }
+
+
+    /**
+     * Настройка вкладки ценового анализа
+     */
+    private void setupAnalysis() {
+        //Доступные поля для группировки
+        for(String s : QueriesPositionConst.analysisGroupOrder)
+            analysisGroupOrder.add(positionsAnalysis.getColumn(s));
+        //Доступные поля для группировки
+        for(String s : QueriesPositionConst.analysisAvailableFields)
+            analysisAvailableOrderItems.add(positionsAnalysis.getColumn(s));
+
+        GroupTable<QueriesPosition> p = positionsAnalysis;
+        p.groupBy(columnToPathsConverter(analysisGroupOrder));
+    }
+
+    /**
+     * Настройка вкладки счетов
+     */
+    private void setupBills() {
+        //Доступные поля для группировки
+        for(String s : QueriesPositionConst.billsGroupOrder)
+            billsGroupOrder.add(positionsBills.getColumn(s));
+        //Доступные поля для группировки
+        for(String s : QueriesPositionConst.billsAvailableFields)
+            billsAvailableOrderItems.add(positionsBills.getColumn(s));
+
+        GroupTable<QueriesPosition> p = positionsBills;
+        p.groupBy(columnToPathsConverter(billsGroupOrder));
+    }
+
+
+
+    //создает окно с перетаскиваемыми элементыми. при завершении выполняет SomeAction с параметром Map, в котором будет запись currentOrder - результирующий порядок
+    public void createGroupOrderDialog(List<Table.Column> currentOrder, List<Table.Column> availableOrderItems, GroupTable<QueriesPosition> table) {
+
+        List<Map.Entry> availableItems = new ArrayList<>();
+        List<Map.Entry> currentOrderEntry = new ArrayList<>();
+
+        for (Table.Column orderItem : availableOrderItems) {
+            availableItems.add(new AbstractMap.SimpleEntry<>(orderItem.getCaption(), orderItem.getId()));
+        }
+
+        for (Table.Column orderItem : currentOrder) {
+            currentOrderEntry.add(new AbstractMap.SimpleEntry<>(orderItem.getCaption(), orderItem.getId()));
+        }
+
+        Map<String, Object> map = new HashMap<>();
+        Map<String, Object> param = new HashMap<>();
+        map.put("availableItems", availableItems);
+        map.put("currentOrder", currentOrderEntry);
+        param.put("params", map);
+
+        openWindow("chooseGroupOrder", WindowManager.OpenType.DIALOG, param)
+                .addCloseListener(data -> {
+                    if (data.equals("ok")) {
+                        int i = 0;
+                        List<Map.Entry<String, MetaPropertyPath>> entries = (List<Map.Entry<String, MetaPropertyPath>>) map.get("currentOrder");
+                        Object[] obj = new Object[entries.size()];
+
+                        currentOrder.clear();
+
+                        for (Map.Entry<String, MetaPropertyPath> ent : entries) {
+                            obj[i] = ent.getValue();
+                            i++;
+                            currentOrder.add(table.getColumn(String.join(".", ent.getValue().getPath())));
+                        }
+                        table.groupBy(obj);
+                    };
+                });
+
+    }
+
+    /**
+     * Проставляем queryLink в остальных таблицах, где еще нет.
+     */
+    private void addLinkOpenButton() {
+        final String title = "Ссылка";
+        positionsNomControl.addGeneratedColumn(title, new OpenLinkGenerator());
+        positionsStoreControl.addGeneratedColumn(title, new OpenLinkGenerator());
+        positionsSupSelection.addGeneratedColumn(title, new OpenLinkGenerator());
+        positionsAnalysis.addGeneratedColumn(title, new OpenLinkGenerator());
+        positionsComission.addGeneratedColumn(title, new OpenLinkGenerator());
+        positionsProcuration.addGeneratedColumn(title, new OpenLinkGenerator());
     }
 
     /**
@@ -866,7 +1025,7 @@ public class QueriesPositionBrowse extends AbstractLookup {
     public void onBtnSetQueryUsefulnessClick() {
 
 
-        if(!checkSingleSelection(positionsNomControl.getSelected())) return;
+        if (!checkSingleSelection(positionsNomControl.getSelected())) return;
         QueriesPosition position = positionsNomControl.getSingleSelected();
         dsNomControl.getChildItems(dsNomControl.getParentGroup(position)).forEach(entity -> {
             entity.setValue("positionUsefulness", true);
@@ -887,9 +1046,6 @@ public class QueriesPositionBrowse extends AbstractLookup {
         getOpenedStageTable().collapseAll();
     }
 
-    @Inject
-    private GroovyTestService groovyTestService;
-
     /**
      * Для списка выделенных позиций пытается первести их на следующий этап
      */
@@ -902,21 +1058,21 @@ public class QueriesPositionBrowse extends AbstractLookup {
      * получается список позиций с незаполненными полями
      * пользователю выводится запрос, что делать с теми, которые заполнены: перевести их или подождать
      */
-    public void onLogisticBtnDoneClick() throws Exception {
+    public void onLogisticBtnDoneClick() {
 
-        Set<QueriesPosition> selectedPositions=positionsLogistic.getSelected();
+        Set<QueriesPosition> selectedPositions = positionsLogistic.getSelected();
         if (selectedPositions.size() == 0) {
             showNotification(getMessage("Select position first"), NotificationType.WARNING);
             return;
         }
-        Collection <QueriesPosition> correctPositions=checkFillingOfRequiredFieldForPositions(positionsLogistic.getSelected());
+        Collection<QueriesPosition> correctPositions = checkFillingOfRequiredFieldForPositions(positionsLogistic.getSelected());
 
-        if(correctPositions.size()>0){
+        if (correctPositions.size() > 0) {
             makeConfirmDialog(
                     getMessage("position_moving")
-                    ,getMessage("correct_position_value")+": "+String.valueOf(correctPositions.size())+". "+getMessage("move_them_to_next_stage")+"?"
-                    ,()->{
-                        correctPositions.forEach(item->{
+                    , getMessage("correct_position_value") + ": " + String.valueOf(correctPositions.size()) + ". " + getMessage("move_them_to_next_stage") + "?"
+                    , () -> {
+                        correctPositions.forEach(item -> {
                             try {
                                 workflowService.movePosition(item);
                             } catch (Exception e) {
@@ -924,28 +1080,28 @@ public class QueriesPositionBrowse extends AbstractLookup {
                             }
                         });
                         refreshLogistic();
-            });
-        }
-        else {
-            showNotification(getMessage("fill_required_fields"),NotificationType.TRAY);
+                    });
+        } else {
+            showNotification(getMessage("fill_required_fields"), NotificationType.TRAY);
         }
 
     }
 
     /**
      * создание окна подтверждения действия
-     * @param header заголовок
+     *
+     * @param header  заголовок
      * @param content содержание(вопрос)
-     * @param action действие, при нажатии ОК. лямбда без параметров
+     * @param action  действие, при нажатии ОК. лямбда без параметров
      */
-    private void makeConfirmDialog(String header,String content,SomeDialogAction action){
-        String capitalHeader= header.substring(0, 1).toUpperCase() + header.substring(1);
-        String capitalContent= content.substring(0, 1).toUpperCase() + content.substring(1);
+    private void makeConfirmDialog(String header, String content, SomeDialogAction action) {
+        String capitalHeader = header.substring(0, 1).toUpperCase() + header.substring(1);
+        String capitalContent = content.substring(0, 1).toUpperCase() + content.substring(1);
         showOptionDialog(
                 capitalHeader,
-                capitalContent ,
+                capitalContent,
                 MessageType.CONFIRMATION,
-                new Action[] {
+                new Action[]{
                         new DialogAction(DialogAction.Type.YES) {
                             @Override
                             public void actionPerform(Component component) {
@@ -957,23 +1113,89 @@ public class QueriesPositionBrowse extends AbstractLookup {
         );
     }
 
-    interface SomeDialogAction{
-        void call();
+    public void onBtnCancelClick() {
+        movePositionsToCancelStage();
+    }
+
+    private void movePositionsToCancelStage() {
+        GroupTable<QueriesPosition> grpTab = getOpenedStageTable();
+        Set<QueriesPosition> positions = grpTab.getSelected();
+        GroupDatasource ds = grpTab.getDatasource();
+        queriesPositionService.movePositionsToCancelStage(positions);
+        ds.refresh();
+    }
+
+    private Set<QueriesPosition> getSelectedPosition() {
+        GroupTable<QueriesPosition> grpTab = getOpenedStageTable();
+        return grpTab.getSelected();
     }
 
     private void movePositions() throws Exception {
         GroupTable<QueriesPosition> grpTab = getOpenedStageTable();
-
-        if(!checkSelection(grpTab.getSelected()))return;
+        if (!checkSelection(grpTab.getSelected())) return;
 
         GroupDatasource ds = grpTab.getDatasource();
         Set<QueriesPosition> positions = grpTab.getSelected();
-        for (QueriesPosition position : positions) {
-            workflowService.movePosition(position);
-//TEST groovy scripts
-//            groovyTestService.testScript( position);
-        }
+        queriesPositionService.movePositions(positions);
         ds.refresh();
+    }
+
+    private void initReturnButtons() {
+        Collection<TabSheet.Tab> tabsColl = tabs.getTabs();
+        tabsColl.forEach((t) -> {
+            try {
+                PopupButton returnButton = (PopupButton) getComponentNN("btnReturn_" + t.getName());
+
+                returnButton.addPopupVisibilityListener((e) -> {
+                    returnButton.removeAllActions();
+                    if (returnButton.isPopupVisible()) {
+                        try {
+                            Set<QueriesPosition> selected = getSelectedPosition();
+                            if (selected.size() > 1) {
+                                showNotification("Выберите только одну позицию");
+                                return;
+                            } else if (selected.size() == 0) {
+                                showNotification("Выберите позицию");
+                                return;
+                            } else {
+                                QueriesPosition position = selected.iterator().next();
+                                Stages curStage = position.getCurrentStage();
+                                List<QueryPositionMovements> movements = workflowService.getQueryPositionMovement(position);
+                                movements.forEach((i) -> {
+                                    //Delete current stage
+                                    if (curStage.getId().equals(i.getStage().getId()))
+                                        return;
+                                    returnButton.addAction(new BaseAction(i.getStage().getId()) {
+                                        @Override
+                                        public void actionPerform(Component component) {
+                                            GroupTable<QueriesPosition> grpTab = getOpenedStageTable();
+                                            GroupDatasource ds = grpTab.getDatasource();
+                                            workflowService.movePositionTo(position, i.getStage());
+                                            ds.refresh();
+
+                                        }
+                                    });
+                                });
+                            }
+
+                        } catch (Exception ex) {
+
+                        }
+                    } else {
+                        //Приходится добавлять пустое действие, без него не срабатывает PopupVisibilityListener
+                        returnButton.addAction(new BaseAction("blankAction") {
+                            @Override
+                            public void actionPerform(Component component) {
+                            }
+                        });
+                    }
+                });
+
+            } catch (IllegalArgumentException e) {
+
+            }
+        });
+
     }
 
     /**
@@ -1010,18 +1232,10 @@ public class QueriesPositionBrowse extends AbstractLookup {
     public void onBtnSplitClick() {
         GroupTable<QueriesPosition> tab = getOpenedStageTable();
         QueriesPosition position = tab.getSingleSelected();
-        if (position.getPosition() != null) {
-            position = position.getPosition();
-        }
-        QueriesPosition copy = copyPosition(position);
-        copy.setPosition(position);
-        if (Stages.StoreControl.equals(position.getCurrentStage()))
-            position.setCurrentStage(Stages.Divided);
+        QueriesPosition copy = queriesPositionService.splitPosition(position);
         tab.getDatasource().addItem(copy);
     }
 
-    @Inject
-    private Metadata metadata;
 
     /**
      * Копирует текущую позицию
@@ -1041,13 +1255,19 @@ public class QueriesPositionBrowse extends AbstractLookup {
         return copy;
     }
 
+    public void onBtnSelectAllClick(){
+        GroupTable<QueriesPosition> tab = getOpenedStageTable();
+        tab.expandAll();
+        tab.selectAll();
+    }
+
     /**
      * Открывает подбор поставщиков
      */
     public void onBtnSuppliersClick() {
         GroupTable tab = getOpenedStageTable();
 
-        if (!checkSelection(tab.getSelected()))return;
+        if (!checkSelection(tab.getSelected())) return;
 
         HashMap<String, Object> items = new HashMap<>();
         items.put("positions", tab.getSelected());
@@ -1060,150 +1280,39 @@ public class QueriesPositionBrowse extends AbstractLookup {
     public void onBtnSuggestionsClick() {
         GroupTable tab = getOpenedStageTable();
 
-        if (!checkSelection(tab.getSelected()))return;
+        if (!checkSelection(tab.getSelected())) return;
 
         HashMap<String, Object> items = new HashMap<>();
         items.put("positions", tab.getSelected());
-        openWindow("supply$SuppliersSuggestion.browse", WindowManager.OpenType.DIALOG, items).addCloseListener((event)->{
-                dsSupSelection.refresh();
+        openWindow("supply$SuppliersSuggestion.browse", WindowManager.OpenType.DIALOG, items).addCloseListener((event) -> {
+            dsSupSelection.refresh();
         });
     }
 
-    @Inject
-    private GroupTable<QueriesPosition> positionsComission;
-
-    @Inject
-    private GroupDatasource dsComission;
     /**
      * Открывает голосование
      */
     public void onBtnVoteClick() {
-
         if (!checkSelection(positionsComission.getSelected())) return;
 
         HashMap<String, Object> items = new HashMap<>();
         items.put("positions", positionsComission.getSelected());
-        openWindow("supply$VoteDialog", WindowManager.OpenType.DIALOG, items).addCloseListener(event->{
+        openWindow("supply$VoteDialog", WindowManager.OpenType.DIALOG, items).addCloseListener(event -> {
             dsComission.refresh();
         });
     }
 
     /**
-     * Обработчик нажатия кнопки Готово на вкладке Закупочная комиссия
-     * @throws Exception
-     */
-    public void onBtnDoneClickComission() throws Exception {
-        setVote();
-    }
-
-    @Inject
-    private VoteService voteService;
-
-    /**
      * Записывает голос, если есть победитель в QP
+     *
      * @throws Exception
      */
     private void setVote() throws Exception {
         GroupTable<QueriesPosition> grpTab = getOpenedStageTable();
         GroupDatasource ds = grpTab.getDatasource();
         Set<QueriesPosition> positions = grpTab.getSelected();
-        for (QueriesPosition position: positions) {
-            workflowService.movePosition(position);
-            voteService.setVoteForPosition(position);
-        }
+        queriesPositionService.setVote(positions);
         ds.refresh();
-    }
-
-    @Inject
-    private GroupTable<QueriesPosition> positionsBills;
-
-    @Inject
-    private Table<Bills> billsTable;
-
-    @Inject
-    private GroupDatasource<QueriesPosition, UUID> dsBills;
-
-    @Inject
-    private GroupDatasource<Bills, UUID> billsesDs;
-
-    @Inject
-    private DataSupplier dataSupplier;
-    @Inject
-    private FileUploadingAPI fileUploadingAPI;
-    @Inject
-    private ExportDisplay exportDisplay;
-    @Inject
-    private FileUploadField uploadField;
-    @Inject
-    private Button downloadImageBtn;
-    @Inject
-    private Button clearImageBtn;
-    @Inject
-    private Button OpenInNewTabBtn;
-    @Inject
-    private BrowserFrame imageForBill;
-
-
-    @Override
-    public void init(Map<String, Object> params) {
-
-        windowUtil=new SupplyWindowUtil(this,messages,componentsFactory,metadata);
-
-        initLogisticStageTable();
-        initSupSelectionStageTable();
-
-        addPositionStateStyleProviderForTable(positionsNomControl);
-        addPositionStateStyleProviderForTable(positionsStoreControl);
-        addPositionStateStyleProviderForTable(positionsComission);
-        addPositionStateStyleProviderForTable(positionsSupSelection);
-        addPositionStateStyleProviderForTable(positionsBills);
-        addPositionStateStyleProviderForTable(positionsLogistic);
-
-        //Генерируемая колонка "Сумма"
-        positionsBills.addGeneratedColumn("Сумма", new Table.PrintableColumnGenerator<QueriesPosition, String>() {
-            @Override
-            public Component generateCell(QueriesPosition entity) {
-                Label label = (Label) componentsFactory.createComponent(Label.NAME);
-                if (entity.getVoteResult() == null) {
-                    return label;
-                }
-                label.setValue(entity.getVoteResult().getPrice() * entity.getVoteResult().getQuantity());
-                return label;
-            }
-
-            @Override
-            public String getValue(QueriesPosition entity) {
-                if (entity.getVoteResult() == null) {
-                    return null;
-                }
-                return Double.toString(entity.getVoteResult().getPrice() * entity.getVoteResult().getQuantity());
-            }
-        });
-
-        // События при клике на счет
-        billsTable.setClickListener("number", (item, columnId) -> setClickListenerToBills(item, columnId));
-        billsTable.setClickListener("timePayment", (item, columnId) -> setClickListenerToBills(item, columnId));
-        billsTable.setClickListener("amount", (item, columnId) -> setClickListenerToBills(item, columnId));
-        billsTable.setClickListener("sumControl", (item, columnId) -> setClickListenerToBills(item, columnId));
-        billsTable.setClickListener("supplier", (item, columnId) -> setClickListenerToBills(item, columnId));
-        billsTable.setClickListener("company", (item, columnId) -> setClickListenerToBills(item, columnId));
-
-        //Значки прикрепления счета
-        positionsBills.setIconProvider(new Table.IconProvider<QueriesPosition>() {
-            @Nullable
-            @Override
-            public String getItemIcon(QueriesPosition entity) {
-                return entity.getBills() != null ? "icons/ok.png" : "icons/cancel.png";
-            }
-        });
-
-        //Вывод изображения счета
-        uploadField.addFileUploadSucceedListener(event -> uploadFieldListenerRealization());
-
-        //Оповещение об ошибках загрузки файла
-        uploadField.addFileUploadErrorListener(event ->
-                showNotification("File upload error", NotificationType.HUMANIZED));
-
     }
 
     /**
@@ -1216,12 +1325,13 @@ public class QueriesPositionBrowse extends AbstractLookup {
         Bills clickedBills = (Bills) item;
         HashMap<String, Object> items = new HashMap<>();
         items.put("supplerId", clickedBills.getSupplier().getId());
+        items.put("companyId", clickedBills.getCompany().getId());
         items.put("billId", clickedBills.getId());
-        dsBills.setQuery("select e from supply$QueriesPosition e LEFT JOIN e.voteResult v LEFT JOIN v.posSup p LEFT JOIN p.supplier s LEFT JOIN e.bills b\n" +
+        dsBills.setQuery("select e from supply$QueriesPosition e LEFT JOIN e.voteResult v LEFT JOIN v.posSup p LEFT JOIN p.supplier s LEFT JOIN e.bills b LEFT JOIN e.query q LEFT JOIN q.company c \n" +
                 "where e.currentStage='Bills' and (" +
                 "b.id = :custom$billId\n" +
                 "or\n" +
-                "(s.id = :custom$supplerId and e.bills is null))");
+                "(s.id = :custom$supplerId and c.id = :custom$companyId and e.bills is null))");
         dsBills.refresh(items);
         billsTable.setSelected(clickedBills);
         displayImage();
@@ -1233,15 +1343,19 @@ public class QueriesPositionBrowse extends AbstractLookup {
      * Загрузка изображения и прикрепление к счету
      */
     private void uploadFieldListenerRealization() {
-        FileDescriptor fd = uploadField.getFileDescriptor();
-        try {
-            fileUploadingAPI.putFileIntoStorage(uploadField.getFileId(), fd);
-        } catch (FileStorageException e) {
-            throw new RuntimeException("Error saving file to FileStorage", e);
+        if (billsTable.getSelected().size() != 1) {
+            showNotification(getMessage("Select bill first"), NotificationType.WARNING);
+        } else {
+            FileDescriptor fd = uploadField.getFileDescriptor();
+            try {
+                fileUploadingAPI.putFileIntoStorage(uploadField.getFileId(), fd);
+            } catch (FileStorageException e) {
+                throw new RuntimeException("Error saving file to FileStorage", e);
+            }
+            billsTable.getSelected().iterator().next().setImageBill(dataSupplier.commit(fd));
+            billsesDs.commit();
+            displayImage();
         }
-        billsTable.getSelected().iterator().next().setImageBill(dataSupplier.commit(fd));
-        billsesDs.commit();
-        displayImage();
     }
 
     /**
@@ -1365,9 +1479,9 @@ public class QueriesPositionBrowse extends AbstractLookup {
 
         positionsBills.getSelected().forEach(p -> {
             p.setBills(null);
-            dsBills.setItem(p);
-            dsBills.commit();
         });
+        dsBills.commit();
+        billsesDs.refresh();
     }
 
     /**
@@ -1376,39 +1490,44 @@ public class QueriesPositionBrowse extends AbstractLookup {
      */
     public void onBtnToSupSelection() {
 
-        if (positionsBills.getSelected().size() == 0 && billsTable.getSelected().size() != 1) {
-            showNotification(getMessage("Select positions or Bill first"), NotificationType.WARNING);
+        //Проверка на наличие выбранных счета или позиций
+        if (positionsBills.getSelected().size() == 0 && billsTable.getSelected().size() == 0) {
+            showNotification(getMessage("Выберете счет или позиции"), NotificationType.WARNING);
             return;
         }
 
-        //Если выделен Счет
+        //Если выбран Счет
         if (billsTable.getSelected().size() == 1) {
             Bills currentBill = billsTable.getSelected().iterator().next();
-            dsBills.getItems().forEach(e -> {
 
-                if (e.getBills().getId().equals(currentBill.getId())) {
+            //Проверка наличия прикрепленных позиций к счету
+            if (currentBill.getPositions().size() == 0) {
+                showNotification(getMessage("Нет прикрепленных позиций"), NotificationType.TRAY);
+                return;
+            }
+
+            dsBills.getItems().forEach(e -> {
+                if (e.getBills() != null && e.getBills().equals(currentBill)) {
                     e.setCurrentStage(Stages.SupSelection);
-                    dsBills.setItem(e);
-                    dsBills.commit();
+                    e.setBills(null);
                 }
             });
+            dsBills.commit();
             dsBills.refresh();
             billsTable.setSelected(new ArrayList<Bills>());
+            billsesDs.refresh();
             return;
         }
 
-        //Если выделены позиции
-        if (positionsBills.getSelected().size() != 0) {
-            positionsBills.getSelected().forEach(e -> {
-                        e.setCurrentStage(Stages.SupSelection);
-                        e.setBills(null);
-                        dsBills.setItem(e);
-                        dsBills.commit();
-                        dsBills.refresh();
-                    }
-
-            );
-        }
+        //Если выбраны позиции
+        positionsBills.getSelected().forEach(e -> {
+                    e.setCurrentStage(Stages.SupSelection);
+                    e.setBills(null);
+                }
+        );
+        dsBills.commit();
+        dsBills.refresh();
+        billsesDs.refresh();
     }
 
     /**
@@ -1429,89 +1548,61 @@ public class QueriesPositionBrowse extends AbstractLookup {
         dsBills.refresh();
     }
 
-    @Inject
-    protected EmailService emailService;
-
     /**
      * @author Andrey Kolosov
      * Отправка писем поставщикам
      */
     public void onBtnSendEmail() {
-
-        if (!checkSelection(positionsBills.getSelected()))return;
+        if (!checkSelection(positionsBills.getSelected())) return;
         Set<QueriesPosition> setPosition = positionsBills.getSelected();
-
-        //Шаблоны
-        String emailHeader = "To Supplier: %s \n" +
-                "From Company: %s \n\n";
-
-        String emailBody = "Nomenclature: %s \n" +
-                "Quantity: %10.2f \n" +
-                "Price: %10.2f \n\n";
-
-        //Группировка по заказчику, компании
-        Map<Suppliers, Map<Company, List<QueriesPosition>>> groupedBySupAndCompMap = setPosition.stream()
-                .collect(Collectors.groupingBy(t -> t.getVoteResult().getPosSup().getSupplier(),
-                        Collectors.groupingBy(b -> b.getQuery().getCompany())));
-
-        groupedBySupAndCompMap.forEach((s, m) -> {
-
-            m.forEach((c, l) -> {
-
-                String emailHeaderToSend = String.format(emailHeader, s.getName(), c.getName());
-                StringBuilder emailBodyToSend = new StringBuilder();
-                l.forEach(q -> {
-                    String emailBodyPosition = String.format(emailBody, q.getNomenclature().getName(), q.getVoteResult().getQuantity(), q.getVoteResult().getPrice());
-                    emailBodyToSend.append(emailBodyPosition);
-                });
-
-                EmailInfo emailInfo = new EmailInfo(
-                        "piratovi@gmail.com", // recipients
-                        "TestTema", // subject
-                        emailHeaderToSend.concat(emailBodyToSend.toString())
-                );
-
-                emailService.sendEmailAsync(emailInfo);
-
-            });
-        });
-
+        queriesPositionService.sendEmail(setPosition);
         positionsBills.setSelected(new ArrayList<QueriesPosition>());
-
     }
 
     /**
+     * @throws Exception перевод всех позиций по одному счету на следующий этап, с проверкой контрольной суммы
      * @author Andrey Kolosov
-     * @throws Exception
-     * перевод всех позиций по одному счету на следующий этап, с проверкой контрольной суммы
      */
     public void onBtnDoneClickBillsTab() throws Exception {
         if (billsTable.getSelected().size() != 1) {
             showNotification(getMessage("Select bill first"), NotificationType.WARNING);
             return;
         }
-
         Bills currentBill = billsTable.getSelected().iterator().next();
+        if (currentBill.getSumControl()) {
+            showNotification(getMessage("Контроль суммы уже пройден"), NotificationType.WARNING);
+            return;
+        }
         Double billSum = currentBill.getAmount();
         List<QueriesPosition> list = currentBill.getPositions();
+        if (list==null||list.size()==0) {
+            return;
+        }
+        for (QueriesPosition queriesPosition : list) {
+            if (queriesPosition.getVoteResult()==null) {
+                showNotification(getMessage("У одной из прикрепленных позиции нет результата голосования"), NotificationType.WARNING);
+                return;
+            }
+        }
         Double positionSum = list.stream().mapToDouble(q ->
                 q.getVoteResult().getPrice() * q.getVoteResult().getQuantity()).sum();
 
         if (Math.abs(positionSum / billSum - 1) > 0.01) {
             showNotification(getMessage("Контроль суммы не пройден"), NotificationType.WARNING);
         } else {
-            currentBill.setSumControl(true);
-            billsesDs.commit();
             for (QueriesPosition p : list) {
                 workflowService.movePosition(p);
             }
+            currentBill.setSumControl(true);
+            billsesDs.commit();
         }
+        billsesDs.refresh();
         dsBills.refresh();
     }
 
     /**
      * @author Andrey Kolosov
-     * Открывает список грузов
+     * Открывает список поставок
      */
     public void onBtnDeliveryClick() {
         GroupTable tab = getOpenedStageTable();
@@ -1520,7 +1611,65 @@ public class QueriesPositionBrowse extends AbstractLookup {
 
         HashMap<String, Object> items = new HashMap<>();
         items.put("position", tab.getSelected());
-        openWindow("supply$Delivery.browse", WindowManager.OpenType.DIALOG, items);
+        openWindow("supply$Delivery.browse", WindowManager.OpenType.DIALOG, items).addCloseListener(event -> {
+            tab.getDatasource().refresh();
+        });
+    }
+
+    interface SomeAction {
+        void execute(Map map);
+    }
+
+    interface SomeDialogAction {
+        void call();
+    }
+
+    private Object[] columnToPathsConverter(List<Table.Column> columns){
+        List<Object> retList = new ArrayList<>();
+        for(Table.Column col : columns)
+            retList.add(col.getId());
+
+        return retList.toArray();
+    }
+
+    private class QueryLinkGenerator implements Table.ColumnGenerator {
+
+        /**
+         * Called by {@link Table} when rendering a column for which the generator was created.
+         *
+         * @param entity an entity instance represented by the current row
+         * @return a component to be rendered inside of the cell
+         */
+        @Override
+        public Component generateCell(Entity entity) {
+            Query q = ((QueriesPosition) entity).getQuery();
+            LinkButton lnk = (LinkButton) componentsFactory.createComponent(LinkButton.NAME);
+            lnk.setAction(new BaseAction("query").
+                    withCaption(q.getInstanceName()).
+                    withHandler(e -> openEditor(q, WindowManager.OpenType.DIALOG)));
+            return lnk;
+        }
+    }
+
+
+    private class OpenLinkGenerator implements Table.ColumnGenerator {
+
+        /**
+         * Called by {@link Table} when rendering a column for which the generator was created.
+         *
+         * @param entity an entity instance represented by the current row
+         * @return a component to be rendered inside of the cell
+         */
+        @Override
+        public Component generateCell(Entity entity) {
+            LinkButton lnk = (LinkButton) componentsFactory.createComponent(LinkButton.NAME);
+            lnk.setAction(new BaseAction("Ссылка").
+                    withCaption("Открыть").
+                    withHandler(e -> openEditor(entity, WindowManager.OpenType.DIALOG).addCloseListener((event) -> {
+                        getOpenedStageTable().getDatasource().refresh();
+                    })));
+            return lnk;
+        }
     }
 
     /**

@@ -1,0 +1,1 @@
+alter table supply_query_position_stage_data_item_link rename to SUPPLY_QUERY_POSITION_STAGE_DATA_ITEM_LINK__U93680 ;
